@@ -12,7 +12,7 @@ import org.springframework.http.HttpStatus
 class ProductControllerTest {
     @Test
     fun addProduct() {
-        val product = Product("cafe", 39.00, "www.test")
+        val product = Product(1L, "cafe", 39.00, "www.test")
         val response =
             RestAssured
                 .given().log().all().body(product)
