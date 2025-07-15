@@ -21,7 +21,10 @@
 - [ ] Delete
   - [ ] Returns ok status if deleted
   - [ ] Throws NotFoundException if Product not found
+- private fun findProduct
+  - [ ] finds the product
+  - [ ] Throws notFoundException
 
 ### Exceptions
-- [ ] NotFoundException
-  - [ ] Handled using ControllerAdvice
+- [x] NotFoundException
+  - [x] Handled using ControllerAdvice
