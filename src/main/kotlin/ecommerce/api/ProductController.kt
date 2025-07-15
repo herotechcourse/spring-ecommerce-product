@@ -4,8 +4,8 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import java.net.URI
 import java.util.concurrent.atomic.AtomicLong
@@ -16,7 +16,9 @@ class ProductController {
     private val index = AtomicLong(1)
 
     @PostMapping("/api/products")
-    fun createProduct(@RequestBody product: Product): ResponseEntity<Void> {
+    fun createProduct(
+        @RequestBody product: Product,
+    ): ResponseEntity<Void> {
         val id = index.getAndIncrement()
         val newProduct = Product.toEntity(product, id)
         products.put(id, newProduct)
@@ -24,13 +26,21 @@ class ProductController {
     }
 
     @GetMapping("/api/products")
-    fun getProducts() : ResponseEntity<List<Product>> {
+    fun getProducts(): ResponseEntity<List<Product>> {
         return ResponseEntity.ok(products.values.toList())
     }
 
     @GetMapping("/api/products/{id}")
-    fun getProduct(@PathVariable id : Long) : ResponseEntity<Product> {
+    fun getProduct(
+        @PathVariable id: Long,
+    ): ResponseEntity<Product> {
         return ResponseEntity.ok(products.getValue(id))
     }
 
+    @PutMapping("/api/products/{id}")
+    fun updateProduct(@PathVariable id: Long, @RequestBody newProduct: Product): ResponseEntity<Void> {
+        val product = products[id] ?: return ResponseEntity.notFound().build()
+        product.update(newProduct)
+        return ResponseEntity.ok().build()
+    }
 }

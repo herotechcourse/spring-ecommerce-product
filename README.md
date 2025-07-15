@@ -27,14 +27,14 @@ ProductController
 - [x] add - POST
     - [x] `createProduct(@RequestBody)`
         - [x] Request -> POST /api/products HTTP/1.1
-- [ ] retrieve - GET
-    - [ ] `readProducts()`
-        - [ ] Request -> GET /api/products HTTP/1.1
-    - [ ] `readProduct()`
-        - [ ] Request -> GET /api/products/{id} HTTP/1.1
-- [ ] update - PUT
-    - [ ] `updateProduct(@PathVariable id: Long, @RequestBody)`
-        - [ ] Request -> PUT /api/products/{id} HTTP/1.1
+- [x] retrieve - GET
+    - [x] `readProducts()`
+        - [x] Request -> GET /api/products HTTP/1.1
+    - [x] `readProduct()`
+        - [x] Request -> GET /api/products/{id} HTTP/1.1
+- [x] update - PUT
+    - [x] `updateProduct(@PathVariable id: Long, @RequestBody)`
+        - [x] Request -> PUT /api/products/{id} HTTP/1.1
 - [ ] delete - DELETE
     - [ ] `deleteProduct(@PathVariable id: Long)`
         - [ ] Request -> DELETE /api/products/{id} HTTP/1.1

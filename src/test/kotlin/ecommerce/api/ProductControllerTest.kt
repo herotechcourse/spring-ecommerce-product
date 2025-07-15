@@ -33,7 +33,10 @@ class ProductControllerTest {
 
     @Test
     fun update() {
+        val product = Product(name = "new product", price = 1.6, imageUrl = "https://www.product.com/image/2")
         create()
+        val response = controller.updateProduct(1, product)
+        assertThat(response.statusCode.value()).isEqualTo(HttpStatus.OK.value())
     }
 
     @Test
