@@ -29,4 +29,42 @@ class ProductControllerTest {
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value())
     }
+
+    @Test
+    fun `Returns Product`() {
+        create()
+
+        val response =
+            RestAssured
+                .given().log().all()
+                .contentType(ContentType.JSON)
+                .`when`().get("/products/1")
+                .then().log().all().extract()
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
+    }
+
+    @Test
+    fun `Throws NotFoundException if Product not Found`() {
+        val response =
+            RestAssured
+                .given().log().all()
+                .contentType(ContentType.JSON)
+                .`when`().get("/products/1")
+                .then().log().all().extract()
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value())
+    }
+
+    @Test
+    fun `Throws NotFoundException if No id provided`() {
+        val response =
+            RestAssured
+                .given().log().all()
+                .contentType(ContentType.JSON)
+                .`when`().get("/products/")
+                .then().log().all().extract()
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value())
+    }
 }
