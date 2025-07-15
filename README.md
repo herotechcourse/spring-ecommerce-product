@@ -14,19 +14,19 @@ Implement the API to send and receive HTTP messages as shown in the example.
 
 Product
 
-- [ ] is a class
-- [ ] has property `id: Long`
-    - [ ] get `id` from controller with `AtomicLong(1)`
-- [ ] has property `name: String`
-- [ ] has property `price: Double`
-- [ ] has property `imageUrl: String`
+- [x] is a class
+- [x] has property `id: Long`
+    - [x] get `id` from controller with `AtomicLong(1)`
+- [x] has property `name: String`
+- [x] has property `price: Double`
+- [x] has property `imageUrl: String`
 
 ProductController
 
 - HTTP Methods
-- [ ] add - POST
-    - [ ] `createProduct(@RequestBody)`
-        - [ ] Request -> POST /api/products HTTP/1.1
+- [x] add - POST
+    - [x] `createProduct(@RequestBody)`
+        - [x] Request -> POST /api/products HTTP/1.1
 - [ ] retrieve - GET
     - [ ] `readProducts()`
         - [ ] Request -> GET /api/products HTTP/1.1
