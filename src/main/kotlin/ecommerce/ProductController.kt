@@ -14,7 +14,7 @@ import java.util.concurrent.atomic.AtomicLong
 @RestController
 class ProductController {
     private val products: MutableMap<Long, Product> = HashMap()
-    private val index = AtomicLong(1)
+    private val index = AtomicLong(0)
 
     @PostMapping("/products")
     fun create(@RequestBody product: Product): ResponseEntity<Void> {

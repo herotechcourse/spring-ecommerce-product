@@ -57,7 +57,7 @@ class ProductControllerTest {
                 .given().log().all()
                 .body(Product(name = "fanta", price = 5.6, imageURL = URI("https://fanta.jpg")))
                 .contentType(ContentType.JSON)
-                .`when`().put("/products/2")
+                .`when`().put("/products/1")
                 .then().log().all().extract()
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
@@ -100,7 +100,7 @@ class ProductControllerTest {
         val response =
             RestAssured
                 .given().log().all()
-                .`when`().delete("/products/2")
+                .`when`().delete("/products/1")
                 .then().log().all().extract()
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value())
