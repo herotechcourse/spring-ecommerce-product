@@ -7,3 +7,9 @@ HTTP API that allows users to retrieve, add, update, and delete products.
 
 ### Product
 - [ ] create product with id, name, price, image URL
+
+### Product Controller
+- [ ] implement `create`
+- [ ] implement `read`
+- [ ] implement `update`
+- [ ] implement `delete`
