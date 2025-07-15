@@ -34,6 +34,7 @@ class ProductControllerTest {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value())
     }
 
+    @Test
     fun create2() {
         val response =
             RestAssured
@@ -92,7 +93,7 @@ class ProductControllerTest {
 
         val response =
             RestAssured
-        .given().log().all()
+                .given().log().all()
                 .body(
                     Product(
                         name = "Flat white L",
@@ -105,7 +106,21 @@ class ProductControllerTest {
                 )
                 .contentType(ContentType.JSON)
                 .`when`().put("/api/products/1")
+                .then().log().all().extract()
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
+    }
+
+    @Test
+    fun delete() {
+        create()
+
+        val response =
+            RestAssured
+                .given().log().all()
+                .`when`().delete("/api/products/1")
+                .then().log().all().extract()
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value())
     }
 }
