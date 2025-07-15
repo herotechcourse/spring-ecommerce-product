@@ -9,8 +9,8 @@
   - [x] imageUrl: String
 
 ### Controller
-- [ ] Create
-  - [ ] Create and returns the new Product
+- [x] Create
+  - [x] Create and returns the new Product
 - [ ] Read
   - [ ] Returns the Product
   - [ ] Throws NotFoundException if Product not found via id 

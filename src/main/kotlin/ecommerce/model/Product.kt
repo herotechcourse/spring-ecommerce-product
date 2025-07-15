@@ -4,12 +4,13 @@ class Product(
     val id: Long? = null,
     var name: String,
     var price: Double,
-    var imageURL: String,
-    ) {
+    var imageUrl: String,
+
+) {
     fun update(newProduct: Product) {
         this.name = newProduct.name
         this.price = newProduct.price
-        this.imageURL = newProduct.imageURL
+        this.imageUrl = newProduct.imageUrl
     }
 
     companion object {
@@ -17,8 +18,7 @@ class Product(
             product: Product,
             id: Long,
         ): Product {
-            return Product(id,product.name,product.price,product.imageURL)
+            return Product(id, product.name, product.price, product.imageUrl)
         }
     }
-
 }
