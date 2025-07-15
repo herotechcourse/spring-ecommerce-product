@@ -78,4 +78,21 @@ class ProductControllerTest {
         assertThat(response.statusCode).isEqualTo(HttpStatus.OK.value())
         assertThat(response.body.jsonPath().getList<Product>("")).hasSize(3)
     }
+
+    @Test
+    fun getProduct() {
+        val product = Product(1L, "cafe", 39.00, "www.test")
+        val products = createProducts()
+        val response =
+            RestAssured
+                .given().log().all()
+                .`when`()
+                .request("GET", "/products/1")
+                .then()
+                .extract()
+                .response()
+
+        assertThat(response.statusCode).isEqualTo(HttpStatus.OK.value())
+        assertThat(response.`as`(Product::class.java)).isEqualTo(product)
+    }
 }
