@@ -33,4 +33,16 @@ class ProductController {
         return ResponseEntity.ok().body(product)
     }
 
+    @DeleteMapping("/api/products/{id}")
+    fun delete(
+        @PathVariable id: Long,
+    ): ResponseEntity<Void> {
+        val product =
+            products.stream()
+                .filter { it.id == id }
+                .findFirst()
+                .orElseThrow { RuntimeException("Product with id $id not found") }
+        products.remove(product)
+        return ResponseEntity.noContent().build()
+    }
 }
