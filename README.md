@@ -1,9 +1,9 @@
 # spring-ecommerce-product
 
 ## Step 1-1
-Implements a simple HTTP API that allows users to **retrieve**, **add**, **update**, and **delete** products.
-HTTP requests and responses must be in **JSON** format.
-Since no separate database is used at this point, data is stored in memory using an appropriate Kotlin Collection Framework.
+Implements a simple HTTP API that allows users to **retrieve**, **add**, **update**, and **delete** products.<br/>
+HTTP requests and responses must be in **JSON** format. <br/>
+Since no separate database is used at this point, data is stored in memory using an appropriate Kotlin Collection Framework. <br/>
 
 ### Feature list
 - [x] resource representation class to store data
@@ -13,3 +13,19 @@ Since no separate database is used at this point, data is stored in memory using
 - [x] add new product - POST
 - [x] update product parameters - PUT
 - [x] delete product from products - DELETE
+
+## Step 1-2
+Implements an admin interface that allows users to view, add, update, and delete products. <br/>
+
+Use Thymeleaf to implement server-side rendering (SSR). <br/>
+The default behavior should be based on traditional HTML form submission and page navigation. <br/>
+However, if you're interested in asynchronous behavior using JavaScript, feel free to use the previously built product API to apply AJAX or similar techniques.<br/>
+For product images, do not upload files; instead, use direct image URLs. <br/>
+
+### Feature list
+- [ ] admin interface
+  - [ ] uses Thymeleaf
+  - [ ] based on HTML form submission and page navigation
+  - [ ] use direct image URLs for products
+
+
