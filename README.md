@@ -21,9 +21,9 @@
   - [x] Returns the Updated Product
   - [x] Returns the Product
   - [x] Throws NotFoundException if Product not found
-- [ ] Delete
-  - [ ] Returns ok status if deleted
-  - [ ] Throws NotFoundException if Product not found
+- [x] Delete
+  - [x] Returns ok status if deleted
+  - [x] Throws NotFoundException if Product not found
 - private fun findProduct
   - [x] finds the product
   - [x] Throws notFoundException

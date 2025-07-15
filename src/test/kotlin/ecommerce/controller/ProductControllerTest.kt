@@ -116,6 +116,30 @@ class ProductControllerTest {
     }
 
     @Test
+    fun delete() {
+        create()
+
+        val response =
+            RestAssured
+                .given().log().all()
+                .`when`().delete("/products/1")
+                .then().log().all().extract()
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value())
+    }
+    @Test
+    fun `Throws NotFoundException on delete method if Product not Found`() {
+        val response =
+            RestAssured
+                .given().log().all()
+                .contentType(ContentType.JSON)
+                .`when`().delete("/products/1")
+                .then().log().all().extract()
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value())
+    }
+
+    @Test
     fun `Throws NotFoundException on read method if Product not Found`() {
         val response =
             RestAssured
