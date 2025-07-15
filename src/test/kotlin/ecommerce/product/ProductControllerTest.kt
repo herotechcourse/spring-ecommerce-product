@@ -28,7 +28,7 @@ class ProductControllerTest {
                     ),
                 )
                 .contentType(ContentType.JSON)
-                .`when`().post("/products")
+                .`when`().post("/api/products")
                 .then().log().all().extract()
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value())
@@ -49,7 +49,7 @@ class ProductControllerTest {
                     ),
                 )
                 .contentType(ContentType.JSON)
-                .`when`().post("/products")
+                .`when`().post("/api/products")
                 .then().log().all().extract()
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value())
@@ -63,7 +63,7 @@ class ProductControllerTest {
             RestAssured
                 .given().log().all()
                 .contentType(ContentType.JSON)
-                .`when`().get("/products")
+                .`when`().get("/api/products")
                 .then().log().all().extract()
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
@@ -79,10 +79,33 @@ class ProductControllerTest {
             RestAssured
                 .given().log().all()
                 .contentType(ContentType.JSON)
-                .`when`().get("/products")
+                .`when`().get("/api/products")
                 .then().log().all().extract()
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
         assertThat(response.jsonPath().getList("", Product::class.java)).hasSize(2)
+    }
+
+    @Test
+    fun update() {
+        create()
+
+        val response =
+            RestAssured
+        .given().log().all()
+                .body(
+                    Product(
+                        name = "Flat white L",
+                        price = 6.50,
+                        imageURL =
+                            URI.create(
+                                "https://st.kakaocdn.net/product/gift/product/20231010111814_9a667f9eccc943648797925498bdd8a3.jpg",
+                            ),
+                    ),
+                )
+                .contentType(ContentType.JSON)
+                .`when`().put("/api/products/1")
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
     }
 }
