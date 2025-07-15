@@ -15,32 +15,27 @@ import org.springframework.web.bind.annotation.ResponseBody
 import java.util.concurrent.atomic.AtomicLong
 
 @Controller
-@RequestMapping
+@RequestMapping("/products")
 class ProductController {
     private val products: MutableSet<Product> = HashSet()
 
     private var index: AtomicLong = AtomicLong(1)
 
-    @PostMapping("/product", consumes = ["application/json"])
-    @ResponseBody
-    fun addProduct(
-        @RequestBody product: Product,
-    ): Product {
-        val product = Product(index.getAndAdd(1), product.name, product.price, product.imageUrl)
-        products.add(product)
-        return product
-    }
-
-    @PostMapping("/product2", consumes = ["application/json"])
+    @PostMapping(consumes = ["application/json"])
     fun addProductResponseEntity(
         @RequestBody product: Product,
     ): ResponseEntity<Product> {
-        val product = Product(product.id, product.name, product.price, product.imageUrl)
+        val product = Product(index.getAndAdd(1), product.name, product.price, product.imageUrl)
         products.add(product)
         return ResponseEntity.ok(product)
     }
 
-    @GetMapping("/product/{id}")
+    @GetMapping
+    fun getProducts(): ResponseEntity<Set<Product>> {
+        return ResponseEntity.ok(products)
+    }
+
+    @GetMapping("/{id}")
     fun getProduct(
         @PathVariable id: Long,
     ): ResponseEntity<Product> {
@@ -57,7 +52,7 @@ class ProductController {
         }
     }
 
-    @PutMapping("/product/{id}")
+    @PutMapping("/{id}")
     fun updateProduct(
         @PathVariable id: Long,
         @RequestBody product: Product,
@@ -68,7 +63,7 @@ class ProductController {
         return ResponseEntity.ok(newProduct)
     }
 
-    @DeleteMapping("/product/{id}")
+    @DeleteMapping("/{id}")
     @ResponseBody
     fun deleteProduct(
         @PathVariable id: Long,
