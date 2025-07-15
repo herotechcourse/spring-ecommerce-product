@@ -1,0 +1,57 @@
+package ecommerce.product
+
+import io.restassured.RestAssured
+import io.restassured.http.ContentType
+import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.Test
+import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.http.HttpStatus
+import org.springframework.test.annotation.DirtiesContext
+import java.net.URI
+
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
+class ProductControllerTest {
+    @Test
+    fun create() {
+        val response =
+            RestAssured
+                .given().log().all()
+                .body(
+                    Product(
+                        name = "Iced Americano T",
+                        price = 4.50,
+                        imageURL =
+                            URI.create(
+                                "https://st.kakaocdn.net/product/gift/product/20231010111814_9a667f9eccc943648797925498bdd8a3.jpg",
+                            ),
+                    ),
+                )
+                .contentType(ContentType.JSON)
+                .`when`().post("/products")
+                .then().log().all().extract()
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value())
+    }
+
+    fun create2() {
+        val response =
+            RestAssured
+                .given().log().all()
+                .body(
+                    Product(
+                        name = "Flat white L",
+                        price = 6.50,
+                        imageURL =
+                            URI.create(
+                                "https://st.kakaocdn.net/product/gift/product/20231010111814_9a667f9eccc943648797925498bdd8a3.jpg",
+                            ),
+                    ),
+                )
+                .contentType(ContentType.JSON)
+                .`when`().post("/products")
+                .then().log().all().extract()
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value())
+    }
+}
