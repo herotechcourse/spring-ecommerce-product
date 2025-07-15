@@ -1,5 +1,7 @@
 package ecommerce
 
+import com.fasterxml.jackson.core.type.TypeReference
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import io.restassured.RestAssured
 import io.restassured.http.ContentType
 import org.assertj.core.api.Assertions.assertThat
@@ -24,22 +26,28 @@ class ProductControllerTest {
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value())
     }
-//
-//    @Test
-//    fun read() {
-//        create()
-//
-//        val response =
-//            RestAssured
-//                .given().log().all()
-//                .contentType(ContentType.JSON)
-//                .`when`().get("/members")
-//                .then().log().all().extract()
-//
-//        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
-//        assertThat(response.jsonPath().getList("", Member::class.java)).hasSize(1)
-//    }
-//
+
+    @Test
+    fun read() {
+        create()
+
+        val response =
+            RestAssured
+                .given().log().all()
+                .contentType(ContentType.JSON)
+                .`when`().get("/products")
+                .then().log().all().extract()
+
+        val rawMap = response.jsonPath().getMap<String, Any>("")
+        val mapper = jacksonObjectMapper()
+        val typeRef = object : TypeReference<Map<Long, Product>>() {}
+        val productMap = mapper.convertValue(rawMap, typeRef)
+
+        assertThat(productMap).hasSize(1)
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
+//        assertThat(response.jsonPath().getMap<Long, Product>("", Long::class.java, Product::class.java)).hasSize(1)
+    }
+
 //    @Test
 //    fun update() {
 //        create()

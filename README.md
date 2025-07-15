@@ -9,7 +9,7 @@ Since no separate database is used at this point, data is stored in memory using
 - [x] resource representation class to store data
   - [x] is wrapped in a collection
 - [x] HTTP requests and responses in JSON format
-- [ ] retrieve product - GET
+- [x] retrieve product - GET
 - [x] add new product - POST
 - [ ] update product parameters - PUT
 - [ ] delete product from products - DELETE
