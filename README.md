@@ -17,10 +17,10 @@
 - [x] Read
   - [x] Returns the Product
   - [x] Throws NotFoundException if Product not found via id 
-- [ ] Update
-  - [ ] Returns the Updated Product
-  - [ ] Returns the Product
-  - [ ] Throws NotFoundException if Product not found
+- [x] Update
+  - [x] Returns the Updated Product
+  - [x] Returns the Product
+  - [x] Throws NotFoundException if Product not found
 - [ ] Delete
   - [ ] Returns ok status if deleted
   - [ ] Throws NotFoundException if Product not found

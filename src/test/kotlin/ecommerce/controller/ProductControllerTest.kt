@@ -75,7 +75,48 @@ class ProductControllerTest {
     }
 
     @Test
-    fun `Throws NotFoundException if Product not Found`() {
+    fun update() {
+        create()
+
+        val response =
+            RestAssured
+                .given().log().all()
+                .body(
+                    Product(
+                        name = "Product 2",
+                        price = 10.0,
+                        imageUrl = "http://localhost:8080/image/upload/product1.jpg"
+                    )
+                )
+                .contentType(ContentType.JSON)
+                .`when`().put("/products/1")
+                .then().log().all().extract()
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
+        assertThat(response.jsonPath().get<String>("name")).isEqualTo("Product 2")
+    }
+
+    @Test
+    fun `Throws NotFoundException on update method if Product not Found`() {
+        val response =
+            RestAssured
+                .given().log().all()
+                .body(
+                    Product(
+                        name = "Product 2",
+                        price = 10.0,
+                        imageUrl = "http://localhost:8080/image/upload/product1.jpg"
+                    )
+                )
+                .contentType(ContentType.JSON)
+                .`when`().put("/products/1")
+                .then().log().all().extract()
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value())
+    }
+
+    @Test
+    fun `Throws NotFoundException on read method if Product not Found`() {
         val response =
             RestAssured
                 .given().log().all()
