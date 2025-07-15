@@ -1,9 +1,9 @@
 # spring-ecommerce-product
 
-  -[ ] Create a simple CRUD HTTP API
-- [ ] Create a Product
-- [ ] Retrieve a Product
-- [ ] Retrieve a list of Products
-- [ ] Update a Product
-- [ ] Delete a product
-- [ ] Tests for CRUD operations
+  -[x] Create a simple CRUD HTTP API
+- [x] Create a Product
+- [x] Retrieve a Product
+- [x] Retrieve a list of Products
+- [x] Update a Product
+- [x] Delete a product
+- [x] Tests for CRUD operations
