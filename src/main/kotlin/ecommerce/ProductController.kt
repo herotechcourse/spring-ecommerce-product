@@ -1,6 +1,7 @@
 package ecommerce
 
 import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
@@ -37,5 +38,11 @@ class ProductController {
         val product = products[id] ?: throw RuntimeException("Product id is null")
         product.update(newProduct)
         return ResponseEntity.ok().build()
+    }
+
+    @DeleteMapping("/products/{id}")
+    fun delete(@PathVariable id: Long): ResponseEntity<Void> {
+        products.remove(id) ?: throw RuntimeException("Product id is null")
+        return ResponseEntity.noContent().build()
     }
 }

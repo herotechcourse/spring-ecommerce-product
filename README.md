@@ -12,4 +12,4 @@ Since no separate database is used at this point, data is stored in memory using
 - [x] retrieve product - GET
 - [x] add new product - POST
 - [x] update product parameters - PUT
-- [ ] delete product from products - DELETE
+- [x] delete product from products - DELETE

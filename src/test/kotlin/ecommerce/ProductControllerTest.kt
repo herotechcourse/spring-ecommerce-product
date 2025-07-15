@@ -92,19 +92,19 @@ class ProductControllerTest {
         assertThat(responseAfterGet.statusCode()).isEqualTo(HttpStatus.OK.value())
     }
 
-//
-//    @Test
-//    fun delete() {
-//        create()
-//
-//        val response =
-//            RestAssured
-//                .given().log().all()
-//                .`when`().delete("/members/1")
-//                .then().log().all().extract()
-//
-//        assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value())
-//    }
+
+    @Test
+    fun delete() {
+        create()
+
+        val response =
+            RestAssured
+                .given().log().all()
+                .`when`().delete("/products/2")
+                .then().log().all().extract()
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value())
+    }
 }
 
 
