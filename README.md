@@ -6,10 +6,10 @@ HTTP API that allows users to retrieve, add, update, and delete products.
 - Since no separate database is used at this point, store data in memory using an appropriate Kotlin Collection Framework.
 
 ### Product
-- [ ] create product with id, name, price, image URL
+- [x] create product with id, name, price, image URL
 
 ### Product Controller
-- [ ] implement `create`
-- [ ] implement `read`
-- [ ] implement `update`
+- [x] implement `create`
+- [x] implement `read`
+- [x] implement `update`
 - [ ] implement `delete`
