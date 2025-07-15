@@ -1,6 +1,7 @@
 package ecommerce.controller
 
 import ecommerce.model.Product
+import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -43,9 +44,17 @@ class ProductController {
     fun getProduct(
         @PathVariable id: Long,
     ): ResponseEntity<Product> {
-        val product =
-            products.first { it.id == id }
-        return ResponseEntity.ok(product)
+        return try {
+            val found = products.any { it.id == id }
+            val product = products.first { it.id == id }
+            if (found) {
+                ResponseEntity.ok(product)
+            } else {
+                throw IllegalArgumentException()
+            }
+        } catch (e: Exception) {
+            ResponseEntity(HttpStatus.NOT_FOUND)
+        }
     }
 
     @PutMapping("/product/{id}")
