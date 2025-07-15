@@ -33,6 +33,6 @@ class ProductController {
     }
 
     private fun findProduct(id: Long): Product {
-        return products.firstOrNull() { it.id == id } ?: throw NotFoundException("Product with id $id not found")
+        return products.firstOrNull { it.id == id } ?: throw NotFoundException("Product with id $id not found")
     }
 }
