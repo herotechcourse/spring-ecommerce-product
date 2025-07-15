@@ -54,4 +54,35 @@ class ProductControllerTest {
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value())
     }
+
+    @Test
+    fun read() {
+        create()
+
+        val response =
+            RestAssured
+                .given().log().all()
+                .contentType(ContentType.JSON)
+                .`when`().get("/products")
+                .then().log().all().extract()
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
+        assertThat(response.jsonPath().getList("", Product::class.java)).hasSize(1)
+    }
+
+    @Test
+    fun `there is 2 products, and read() return all products in the list`() {
+        create()
+        create2()
+
+        val response =
+            RestAssured
+                .given().log().all()
+                .contentType(ContentType.JSON)
+                .`when`().get("/products")
+                .then().log().all().extract()
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
+        assertThat(response.jsonPath().getList("", Product::class.java)).hasSize(2)
+    }
 }
