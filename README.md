@@ -2,11 +2,11 @@
 
 ## CRUD Operations for `Product`
 ### Model
-- [ ] Product
-  - [ ] id: long?
-  - [ ] name: String
-  - [ ] price: Double
-  - [ ] imageUrl: String
+- [x] Product
+  - [x] id: long?
+  - [x] name: String
+  - [x] price: Double
+  - [x] imageUrl: String
 
 ### Controller
 - [ ] Create
