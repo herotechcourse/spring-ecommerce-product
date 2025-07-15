@@ -35,6 +35,6 @@ ProductController
 - [x] update - PUT
     - [x] `updateProduct(@PathVariable id: Long, @RequestBody)`
         - [x] Request -> PUT /api/products/{id} HTTP/1.1
-- [ ] delete - DELETE
-    - [ ] `deleteProduct(@PathVariable id: Long)`
-        - [ ] Request -> DELETE /api/products/{id} HTTP/1.1
+- [x] delete - DELETE
+    - [x] `deleteProduct(@PathVariable id: Long)`
+        - [x] Request -> DELETE /api/products/{id} HTTP/1.1

@@ -32,6 +32,14 @@ class ProductControllerTest {
     }
 
     @Test
+    fun `readProduct() - but product doesn't exist`() {
+        create()
+        create()
+        val response = controller.getProduct(10)
+        assertThat(response.statusCode.value()).isEqualTo(HttpStatus.NOT_FOUND.value())
+    }
+
+    @Test
     fun update() {
         val product = Product(name = "new product", price = 1.6, imageUrl = "https://www.product.com/image/2")
         create()
@@ -41,5 +49,9 @@ class ProductControllerTest {
 
     @Test
     fun delete() {
+        create()
+        val response = controller.deleteProduct(1)
+        assertThat(response.statusCode.value()).isEqualTo(HttpStatus.NO_CONTENT.value())
+        readProducts()
     }
 }
