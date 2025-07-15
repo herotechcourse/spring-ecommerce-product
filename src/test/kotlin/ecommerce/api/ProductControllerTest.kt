@@ -24,6 +24,14 @@ class ProductControllerTest {
     }
 
     @Test
+    fun readProduct() {
+        create()
+        create()
+        val response = controller.getProduct(2)
+        assertThat(response.statusCode.value()).isEqualTo(HttpStatus.OK.value())
+    }
+
+    @Test
     fun update() {
         create()
     }

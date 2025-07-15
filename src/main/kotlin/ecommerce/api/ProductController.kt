@@ -2,6 +2,7 @@ package ecommerce.api
 
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestParam
@@ -25,6 +26,11 @@ class ProductController {
     @GetMapping("/api/products")
     fun getProducts() : ResponseEntity<List<Product>> {
         return ResponseEntity.ok(products.values.toList())
+    }
+
+    @GetMapping("/api/products/{id}")
+    fun getProduct(@PathVariable id : Long) : ResponseEntity<Product> {
+        return ResponseEntity.ok(products.getValue(id))
     }
 
 }
