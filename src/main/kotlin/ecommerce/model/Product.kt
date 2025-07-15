@@ -1,6 +1,6 @@
 package ecommerce.model
 
-class Product(
+data class Product(
     val id: Long,
     val name: String,
     val price: Double,
