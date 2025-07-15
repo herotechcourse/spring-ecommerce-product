@@ -19,4 +19,10 @@ class ProductController {
         products.add(newProduct)
         return ResponseEntity.created(URI.create("/products/" + newProduct.id)).body(product)
     }
+
+    @GetMapping("/products")
+    fun read(): ResponseEntity<List<Product>> {
+        return ResponseEntity.ok(products)
+        //return ResponseEntity.ok().body(prodcuts)
+    }
 }
