@@ -24,4 +24,15 @@ class ProductController {
     fun read(): ResponseEntity<List<Product>> {
         return ResponseEntity.ok().body(products)
     }
+
+    @PutMapping("/api/products/{id}")
+    fun update(@RequestBody newProduct: Product, @PathVariable id: Long): ResponseEntity<Product> {
+        val product = products.stream()
+            .filter { it.id == id }
+            .findFirst()
+            .orElseThrow { RuntimeException("Product with id $id not found") }
+        product.update(newProduct)
+        return ResponseEntity.ok().body(product)
+    }
+
 }
