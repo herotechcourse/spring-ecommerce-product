@@ -3,6 +3,7 @@ package ecommerce.controller
 import ecommerce.model.Product
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Controller
+import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
@@ -56,5 +57,13 @@ class ProductController {
         val newProduct = Product(id, product.name, product.price, product.imageUrl)
         products.add(newProduct)
         return ResponseEntity.ok(newProduct)
+    }
+
+    @DeleteMapping("/product/{id}")
+    @ResponseBody
+    fun deleteProduct(
+        @PathVariable id: Long,
+    ) {
+        products.removeIf { it.id == id }
     }
 }
