@@ -48,20 +48,50 @@ class ProductControllerTest {
 //        assertThat(response.jsonPath().getMap<Long, Product>("", Long::class.java, Product::class.java)).hasSize(1)
     }
 
-//    @Test
-//    fun update() {
-//        create()
-//
-//        val response =
-//            RestAssured
-//                .given().log().all()
-//                .body(Member(name = "brown", age = 30))
-//                .contentType(ContentType.JSON)
-//                .`when`().put("/members/1")
-//                .then().log().all().extract()
-//
-//        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
-//    }
+    @Test
+    fun `update existing product`() {
+        create()
+
+        val response =
+            RestAssured
+                .given().log().all()
+                .body(Product(name = "fanta", price = 5.6, imageURL = URI("https://fanta.jpg")))
+                .contentType(ContentType.JSON)
+                .`when`().put("/products/2")
+                .then().log().all().extract()
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
+    }
+
+    @Test
+    fun `update non-existing product, test if new product was created`() {
+
+        val responseAfterPut =
+            RestAssured
+                .given().log().all()
+                .body(Product(name = "fanta", price = 5.6, imageURL = URI("https://fanta.jpg")))
+                .contentType(ContentType.JSON)
+                .`when`().put("/products/3")
+                .then().log().all().extract()
+
+        assertThat(responseAfterPut.statusCode()).isEqualTo(HttpStatus.OK.value())
+
+        val responseAfterGet =
+            RestAssured
+                .given().log().all()
+                .contentType(ContentType.JSON)
+                .`when`().get("/products")
+                .then().log().all().extract()
+
+        val rawMap = responseAfterGet.jsonPath().getMap<String, Any>("")
+        val mapper = jacksonObjectMapper()
+        val typeRef = object : TypeReference<Map<Long, Product>>() {}
+        val productMap = mapper.convertValue(rawMap, typeRef)
+
+        assertThat(productMap).hasSize(1)
+        assertThat(responseAfterGet.statusCode()).isEqualTo(HttpStatus.OK.value())
+    }
+
 //
 //    @Test
 //    fun delete() {

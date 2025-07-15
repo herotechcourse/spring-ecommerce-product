@@ -2,7 +2,9 @@ package ecommerce
 
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
 import java.net.URI
@@ -24,5 +26,16 @@ class ProductController {
     @GetMapping("/products")
     fun read(): ResponseEntity<MutableMap<Long, Product>> {
         return ResponseEntity.ok().body(products)
+    }
+
+    @PutMapping("/products/{id}")
+    fun update(@RequestBody newProduct: Product, @PathVariable id: Long): ResponseEntity<Void> {
+        if (!products.containsKey(id)) {
+            create(newProduct)
+            return ResponseEntity.ok().build()
+        }
+        val product = products[id] ?: throw RuntimeException("Product id is null")
+        product.update(newProduct)
+        return ResponseEntity.ok().build()
     }
 }
