@@ -4,6 +4,7 @@ import ecommerce.exception.NotFoundException
 import ecommerce.model.Product
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Controller
+import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -15,8 +16,9 @@ import java.util.concurrent.atomic.AtomicLong
 
 @Controller
 class ProductController {
-    private val products: MutableList<Product> = ArrayList()
     private val index = AtomicLong(1)
+    private val products: MutableList<Product> =
+        (0..5).map { Product.toEntity(Product(name = "Name", price = 10.0, imageUrl = ""), index.getAndIncrement()) }.toMutableList()
 
     @PostMapping("/products")
     fun create(
@@ -29,8 +31,10 @@ class ProductController {
 
     @GetMapping("/products")
     fun read(
-    ): ResponseEntity<List<Product>> {
-        return ResponseEntity.ok(products)
+        model: Model,
+    ): String {
+        model.addAttribute("products", products)
+        return "products"
     }
 
     @GetMapping("/products/{id}")
@@ -39,6 +43,14 @@ class ProductController {
     ): ResponseEntity<Product> {
         return ResponseEntity.ok(findProduct(id))
     }
+
+//    @GetMapping("/products")
+//    fun temp(
+//        model: Model,
+//    ): String {
+//        model.addAttribute("products", products)
+//        return "products"
+//    }
 
     @PutMapping("/products/{id}")
     fun update(
@@ -53,7 +65,7 @@ class ProductController {
     @DeleteMapping("/products/{id}")
     fun delete(
         @PathVariable("id") id: Long,
-    ): ResponseEntity<Void>{
+    ): ResponseEntity<Void> {
         val product = findProduct(id)
         products.remove(product)
         return ResponseEntity.noContent().build()
