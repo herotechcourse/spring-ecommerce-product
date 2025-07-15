@@ -32,6 +32,34 @@ class ProductControllerTest {
     }
 
     @Test
+    fun `Returns Products`() {
+        create()
+
+        val response =
+            RestAssured
+                .given().log().all()
+                .contentType(ContentType.JSON)
+                .`when`().get("/products")
+                .then().log().all().extract()
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
+        assertThat(response.jsonPath().get<List<Product>>().size).isEqualTo(1)
+    }
+
+    @Test
+    fun `Returns empty List`() {
+        val response =
+            RestAssured
+                .given().log().all()
+                .contentType(ContentType.JSON)
+                .`when`().get("/products")
+                .then().log().all().extract()
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
+        assertThat(response.jsonPath().get<List<Product>>().size).isEqualTo(0)
+    }
+
+    @Test
     fun `Returns Product`() {
         create()
 
@@ -43,6 +71,7 @@ class ProductControllerTest {
                 .then().log().all().extract()
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
+        assertThat(response.jsonPath().get<String>("name")).isEqualTo("Product 1")
     }
 
     @Test

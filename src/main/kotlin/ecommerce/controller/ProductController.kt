@@ -25,6 +25,12 @@ class ProductController {
         return ResponseEntity.created(URI.create("/products/" + newProduct.id)).body(newProduct)
     }
 
+    @GetMapping("/products")
+    fun read(
+    ): ResponseEntity<List<Product>> {
+        return ResponseEntity.ok(products)
+    }
+
     @GetMapping("/products/{id}")
     fun read(
         @PathVariable("id") id: Long,

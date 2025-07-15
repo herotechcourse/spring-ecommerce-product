@@ -11,6 +11,9 @@
 ### Controller
 - [x] Create
   - [x] Create and returns the new Product
+- [x] Read All
+  - [x] Returns the products
+  - [x] Returns empty array if no products
 - [x] Read
   - [x] Returns the Product
   - [x] Throws NotFoundException if Product not found via id 
