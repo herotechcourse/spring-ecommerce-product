@@ -1,0 +1,70 @@
+package ecommerce.controller
+
+import ecommerce.Product
+import io.restassured.RestAssured
+import io.restassured.http.ContentType
+import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.Test
+import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.http.HttpStatus
+import org.springframework.test.annotation.DirtiesContext
+
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
+class ProductControllerTest {
+    @Test
+    fun createProduct() {
+        val response =
+            RestAssured
+                .given().log().all()
+                .body(Product(id = 100, name = "test", price = 20.0, img = "img1"))
+                .contentType(ContentType.JSON)
+                .`when`().post("/products")
+                .then().log().all().extract()
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value())
+    }
+
+    @Test
+    fun getProducts() {
+        createProduct()
+
+        val response =
+            RestAssured
+                .given().log().all()
+                .contentType(ContentType.JSON)
+                .`when`().get("/products")
+                .then().log().all().extract()
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
+        //assertThat(response.jsonPath().getMap<Long, Product>()<Long, Product>("", Product::class.java)).hasSize(1)
+    }
+
+    @Test
+    fun updateProduct() {
+        createProduct()
+
+        val response =
+            RestAssured
+                .given().log().all()
+                .body(Product(id = 100, name = "test", price = 30.0, img = "img1"))
+                .contentType(ContentType.JSON)
+                .`when`().put("/products/100")
+                .then().log().all().extract()
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
+    }
+
+    @Test
+    fun delete() {
+        createProduct()
+
+        val response =
+            RestAssured
+                .given().log().all()
+                .`when`().delete("/products/100")
+                .then().log().all().extract()
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value())
+    }
+}
