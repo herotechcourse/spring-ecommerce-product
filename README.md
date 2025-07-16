@@ -12,6 +12,8 @@ Implement the API to send and receive HTTP messages as shown in the example.
 
 ## Features List
 
+### Domain
+
 Product
 
 - [x] is a class
@@ -20,6 +22,8 @@ Product
 - [x] has property `name: String`
 - [x] has property `price: Double`
 - [x] has property `imageUrl: String`
+
+### Controller
 
 ProductController
 
@@ -38,3 +42,25 @@ ProductController
 - [x] delete - DELETE
     - [x] `deleteProduct(@PathVariable id: Long)`
         - [x] Request -> DELETE /api/products/{id} HTTP/1.1
+
+ProductViewController
+
+- [x] `displayProducts()` shows list of products with view of products.html
+- [x] `displayCreateProductForm()` shows page for create product form with view of createProductForm.html
+- [x] `displayUpdateProductForm()` shows page for update product form with view of updateProductForm.html
+
+### View
+
+products.html
+- [x] use table to show list of product
+- [x] add JS code to send DELETE request to Product api
+- [x] make the delete button color in RED!!!!
+
+createProductForm.html
+- [x] use form to submit data to backend
+- [x] add JS code to send POST request to Product api
+
+updateProductForm.html
+- [x] take product with id
+- [x] use form to submit data to backend
+- [x] add JS code to send PUT request to Product api
