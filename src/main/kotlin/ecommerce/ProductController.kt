@@ -49,7 +49,8 @@ class ProductController {
     @GetMapping("/admin/products")
     fun table(model: Model): String {
         model.addAttribute("products", products.values)
-        return "/products"
+        model.addAttribute("product", Product())
+        return "products"
     }
 }
 

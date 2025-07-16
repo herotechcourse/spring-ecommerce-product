@@ -1,116 +1,201 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8" />
     <title>Manage Products</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 900px;
+            margin: 20px auto;
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 8px;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1em;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 0 8px rgba(0,0,0,0.1);
+        }
+        th, td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #ddd;
+            text-align: left;
+        }
+        th {
+            background: #007BFF;
+            color: white;
+            font-weight: 600;
+        }
+        tr:hover {
+            background: #f1f1f1;
+        }
+        button {
+            background: #007BFF;
+            border: none;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            margin: 10px 0;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        #productFormContainer {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 0 8px rgba(0,0,0,0.1);
+            margin-top: 20px;
+            display: none; /* hidden initially */
+        }
+        label {
+            display: block;
+            margin-top: 10px;
+            font-weight: 600;
+            color: #555;
+        }
+        input[type="text"], input[type="number"], input[type="url"], textarea {
+            width: 100%;
+            padding: 8px 10px;
+            margin-top: 5px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        .form-buttons {
+            margin-top: 15px;
+        }
+        .form-buttons button {
+            margin-right: 10px;
+        }
+    </style>
 </head>
 <body>
-<button type="button" onclick="alert('Hello world!')">Add new product</button>
-<button type="button" onclick="alert('Hello world!')">Update product by ID</button>
-<button type="button" onclick="alert('Hello world!')">Delete product</button>
 
-<form action="/products" method="post">
-    <h2>Add a new product</h2>
-    <p>
-        <label for="name">Name (required):</label>
-        <input type="text" name="name" id="name" required />
-    </p>
-    <p>
-        <label for="price">Price (required):</label>
-        <input type="number" name="price" id="price" required />
-    </p>
-    <p>
-        <label for="imageUrl">URL (required):</label>
-        <input type="url" name="imageUrl" id="imageUrl" required />
-    </p>
-    <p>
-        <button type="submit" onclick="alert('Adding new product')">Add</button>
-    </p>
-</form>
+<h1>Product Management</h1>
 
-<form id="update">
-    <h2>Update product</h2>
-    <p>
-        <label for="productID">ID: (required) </label>
-        <input type="text" name="productID" id="productID" required />
-    </p>
-    <p>
-        <label for="newName">Name:</label>
-        <input type="text" name="newName" id="newName" />
-    </p>
-    <p>
-        <label for="newPrice">Price:</label>
-        <input type="number" name="newPrice" id="newPrice" />
-    </p>
-    <p>
-        <label for="newImageUrl">URL:</label>
-        <input type="url" name="newImageUrl" id="newImageUrl" />
-    </p>
-    <p>
-        <button type="submit">Update</button>
-    </p>
-</form>
+<button id="showAddFormBtn">Add Product</button>
 
-<script>
-    document.getElementById('update').addEventListener('submit', function(e) {
-        e.preventDefault();
+<table>
+    <thead>
+    <tr>
+        <th>Id</th><th>Name</th><th>Price</th><th>Image</th><th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="product : ${products}">
+        <td th:text="${product.id}">1</td>
+        <td th:text="${product.name}">Sample Name</td>
+        <td th:text="${product.price}">$99.99</td>
+        <td><img th:src="${product.imageUrl}" alt="Product image" style="max-height:50px;"/></td>
+        <td>
+            <button class="editBtn"
+                    th:data-id="${product.id}"
+                    th:data-name="${product.name}"
+                    th:data-price="${product.price}"
+                    th:data-imageurl="${product.imageUrl}">
+                Edit
+            </button>
+            <form th:action="@{'/admin/products/' + ${product.id} + '/delete'}" method="post" style="display:inline;">
+                <button type="submit" onclick="return confirm('Delete product?');" style="background:#dc3545;">Delete</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
 
-        const form = e.target;
-        const formData = new FormData(form);
-        const productID = formData.get('productID');
+<div id="productFormContainer">
+    <h2 id="formTitle">Add New Product</h2>
+    <form id="productForm">
+        <input type="hidden" id="id" name="id" />
 
-        formData.delete('productID');
+        <label for="name">Name</label>
+        <input type="text" id="name" name="name" required />
 
-        fetch(`/products/${productID}`, {
-            method: 'PUT',
-            body: JSON.stringify(Object.fromEntries(formData)),
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        }).then(response => {
-            if (response.ok) {
-                alert('Product updated successfully!');
-            } else {
-                alert('Failed to update product.');
-            }
-        });
-    });
-</script>
+        <label for="price">Price</label>
+        <input type="number" id="price" name="price" step="0.01" required />
 
-<form id="delete">
-    <h2>Delete product</h2>
-    <p>
-        <label for="deleteProductID">ID: (required) </label>
-        <input type="text" name="deleteProductID" id="deleteProductID" required />
-    </p>
-    <p>
-        <button type="submit">Delete</button>
-    </p>
-</form>
+        <label for="imageUrl">Image URL</label>
+        <input type="text" id="imageUrl" name="imageUrl" required />
+
+        <div class="form-buttons">
+            <button type="submit">Save</button>
+            <button type="button" id="cancelBtn" style="background:#6c757d;">Cancel</button>
+        </div>
+    </form>
+</div>
 
 <script>
-    document.getElementById('delete').addEventListener('submit', function(e) {
-        e.preventDefault();
+    const showAddFormBtn = document.getElementById('showAddFormBtn');
+    const productFormContainer = document.getElementById('productFormContainer');
+    const productForm = document.getElementById('productForm');
+    const formTitle = document.getElementById('formTitle');
+    const cancelBtn = document.getElementById('cancelBtn');
 
-        const form = e.target;
-        const formData = new FormData(form);
-        const productID = formData.get('deleteProductID');
+    // Show empty form for adding product
+    showAddFormBtn.addEventListener('click', () => {
+        formTitle.textContent = 'Add New Product';
+        productForm.id.value = '';
+        productForm.name.value = '';
+        productForm.price.value = '';
+        productForm.imageUrl.value = '';
+        productFormContainer.style.display = 'block';
+    });
 
-        fetch(`/products/${productID}`, {
-            method: 'DELETE'
-        }).then(response => {
-            if (response.ok) {
-                alert('Product deleted successfully!');
-            } else {
-                alert('Failed to delete product.');
-            }
-        }).catch(error => {
-            console.error('Error:', error);
-            alert('An error occurred while trying to delete the product.');
+    // Cancel button hides form
+    cancelBtn.addEventListener('click', () => {
+        productFormContainer.style.display = 'none';
+    });
+
+    // Edit button functionality
+    document.querySelectorAll('.editBtn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            formTitle.textContent = 'Edit Product';
+            productForm.id.value = btn.getAttribute('data-id');
+            productForm.name.value = btn.getAttribute('data-name');
+            productForm.price.value = btn.getAttribute('data-price');
+            productForm.imageUrl.value = btn.getAttribute('data-imageurl');
+            productFormContainer.style.display = 'block';
         });
     });
-</script>
 
+    // Submit form with AJAX (optional, or let it do normal POST)
+    productForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+
+        const product = {
+            id: productForm.id.value ? parseInt(productForm.id.value) : null,
+            name: productForm.name.value,
+            price: parseFloat(productForm.price.value),
+            imageUrl: productForm.imageUrl.value
+        };
+
+        fetch('/products', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(product)
+        }).then(response => {
+            if (response.ok) {
+                alert('Product saved!');
+                window.location.reload();
+            } else {
+                alert('Failed to save product');
+            }
+        }).catch(() => alert('Error saving product'));
+    });
+</script>
 
 </body>
 </html>
