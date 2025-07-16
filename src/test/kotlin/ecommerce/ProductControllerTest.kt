@@ -17,12 +17,8 @@ class ProductControllerTest {
     @Test
     fun create() {
         val response =
-            RestAssured
-                .given().log().all()
-                .body(Product(name = "cola", price = 4.5, imageURL = URI("https://cola.jpg")))
-                .contentType(ContentType.JSON)
-                .`when`().post("/products")
-                .then().log().all().extract()
+            RestAssured.given().log().all().body(Product(name = "cola", price = 4.5, imageUrl = "https://cola.jpg"))
+                .contentType(ContentType.JSON).`when`().post("/products").then().log().all().extract()
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value())
     }
@@ -32,11 +28,8 @@ class ProductControllerTest {
         create()
 
         val response =
-            RestAssured
-                .given().log().all()
-                .contentType(ContentType.JSON)
-                .`when`().get("/products")
-                .then().log().all().extract()
+            RestAssured.given().log().all().contentType(ContentType.JSON).`when`().get("/products").then().log().all()
+                .extract()
 
         val rawMap = response.jsonPath().getMap<String, Any>("")
         val mapper = jacksonObjectMapper()
@@ -53,12 +46,8 @@ class ProductControllerTest {
         create()
 
         val response =
-            RestAssured
-                .given().log().all()
-                .body(Product(name = "fanta", price = 5.6, imageURL = URI("https://fanta.jpg")))
-                .contentType(ContentType.JSON)
-                .`when`().put("/products/1")
-                .then().log().all().extract()
+            RestAssured.given().log().all().body(Product(name = "fanta", price = 5.6, imageUrl = "https://fanta.jpg"))
+                .contentType(ContentType.JSON).`when`().put("/products/1").then().log().all().extract()
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
     }
@@ -67,21 +56,14 @@ class ProductControllerTest {
     fun `update non-existing product, test if new product was created`() {
 
         val responseAfterPut =
-            RestAssured
-                .given().log().all()
-                .body(Product(name = "fanta", price = 5.6, imageURL = URI("https://fanta.jpg")))
-                .contentType(ContentType.JSON)
-                .`when`().put("/products/3")
-                .then().log().all().extract()
+            RestAssured.given().log().all().body(Product(name = "fanta", price = 5.6, imageUrl = "https://fanta.jpg"))
+                .contentType(ContentType.JSON).`when`().put("/products/3").then().log().all().extract()
 
         assertThat(responseAfterPut.statusCode()).isEqualTo(HttpStatus.OK.value())
 
         val responseAfterGet =
-            RestAssured
-                .given().log().all()
-                .contentType(ContentType.JSON)
-                .`when`().get("/products")
-                .then().log().all().extract()
+            RestAssured.given().log().all().contentType(ContentType.JSON).`when`().get("/products").then().log().all()
+                .extract()
 
         val rawMap = responseAfterGet.jsonPath().getMap<String, Any>("")
         val mapper = jacksonObjectMapper()
@@ -97,11 +79,7 @@ class ProductControllerTest {
     fun delete() {
         create()
 
-        val response =
-            RestAssured
-                .given().log().all()
-                .`when`().delete("/products/1")
-                .then().log().all().extract()
+        val response = RestAssured.given().log().all().`when`().delete("/products/1").then().log().all().extract()
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value())
     }
