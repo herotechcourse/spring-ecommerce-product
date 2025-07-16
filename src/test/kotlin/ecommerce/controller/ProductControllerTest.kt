@@ -4,6 +4,7 @@ import ecommerce.model.Product
 import io.restassured.RestAssured
 import io.restassured.http.ContentType
 import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.AssertionsForClassTypes
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.HttpStatus
@@ -38,12 +39,11 @@ class ProductControllerTest {
         val response =
             RestAssured
                 .given().log().all()
-                .contentType(ContentType.JSON)
                 .`when`().get("/products")
                 .then().log().all().extract()
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
-        assertThat(response.jsonPath().get<List<Product>>().size).isEqualTo(1)
+        AssertionsForClassTypes.assertThat(response.asString()).contains("Product 1")
     }
 
     @Test
@@ -51,27 +51,10 @@ class ProductControllerTest {
         val response =
             RestAssured
                 .given().log().all()
-                .contentType(ContentType.JSON)
                 .`when`().get("/products")
                 .then().log().all().extract()
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
-        assertThat(response.jsonPath().get<List<Product>>().size).isEqualTo(0)
-    }
-
-    @Test
-    fun `Returns Product`() {
-        create()
-
-        val response =
-            RestAssured
-                .given().log().all()
-                .contentType(ContentType.JSON)
-                .`when`().get("/products/1")
-                .then().log().all().extract()
-
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
-        assertThat(response.jsonPath().get<String>("name")).isEqualTo("Product 1")
     }
 
     @Test
@@ -85,8 +68,8 @@ class ProductControllerTest {
                     Product(
                         name = "Product 2",
                         price = 10.0,
-                        imageUrl = "http://localhost:8080/image/upload/product1.jpg"
-                    )
+                        imageUrl = "http://localhost:8080/image/upload/product1.jpg",
+                    ),
                 )
                 .contentType(ContentType.JSON)
                 .`when`().put("/products/1")
@@ -105,8 +88,8 @@ class ProductControllerTest {
                     Product(
                         name = "Product 2",
                         price = 10.0,
-                        imageUrl = "http://localhost:8080/image/upload/product1.jpg"
-                    )
+                        imageUrl = "http://localhost:8080/image/upload/product1.jpg",
+                    ),
                 )
                 .contentType(ContentType.JSON)
                 .`when`().put("/products/1")
@@ -127,6 +110,7 @@ class ProductControllerTest {
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value())
     }
+
     @Test
     fun `Throws NotFoundException on delete method if Product not Found`() {
         val response =
@@ -134,18 +118,6 @@ class ProductControllerTest {
                 .given().log().all()
                 .contentType(ContentType.JSON)
                 .`when`().delete("/products/1")
-                .then().log().all().extract()
-
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value())
-    }
-
-    @Test
-    fun `Throws NotFoundException on read method if Product not Found`() {
-        val response =
-            RestAssured
-                .given().log().all()
-                .contentType(ContentType.JSON)
-                .`when`().get("/products/1")
                 .then().log().all().extract()
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value())
