@@ -1,22 +1,19 @@
 package ecommerce
 
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.DeleteMapping
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.PutMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.stereotype.Controller
+import org.springframework.ui.Model
+import org.springframework.web.bind.annotation.*
 import java.net.URI
 import java.util.concurrent.atomic.AtomicLong
 
-@RestController
+@Controller
 class ProductController {
     private val products: MutableMap<Long, Product> = HashMap()
     private val index = AtomicLong(0)
 
     @PostMapping("/products")
+    @ResponseBody
     fun create(@RequestBody product: Product): ResponseEntity<Void> {
         val newProduct = Product.toEntity(product, index.incrementAndGet())
         val productId = newProduct.id ?: throw RuntimeException("Product id is null")
@@ -25,11 +22,13 @@ class ProductController {
     }
 
     @GetMapping("/products")
+    @ResponseBody
     fun read(): ResponseEntity<MutableMap<Long, Product>> {
         return ResponseEntity.ok().body(products)
     }
 
     @PutMapping("/products/{id}")
+    @ResponseBody
     fun update(@RequestBody newProduct: Product, @PathVariable id: Long): ResponseEntity<Void> {
         if (!products.containsKey(id)) {
             create(newProduct)
@@ -41,8 +40,18 @@ class ProductController {
     }
 
     @DeleteMapping("/products/{id}")
+    @ResponseBody
     fun delete(@PathVariable id: Long): ResponseEntity<Void> {
         products.remove(id) ?: throw RuntimeException("Product id is null")
         return ResponseEntity.noContent().build()
     }
+
+    @GetMapping("/admin/products")
+    fun table(model: Model): String {
+        model.addAttribute("products", products.values)
+        return "/products"
+    }
 }
+
+// TODO read about difference btw RestController and Controller
+// TODO why do we combine Controller and ControllerView
