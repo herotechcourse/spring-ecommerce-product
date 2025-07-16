@@ -9,7 +9,6 @@ import org.junit.jupiter.api.Test
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.HttpStatus
 import org.springframework.test.annotation.DirtiesContext
-import java.net.URI
 
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
@@ -54,7 +53,6 @@ class ProductControllerTest {
 
     @Test
     fun `update non-existing product, test if new product was created`() {
-
         val responseAfterPut =
             RestAssured.given().log().all().body(Product(name = "fanta", price = 5.6, imageUrl = "https://fanta.jpg"))
                 .contentType(ContentType.JSON).`when`().put("/products/3").then().log().all().extract()
@@ -74,7 +72,6 @@ class ProductControllerTest {
         assertThat(responseAfterGet.statusCode()).isEqualTo(HttpStatus.OK.value())
     }
 
-
     @Test
     fun delete() {
         create()
@@ -84,5 +81,3 @@ class ProductControllerTest {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value())
     }
 }
-
-

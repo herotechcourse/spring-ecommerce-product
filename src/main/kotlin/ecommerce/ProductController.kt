@@ -14,7 +14,9 @@ class ProductController {
 
     @PostMapping("/products")
     @ResponseBody
-    fun create(@RequestBody product: Product): ResponseEntity<Void> {
+    fun create(
+        @RequestBody product: Product,
+    ): ResponseEntity<Void> {
         val newProduct = Product.toEntity(product, index.incrementAndGet())
         val productId = newProduct.id ?: throw RuntimeException("Product id is null")
         products.putIfAbsent(productId, newProduct)
@@ -29,7 +31,10 @@ class ProductController {
 
     @PutMapping("/products/{id}")
     @ResponseBody
-    fun update(@RequestBody newProduct: Product, @PathVariable id: Long): ResponseEntity<Void> {
+    fun update(
+        @RequestBody newProduct: Product,
+        @PathVariable id: Long,
+    ): ResponseEntity<Void> {
         if (!products.containsKey(id)) {
             create(newProduct)
             return ResponseEntity.ok().build()
@@ -41,7 +46,9 @@ class ProductController {
 
     @DeleteMapping("/products/{id}")
     @ResponseBody
-    fun delete(@PathVariable id: Long): ResponseEntity<Void> {
+    fun delete(
+        @PathVariable id: Long,
+    ): ResponseEntity<Void> {
         products.remove(id) ?: throw RuntimeException("Product id is null")
         return ResponseEntity.noContent().build()
     }

@@ -4,7 +4,7 @@ class Product(
     var id: Long? = null,
     var name: String = "",
     var price: Double = 0.0,
-    var imageUrl: String = ""
+    var imageUrl: String = "",
 ) {
     fun update(newProduct: Product) {
         this.name = newProduct.name
@@ -13,7 +13,10 @@ class Product(
     }
 
     companion object {
-        fun toEntity(product: Product, id: Long): Product {
+        fun toEntity(
+            product: Product,
+            id: Long,
+        ): Product {
             return Product(id, product.name, product.price, product.imageUrl)
         }
     }
