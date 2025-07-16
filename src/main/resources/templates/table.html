@@ -26,7 +26,12 @@
             <td>
                 <img th:src="${product.imageUrl}" alt="Immagine prodotto" width="100">
             </td>
-            <td><i class="fa-solid fa-trash"></i></td>
+            <td>
+<!--                <button th:onclick="deleteProduct(${product.id})">-->
+                <button th:onclick="'deleteProduct(' + ${product.id} + ')'">
+                    <i class="fa-solid fa-trash"></i>
+                </button>
+            </td>
 
         </tr>
         </tbody>
@@ -129,6 +134,24 @@
         }
     }
 
+    async function deleteProduct(id) {
+        debugger;
+        try {
+            await fetch(`http://localhost:8080/products/${id}`, {
+                method: "DELETE",
+            }).then((response) => {
+                if (!response.ok) {
+                    alert("Delete failed");
+                    throw Error("Delete failed")
+                }
+                alert("Delete successful")
+            })
+        } catch (error) {
+            console.log(error.message)
+        } finally {
+            window.location.reload()
+        }
+    }
 </script>
 </body>
 </html>
