@@ -8,7 +8,7 @@
 <body>
 <section>
     <h1>PRODUCT LIST</h1>
-    <table >
+    <table>
         <thead>
         <tr>
             <th>ID</th>
@@ -23,7 +23,7 @@
             <td th:text="${product.id}"></td>
             <td th:text="${product.name}"></td>
             <td th:text="${product.price}"></td>
-            <td th:text="${product.imageUrl}"> </td>
+            <td th:text="${product.imageUrl}"></td>
             <td><i class="fa-solid fa-trash"></i></td>
         </tr>
         </tbody>
@@ -31,13 +31,13 @@
 </section>
 <section>
     <h2>Add Product</h2>
-    <form>
+    <form id="addProductForm">
         <label for="name">Product</label>
-        <input type="text" id="name">
+        <input type="text" id="name" name="name">
         <label for="price">Price</label>
-        <input type="text" id="price">
+        <input type="number" id="price" name="price" step="0.01">
         <label for="imageUrl">ImageUrl</label>
-        <input type="text" id="imageUrl">
+        <input type="text" id="imageUrl" name="imageUrl">
         <button type="submit">Add Product</button>
     </form>
 </section>
@@ -45,9 +45,9 @@
     <h2>Update Product</h2>
     <form>
         <label for="id">ID</label>
-        <input type="text" id="id">
+        <input type="text" id="id" value="id">
         <label for="updateName">Product</label>
-        <input type="text" id="updateName">
+        <input type="text" id="updateName" value="name">
         <label for="updatePrice">Price</label>
         <input type="text" id="updatePrice">
         <label for="updateImageUrl">ImageUrl</label>
@@ -55,7 +55,41 @@
         <button type="submit">Update Product</button>
     </form>
 </section>
+<script>
+    document.getElementById("addProductForm").addEventListener("submit", function (event) {
+        event.preventDefault();
+        const form = event.target;
+        const formData = new FormData(form);
+        const formObject = {};
+        formData.forEach((value, key) => {
+            formObject[key] = value
+        })
+        const json = JSON.stringify(formObject)
+        console.log(json)
+        addProduct(json)
+    })
+
+    async function addProduct(json) {
+        try {
+            await fetch("http://localhost:8080/products", {
+                method: "POST",
+                body: json,
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            }).then((response) => {
+                if (!response.ok) {
+                    alert("Adding failed");
+                    throw Error("fetch failed")
+                }
+                alert("Adding successful")
+            })
+        } catch (error) {
+            console.log(error.message)
+        } finally {
+            window.location.reload()
+        }
+    }
+</script>
 </body>
 </html>
-
-
