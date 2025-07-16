@@ -29,6 +29,7 @@ class ProductController {
 
     @GetMapping("/api/products")
     fun read(): ResponseEntity<List<Product>> {
+        if (products.isEmpty()) return ResponseEntity.noContent().build()
         return ResponseEntity.ok(products.values.toList())
     }
 
@@ -37,17 +38,25 @@ class ProductController {
         @RequestBody newProduct: Product,
         @PathVariable id: Long,
     ): ResponseEntity<Product> {
-        val product = products.getValue(id)
-
-        product.update(newProduct)
-        return ResponseEntity.ok().body(product)
+        try {
+            val product = products.getValue(id)
+            product.update(newProduct)
+            return ResponseEntity.ok().body(product)
+        } catch (exception: NoSuchElementException) {
+            return ResponseEntity.notFound().build()
+        }
     }
 
     @DeleteMapping("/api/products/{id}")
     fun delete(
         @PathVariable id: Long,
     ): ResponseEntity<Void> {
-        products.getValue(id)
+        if (products.isEmpty()) return ResponseEntity.notFound().build()
+        try {
+            products.getValue(id)
+        } catch (exception: NoSuchElementException) {
+            return ResponseEntity.notFound().build()
+        }
         products.remove(id)
         return ResponseEntity.noContent().build()
     }
