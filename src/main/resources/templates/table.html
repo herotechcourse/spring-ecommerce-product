@@ -3,30 +3,58 @@
 <head>
     <meta charset="UTF-8">
     <title>Products table</title>
+    <script src="https://kit.fontawesome.com/20fda53ba3.js" crossorigin="anonymous"></script>
 </head>
 <body>
-<table >
-    <thead>
-    <tr>
-        <th>ID</th>
-        <th>NAME</th>
-        <th>PRICE</th>
-        <th>IMAGE</th>
-        <th>ACTIONS</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="product : ${products}">
-        <td th:text="${product.id}"></td>
-        <td th:text="${product.name}"></td>
-        <td th:text="${product.price}"></td>
-        <td th:text="${product.imageUrl}"> </td>
-        <td></td>
-    </tr>
-    </tbody>
-
-</table>
-
+<section>
+    <h1>PRODUCT LIST</h1>
+    <table >
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>NAME</th>
+            <th>PRICE</th>
+            <th>IMAGE</th>
+            <th>ACTIONS</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="product : ${products}">
+            <td th:text="${product.id}"></td>
+            <td th:text="${product.name}"></td>
+            <td th:text="${product.price}"></td>
+            <td th:text="${product.imageUrl}"> </td>
+            <td><i class="fa-solid fa-trash"></i></td>
+        </tr>
+        </tbody>
+    </table>
+</section>
+<section>
+    <h2>Add Product</h2>
+    <form>
+        <label for="name">Product</label>
+        <input type="text" id="name">
+        <label for="price">Price</label>
+        <input type="text" id="price">
+        <label for="imageUrl">ImageUrl</label>
+        <input type="text" id="imageUrl">
+        <button type="submit">Add Product</button>
+    </form>
+</section>
+<section>
+    <h2>Update Product</h2>
+    <form>
+        <label for="id">ID</label>
+        <input type="text" id="id">
+        <label for="updateName">Product</label>
+        <input type="text" id="updateName">
+        <label for="updatePrice">Price</label>
+        <input type="text" id="updatePrice">
+        <label for="updateImageUrl">ImageUrl</label>
+        <input type="text" id="updateImageUrl">
+        <button type="submit">Update Product</button>
+    </form>
+</section>
 </body>
 </html>
 
