@@ -23,9 +23,9 @@ However, if you're interested in asynchronous behavior using JavaScript, feel fr
 For product images, do not upload files; instead, use direct image URLs. <br/>
 
 ### Feature list
-- [ ] admin interface
-  - [ ] uses Thymeleaf
-  - [ ] based on HTML form submission and page navigation
-  - [ ] use direct image URLs for products
+- [x] admin interface
+  - [x] uses Thymeleaf
+  - [x] based on HTML form submission and page navigation
+  - [x] use direct image URLs for products
 
 
