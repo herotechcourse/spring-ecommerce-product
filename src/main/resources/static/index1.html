@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Product Admin</title>
+    <style>
+        .product-item {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+
+        .image_wrapper {
+            width: 300px;
+            height: 300px;
+        }
+
+        .product-image {
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+<h1>Product Admin Panel</h1>
+
+<h2>Add New Product</h2>
+<form id="product-form">
+    <input type="text" id="name" placeholder="Product Name" required>
+    <input type="text" id="price" placeholder="Price" required>
+    <input type="text" id="imageUrl" placeholder="Image URL">
+    <button type="submit">Add Product</button>
+    <button type="button" id="cancel-edit" style="display:none;">Cancel</button>
+</form>
+<div class="delete_update_wrapper"></div>
+
+<h2>Product List</h2>
+<div id="product-list"></div>
+
+<script>
+    const API_URL = "/api/products";
+
+    async function fetchProducts() {
+        const res = await fetch(API_URL);
+        if (res.status === 204) {
+            document.getElementById("product-list").innerHTML = "<p>No products found.</p>";
+            return;
+        }
+        const products = await res.json();
+        displayProducts(products);
+    }
+
+    function displayProducts(products) {
+        const list = document.getElementById("product-list");
+        list.innerHTML = "";
+        products.forEach(product => {
+            const div = document.createElement("div");
+            div.className = "product-item";
+
+            div.innerHTML = `
+                    <strong>${product.name}</strong> — ${product.price}<br>
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thu…ch_coffe.jpg/960px-Dutch_coffe.jpg?20050828122906" class="product-image">
+                    <br>
+                    <button onclick="updateProduct(${product.id})">Update</button>
+                    <button onclick="deleteProduct(${product.id})">Delete</button>
+                `;
+            list.appendChild(div);
+        });
+    }
+    function displayProducts(products) {
+        const list = document.getElementById("product-list");
+        list.innerHTML = "";
+        products.forEach(product => {
+            const div = document.createElement("div");
+            div.className = "product-item";
+
+            div.innerHTML = `
+                    <strong>${product.name}</strong> — ${product.price}<br>
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thu…ch_coffe.jpg/960px-Dutch_coffe.jpg?20050828122906" class="product-image">
+                    <br>
+                    <button onclick="updateProduct(${product.id})">Update</button>
+                    <button onclick="deleteProduct(${product.id})">Delete</button>
+                `;
+            list.appendChild(div);
+        });
+    }
+    function updateProduct(id, name, price, imageUrl) {
+        editingProductId = id;
+        document.getElementById("name").value = unescapeQuotes(name);
+        document.getElementById("price").value = unescapeQuotes(price);
+        document.getElementById("imageUrl").value = unescapeQuotes(imageUrl);
+
+        document.querySelector("#product-form button[type=submit]").textContent = "Update Product";
+        document.getElementById("form-title").textContent = "Update Product";
+        document.getElementById("cancel-edit").style.display = "inline";
+    }
+
+    document.getElementById("cancel-edit").addEventListener("click", function () {
+        clearForm();
+    });
+
+    function clearForm() {
+        editingProductId = null;
+        document.getElementById("product-form").reset();
+        document.querySelector("#product-form button[type=submit]").textContent = "Add Product";
+        document.getElementById("form-title").textContent = "Add New Product";
+        document.getElementById("cancel-edit").style.display = "none";
+    }
+
+    async function deleteProduct(id) {
+        const res = await fetch(`${API_URL}/${id}`, {method: "DELETE"});
+        if (res.ok) await fetchProducts();
+    }
+
+    async function editProduct(id, name, price, imageUrl) {
+        const newName = prompt("Edit product name:", unescapeQuotes(name));
+        if (newName === null) return;
+
+        const newPrice = prompt("Edit price:", unescapeQuotes(price));
+        if (newPrice === null) return;
+
+        const newImageUrl = prompt("Edit image URL:", unescapeQuotes(imageUrl));
+        if (newImageUrl === null) return;
+
+        const updatedProduct = {
+            name: newName.trim(),
+            price: newPrice.trim(),
+            imageUrl: newImageUrl.trim()
+        };
+
+        const res = await fetch(`${API_URL}/${id}`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(updatedProduct)
+        });
+
+        if (res.ok) fetchProducts();
+        else alert("Update failed");
+    }
+
+    document.getElementById("product-form").addEventListener("submit", async function (e) {
+        e.preventDefault();
+
+        const name = document.getElementById("name").value.trim();
+        const price = document.getElementById("price").value.trim();
+        const imageUrl = document.getElementById("imageUrl").value.trim();
+
+        const body = {
+            name,
+            price,
+            imageUrl
+        };
+
+
+        const res = await fetch(API_URL, {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify(body)
+        });
+
+        if (res.ok) {
+            document.getElementById("product-form").reset();
+            await fetchProducts();
+        }
+    });
+
+    document.getElementById("product-form").addEventListener("submit", async function (e) {
+        e.preventDefault();
+
+        const name = document.getElementById("name").value.trim();
+        const price = document.getElementById("price").value.trim();
+        const imageUrl = document.getElementById("imageUrl").value.trim();
+
+        const body = {
+            name,
+            price,
+            imageUrl
+        };
+
+
+        const res = await fetch(API_URL, {
+            method: "PUT",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify(body)
+        });
+
+        if (res.ok) {
+            document.getElementById("product-form").update(id);
+            await fetchProducts();
+        }
+    });
+
+    // Initial load
+    fetchProducts();
+</script>
+</body>
+</html>
