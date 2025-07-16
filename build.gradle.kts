@@ -30,7 +30,7 @@ dependencies {
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     testImplementation("io.rest-assured:rest-assured:5.3.1")
-    implementation("org.thymeleaf:thymeleaf:3.0.12.RELEASE")
+//    implementation("org.thymeleaf:thymeleaf:3.0.12.RELEASE")
 }
 
 kotlin {
