@@ -23,8 +23,11 @@
             <td th:text="${product.id}"></td>
             <td th:text="${product.name}"></td>
             <td th:text="${product.price}"></td>
-            <td th:text="${product.imageUrl}"></td>
+            <td>
+                <img th:src="${product.imageUrl}" alt="Immagine prodotto" width="100">
+            </td>
             <td><i class="fa-solid fa-trash"></i></td>
+
         </tr>
         </tbody>
     </table>
@@ -37,21 +40,21 @@
         <label for="price">Price</label>
         <input type="number" id="price" name="price" step="0.01">
         <label for="imageUrl">ImageUrl</label>
-        <input type="text" id="imageUrl" name="imageUrl">
+        <input type="url" id="imageUrl" name="imageUrl">
         <button type="submit">Add Product</button>
     </form>
 </section>
 <section>
     <h2>Update Product</h2>
-    <form>
+    <form id="updateProductForm">
         <label for="id">ID</label>
-        <input type="text" id="id" value="id">
+        <input type="text" id="id" name="id">
         <label for="updateName">Product</label>
-        <input type="text" id="updateName" value="name">
+        <input type="text" id="updateName" name="name">
         <label for="updatePrice">Price</label>
-        <input type="text" id="updatePrice">
+        <input type="number" id="updatePrice" name="price" step="0.01">
         <label for="updateImageUrl">ImageUrl</label>
-        <input type="text" id="updateImageUrl">
+        <input type="url" id="updateImageUrl" name="imageUrl">
         <button type="submit">Update Product</button>
     </form>
 </section>
@@ -90,6 +93,42 @@
             window.location.reload()
         }
     }
+
+    document.getElementById("updateProductForm").addEventListener("submit", function (event) {
+        event.preventDefault();
+        const form = event.target;
+        const formData = new FormData(form);
+        const formObject = {};
+        formData.forEach((value, key) => {
+            formObject[key] = value
+        })
+        const json = JSON.stringify(formObject)
+        console.log(json)
+        updateProduct(json)
+    })
+
+    async function updateProduct(json) {
+        try {
+            await fetch("http://localhost:8080/products", {
+                method: "PUT",
+                body: json,
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            }).then((response) => {
+                if (!response.ok) {
+                    alert("Update failed");
+                    throw Error("fetch failed")
+                }
+                alert("Update successful")
+            })
+        } catch (error) {
+            console.log(error.message)
+        } finally {
+            window.location.reload()
+        }
+    }
+
 </script>
 </body>
 </html>
