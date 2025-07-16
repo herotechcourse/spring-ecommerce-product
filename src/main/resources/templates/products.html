@@ -41,6 +41,7 @@
             <th class="px-4 py-2 border-b">ID</th>
             <th class="px-4 py-2 border-b">Name</th>
             <th class="px-4 py-2 border-b">Price</th>
+            <th class="px-4 py-2 border-b">Image</th>
             <th class="px-4 py-2 border-b flex ">Actions</th>
         </tr>
         </thead>
@@ -49,6 +50,13 @@
             <td class="px-4 py-2 border-b" th:text="${product.id}"></td>
             <td class="px-4 py-2 border-b" th:text="${product.name}"></td>
             <td class="px-4 py-2 border-b" th:text="${product.price}"></td>
+            <td class="px-4 py-2 border-b" >
+                <img
+                        th:src="${product.imageUrl}"
+                        alt="Image"
+                        class="h-16 w-16 object-cover"
+                />
+            </td>
             <td class="px-4 py-2 border-b">
                 <div class="flex gap-3 items-center">
                     <button
