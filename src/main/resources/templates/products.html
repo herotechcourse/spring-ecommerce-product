@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Spring E-commerce</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css"
+    >
+</head>
+<body>
+<header class="container">
+    <nav>
+        <ul>
+            <li><strong><a href="/">Home</a></strong></li>
+        </ul>
+        <ul>
+            <li><a href="/add/product">add product</a></li>
+        </ul>
+    </nav>
+</header>
+<main class="container">
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Price</th>
+            <th>ImageURL</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="product: ${products}">
+            <td id="product-id" th:value="${product.id}" th:text="${product.id}"/>
+            <td th:text="${product.name}"/>
+            <td th:text="${product.price}"/>
+            <td th:text="${product.imageUrl}"/>
+        </tr>
+        </tbody>
+    </table>
+</main>
+</body>
+</html>
