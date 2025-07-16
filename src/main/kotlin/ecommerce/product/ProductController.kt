@@ -38,26 +38,16 @@ class ProductController {
         @RequestBody newProduct: Product,
         @PathVariable id: Long,
     ): ResponseEntity<Product> {
-        try {
-            val product = products.getValue(id)
-            product.update(newProduct)
-            return ResponseEntity.ok().body(product)
-        } catch (exception: NoSuchElementException) {
-            return ResponseEntity.notFound().build()
-        }
+        val product = products[id] ?: return ResponseEntity.notFound().build()
+        product.update(newProduct)
+        return ResponseEntity.ok().body(product)
     }
 
     @DeleteMapping("/api/products/{id}")
     fun delete(
         @PathVariable id: Long,
     ): ResponseEntity<Void> {
-        if (products.isEmpty()) return ResponseEntity.notFound().build()
-        try {
-            products.getValue(id)
-        } catch (exception: NoSuchElementException) {
-            return ResponseEntity.notFound().build()
-        }
-        products.remove(id)
+        products.remove(id) ?: return ResponseEntity.notFound().build()
         return ResponseEntity.noContent().build()
     }
 }
