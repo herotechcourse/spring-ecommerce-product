@@ -65,8 +65,22 @@ class ProductControllerTest {
                 .`when`().get("/api/products")
                 .then().log().all().extract()
 
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value())
+    }
+
+    @Test
+    fun `should be able to update product, and return 'ok 200' response`() {
+        createProduct(AMERICANO)
+
+        val response =
+            RestAssured
+                .given().log().all()
+                .body(FLAT_WHITE)
+                .contentType(ContentType.JSON)
+                .`when`().put("/api/products/1")
+                .then().log().all().extract()
+
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
-        assertThat(response.jsonPath().getList("", Product::class.java)).hasSize(2)
     }
 
     @Test
@@ -93,5 +107,63 @@ class ProductControllerTest {
                 .then().log().all().extract()
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value())
+    }
+
+    @Test
+    fun `should return 'not found 404' response, when list of products is empty`() {
+        val response =
+            RestAssured
+                .given().log().all()
+                .`when`().delete("/api/products/1")
+                .then().log().all().extract()
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value())
+    }
+
+    @Test
+    fun `should return 'not found 404' response, when product id not found`() {
+        createProduct(AMERICANO)
+
+        val response =
+            RestAssured
+                .given().log().all()
+                .`when`().delete("/api/products/100")
+                .then().log().all().extract()
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value())
+    }
+
+    companion object {
+        fun createProduct(product: Product) {
+            val response =
+                RestAssured
+                    .given().log().all()
+                    .body(product)
+                    .contentType(ContentType.JSON)
+                    .`when`().post("/api/products")
+                    .then().log().all().extract()
+
+            assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value())
+        }
+
+        val FLAT_WHITE =
+            Product(
+                name = "Flat white L",
+                price = 6.50,
+                imageURL =
+                    URI.create(
+                        "https://st.kakaocdn.net/product/gift/product/20231010111814_9a667f9eccc943648797925498bdd8a3.jpg",
+                    ),
+            )
+
+        val AMERICANO =
+            Product(
+                name = "Iced Americano T",
+                price = 4.50,
+                imageURL =
+                    URI.create(
+                        "https://st.kakaocdn.net/product/gift/product/20231010111814_9a667f9eccc943648797925498bdd8a3.jpg",
+                    ),
+            )
     }
 }
