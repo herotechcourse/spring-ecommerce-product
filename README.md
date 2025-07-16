@@ -1,6 +1,6 @@
 # spring-ecommerce-product
 
-## Functional Requirements
+## Functional Requirements Step 1-1
 
 Implement a simple HTTP API that allows users to retrieve, add, update, and delete products.
 - HTTP requests and responses must be in JSON format.
@@ -24,13 +24,25 @@ Content-Type: application/json
     }
 ]
 ```
-## Feature
 
-- [ ] Implement Product entity class
-- [ ] implement the rest controller
-  - [ ] @GetMapping endpoint to retrieve the Product
+## Features Step1-1
+
+- [x] Implement Product entity class
+- [x] implement the rest controller
+  - [x] @GetMapping endpoint to retrieve the Product
     `/api/products HTTP/1.1`
-  - [ ] @PostMapping to add a product
-  - [ ] @PutMapping to update
-  - [ ] @DeleteMapping to delete
-- [ ] store data in memory using a suitable collection `private val products: MutableMap<Long, Product> = HashMap()`
+  - [x] @PostMapping to add a product
+  - [x] @PutMapping to update
+  - [x] @DeleteMapping to delete
+- [x] store data in memory using a suitable collection `private val products: MutableMap<Long, Product> = HashMap()`
+
+## Functional Requirements Step 1-2
+- Implement an admin interface that allows users to view, add, update, and delete products.
+- Use Thymeleaf to implement server-side rendering (SSR).
+The default behavior should be based on traditional HTML form submission and page navigation.
+- For product images, do not upload files; instead, use direct image URLs.
+
+## Features Step1-2
+- [ ] Use Thymeleaf to implement server-side rendering (SSR)
+- [ ] Create the template table.html
+- [ ] Connect controller with table.html
