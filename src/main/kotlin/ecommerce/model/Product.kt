@@ -2,9 +2,9 @@ package ecommerce.model
 
 class Product(
     val id: Long? = null,
-    var name: String,
-    var price: Double,
-    var imageUrl: String,
+    var name: String = "",
+    var price: Double = 0.0,
+    var imageUrl: String = "",
 ) {
     fun update(newProduct: Product) {
         this.name = newProduct.name
