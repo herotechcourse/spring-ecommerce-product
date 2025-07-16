@@ -17,4 +17,9 @@ class ProductViewController(
         model.addAttribute("products", products)
         return "products"
     }
+
+    @GetMapping("/add/product")
+    fun displayCreateProductForm(): String {
+        return "createProductForm"
+    }
 }
