@@ -13,20 +13,11 @@ import java.net.URI
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 class ProductControllerTest {
     @Test
-    fun create() {
+    fun `should be able return 'created 201' response`() {
         val response =
             RestAssured
                 .given().log().all()
-                .body(
-                    Product(
-                        name = "Iced Americano T",
-                        price = 4.50,
-                        imageURL =
-                            URI.create(
-                                "https://st.kakaocdn.net/product/gift/product/20231010111814_9a667f9eccc943648797925498bdd8a3.jpg",
-                            ),
-                    ),
-                )
+                .body(AMERICANO)
                 .contentType(ContentType.JSON)
                 .`when`().post("/api/products")
                 .then().log().all().extract()
@@ -35,30 +26,8 @@ class ProductControllerTest {
     }
 
     @Test
-    fun create2() {
-        val response =
-            RestAssured
-                .given().log().all()
-                .body(
-                    Product(
-                        name = "Flat white L",
-                        price = 6.50,
-                        imageURL =
-                            URI.create(
-                                "https://st.kakaocdn.net/product/gift/product/20231010111814_9a667f9eccc943648797925498bdd8a3.jpg",
-                            ),
-                    ),
-                )
-                .contentType(ContentType.JSON)
-                .`when`().post("/api/products")
-                .then().log().all().extract()
-
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value())
-    }
-
-    @Test
-    fun read() {
-        create()
+    fun `should be able to read a product and return 'ok 200' response`() {
+        createProduct(AMERICANO)
 
         val response =
             RestAssured
@@ -72,9 +41,9 @@ class ProductControllerTest {
     }
 
     @Test
-    fun `there is 2 products, and read() return all products in the list`() {
-        create()
-        create2()
+    fun `should be able to read products, and return 'ok 200' response`() {
+        createProduct(AMERICANO)
+        createProduct(FLAT_WHITE)
 
         val response =
             RestAssured
@@ -88,32 +57,34 @@ class ProductControllerTest {
     }
 
     @Test
-    fun update() {
-        create()
-
+    fun `should return 'no-content 204' response`() {
         val response =
             RestAssured
                 .given().log().all()
-                .body(
-                    Product(
-                        name = "Flat white L",
-                        price = 6.50,
-                        imageURL =
-                            URI.create(
-                                "https://st.kakaocdn.net/product/gift/product/20231010111814_9a667f9eccc943648797925498bdd8a3.jpg",
-                            ),
-                    ),
-                )
+                .contentType(ContentType.JSON)
+                .`when`().get("/api/products")
+                .then().log().all().extract()
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
+        assertThat(response.jsonPath().getList("", Product::class.java)).hasSize(2)
+    }
+
+    @Test
+    fun `should return 'not found 404' response, when failed to update product`() {
+        val response =
+            RestAssured
+                .given().log().all()
+                .body(FLAT_WHITE)
                 .contentType(ContentType.JSON)
                 .`when`().put("/api/products/1")
                 .then().log().all().extract()
 
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value())
     }
 
     @Test
-    fun delete() {
-        create()
+    fun `should be able to delete product, and return '204' response`() {
+        createProduct(AMERICANO)
 
         val response =
             RestAssured
