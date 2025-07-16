@@ -11,16 +11,17 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestMapping
 import java.net.URI
 import java.util.concurrent.atomic.AtomicLong
 
 @Controller
+@RequestMapping("/products")
 class ProductController {
     private val index = AtomicLong(1)
-    private val products: MutableList<Product> =
-        (0..5).map { Product.toEntity(Product(name = "Name", price = 10.0, imageUrl = ""), index.getAndIncrement()) }.toMutableList()
+    private val products: MutableList<Product> = mutableListOf()
 
-    @PostMapping("/products")
+    @PostMapping("")
     fun create(
         @RequestBody product: Product,
     ): ResponseEntity<Product> {
@@ -29,30 +30,28 @@ class ProductController {
         return ResponseEntity.created(URI.create("/products/" + newProduct.id)).body(newProduct)
     }
 
-    @GetMapping("/products")
-    fun read(
-        model: Model,
-    ): String {
+    @GetMapping("/new")
+    fun showCreateForm(): String {
+        return "create_product_form"
+    }
+
+    @GetMapping("")
+    fun read(model: Model): String {
         model.addAttribute("products", products)
         return "products"
     }
 
-    @GetMapping("/products/{id}")
-    fun read(
+    @GetMapping("/edit/{id}")
+    fun showUpdateForm(
         @PathVariable("id") id: Long,
-    ): ResponseEntity<Product> {
-        return ResponseEntity.ok(findProduct(id))
+        model: Model,
+    ): String {
+        val product = findProduct(id)
+        model.addAttribute("product", product)
+        return "edit_product_form"
     }
 
-//    @GetMapping("/products")
-//    fun temp(
-//        model: Model,
-//    ): String {
-//        model.addAttribute("products", products)
-//        return "products"
-//    }
-
-    @PutMapping("/products/{id}")
+    @PutMapping("/{id}")
     fun update(
         @PathVariable("id") id: Long,
         @RequestBody newProduct: Product,
@@ -62,7 +61,7 @@ class ProductController {
         return ResponseEntity.ok(product)
     }
 
-    @DeleteMapping("/products/{id}")
+    @DeleteMapping("/{id}")
     fun delete(
         @PathVariable("id") id: Long,
     ): ResponseEntity<Void> {
@@ -70,7 +69,6 @@ class ProductController {
         products.remove(product)
         return ResponseEntity.noContent().build()
     }
-
 
     private fun findProduct(id: Long): Product {
         return products.firstOrNull { it.id == id } ?: throw NotFoundException("Product with id $id not found")
