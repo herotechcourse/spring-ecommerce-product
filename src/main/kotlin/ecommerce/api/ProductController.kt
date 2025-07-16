@@ -13,7 +13,7 @@ import java.util.concurrent.atomic.AtomicLong
 
 @RestController
 class ProductController {
-    private val products: MutableMap<Long, Product> = HashMap()
+    val products: MutableMap<Long, Product> = HashMap()
     private val index = AtomicLong(1)
 
     @PostMapping("/api/products")
@@ -40,14 +40,19 @@ class ProductController {
     }
 
     @PutMapping("/api/products/{id}")
-    fun updateProduct(@PathVariable id: Long, @RequestBody newProduct: Product): ResponseEntity<Void> {
+    fun updateProduct(
+        @PathVariable id: Long,
+        @RequestBody newProduct: Product,
+    ): ResponseEntity<Void> {
         val product = products[id] ?: return ResponseEntity.notFound().build()
         product.update(newProduct)
         return ResponseEntity.ok().build()
     }
 
     @DeleteMapping("/api/products/{id}")
-    fun deleteProduct(@PathVariable id: Long): ResponseEntity<Void> {
+    fun deleteProduct(
+        @PathVariable id: Long,
+    ): ResponseEntity<Void> {
         products.remove(id) ?: return ResponseEntity.notFound().build()
         return ResponseEntity.noContent().build()
     }
