@@ -54,13 +54,12 @@ class ProductController {
         }
     }
 
-    @PutMapping("/{id}")
+    @PutMapping
     fun updateProduct(
-        @PathVariable id: Long,
         @RequestBody product: Product,
     ): ResponseEntity<Product> {
-        products.removeIf { it.id == id }
-        val newProduct = Product(id, product.name, product.price, product.imageUrl)
+        products.removeIf { it.id == product.id }
+        val newProduct = Product(product.id, product.name, product.price, product.imageUrl)
         products.add(newProduct)
         return ResponseEntity.ok(newProduct)
     }
