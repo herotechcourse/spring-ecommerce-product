@@ -27,6 +27,7 @@
             <th>Name</th>
             <th>Price</th>
             <th>ImageURL</th>
+            <th>actions</th>
         </tr>
         </thead>
         <tbody>
@@ -35,9 +36,41 @@
             <td th:text="${product.name}"/>
             <td th:text="${product.price}"/>
             <td th:text="${product.imageUrl}"/>
+            <td>
+                <a th:href="@{update/product/{id}(id=${product.id})}">edit</a>
+                <button type="button"
+                        class="delete-button"
+                        th:data-id="${product.id}">
+                    Delete
+                </button>
+            </td>
         </tr>
         </tbody>
     </table>
 </main>
 </body>
+<script>
+    document.querySelectorAll(".delete-button").forEach(button => {
+        button.addEventListener("click", async (event) => {
+            const id = event.target.getAttribute("data-id");
+            if (!confirm(`Are you sure you want to delete product ${id}?`)) return;
+            try {
+                const response = await fetch(`/api/products/${id}`, {
+                    method: "DELETE"
+                });
+                if (response.ok) {
+                    // alert(`Product ${id} deleted`);
+                    // Remove the row from the table or reload page:
+                    // event.target.closest("tr").remove();
+                    window.location.reload();
+                } else {
+                    alert("Failed to delete product. Status: " + response.status);
+                }
+            } catch (error) {
+                console.error("Error:", error);
+                alert("An error occurred while deleting the product.");
+            }
+        });
+    });
+</script>
 </html>
