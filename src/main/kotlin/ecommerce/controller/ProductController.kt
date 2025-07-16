@@ -1,6 +1,7 @@
 package ecommerce.controller
 
-import ecommerce.Product
+import ecommerce.model.Product
+import ecommerce.service.ProductService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
@@ -10,19 +11,14 @@ import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
 import java.net.URI
-import java.util.concurrent.atomic.AtomicLong
 
 @RestController
-class ProductController {
-    private val products: MutableMap<Long, Product> = HashMap()
-    private val index: AtomicLong = AtomicLong(1)
-
+class ProductController(private val productService: ProductService) {
     @PostMapping("/products")
     fun createProduct(
         @RequestBody newProduct: Product,
     ): ResponseEntity<Product> {
-        val product: Product = Product.create(newProduct, index.andIncrement)
-        products.put(newProduct.id, product)
+        productService.createProduct(newProduct)
         return ResponseEntity.created(URI.create("/products/${newProduct.id}")).build()
     }
 
@@ -30,12 +26,17 @@ class ProductController {
     fun getProductById(
         @PathVariable("id") id: Long,
     ): ResponseEntity<Product> {
-        return ResponseEntity.ok().body(products[id])
+        try {
+            productService.getProductById(id)
+        } catch (ex: Exception) {
+            ex.printStackTrace()
+        }
+        return ResponseEntity.ok().body(productService.getProductById(id))
     }
 
     @GetMapping("/products")
-    fun getProducts(): ResponseEntity<MutableMap<Long, Product>> {
-        return ResponseEntity.ok().body(products)
+    fun getProducts(): ResponseEntity<List<Product>> {
+        return ResponseEntity.ok().body(productService.getAllProducts())
     }
 
     @PutMapping("/products/{id}")
@@ -43,16 +44,18 @@ class ProductController {
         @PathVariable("id") id: Long,
         @RequestBody product: Product,
     ): ResponseEntity<Product> {
-        val updatedProduct = products[id] ?: throw Exception("Product with id $id not found")
-        updatedProduct.update(product)
-        return ResponseEntity.ok().body(updatedProduct)
+        productService.updateProduct(id, product)
+        return ResponseEntity.ok().body(product)
     }
 
     @DeleteMapping("/products/{id}")
     fun deleteProduct(
         @PathVariable("id") id: Long,
     ): ResponseEntity<Void> {
-        products.remove(id)
-        return ResponseEntity.noContent().build()
+        if (productService.deleteProduct(id)) {
+            return ResponseEntity.noContent().build()
+        } else {
+            return ResponseEntity.notFound().build()
+        }
     }
 }

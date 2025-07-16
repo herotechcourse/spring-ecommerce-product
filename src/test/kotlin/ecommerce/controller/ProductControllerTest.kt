@@ -1,6 +1,6 @@
 package ecommerce.controller
 
-import ecommerce.Product
+import ecommerce.model.Product
 import io.restassured.RestAssured
 import io.restassured.http.ContentType
 import org.assertj.core.api.Assertions.assertThat
@@ -17,7 +17,7 @@ class ProductControllerTest {
         val response =
             RestAssured
                 .given().log().all()
-                .body(Product(id = 100, name = "test", price = 20.0, img = "img1"))
+                .body(Product(id = 100, name = "test", price = 20.0, img = "img1", 2))
                 .contentType(ContentType.JSON)
                 .`when`().post("/products")
                 .then().log().all().extract()
@@ -37,7 +37,7 @@ class ProductControllerTest {
                 .then().log().all().extract()
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
-        //assertThat(response.jsonPath().getMap<Long, Product>()<Long, Product>("", Product::class.java)).hasSize(1)
+        assertThat(response.jsonPath().getList<Product>("")).hasSize(1)
     }
 
     @Test
@@ -47,7 +47,7 @@ class ProductControllerTest {
         val response =
             RestAssured
                 .given().log().all()
-                .body(Product(id = 100, name = "test", price = 30.0, img = "img1"))
+                .body(Product(id = 100, name = "test", price = 30.0, img = "img1", quantity = 2))
                 .contentType(ContentType.JSON)
                 .`when`().put("/products/100")
                 .then().log().all().extract()
