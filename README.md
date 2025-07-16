@@ -1,6 +1,6 @@
 # spring-ecommerce-product
 
-## CRUD Operations for `Product`
+## CRUD Operations for `Product` -> `Step 1-1`
 ### Model
 - [x] Product
   - [x] id: long?
@@ -13,13 +13,8 @@
   - [x] Create and returns the new Product
 - [x] Read All
   - [x] Returns the products
-  - [x] Returns empty array if no products
-- [x] Read
-  - [x] Returns the Product
-  - [x] Throws NotFoundException if Product not found via id 
 - [x] Update
   - [x] Returns the Updated Product
-  - [x] Returns the Product
   - [x] Throws NotFoundException if Product not found
 - [x] Delete
   - [x] Returns ok status if deleted
@@ -31,3 +26,19 @@
 ### Exceptions
 - [x] NotFoundException
   - [x] Handled using ControllerAdvice
+
+## Admin Interface Implementation for `Product` -> `Step 1-2`
+
+### Views
+- [x] View all products
+ - [x] added new page for `products.html`
+ - [x] Changed Read All for ThymeLeaf returns the page as String
+- [x] Add a new product
+  - [x] `products/new` method for showing the new product form
+  - [x] create request handled by JS
+- [x] Update a product
+  - [x] `products/edit/${id}` method for showing the product form to edit
+  - [x] update request handled by JS
+- [x] Delete a product
+  - [x] Send delete request using JS
+- [x] Template for styling Footer and Header
