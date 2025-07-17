@@ -19,7 +19,7 @@ class ProductRepository(private val jdbcTemplate: JdbcTemplate) {
         }
 
     fun count(): Int {
-        val sql = "SELECT COUNT(*) FROM product"
+        val sql = "SELECT COUNT(*) FROM products"
         return jdbcTemplate.queryForObject(sql, Int::class.java) ?: 0
     }
 
@@ -43,11 +43,11 @@ class ProductRepository(private val jdbcTemplate: JdbcTemplate) {
         product: Product,
     ) {
         val sql = "update products set product_name = ?, price = ?, image_url = ? where id = ?"
-       jdbcTemplate.update(sql, product.name, product.price, product.imageUrl, id)
+        jdbcTemplate.update(sql, product.name, product.price, product.imageUrl, id)
     }
 
     fun deleteById(id: Long) {
         val sql = "delete from products where id = ?"
-         jdbcTemplate.update(sql, id)
+        jdbcTemplate.update(sql, id)
     }
 }
