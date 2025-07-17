@@ -42,3 +42,13 @@
 - [x] Delete a product
   - [x] Send delete request using JS
 - [x] Template for styling Footer and Header
+
+## Integrate DB in Project `Product` -> `Step 1-3`
+- [x] install db dependency
+- [x] create schema.sql
+- [x] create data.sql
+- [x] add rules in application.properties
+- [x] create table
+- [x] Convert Controller for db usage
+- [x] Create Product Repository to handle DB logic
+- [ ] Implement Services to move business logic from Controller
