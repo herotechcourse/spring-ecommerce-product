@@ -37,7 +37,6 @@ class ProductControllerTest {
 
         assertThat(productMap).hasSize(1)
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
-//        assertThat(response.jsonPath().getMap<Long, Product>("", Long::class.java, Product::class.java)).hasSize(1)
     }
 
     @Test

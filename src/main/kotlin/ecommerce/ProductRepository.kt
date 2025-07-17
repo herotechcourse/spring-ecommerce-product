@@ -5,17 +5,17 @@ import org.springframework.jdbc.core.RowMapper
 import org.springframework.stereotype.Repository
 import java.sql.ResultSet
 
-
 @Repository
 class ProductRepository(private val jdbcTemplate: JdbcTemplate) {
-    private val productRowMapper = RowMapper<Product> { rs: ResultSet, _ ->
-        Product(
-            rs.getLong("id"),
-            rs.getString("name"),
-            rs.getDouble("price"),
-            rs.getString("image_url"),
-        )
-    }
+    private val productRowMapper =
+        RowMapper<Product> { rs: ResultSet, _ ->
+            Product(
+                rs.getLong("id"),
+                rs.getString("name"),
+                rs.getDouble("price"),
+                rs.getString("image_url"),
+            )
+        }
 
     fun findAllProducts(): List<Product> {
         val sql = "select id, name, price, image_url from products"
@@ -28,16 +28,15 @@ class ProductRepository(private val jdbcTemplate: JdbcTemplate) {
         jdbcTemplate.update(sql, product.name, product.price, product.imageUrl)
     }
 
-    fun findProductById(id: Long): Product? {
-        val product = jdbcTemplate.queryForObject(
-            "select id, name, price, image_url from products where id = ?",
-            productRowMapper,
-            id)
-        return product
+    fun edit(
+        product: Product,
+        productId: Long,
+    ) {
+        val sql = "UPDATE products SET name = ?, price = ?, image_url = ? WHERE id = ?"
+        jdbcTemplate.update(sql, product.name, product.price, product.imageUrl, productId)
     }
 
     fun delete(id: Long): Int {
         return jdbcTemplate.update("delete from products where id = ?", id)
     }
-
 }
