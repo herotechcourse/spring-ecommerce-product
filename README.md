@@ -16,5 +16,10 @@
 - [x] Add Button for Edit a Product
 - [x] Add Button for Delete a Product
 - [x] Add Button for Add a Product
-- 
+
+## Database
+- [x] Build a Repository
+- [x] Database configuration
+- [x] Connect the repository with the DB through the service layer
+- [x] Build a schema for the database
 
