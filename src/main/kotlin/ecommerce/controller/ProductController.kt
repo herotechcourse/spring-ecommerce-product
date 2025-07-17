@@ -5,6 +5,7 @@ import ecommerce.repository.ProductRepository
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Controller
+import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -33,9 +34,9 @@ class ProductController {
 //    }
 
     @GetMapping
-    fun getProducts(): ResponseEntity<List<Product>> {
-        val products = productRepository.getAll()
-        return ResponseEntity.ok(products)
+    fun getProducts(model: Model): String {
+        model.addAttribute("products", productRepository.getAll())
+        return "table"
     }
 
     @GetMapping("/{id}")
