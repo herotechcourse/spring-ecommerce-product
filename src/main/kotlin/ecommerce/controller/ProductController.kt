@@ -2,6 +2,7 @@ package ecommerce.controller
 
 import ecommerce.model.Product
 import ecommerce.repository.ProductRepository
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Controller
@@ -18,6 +19,7 @@ import java.util.concurrent.atomic.AtomicLong
 @Controller
 @RequestMapping("/products")
 class ProductController {
+    @Autowired
     private lateinit var productRepository: ProductRepository
 
     private val products: MutableSet<Product> = HashSet()
@@ -57,13 +59,11 @@ class ProductController {
     }
 
     @PutMapping
+    @ResponseBody
     fun updateProduct(
         @RequestBody product: Product,
-    ): ResponseEntity<Product> {
-        products.removeIf { it.id == product.id }
-        val newProduct = Product(product.id, product.name, product.price, product.imageUrl)
-        products.add(newProduct)
-        return ResponseEntity.ok(newProduct)
+    ) {
+        productRepository.updateProduct(product)
     }
 
     @DeleteMapping("/{id}")
