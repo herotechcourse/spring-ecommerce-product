@@ -55,7 +55,7 @@ class ProductController {
     fun update(
         @PathVariable("id") id: Long,
         @RequestBody newProduct: Product,
-    ): ResponseEntity<Void>  {
+    ): ResponseEntity<Void> {
         ProductRepository(jdbcTemplate).update(id, newProduct)
         return ResponseEntity.ok().build()
     }

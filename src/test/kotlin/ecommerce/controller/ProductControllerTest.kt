@@ -92,7 +92,6 @@ class ProductControllerTest {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
     }
 
-
     @Test
     fun delete() {
         val response =
