@@ -18,6 +18,10 @@ class ProductRepository(private val jdbcTemplate: JdbcTemplate) {
             )
         }
 
+    fun findById(id: Long): Product? {
+        return jdbcTemplate.queryForObject("select id, name, price, image_url from products where id = ?", productRowMapper, id)
+    }
+
     fun getAll(): List<Product> {
         return jdbcTemplate.query("select id, name, price, image_url from products", productRowMapper)
     }

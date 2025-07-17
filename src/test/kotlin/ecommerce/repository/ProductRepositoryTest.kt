@@ -33,6 +33,12 @@ class ProductRepositoryTest {
     }
 
     @Test
+    fun findFyId() {
+        val product = productRepository.findById(1)
+        assertThat(product?.name).isEqualTo("Coffee")
+    }
+
+    @Test
     fun update() {
         val product = Product(1, "update", 11.00, "test.com")
         val products = productRepository.updateProduct(product)

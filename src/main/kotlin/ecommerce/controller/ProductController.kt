@@ -3,7 +3,6 @@ package ecommerce.controller
 import ecommerce.model.Product
 import ecommerce.repository.ProductRepository
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
@@ -46,17 +45,8 @@ class ProductController {
     fun getProduct(
         @PathVariable id: Long,
     ): ResponseEntity<Product> {
-        return try {
-            val found = products.any { it.id == id }
-            val product = products.first { it.id == id }
-            if (found) {
-                ResponseEntity.ok(product)
-            } else {
-                throw IllegalArgumentException()
-            }
-        } catch (e: Exception) {
-            ResponseEntity(HttpStatus.NOT_FOUND)
-        }
+        val product = productRepository.findById(id) ?: throw NoSuchElementException()
+        return ResponseEntity.ok(product)
     }
 
     @PutMapping
