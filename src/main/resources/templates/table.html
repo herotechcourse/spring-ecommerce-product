@@ -4,65 +4,91 @@
     <meta charset="UTF-8">
     <title>Products table</title>
     <script src="https://kit.fontawesome.com/20fda53ba3.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-<section>
-    <h1>PRODUCT LIST</h1>
-    <table>
-        <thead>
-        <tr>
-            <th>ID</th>
-            <th>NAME</th>
-            <th>PRICE</th>
-            <th>IMAGE</th>
-            <th>ACTIONS</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="product : ${products}">
-            <td th:text="${product.id}"></td>
-            <td th:text="${product.name}"></td>
-            <td th:text="${product.price}"></td>
-            <td>
-                <img th:src="${product.imageUrl}" alt="Immagine prodotto" width="100">
-            </td>
-            <td>
-<!--                <button th:onclick="deleteProduct(${product.id})">-->
-                <button th:onclick="'deleteProduct(' + ${product.id} + ')'">
-                    <i class="fa-solid fa-trash"></i>
-                </button>
-            </td>
+<body class="bg-yellow-100">
+<section class="p-8">
+    <h1 class="text-3xl font-bold mb-6 text-gray-800">Product List</h1>
+    <div class="overflow-x-auto">
+        <table class="min-w-full bg-white shadow rounded-lg">
+            <thead>
+            <tr class="bg-gray-100 text-left text-gray-600 uppercase text-sm">
+                <th class="py-3 px-4">ID</th>
+                <th class="py-3 px-4">Name</th>
+                <th class="py-3 px-4">Price</th>
+                <th class="py-3 px-4">Image</th>
+                <th class="py-3 px-4">Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="product : ${products}" class="border-t hover:bg-gray-50">
+                <td class="py-3 px-4" th:text="${product.id}"></td>
+                <td class="py-3 px-4" th:text="${product.name}"></td>
+                <td class="py-3 px-4" th:text="${product.price}"></td>
+                <td class="py-3 px-4">
+                    <img th:src="${product.imageUrl}" alt="Product Image" class="w-24 rounded" />
+                </td>
+                <td class="py-3 px-4">
+                    <button
+                            th:onclick="'deleteProduct(' + ${product.id} + ')'"
+                            class="text-red-600 hover:text-red-800"
+                            title="Delete"
+                    >
+                        <i class="fa-solid fa-trash"></i>
+                    </button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</section>
 
-        </tr>
-        </tbody>
-    </table>
-</section>
-<section>
-    <h2>Add Product</h2>
-    <form id="addProductForm">
-        <label for="name">Product</label>
-        <input type="text" id="name" name="name">
-        <label for="price">Price</label>
-        <input type="number" id="price" name="price" step="0.01">
-        <label for="imageUrl">ImageUrl</label>
-        <input type="url" id="imageUrl" name="imageUrl">
-        <button type="submit">Add Product</button>
+<section class="p-6 bg-white rounded-lg shadow m-6">
+    <h2 class="text-xl font-semibold mb-4 text-gray-800">Add Product</h2>
+    <form id="addProductForm" class="flex flex-wrap items-center gap-4">
+        <div class="flex flex-col">
+            <label for="name" class="text-sm font-medium text-gray-700">Product</label>
+            <input type="text" id="name" name="name" class="border rounded px-3 py-1 w-48" />
+        </div>
+        <div class="flex flex-col">
+            <label for="price" class="text-sm font-medium text-gray-700">Price</label>
+            <input type="number" step="0.01" id="price" name="price" class="border rounded px-3 py-1 w-32" />
+        </div>
+        <div class="flex flex-col">
+            <label for="imageUrl" class="text-sm font-medium text-gray-700">Image URL</label>
+            <input type="url" id="imageUrl" name="imageUrl" class="border rounded px-3 py-1 w-64" />
+        </div>
+        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 mt-5">
+            Add
+        </button>
     </form>
 </section>
-<section>
-    <h2>Update Product</h2>
-    <form id="updateProductForm">
-        <label for="id">ID</label>
-        <input type="text" id="id" name="id">
-        <label for="updateName">Product</label>
-        <input type="text" id="updateName" name="name">
-        <label for="updatePrice">Price</label>
-        <input type="number" id="updatePrice" name="price" step="0.01">
-        <label for="updateImageUrl">ImageUrl</label>
-        <input type="url" id="updateImageUrl" name="imageUrl">
-        <button type="submit">Update Product</button>
+
+<section class="p-6 bg-white rounded-lg shadow m-6">
+    <h2 class="text-xl font-semibold mb-4 text-gray-800">Update Product</h2>
+    <form id="updateProductForm" class="flex flex-wrap items-center gap-4">
+        <div class="flex flex-col">
+            <label for="id" class="text-sm font-medium text-gray-700">ID</label>
+            <input type="text" id="id" name="id" class="border rounded px-3 py-1 w-20" />
+        </div>
+        <div class="flex flex-col">
+            <label for="updateName" class="text-sm font-medium text-gray-700">Product</label>
+            <input type="text" id="updateName" name="name" class="border rounded px-3 py-1 w-48" />
+        </div>
+        <div class="flex flex-col">
+            <label for="updatePrice" class="text-sm font-medium text-gray-700">Price</label>
+            <input type="number" step="0.01" id="updatePrice" name="price" class="border rounded px-3 py-1 w-32" />
+        </div>
+        <div class="flex flex-col">
+            <label for="updateImageUrl" class="text-sm font-medium text-gray-700">Image URL</label>
+            <input type="url" id="updateImageUrl" name="imageUrl" class="border rounded px-3 py-1 w-64" />
+        </div>
+        <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 mt-5">
+            Update
+        </button>
     </form>
 </section>
+
 <script>
     document.getElementById("addProductForm").addEventListener("submit", function (event) {
         event.preventDefault();
