@@ -2,7 +2,10 @@ package ecommerce.controller
 
 import ecommerce.exception.NotFoundException
 import ecommerce.model.Product
+import ecommerce.repository.ProductRepository
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
+import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -18,16 +21,15 @@ import java.util.concurrent.atomic.AtomicLong
 @Controller
 @RequestMapping("/products")
 class ProductController {
-    private val index = AtomicLong(1)
-    private val products: MutableList<Product> = mutableListOf()
+    @Autowired
+    private lateinit var jdbcTemplate: JdbcTemplate
 
     @PostMapping("")
     fun create(
         @RequestBody product: Product,
-    ): ResponseEntity<Product> {
-        val newProduct = Product.toEntity(product, index.getAndIncrement())
-        products.add(newProduct)
-        return ResponseEntity.created(URI.create("/products/" + newProduct.id)).body(newProduct)
+    ): ResponseEntity<Void> {
+        ProductRepository(jdbcTemplate).save(product)
+        return ResponseEntity.created(URI.create("/products/")).build()
     }
 
     @GetMapping("/new")
@@ -37,7 +39,7 @@ class ProductController {
 
     @GetMapping("")
     fun read(model: Model): String {
-        model.addAttribute("products", products)
+        model.addAttribute("products", ProductRepository(jdbcTemplate).findAll())
         return "products"
     }
 
@@ -46,7 +48,7 @@ class ProductController {
         @PathVariable("id") id: Long,
         model: Model,
     ): String {
-        val product = findProduct(id)
+        val product =  ProductRepository(jdbcTemplate).findById(id)
         model.addAttribute("product", product)
         return "edit_product_form"
     }
@@ -55,22 +57,16 @@ class ProductController {
     fun update(
         @PathVariable("id") id: Long,
         @RequestBody newProduct: Product,
-    ): ResponseEntity<Product> {
-        val product = findProduct(id)
-        product.update(newProduct)
-        return ResponseEntity.ok(product)
+    ): ResponseEntity<Void> {
+        ProductRepository(jdbcTemplate).update(id, newProduct)
+        return ResponseEntity.ok().build()
     }
 
     @DeleteMapping("/{id}")
     fun delete(
         @PathVariable("id") id: Long,
     ): ResponseEntity<Void> {
-        val product = findProduct(id)
-        products.remove(product)
+        ProductRepository(jdbcTemplate).deleteById(id)
         return ResponseEntity.noContent().build()
-    }
-
-    private fun findProduct(id: Long): Product {
-        return products.firstOrNull { it.id == id } ?: throw NotFoundException("Product with id $id not found")
     }
 }
