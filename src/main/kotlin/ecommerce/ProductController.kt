@@ -5,27 +5,29 @@ import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.*
 import java.net.URI
-import java.util.concurrent.atomic.AtomicLong
 
 @Controller
-class ProductController {
-    private val products: MutableMap<Long, Product> = HashMap()
-    private val index = AtomicLong(0)
+class ProductController(private val productRepository: ProductRepository) {
+    //private val products: MutableMap<Long, Product> = HashMap()
+    //private val index = AtomicLong(0)
 
     @PostMapping("/products")
     @ResponseBody
     fun create(
         @RequestBody product: Product,
     ): ResponseEntity<Void> {
-        val newProduct = Product.toEntity(product, index.incrementAndGet())
-        val productId = newProduct.id ?: throw RuntimeException("Product id is null")
-        products.putIfAbsent(productId, newProduct)
-        return ResponseEntity.created(URI.create("/products/${newProduct.id}")).build()
+//        val newProduct = Product.toEntity(product, index.incrementAndGet())
+//        val productId = newProduct.id ?: throw RuntimeException("Product id is null")
+//        products.putIfAbsent(productId, newProduct)
+       // productRepository.insert(product)
+        productRepository.insert(product)
+        return ResponseEntity.created(URI.create("/products/${product.id}")).build()
     }
 
     @GetMapping("/products")
     @ResponseBody
-    fun read(): ResponseEntity<MutableMap<Long, Product>> {
+    fun read(): ResponseEntity<List<Product>> {
+        val products = productRepository.findAllProducts()
         return ResponseEntity.ok().body(products)
     }
 
@@ -35,12 +37,7 @@ class ProductController {
         @RequestBody newProduct: Product,
         @PathVariable id: Long,
     ): ResponseEntity<Void> {
-        if (!products.containsKey(id)) {
-            create(newProduct)
-            return ResponseEntity.ok().build()
-        }
-        val product = products[id] ?: throw RuntimeException("Product id is null")
-        product.update(newProduct)
+        productRepository.findProductById(id)?.update(newProduct) ?: create(newProduct) // TODO check this
         return ResponseEntity.ok().build()
     }
 
@@ -49,13 +46,13 @@ class ProductController {
     fun delete(
         @PathVariable id: Long,
     ): ResponseEntity<Void> {
-        products.remove(id) ?: throw RuntimeException("Product id is null")
+        productRepository.delete(id)
         return ResponseEntity.noContent().build()
     }
 
     @GetMapping("/admin/products")
     fun table(model: Model): String {
-        model.addAttribute("products", products.values)
+        model.addAttribute("products", productRepository.findAllProducts())
         model.addAttribute("product", Product())
         return "products"
     }
