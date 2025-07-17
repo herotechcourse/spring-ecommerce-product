@@ -71,6 +71,6 @@ class ProductController {
     fun deleteProduct(
         @PathVariable id: Long,
     ) {
-        products.removeIf { it.id == id }
+        productRepository.deleteProduct(id)
     }
 }

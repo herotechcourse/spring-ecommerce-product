@@ -39,6 +39,13 @@ class ProductRepositoryTest {
         assertThat(product.name).isEqualTo("update")
     }
 
+    @Test
+    fun delete() {
+        productRepository.deleteProduct(1)
+        val products = productRepository.getAll()
+        assertThat(products).hasSize(3)
+    }
+
     private fun createQuery(): String {
         return """
             create table PRODUCTS

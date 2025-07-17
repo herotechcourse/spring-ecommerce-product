@@ -31,4 +31,8 @@ class ProductRepository(private val jdbcTemplate: JdbcTemplate) {
             product.id,
         )
     }
+
+    fun deleteProduct(id: Long) {
+        jdbcTemplate.update("delete from products where id = ?", id.toLong())
+    }
 }
