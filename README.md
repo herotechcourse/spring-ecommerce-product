@@ -49,18 +49,40 @@ ProductViewController
 - [x] `displayCreateProductForm()` shows page for create product form with view of createProductForm.html
 - [x] `displayUpdateProductForm()` shows page for update product form with view of updateProductForm.html
 
+### Service
+
+ProductService
+
+- [x] `findAll()` - query to database to get all products
+- [x] `findById()` - query for an object to database
+- [x] `insert()` - query to database to create new product
+- [x] `update()` - query to database to update a product
+- [x] `delete()` - query to database to delete a product
+
 ### View
 
 products.html
+
 - [x] use table to show list of product
 - [x] add JS code to send DELETE request to Product api
 - [x] make the delete button color in RED!!!!
+- [x] add JS code to request GET request to Product api to receive all products data
 
 createProductForm.html
+
 - [x] use form to submit data to backend
 - [x] add JS code to send POST request to Product api
 
 updateProductForm.html
+
 - [x] take product with id
 - [x] use form to submit data to backend
 - [x] add JS code to send PUT request to Product api
+- [x] add JS code to request GET request to Product api to receive an updating product data
+
+### etc.
+
+- [x] connect to an H2 in-memory database
+  - [x] define the product schema
+  - [x] add some sample data
+  - [x] configure the database setting with `application.properties`
