@@ -7,7 +7,6 @@ import org.junit.jupiter.api.Test
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.HttpStatus
 import org.springframework.test.annotation.DirtiesContext
-import java.net.URI
 
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
@@ -151,9 +150,7 @@ class ProductControllerTest {
                 name = "Flat white L",
                 price = 6.50,
                 imageURL =
-                    URI.create(
-                        "https://st.kakaocdn.net/product/gift/product/20231010111814_9a667f9eccc943648797925498bdd8a3.jpg",
-                    ),
+                    "https://st.kakaocdn.net/product/gift/product/20231010111814_9a667f9eccc943648797925498bdd8a3.jpg",
             )
 
         val AMERICANO =
@@ -161,9 +158,7 @@ class ProductControllerTest {
                 name = "Iced Americano T",
                 price = 4.50,
                 imageURL =
-                    URI.create(
-                        "https://st.kakaocdn.net/product/gift/product/20231010111814_9a667f9eccc943648797925498bdd8a3.jpg",
-                    ),
+                    "https://st.kakaocdn.net/product/gift/product/20231010111814_9a667f9eccc943648797925498bdd8a3.jpg",
             )
     }
 }

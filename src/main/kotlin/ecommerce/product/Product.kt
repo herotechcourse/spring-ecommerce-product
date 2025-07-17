@@ -1,8 +1,6 @@
 package ecommerce.product
 
-import java.net.URI
-
-class Product(var id: Long? = null, var name: String, var price: Double, var imageURL: URI?) {
+class Product(var id: Long? = null, var name: String, var price: Double, var imageURL: String?) {
     fun update(newProduct: Product) {
         this.name = newProduct.name
         this.price = newProduct.price
