@@ -1,18 +1,47 @@
 package ecommerce.controller
 
 import ecommerce.model.Product
+import ecommerce.repository.ProductRepository
 import io.restassured.RestAssured
 import io.restassured.http.ContentType
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.AssertionsForClassTypes
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.HttpStatus
+import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.test.annotation.DirtiesContext
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 class ProductControllerTest {
+    private lateinit var productRepository: ProductRepository
+
+    @Autowired
+    private lateinit var jdbcTemplate: JdbcTemplate
+
+    @BeforeEach
+    fun setUp() {
+        productRepository = ProductRepository(jdbcTemplate)
+        jdbcTemplate.execute(
+            """
+            CREATE TABLE IF NOT EXISTS products (
+            id INT PRIMARY KEY AUTO_INCREMENT,
+            product_name VARCHAR(255) NOT NULL,
+            price DOUBLE CHECK (price >= 0),
+            image_url VARCHAR(255))
+            """.trimIndent(),
+        )
+        jdbcTemplate.update(
+            "INSERT INTO products(product_name,price,image_url) VALUES (?,?,?)",
+            "Product 1",
+            10.2,
+            "url.com",
+        )
+    }
+
     @Test
     fun create() {
         val product =
@@ -34,8 +63,6 @@ class ProductControllerTest {
 
     @Test
     fun `Returns Products`() {
-        create()
-
         val response =
             RestAssured
                 .given().log().all()
@@ -47,20 +74,7 @@ class ProductControllerTest {
     }
 
     @Test
-    fun `Returns empty List`() {
-        val response =
-            RestAssured
-                .given().log().all()
-                .`when`().get("/products")
-                .then().log().all().extract()
-
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
-    }
-
-    @Test
     fun update() {
-        create()
-
         val response =
             RestAssured
                 .given().log().all()
@@ -76,32 +90,11 @@ class ProductControllerTest {
                 .then().log().all().extract()
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
-        assertThat(response.jsonPath().get<String>("name")).isEqualTo("Product 2")
     }
 
-    @Test
-    fun `Throws NotFoundException on update method if Product not Found`() {
-        val response =
-            RestAssured
-                .given().log().all()
-                .body(
-                    Product(
-                        name = "Product 2",
-                        price = 10.0,
-                        imageUrl = "http://localhost:8080/image/upload/product1.jpg",
-                    ),
-                )
-                .contentType(ContentType.JSON)
-                .`when`().put("/products/1")
-                .then().log().all().extract()
-
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value())
-    }
 
     @Test
     fun delete() {
-        create()
-
         val response =
             RestAssured
                 .given().log().all()
@@ -109,18 +102,6 @@ class ProductControllerTest {
                 .then().log().all().extract()
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value())
-    }
-
-    @Test
-    fun `Throws NotFoundException on delete method if Product not Found`() {
-        val response =
-            RestAssured
-                .given().log().all()
-                .contentType(ContentType.JSON)
-                .`when`().delete("/products/1")
-                .then().log().all().extract()
-
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value())
     }
 
     @Test

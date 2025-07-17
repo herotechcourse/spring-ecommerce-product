@@ -1,6 +1,5 @@
 package ecommerce.controller
 
-import ecommerce.exception.NotFoundException
 import ecommerce.model.Product
 import ecommerce.repository.ProductRepository
 import org.springframework.beans.factory.annotation.Autowired
@@ -16,7 +15,6 @@ import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import java.net.URI
-import java.util.concurrent.atomic.AtomicLong
 
 @Controller
 @RequestMapping("/products")
@@ -48,7 +46,7 @@ class ProductController {
         @PathVariable("id") id: Long,
         model: Model,
     ): String {
-        val product =  ProductRepository(jdbcTemplate).findById(id)
+        val product = ProductRepository(jdbcTemplate).findById(id)
         model.addAttribute("product", product)
         return "edit_product_form"
     }
@@ -57,7 +55,7 @@ class ProductController {
     fun update(
         @PathVariable("id") id: Long,
         @RequestBody newProduct: Product,
-    ): ResponseEntity<Void> {
+    ): ResponseEntity<Void>  {
         ProductRepository(jdbcTemplate).update(id, newProduct)
         return ResponseEntity.ok().build()
     }
