@@ -34,11 +34,7 @@ class ProductRepository(private val jdbcTemplate: JdbcTemplate) {
 
     operator fun get(id: Long): Product? {
         val sql = "SELECT id, name, price, image_url FROM products WHERE id = ?"
-        return try {
-            jdbcTemplate.queryForObject(sql, rowMapper, id)
-        } catch (exception: Exception) {
-            null
-        }
+        return jdbcTemplate.queryForObject(sql, rowMapper, id).takeIf { it != null }
     }
 
     fun insert(
