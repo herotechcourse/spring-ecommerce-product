@@ -14,17 +14,12 @@ import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.ResponseBody
-import java.util.concurrent.atomic.AtomicLong
 
 @Controller
 @RequestMapping("/products")
 class ProductController {
     @Autowired
     private lateinit var productRepository: ProductRepository
-
-    private val products: MutableSet<Product> = HashSet()
-
-    private var index: AtomicLong = AtomicLong(1)
 
     @PostMapping(consumes = ["application/json"])
     @ResponseBody
