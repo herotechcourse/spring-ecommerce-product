@@ -9,29 +9,31 @@
     >
 </head>
 <body>
-<form action="#" th:action="@{/products}" th:object="${product}" method="post"></form>
+<div class="container">
     <h1 th:text="products"></h1>
-<!--<a href="/products">Add Product</a>-->
-<table>
-    <tr>
-        <th>ID</th>
-        <th>Name</th>
-        <th>Price</th>
-        <th>Image</th>
-        <th>Quantity</th>
-        <th>Actions</th>
-    </tr>
-    <tr th:each="product : ${products}">
-        <td th:text="${product.id}"></td>
-        <td th:text="${product.name}"></td>
-        <td th:text="${product.price}"></td>
-        <td> <img th:src="${product.img}" alt="${product.name}"> </td>
-        <td th:text="${product.quantity}"></td>
-        <td>
-            <a th:href="@{'/products/edit/' + ${product.id}}">Edit</a> |
-            <a th:href="@{'/products/delete/' + ${product.id}}">Delete</a>
-        </td>
-    </tr>
-</table>
+    <a th:href="@{'/admin/products/add-product'}"><button type="submit">Add Product</button></a>
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Price</th>
+            <th>Image</th>
+            <th>Quantity</th>
+            <th>Actions</th>
+        </tr>
+        <tr th:each="product : ${products}">
+            <td th:text="${product.id}"></td>
+            <td th:text="${product.name}"></td>
+            <td th:text="${product.price}"></td>
+            <td><img th:src="${product.img}" alt="${product.name}"></td>
+            <td th:text="${product.quantity}"></td>
+            <td>
+                <a th:href="@{'/admin/products/edit-product/' + ${product.id}}"><button type="submit">Edit</button></a>
+
+                <form th:action="@{/admin/products/delete-product/{id}(id=${product.id})}" th:method="delete"><button type="submit">Delete</button></form>
+            </td>
+        </tr>
+    </table>
+</div>
 </body>
 </html>

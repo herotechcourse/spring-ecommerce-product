@@ -11,5 +11,10 @@
 
 ## Admin
 - [ ] Login for Admin
-- [ ] Admin can view, add, update, and delete products
+- [x] Admin can view, add, update, and delete products
 - [x] Template for Product Page
+- [x] Add Button for Edit a Product
+- [x] Add Button for Delete a Product
+- [x] Add Button for Add a Product
+- 
+
