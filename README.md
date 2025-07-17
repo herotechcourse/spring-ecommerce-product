@@ -43,6 +43,20 @@ The default behavior should be based on traditional HTML form submission and pag
 - For product images, do not upload files; instead, use direct image URLs.
 
 ## Features Step1-2
-- [ ] Use Thymeleaf to implement server-side rendering (SSR)
-- [ ] Create the template table.html
-- [ ] Connect controller with table.html
+- [x] Use Thymeleaf to implement server-side rendering (SSR)
+- [x] Create the template table.html
+- [x] Connect controller with table.html
+
+
+## Functional Requirements step 1-3
+Store product information in a database instead of keeping it in memory using Kotlin collections.
+Database tables must be initialized automatically when the application starts.
+
+## Features step 1-3
+- [ ] use an H2 in-memory database instead of Kotlin collections.
+  - [ ] Add the required Gradle dependencies 
+  - [ ] Define the database schema 
+  - [ ] Configure the database settings
+  - [ ] Set up application.properties to enable H2-Console
+- [ ] use Spring's JdbcTemplate
+- [ ] Use SQL scripts for table creation and initial data.
