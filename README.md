@@ -53,10 +53,10 @@ Store product information in a database instead of keeping it in memory using Ko
 Database tables must be initialized automatically when the application starts.
 
 ## Features step 1-3
-- [ ] use an H2 in-memory database instead of Kotlin collections.
-  - [ ] Add the required Gradle dependencies 
-  - [ ] Define the database schema 
-  - [ ] Configure the database settings
-  - [ ] Set up application.properties to enable H2-Console
-- [ ] use Spring's JdbcTemplate
-- [ ] Use SQL scripts for table creation and initial data.
+- [x] use an H2 in-memory database instead of Kotlin collections.
+  - [x] Add the required Gradle dependencies 
+  - [x] Define the database schema 
+  - [x] Configure the database settings
+  - [x] Set up application.properties to enable H2-Console
+- [x] use Spring's JdbcTemplate
+- [x] Use SQL scripts for table creation and initial data.
