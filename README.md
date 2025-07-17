@@ -28,4 +28,16 @@ For product images, do not upload files; instead, use direct image URLs. <br/>
   - [x] based on HTML form submission and page navigation
   - [x] use direct image URLs for products
 
+## Step 1-3
+Refactor the application using an H2 in-memory database instead of Kotlin collections.
+The required database tables are initialized automatically when the application starts.
+
+### Feature List
+- [x] connect to a database
+  - [x] Add the required Gradle dependencies
+  - [x] Define the database schema
+  - [x] Configure the database settings
+  - [x] use Spring's JdbcTemplate
+
+
 
