@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Spring E-commerce</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
@@ -15,54 +14,54 @@
             <li><strong><a href="/">Home</a></strong></li>
         </ul>
         <ul>
-            <li><a href="/add/product">add product</a></li>
+            <li><a href="/add/product">Add Product</a></li>
         </ul>
     </nav>
 </header>
 <main class="container">
-    <h1>Form</h1>
-    <input type="hidden" id="product-id" th:value="${product.id}" />
-    <form id="product-form" action="#" th:object="${product}" method="post">
+    <h1>Edit Product</h1>
+    <!-- Hidden input to store the product ID -->
+    <input type="hidden" id="product-id" />
+    <!-- Product edit form -->
+    <form id="product-form">
         <fieldset>
             <label>
                 Name
-                <input
-                        id="name"
-                        th:field="*{name}"
-                        name="name"
-                        autocomplete="name"
-                />
+                <input type="text" id="name" name="name" required />
             </label>
             <label>
                 Price
-                <input
-                        type="number"
-                        id="price"
-                        step="0.1"
-                        th:field="*{price}"
-                        name="price"
-                        autocomplete="price"
-                />
+                <input type="number" id="price" name="price" step="0.01" required />
             </label>
             <label>
-                ImageUrl
-                <input
-                        type="url"
-                        id="imageUrl"
-                        th:field="*{imageUrl}"
-                        name="imageUrl"
-                        autocomplete="url"
-                />
+                Image URL
+                <input type="url" id="imageUrl" name="imageUrl" required />
             </label>
         </fieldset>
-        <input
-                type="submit"
-                value="Update"
-        />
+        <input type="submit" value="Update" />
     </form>
 </main>
-</body>
 <script>
+    document.addEventListener("DOMContentLoaded", async () => {
+        const pathParts = window.location.pathname.split("/");
+        const id = pathParts[pathParts.length - 1];
+        document.getElementById("product-id").value = id;
+        try {
+            const response = await fetch(`/api/products/${id}`);
+            if (!response.ok) {
+                alert("Failed to load product. Status: " + response.status);
+                return;
+            }
+            const product = await response.json();
+            document.getElementById("name").value = product.name;
+            document.getElementById("price").value = product.price;
+            document.getElementById("imageUrl").value = product.imageUrl;
+        } catch (error) {
+            console.error("Error fetching product:", error);
+            alert("An error occurred while fetching the product.");
+        }
+    });
+
     document.getElementById("product-form").addEventListener("submit", async function (event) {
         event.preventDefault();
         const id = document.getElementById("product-id").value;
@@ -79,15 +78,15 @@
                 body: JSON.stringify(product)
             });
             if (response.ok) {
-                // alert("Product updated successfully!");
-                window.location.href = "/"; // Redirect to home or product list
+                window.location.href = "/";
             } else {
                 alert("Failed to update product. Status: " + response.status);
             }
         } catch (error) {
-            console.error("Error:", error);
+            console.error("Error updating product:", error);
             alert("An error occurred while updating the product.");
         }
     });
 </script>
+</body>
 </html>
