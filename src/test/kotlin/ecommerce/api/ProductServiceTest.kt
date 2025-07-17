@@ -26,7 +26,7 @@ class ProductServiceTest {
                          price       DOUBLE  NOT NULL,
                          imageUrl    TEXT    NOT NULL,
                          PRIMARY KEY (id)
-                    );"""
+                    );""",
         )
 
         val query = """INSERT INTO product (name, price, imageUrl) VALUES ('Iron Man', 1000, 'https://alexnsan.comics/imageurl/1');

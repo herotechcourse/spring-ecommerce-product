@@ -23,11 +23,18 @@ class ProductService(private val db: JdbcTemplate) {
     }
 
     fun findById(id: Long): Product? {
-        val product = db.queryForObject(
-            """select id, name, price, imageUrl from product where id = ?""",
-            productRowMapper,
-            id,
-        ) ?: return null
+        var product: Product?
+        try {
+            product =
+                db.queryForObject(
+                    """select id, name, price, imageUrl from product where id = ?""",
+                    productRowMapper,
+                    id,
+                )
+        } catch (exception: Exception) {
+            println(exception.message)
+            return null
+        }
         return product
     }
 
@@ -36,17 +43,20 @@ class ProductService(private val db: JdbcTemplate) {
             """INSERT INTO product (name, price, imageUrl) VALUES (?, ?, ?);""",
             product.name,
             product.price,
-            product.imageUrl
+            product.imageUrl,
         )
     }
 
-    fun update(id: Long, product: Product) {
+    fun update(
+        id: Long,
+        product: Product,
+    ) {
         db.update(
             """UPDATE product set name = ?, price = ?, imageUrl = ? WHERE id = ?""",
             product.name,
             product.price,
             product.imageUrl,
-            id
+            id,
         )
     }
 
