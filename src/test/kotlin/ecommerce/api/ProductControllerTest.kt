@@ -1,11 +1,45 @@
 package ecommerce.api
 
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest
 import org.springframework.http.HttpStatus
+import org.springframework.jdbc.core.JdbcTemplate
 
+@JdbcTest
 class ProductControllerTest {
-    val controller = ProductController()
+    private lateinit var productService: ProductService
+
+    @Autowired
+    private lateinit var jdbcTemplate: JdbcTemplate
+    private lateinit var controller: ProductController
+
+    @BeforeEach
+    fun setUp() {
+        productService = ProductService(jdbcTemplate)
+
+        jdbcTemplate.execute("DROP TABLE product IF EXISTS")
+        jdbcTemplate.execute(
+            """CREATE TABLE product (
+                         id          LONG    NOT NULL AUTO_INCREMENT,
+                         name        varchar(255)    NOT NULL,
+                         price       DOUBLE  NOT NULL,
+                         imageUrl    TEXT    NOT NULL,
+                         PRIMARY KEY (id)
+                    );""",
+        )
+
+        val query = """INSERT INTO product (name, price, imageUrl) VALUES ('Iron Man', 1000, 'https://alexnsan.comics/imageurl/1');
+                    INSERT INTO product (name, price, imageUrl) VALUES ('X-men', 1000, 'https://alexnsan.comics/imageurl/2');
+                    INSERT INTO product (name, price, imageUrl) VALUES ('Superman', 1000, 'https://alexnsan.comics/imageurl/3');
+                    INSERT INTO product (name, price, imageUrl) VALUES ('Naruto', 1000, 'https://alexnsan.comics/imageurl/4');
+                    INSERT INTO product (name, price, imageUrl) VALUES ('Full Metal Alchemist', 1000, 'https://alexnsan.comics/imageurl/5');"""
+        jdbcTemplate.batchUpdate(query)
+
+        controller = ProductController(productService)
+    }
 
     @Test
     fun create() {

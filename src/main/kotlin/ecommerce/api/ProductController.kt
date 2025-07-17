@@ -7,53 +7,51 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import java.net.URI
-import java.util.concurrent.atomic.AtomicLong
 
 @RestController
-class ProductController {
-    val products: MutableMap<Long, Product> = HashMap()
-    private val index = AtomicLong(1)
-
-    @PostMapping("/api/products")
+@RequestMapping("/api")
+class ProductController(private val productService: ProductService) {
+    @PostMapping("/products")
     fun createProduct(
         @RequestBody product: Product,
     ): ResponseEntity<Void> {
-        val id = index.getAndIncrement()
-        val newProduct = Product.toEntity(product, id)
-        products.put(id, newProduct)
-        return ResponseEntity.created(URI("/api/products/${newProduct.id}")).build()
+        productService.insert(product)
+        return ResponseEntity.created(URI("/products/${product.id}")).build()
     }
 
-    @GetMapping("/api/products")
+    @GetMapping("/products")
     fun getProducts(): ResponseEntity<List<Product>> {
-        return ResponseEntity.ok(products.values.toList())
+        val products = productService.findAll()
+        return ResponseEntity.ok(products)
     }
 
-    @GetMapping("/api/products/{id}")
+    @GetMapping("/products/{id}")
     fun getProduct(
         @PathVariable id: Long,
     ): ResponseEntity<Product> {
-        val product = products[id] ?: return ResponseEntity.notFound().build()
+        val product = productService.findById(id) ?: return ResponseEntity.notFound().build()
         return ResponseEntity.ok(product)
     }
 
-    @PutMapping("/api/products/{id}")
+    @PutMapping("/products/{id}")
     fun updateProduct(
         @PathVariable id: Long,
         @RequestBody newProduct: Product,
     ): ResponseEntity<Void> {
-        val product = products[id] ?: return ResponseEntity.notFound().build()
-        product.update(newProduct)
+        productService.findById(id) ?: return ResponseEntity.notFound().build()
+        productService.update(id, newProduct)
         return ResponseEntity.ok().build()
     }
 
-    @DeleteMapping("/api/products/{id}")
+    @DeleteMapping("/products/{id}")
     fun deleteProduct(
         @PathVariable id: Long,
     ): ResponseEntity<Void> {
-        products.remove(id) ?: return ResponseEntity.notFound().build()
+        productService.findById(id) ?: return ResponseEntity.notFound().build()
+        productService.delete(id)
         return ResponseEntity.noContent().build()
     }
 }
