@@ -149,7 +149,7 @@ class ProductControllerTest {
             Product(
                 name = "Flat white L",
                 price = 6.50,
-                imageURL =
+                imageUrl =
                     "https://st.kakaocdn.net/product/gift/product/20231010111814_9a667f9eccc943648797925498bdd8a3.jpg",
             )
 
@@ -157,7 +157,7 @@ class ProductControllerTest {
             Product(
                 name = "Iced Americano T",
                 price = 4.50,
-                imageURL =
+                imageUrl =
                     "https://st.kakaocdn.net/product/gift/product/20231010111814_9a667f9eccc943648797925498bdd8a3.jpg",
             )
     }
