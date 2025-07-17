@@ -23,7 +23,7 @@ class ProductRepository(private val jdbcTemplate: JdbcTemplate) {
     }
 
     fun count(): Int? {
-        val sql = "select count(*) from products"
+        val sql = "SELECT count(*) FROM products"
         return jdbcTemplate.queryForObject(sql, Int::class.java) ?: 0
     }
 
