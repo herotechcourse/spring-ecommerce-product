@@ -1,5 +1,6 @@
 package ecommerce.repository
 
+import ecommerce.model.Product
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -29,6 +30,13 @@ class ProductRepositoryTest {
     fun getAll() {
         val products = productRepository.getAll()
         assertThat(products).hasSize(4)
+    }
+
+    @Test
+    fun update() {
+        val product = Product(1, "update", 11.00, "test.com")
+        val products = productRepository.updateProduct(product)
+        assertThat(product.name).isEqualTo("update")
     }
 
     private fun createQuery(): String {
