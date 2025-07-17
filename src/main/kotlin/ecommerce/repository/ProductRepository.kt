@@ -21,4 +21,14 @@ class ProductRepository(private val jdbcTemplate: JdbcTemplate) {
     fun getAll(): List<Product> {
         return jdbcTemplate.query("select id, name, price, image_url from products", productRowMapper)
     }
+
+    fun updateProduct(product: Product) {
+        jdbcTemplate.update(
+            "UPDATE products SET name=?, price= ?, image_url = ? where id = ?",
+            product.name,
+            product.price,
+            product.imageUrl,
+            product.id,
+        )
+    }
 }
