@@ -12,7 +12,7 @@ import org.springframework.test.annotation.DirtiesContext
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 class ProductControllerTest {
     @Test
-    fun `should be able return 'created 201' response`() {
+    fun `create() should be able return 'created 201' response`() {
         val response =
             RestAssured
                 .given().log().all()
@@ -25,7 +25,7 @@ class ProductControllerTest {
     }
 
     @Test
-    fun `should be able to read a product and return 'ok 200' response`() {
+    fun `read() should be able to read a product and return 'ok 200' response`() {
         createProduct(AMERICANO)
 
         val response =
@@ -40,7 +40,7 @@ class ProductControllerTest {
     }
 
     @Test
-    fun `should be able to read products, and return 'ok 200' response`() {
+    fun `read() should be able to read products, and return 'ok 200' response`() {
         createProduct(AMERICANO)
         createProduct(FLAT_WHITE)
 
@@ -56,7 +56,7 @@ class ProductControllerTest {
     }
 
     @Test
-    fun `should return 'no-content 204' response`() {
+    fun `read() should return 'no-content 204' response`() {
         val response =
             RestAssured
                 .given().log().all()
@@ -68,7 +68,7 @@ class ProductControllerTest {
     }
 
     @Test
-    fun `should be able to update product, and return 'ok 200' response`() {
+    fun `update() should be able to update product, and return 'ok 200' response`() {
         createProduct(AMERICANO)
 
         val response =
@@ -83,7 +83,7 @@ class ProductControllerTest {
     }
 
     @Test
-    fun `should return 'not found 404' response, when failed to update product`() {
+    fun `update() should return 'not found 404' response, when failed to update product`() {
         val response =
             RestAssured
                 .given().log().all()
@@ -96,7 +96,7 @@ class ProductControllerTest {
     }
 
     @Test
-    fun `should be able to delete product, and return '204' response`() {
+    fun `delete() should be able to delete product, and return '204' response`() {
         createProduct(AMERICANO)
 
         val response =
@@ -109,7 +109,7 @@ class ProductControllerTest {
     }
 
     @Test
-    fun `should return 'not found 404' response, when list of products is empty`() {
+    fun `delete() should return 'not found 404' response, when list of products is empty`() {
         val response =
             RestAssured
                 .given().log().all()
@@ -120,7 +120,7 @@ class ProductControllerTest {
     }
 
     @Test
-    fun `should return 'not found 404' response, when product id not found`() {
+    fun `delete() should return 'not found 404' response, when product id not found`() {
         createProduct(AMERICANO)
 
         val response =
