@@ -22,6 +22,15 @@ class ProductRepository(private val jdbcTemplate: JdbcTemplate) {
         return jdbcTemplate.query("select id, name, price, image_url from products", productRowMapper)
     }
 
+    fun createProduct(product: Product) {
+        jdbcTemplate.update(
+            "insert into products (name, price, image_url) values (?,?,?)",
+            product.name,
+            product.price,
+            product.imageUrl,
+        )
+    }
+
     fun updateProduct(product: Product) {
         jdbcTemplate.update(
             "UPDATE products SET name=?, price= ?, image_url = ? where id = ?",

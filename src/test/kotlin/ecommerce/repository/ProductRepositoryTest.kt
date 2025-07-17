@@ -46,6 +46,14 @@ class ProductRepositoryTest {
         assertThat(products).hasSize(3)
     }
 
+    @Test
+    fun create() {
+        val product = Product(1, "update", 11.00, "test.com")
+        productRepository.createProduct(product)
+        val products = productRepository.getAll()
+        assertThat(products).hasSize(5)
+    }
+
     private fun createQuery(): String {
         return """
             create table PRODUCTS
