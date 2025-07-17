@@ -1,5 +1,6 @@
 package ecommerce.product
 
+import ecommerce.repository.ProductRepository
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -12,8 +13,7 @@ import java.net.URI
 import java.util.concurrent.atomic.AtomicLong
 
 @Controller
-class ProductController {
-    private val products: MutableMap<Long, Product> = HashMap()
+class ProductController(private val repository: ProductRepository) {
     private val index = AtomicLong(1)
 
     @PostMapping("/api/products")
@@ -23,14 +23,14 @@ class ProductController {
         val id = index.getAndIncrement()
         val newProduct = Product.toEntity(product, id)
 
-        products.put(id, newProduct)
+        repository.insert(id, newProduct)
         return ResponseEntity.created(URI.create("/products/" + newProduct.id)).body(product)
     }
 
     @GetMapping("/api/products")
     fun read(): ResponseEntity<List<Product>> {
-        if (products.isEmpty()) return ResponseEntity.noContent().build()
-        return ResponseEntity.ok(products.values.toList())
+        if (repository.isEmptyOrNull()) return ResponseEntity.noContent().build()
+        return ResponseEntity.ok(repository.findAll())
     }
 
     @PutMapping("/api/products/{id}")
@@ -38,8 +38,9 @@ class ProductController {
         @RequestBody newProduct: Product,
         @PathVariable id: Long,
     ): ResponseEntity<Product> {
-        val product = products[id] ?: return ResponseEntity.notFound().build()
+        val product = repository[id] ?: return ResponseEntity.notFound().build()
         product.update(newProduct)
+        repository.updateById(id, product)
         return ResponseEntity.ok().body(product)
     }
 
@@ -47,7 +48,7 @@ class ProductController {
     fun delete(
         @PathVariable id: Long,
     ): ResponseEntity<Void> {
-        products.remove(id) ?: return ResponseEntity.notFound().build()
+        repository.deleteById(id) ?: return ResponseEntity.notFound().build()
         return ResponseEntity.noContent().build()
     }
 }
