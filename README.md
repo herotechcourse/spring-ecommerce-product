@@ -52,7 +52,6 @@ The required database tables are initialized automatically when the application 
 - TODO read about difference btw RestController and Controller
 - TODO why do we combine Controller and ControllerView
 - read and learn SQL commands in H2 console
-- 
 
 
 
