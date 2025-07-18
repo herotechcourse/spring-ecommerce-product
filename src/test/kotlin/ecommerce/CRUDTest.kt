@@ -7,14 +7,16 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.boot.test.web.server.LocalServerPort
 import org.springframework.http.HttpStatus
 import org.springframework.jdbc.core.JdbcTemplate
-import org.springframework.test.annotation.DirtiesContext
 
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class CRUDTest {
     private lateinit var productRepository: ProductRepository
+
+    @LocalServerPort
+    private var port: Int = 0
 
     @Autowired
     private lateinit var jdbcTemplate: JdbcTemplate
@@ -25,8 +27,8 @@ class CRUDTest {
 
         jdbcTemplate.execute("DROP TABLE products IF EXISTS")
         jdbcTemplate.execute(
-            "CREATE TABLE products(" +
-                "id BIGINT AUTO_INCREMENT, name VARCHAR(255) NOT NULL, price DOUBLE NOT NULL, image_url VARCHAR(512) NOT NULL)",
+            "CREATE TABLE IF NOT EXISTS products(" +
+                    "id BIGINT AUTO_INCREMENT, name VARCHAR(255) NOT NULL, price DOUBLE NOT NULL, image_url VARCHAR(512) NOT NULL)",
         )
 
         val products =
@@ -67,6 +69,7 @@ class CRUDTest {
         val response =
             RestAssured
                 .given().log().all()
+                .port(port)
                 .body(
                     Product(
                         name = "Orange ice cream",
@@ -86,6 +89,7 @@ class CRUDTest {
         val response =
             RestAssured
                 .given().log().all()
+                .port(port)
                 .contentType(ContentType.JSON)
                 .`when`().get("/api/products")
                 .then().log().all().extract()
@@ -99,13 +103,14 @@ class CRUDTest {
         val response =
             RestAssured
                 .given().log().all()
+                .port(port)
                 .body(
                     Product(
                         name = "lemon ice cream",
                         price = 3.60,
                         imageUrl =
                             "https://www.carnation.co.uk/sites/default/files/2020" +
-                                "-05/Final%20Lemon%20Curd%20Ice%20Cream%20mobile.jpg",
+                                    "-05/Final%20Lemon%20Curd%20Ice%20Cream%20mobile.jpg",
                     ),
                 )
                 .contentType(ContentType.JSON)
@@ -120,6 +125,7 @@ class CRUDTest {
         val response =
             RestAssured
                 .given().log().all()
+                .port(port)
                 .body(
                     Product(
                         name = "vanilla ice cream",
@@ -141,6 +147,7 @@ class CRUDTest {
         val response =
             RestAssured
                 .given().log().all()
+                .port(port)
                 .`when`().delete("/api/products/1")
                 .then().log().all().extract()
 
@@ -152,6 +159,7 @@ class CRUDTest {
         val response =
             RestAssured
                 .given().log().all()
+                .port(port)
                 .`when`().delete("/api/products/4")
                 .then().log().all().extract()
 

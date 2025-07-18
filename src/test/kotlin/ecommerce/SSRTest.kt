@@ -7,14 +7,16 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.boot.test.web.server.LocalServerPort
 import org.springframework.jdbc.core.JdbcTemplate
-import org.springframework.test.annotation.DirtiesContext
 
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
 class SSRTest() {
     private lateinit var productRepository: ProductRepository
+
+    @LocalServerPort
+    private val port: Int = 0
 
     val products =
         listOf(
@@ -47,8 +49,8 @@ class SSRTest() {
 
         jdbcTemplate.execute("DROP TABLE products IF EXISTS")
         jdbcTemplate.execute(
-            "CREATE TABLE products(" +
-                "id BIGINT AUTO_INCREMENT, name VARCHAR(255) NOT NULL, price DOUBLE NOT NULL, image_url VARCHAR(512) NOT NULL)",
+            "CREATE TABLE IF NOT EXISTS products(" +
+                    "id BIGINT AUTO_INCREMENT, name VARCHAR(255) NOT NULL, price DOUBLE NOT NULL, image_url VARCHAR(512) NOT NULL)",
         )
 
         jdbcTemplate.batchUpdate(
@@ -66,6 +68,8 @@ class SSRTest() {
     fun `HTML page contains product names`() {
         val response =
             RestAssured
+                .given()
+                .port(port)
                 .get("/products")
 
         val html = response.body.asString()
@@ -79,6 +83,8 @@ class SSRTest() {
     fun `HTML page does not contain product name`() {
         val response =
             RestAssured
+                .given()
+                .port(port)
                 .get("/products")
 
         val html = response.body.asString()

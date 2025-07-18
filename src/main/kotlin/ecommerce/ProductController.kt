@@ -10,11 +10,14 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RestController
 import java.net.URI
 
-@Controller
+@RestController
+@RequestMapping("/api/products")
 class ProductController(private val productRepository: ProductRepository) {
-    @PostMapping("/api/products")
+    @PostMapping
     fun createProduct(
         @RequestBody product: Product,
     ): ResponseEntity<Void> {
@@ -22,13 +25,13 @@ class ProductController(private val productRepository: ProductRepository) {
         return ResponseEntity.created(URI.create("/api/products/$id")).build()
     }
 
-    @GetMapping("/api/products")
+    @GetMapping
     fun readProducts(): ResponseEntity<List<Product>> {
         val products = productRepository.getAll()
         return ResponseEntity.ok(products)
     }
 
-    @PutMapping("/api/products/{id}")
+    @PutMapping("/{id}")
     fun updateProduct(
         @RequestBody newProduct: Product,
         @PathVariable id: Long,
@@ -40,7 +43,7 @@ class ProductController(private val productRepository: ProductRepository) {
         return ResponseEntity.ok().build()
     }
 
-    @DeleteMapping("/api/products/{id}")
+    @DeleteMapping("/{id}")
     fun deleteProduct(
         @PathVariable id: Long,
     ): ResponseEntity<Void> {
