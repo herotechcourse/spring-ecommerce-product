@@ -31,8 +31,8 @@ class ProductControllerTest {
 
         val splitUpAttributes: List<Array<String>> =
             listOf(
-                "Coca-Cola 2.0 https://mcdonalds.com.mt/wp-content/uploads/2024/06/COCA-COLA-WEBSITE-IMG.jpg",
-                "Fanta 2.5 https://www.cokesolutions.com/content/dam/cokesolutions/us/images/Products/Fanta-Orange-PET.jpg",
+                "Coca-Cola 2.00 https://mcdonalds.com.mt/wp-content/uploads/2024/06/COCA-COLA-WEBSITE-IMG.jpg",
+                "Fanta 2.50 https://www.cokesolutions.com/content/dam/cokesolutions/us/images/Products/Fanta-Orange-PET.jpg",
                 "Cappuccino 4.39 https://www.tchibo.de/kaffeeakademie/media/pages/global-images/fb95bb5370-1729609446/adobestock_219364830-1440x700-crop-42-46.jpg",
                 "Tea 1.59 https://cupitol.com/wp-content/uploads/2019/08/tea-drinking-1.jpg",
             ).map { name -> name.split(" ").toTypedArray() }.toList()
@@ -42,8 +42,15 @@ class ProductControllerTest {
     @Test
     fun create() {
         val response =
-            RestAssured.given().log().all().body(Product(name = "cola", price = 4.5, imageUrl = "https://cola.jpg"))
-                .contentType(ContentType.JSON).`when`().post("/products").then().log().all().extract()
+            RestAssured.given()
+                .log().all()
+                .contentType(ContentType.JSON)
+                .body(Product(name = "cola", price = 4.50, imageUrl = "https://cola.jpg"))
+                .`when`()
+                .post("/products")
+                .then()
+                .log().all()
+                .extract()
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value())
     }
@@ -55,13 +62,13 @@ class ProductControllerTest {
         with(products[0]) {
             assertThat(id).isEqualTo(1)
             assertThat(name).isEqualTo("Coca-Cola")
-            assertThat(price).isEqualTo(2.0)
+            assertThat(price).isEqualTo(2.00)
             assertThat(imageUrl).isEqualTo("https://mcdonalds.com.mt/wp-content/uploads/2024/06/COCA-COLA-WEBSITE-IMG.jpg")
         }
         with(products[1]) {
             assertThat(id).isEqualTo(2)
             assertThat(name).isEqualTo("Fanta")
-            assertThat(price).isEqualTo(2.5)
+            assertThat(price).isEqualTo(2.50)
             assertThat(imageUrl).isEqualTo("https://www.cokesolutions.com/content/dam/cokesolutions/us/images/Products/Fanta-Orange-PET.jpg")
         }
         with(products[2]) {
@@ -81,15 +88,29 @@ class ProductControllerTest {
     @Test
     fun `update existing product`() {
         val response =
-            RestAssured.given().log().all().body(Product(name = "Fanta", price = 5.6, imageUrl = "https://www.cokesolutions.com/content/dam/cokesolutions/us/images/Products/Fanta-Orange-PET.jpg"))
-                .contentType(ContentType.JSON).`when`().put("/products/1").then().log().all().extract()
+            RestAssured.given()
+                .log().all()
+                .contentType(ContentType.JSON)
+                .body(Product(name = "Fanta", price = 5.60, imageUrl = "https://www.cokesolutions.com/content/dam/cokesolutions/us/images/Products/Fanta-Orange-PET.jpg"))
+                .`when`()
+                .put("/products/1")
+                .then()
+                .log().all()
+                .extract()
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
     }
 
     @Test
     fun delete() {
-        val response = RestAssured.given().log().all().`when`().delete("/products/1").then().log().all().extract()
+        val response =
+            RestAssured.given()
+                .log().all()
+                .`when`()
+                .delete("/products/1")
+                .then()
+                .log().all()
+                .extract()
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value())
     }
 }
