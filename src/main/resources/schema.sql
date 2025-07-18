@@ -1,8 +1,8 @@
-create table PRODUCTS
+CREATE TABLE PRODUCTS
 (
-    id        int          not null AUTO_INCREMENT,
-    name      varchar(100) not null,
-    price     DECIMAL(10, 2),
-    image_url varchar(500) not null,
+    id        BIGINT          NOT NULL AUTO_INCREMENT,
+    name      VARCHAR(100) NOT NULL,
+    price     DECIMAL(10, 2) NOT NULL,
+    image_url VARCHAR(500) NOT NULL,
     PRIMARY KEY (id)
 );
