@@ -18,13 +18,13 @@ class ProductRepository(private val jdbcTemplate: JdbcTemplate) {
         }
 
     fun findAllProducts(): List<Product> {
-        val sql = "select id, name, price, image_url from products"
+        val sql = "SELECT id, name, price, image_url FROM products"
         val products: List<Product> = jdbcTemplate.query(sql, productRowMapper)
         return products
     }
 
     fun insert(product: Product) {
-        val sql = "insert into products (name, price, image_url) values (?, ?, ?)"
+        val sql = "INSERT INTO products (name, price, image_url) VALUES (?, ?, ?)"
         jdbcTemplate.update(sql, product.name, product.price, product.imageUrl)
     }
 
@@ -37,6 +37,6 @@ class ProductRepository(private val jdbcTemplate: JdbcTemplate) {
     }
 
     fun delete(id: Long): Int {
-        return jdbcTemplate.update("delete from products where id = ?", id)
+        return jdbcTemplate.update("DELETE FROM products WHERE id = ?", id)
     }
 }
