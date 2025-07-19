@@ -1,4 +1,4 @@
-package ecommerce.repository
+package ecommerce.store
 
 import ecommerce.product.Product
 import org.springframework.jdbc.core.JdbcTemplate
@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository
 import java.sql.ResultSet
 
 @Repository
-class ProductRepository(private val jdbcTemplate: JdbcTemplate) {
+class ProductStore(val jdbcTemplate: JdbcTemplate) : BaseProductStore {
     private val rowMapper =
         RowMapper<Product> { rs: ResultSet, _ ->
             Product(
@@ -18,26 +18,26 @@ class ProductRepository(private val jdbcTemplate: JdbcTemplate) {
             )
         }
 
-    fun isEmptyOrNull(): Boolean {
+    override fun isEmptyOrNull(): Boolean {
         return count() == 0
     }
 
-    fun count(): Int? {
+    override fun count(): Int? {
         val sql = "SELECT count(*) FROM products"
         return jdbcTemplate.queryForObject(sql, Int::class.java) ?: 0
     }
 
-    fun findAll(): List<Product> {
+    override fun findAll(): List<Product> {
         val sql = "SELECT id, name, price, image_url FROM products"
         return jdbcTemplate.query(sql, rowMapper)
     }
 
-    operator fun get(id: Long): Product? {
+    override operator fun get(id: Long): Product? {
         val sql = "SELECT id, name, price, image_url FROM products WHERE id = ?"
         return jdbcTemplate.query(sql, rowMapper, id).firstOrNull()
     }
 
-    fun insert(
+    override fun insert(
         id: Long,
         product: Product,
     ): Int? {
@@ -50,7 +50,7 @@ class ProductRepository(private val jdbcTemplate: JdbcTemplate) {
         return jdbcTemplate.update(sql, id, product.name, product.price, product.imageUrl)
     }
 
-    fun updateById(
+    override fun updateById(
         id: Long,
         product: Product,
     ): Int? {
