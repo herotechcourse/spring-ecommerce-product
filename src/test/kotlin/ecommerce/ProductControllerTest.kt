@@ -20,8 +20,6 @@ class ProductControllerTest {
 
     @BeforeEach
     fun setUp() {
-        productRepository = ProductRepository(jdbcTemplate)
-
         jdbcTemplate.execute("DROP TABLE products IF EXISTS")
         jdbcTemplate.execute(
             "CREATE TABLE products(" + "id SERIAL, name VARCHAR(100), price DECIMAL(10,2), image_url VARCHAR(500))",
