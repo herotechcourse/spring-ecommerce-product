@@ -64,7 +64,12 @@ class ProductStore(val jdbcTemplate: JdbcTemplate) : BaseProductStore {
         return jdbcTemplate.update(sql, product.name, product.price, product.imageUrl, id).takeIf { it == 1 }
     }
 
-    fun deleteById(id: Long): Int? {
+    override fun findByName(name: String): Product? {
+        val sql = "SELECT id, name, price, image_url FROM products WHERE name = ?"
+        return jdbcTemplate.query(sql, rowMapper, name).firstOrNull()
+    }
+
+    override fun deleteById(id: Long): Int? {
         if (isEmptyOrNull()) return null
         val sql = "DELETE FROM products WHERE id = ?"
         return jdbcTemplate.update(sql, id).takeIf { it == 1 }
