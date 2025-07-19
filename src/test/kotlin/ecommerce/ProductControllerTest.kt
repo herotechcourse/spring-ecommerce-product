@@ -27,9 +27,12 @@ class ProductControllerTest {
 
         val splitUpAttributes: List<Array<String>> =
             listOf(
-                "Coca-Cola 2.00 https://mcdonalds.com.mt/wp-content/uploads/2024/06/COCA-COLA-WEBSITE-IMG.jpg",
-                "Fanta 2.50 https://www.cokesolutions.com/content/dam/cokesolutions/us/images/Products/Fanta-Orange-PET.jpg",
-                "Cappuccino 4.39 https://www.tchibo.de/kaffeeakademie/media/pages/global-images/fb95bb5370-1729609446/adobestock_219364830-1440x700-crop-42-46.jpg",
+                "Coca-Cola 2.00 https://mcdonalds.com.mt/wp-content/uploads/2024/06/" +
+                    "COCA-COLA-WEBSITE-IMG.jpg",
+                "Fanta 2.50 https://www.cokesolutions.com/content/dam/cokesolutions/us/" +
+                    "images/Products/Fanta-Orange-PET.jpg",
+                "Cappuccino 4.39 https://www.tchibo.de/kaffeeakademie/media/pages/global-images/" +
+                    "fb95bb5370-1729609446/adobestock_219364830-1440x700-crop-42-46.jpg",
                 "Tea 1.59 https://cupitol.com/wp-content/uploads/2019/08/tea-drinking-1.jpg",
             ).map { name -> name.split(" ").toTypedArray() }.toList()
         jdbcTemplate.batchUpdate("INSERT INTO products(name, price, image_url) VALUES (?,?,?)", splitUpAttributes)
@@ -65,13 +68,23 @@ class ProductControllerTest {
             assertThat(id).isEqualTo(2)
             assertThat(name).isEqualTo("Fanta")
             assertThat(price).isEqualTo(2.50)
-            assertThat(imageUrl).isEqualTo("https://www.cokesolutions.com/content/dam/cokesolutions/us/images/Products/Fanta-Orange-PET.jpg")
+            assertThat(
+                imageUrl,
+            ).isEqualTo(
+                "https://www.cokesolutions.com/content/dam/cokesolutions/us/images/Products/" +
+                    "Fanta-Orange-PET.jpg",
+            )
         }
         with(products[2]) {
             assertThat(id).isEqualTo(3)
             assertThat(name).isEqualTo("Cappuccino")
             assertThat(price).isEqualTo(4.39)
-            assertThat(imageUrl).isEqualTo("https://www.tchibo.de/kaffeeakademie/media/pages/global-images/fb95bb5370-1729609446/adobestock_219364830-1440x700-crop-42-46.jpg")
+            assertThat(
+                imageUrl,
+            ).isEqualTo(
+                "https://www.tchibo.de/kaffeeakademie/media/pages/global-images/fb95bb5370-1729609446/" +
+                    "adobestock_219364830-1440x700-crop-42-46.jpg",
+            )
         }
         with(products[3]) {
             assertThat(id).isEqualTo(4)
@@ -87,7 +100,15 @@ class ProductControllerTest {
             RestAssured.given()
                 .log().all()
                 .contentType(ContentType.JSON)
-                .body(Product(name = "Fanta", price = 5.60, imageUrl = "https://www.cokesolutions.com/content/dam/cokesolutions/us/images/Products/Fanta-Orange-PET.jpg"))
+                .body(
+                    Product(
+                        name = "Fanta",
+                        price = 5.60,
+                        imageUrl =
+                            "https://www.cokesolutions.com/content/dam/cokesolutions/us/images/" +
+                                "Products/Fanta-Orange-PET.jpg",
+                    ),
+                )
                 .`when`()
                 .put("/products/1")
                 .then()
