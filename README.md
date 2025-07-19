@@ -18,6 +18,10 @@ HTTP API that allows users to retrieve, add, update, and delete products.
   - if a product map is empty, return notFound()
   - if cannot find a product with id, return notFound()
 
+### Product Service
+- [ ] create a product service class to validate requirements of product name, price and image URL
+- [ ] connect validation to the methods responsible for creating and updating functions
+
 ### Test: Product Controller
 - [x] refactor test names
 - [x] positive tests
