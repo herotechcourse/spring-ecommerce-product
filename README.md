@@ -27,11 +27,12 @@ functionality, readability, and test reliability.
 
 - [x] **Rename or refactor `Product.toEntity`** -> to `Product.withId`
   The current method name may be misleading. Consider renaming it or using a constructor with named arguments.
+- [ ] Check/Read about Entity and DTO
 
 - [ ] **Remove manual ID generation**  
   H2 database handles IDs via AUTO_INCREMENT. Remove controller logic that manually assigns IDs.
 
-- [ ] **Adjust controller for JSON responses**  
+- [x] **Adjust controller for JSON responses**  
   Replace `@Controller` with `@RestController` or add `@ResponseBody` to return JSON directly.
 
 - [ ] **Clarify update return type**  
