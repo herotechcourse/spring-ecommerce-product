@@ -13,7 +13,7 @@ class Product(
     }
 
     companion object {
-        fun toEntity(
+        fun withId(
             product: Product,
             id: Long,
         ): Product {

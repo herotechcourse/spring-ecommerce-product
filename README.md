@@ -8,11 +8,14 @@ HTTP API that allows users to retrieve, add, update, and delete products.
 - Since no separate database is used at this point, store data in memory using an appropriate Kotlin Collection
   Framework.
 
+---
+
 ### Todo
 
 The following tasks are based on the feedback received
 in [PR #15](https://github.com/herotechcourse/spring-ecommerce-product/pull/15). These improvements aim to enhance
 functionality, readability, and test reliability.
+
 - [x] **remove application.yml**
   For Spring Boot configuration, only needs either application.properties or application.yml
 
@@ -22,7 +25,7 @@ functionality, readability, and test reliability.
 - [x] **Improve constructor readability**  
   If a class constructor has many parameters, split them into multiple lines for clarity.
 
-- [ ] **Rename or refactor `Product.toEntity`**  
+- [x] **Rename or refactor `Product.toEntity`** -> to `Product.withId`
   The current method name may be misleading. Consider renaming it or using a constructor with named arguments.
 
 - [ ] **Remove manual ID generation**  
