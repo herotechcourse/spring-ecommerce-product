@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <title>Product List</title>
+</head>
+<body>
+<h1>Products</h1>
+
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Price</th>
+        <th>Image</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="p : ${products}">
+        <td th:text="${p.id}">1</td>
+        <td th:text="${p.name}">Chocolate Ice Cream</td>
+        <td th:text="${p.price}">2.80</td>
+        <td>
+            <img th:src="${p.imageUrl}" alt="Product Image" width="100"/>
+        </td>
+        <td>
+            <button onclick="deleteProduct(this)" th:data-id="${p.id}">Delete</button>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<h2>Add Product</h2>
+<form id="productForm">
+    <label for="name"></label><input type="text" id="name" placeholder="Name" required>
+    <label for="price"></label><input type="number" id="price" placeholder="Price" step="0.01" required>
+    <label for="imageUrl"></label><input type="text" id="imageUrl" placeholder="Image URL" required>
+    <button type="submit">Add</button>
+</form>
+
+<h2>Update Product</h2>
+<form id="updateProductForm">
+    <label for="updateId"></label>
+    <input type="number" id="updateId" placeholder="Product ID" required>
+
+    <label for="updateName"></label>
+    <input type="text" id="updateName" placeholder="Name" required>
+
+    <label for="updatePrice"></label>
+    <input type="number" id="updatePrice" placeholder="Price" step="0.01" required>
+
+    <label for="updateImageUrl"></label>
+    <input type="text" id="updateImageUrl" placeholder="Image URL" required>
+
+    <button type="submit">Update</button>
+</form>
+
+
+<script>
+    // Add Product
+    document.getElementById('productForm').addEventListener('submit', async function (event) {
+        event.preventDefault(); // Prevent page reload
+
+        const product = {
+            name: document.getElementById('name').value,
+            price: parseFloat(document.getElementById('price').value),
+            imageUrl: document.getElementById('imageUrl').value
+        };
+
+        const response = await fetch('/api/products', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(product)
+        });
+
+        if (response.ok) {
+            alert('Product created!');
+            location.reload(); // Reload to show new product
+        } else {
+            alert('Failed to create product');
+        }
+    });
+
+    // Delete Product
+    function deleteProduct(button) {
+        const id = button.getAttribute("data-id");
+
+        fetch(`/api/products/${id}`, {
+            method: "DELETE"
+        })
+            .then(response => {
+                if (response.ok) {
+                    alert("Product deleted");
+                    location.reload();
+                } else {
+                    alert("Failed to delete product");
+                }
+            });
+    }
+
+    document.getElementById('updateProductForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+        updateProduct();
+    });
+
+    // Update Product
+    async function updateProduct() {
+        const id = document.getElementById('updateId').value;
+        const updatedProduct = {
+            name: document.getElementById('updateName').value,
+            price: parseFloat(document.getElementById('updatePrice').value),
+            imageUrl: document.getElementById('updateImageUrl').value
+        };
+
+        try {
+            const response = await fetch(`/api/products/${id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(updatedProduct)
+            });
+
+            if (response.ok) {
+                alert('Product updated!');
+                location.reload();
+            } else {
+                alert('Failed to update product');
+            }
+        } catch (error) {
+            console.error("Error updating product:", error);
+            alert('Something went wrong');
+        }
+    }
+
+</script>
+
+</body>
+</html>
