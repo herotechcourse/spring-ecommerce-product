@@ -13,6 +13,8 @@ HTTP API that allows users to retrieve, add, update, and delete products.
 The following tasks are based on the feedback received
 in [PR #15](https://github.com/herotechcourse/spring-ecommerce-product/pull/15). These improvements aim to enhance
 functionality, readability, and test reliability.
+- [x] remove application.yml
+  For Spring Boot configuration, only needs either application.properties or application.yml
 
 - [ ] **Fix Edit/Delete button issue**  
   Resolve the problem where Edit and Delete buttons do not function on the HTML page.
