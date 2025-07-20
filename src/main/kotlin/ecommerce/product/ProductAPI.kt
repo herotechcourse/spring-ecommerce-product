@@ -29,7 +29,6 @@ class ProductAPI(private val store: ProductStore) {
 
     @GetMapping("/api/products")
     fun getProducts(): ResponseEntity<List<Product>> {
-        if (store.isEmptyOrNull()) return ResponseEntity.noContent().build()
         return ResponseEntity.ok(store.findAll())
     }
 
