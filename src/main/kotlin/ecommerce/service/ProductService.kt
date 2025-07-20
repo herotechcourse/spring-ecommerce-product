@@ -6,14 +6,16 @@ import org.springframework.stereotype.Service
 
 @Service
 class ProductService(private val productStore: ProductStore) {
-
     fun findAll(): List<Product> = productStore.findAllProducts()
 
     fun findById(id: Long): Product? = productStore.findProductById(id)
 
-    fun insert(product: Product) = productStore.insertProduct(product)
+    fun insert(product: Product): Product = productStore.insertProduct(product)
 
-    fun update(id: Long, product: Product): Boolean {
+    fun update(
+        id: Long,
+        product: Product,
+    ): Boolean {
         if (productStore.findProductById(id) == null) return false
         productStore.updateProduct(id, product)
         return true
