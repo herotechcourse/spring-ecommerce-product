@@ -4,7 +4,7 @@ class Product(
     var id: Long? = null,
     var name: String,
     var price: Double,
-    var imageUrl: String?
+    var imageUrl: String?,
 ) {
     fun update(newProduct: Product) {
         this.name = newProduct.name
