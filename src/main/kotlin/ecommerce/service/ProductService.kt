@@ -1,5 +1,6 @@
-package ecommerce.api
+package ecommerce.service
 
+import ecommerce.model.Product
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.jdbc.core.RowMapper
 import org.springframework.stereotype.Service

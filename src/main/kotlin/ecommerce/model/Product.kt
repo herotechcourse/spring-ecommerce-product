@@ -1,4 +1,5 @@
-package ecommerce.api
+package ecommerce.model
+
 
 class Product(
     var id: Long? = null,
