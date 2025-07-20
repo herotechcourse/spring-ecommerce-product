@@ -32,12 +32,12 @@ class ProductStore(private val jdbcTemplate: JdbcTemplate) {
         return jdbcTemplate.query(sql, rowMapper)
     }
 
-    operator fun get(id: Long): Product? {
+    fun findById(id: Long): Product? {
         val sql = "SELECT id, name, price, image_url FROM products WHERE id = ?"
         return jdbcTemplate.queryForObject(sql, rowMapper, id).takeIf { it != null }
     }
 
-    fun insert(
+    fun save(
         id: Long,
         product: Product,
     ): Int? {
@@ -50,7 +50,7 @@ class ProductStore(private val jdbcTemplate: JdbcTemplate) {
         return jdbcTemplate.update(sql, id, product.name, product.price, product.imageUrl)
     }
 
-    fun updateById(
+    fun update(
         id: Long,
         product: Product,
     ): Int? {

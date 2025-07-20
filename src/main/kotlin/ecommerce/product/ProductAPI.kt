@@ -1,14 +1,14 @@
 package ecommerce.product
 
-import ecommerce.repository.ProductRepository
+import ecommerce.repository.ProductStore
 import org.springframework.http.ResponseEntity
-import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RestController
 import java.net.URI
 import java.util.concurrent.atomic.AtomicLong
 
@@ -21,31 +21,31 @@ class ProductAPI(private val repository: ProductStore) {
         @RequestBody product: Product,
     ): ResponseEntity<Product> {
         val id = index.getAndIncrement()
-        val newProduct = Product.toEntity(product, id)
+        val newProduct = Product.withId(product, id)
 
-        repository.insert(id, newProduct)
-        return ResponseEntity.created(URI.create("/products/" + newProduct.id)).body(product)
+        repository.save(id, newProduct)
+        return ResponseEntity.created(URI.create("/products/$id")).body(product)
     }
 
     @GetMapping("/api/products")
-    fun read(): ResponseEntity<List<Product>> {
+    fun getProducts(): ResponseEntity<List<Product>> {
         if (repository.isEmptyOrNull()) return ResponseEntity.noContent().build()
         return ResponseEntity.ok(repository.findAll())
     }
 
     @PutMapping("/api/products/{id}")
-    fun update(
+    fun updateProduct(
         @RequestBody newProduct: Product,
         @PathVariable id: Long,
     ): ResponseEntity<Product> {
-        val product = repository[id] ?: return ResponseEntity.notFound().build()
+        val product = repository.findById(id) ?: return ResponseEntity.notFound().build()
         product.update(newProduct)
-        repository.updateById(id, product)
+        repository.update(id, product)
         return ResponseEntity.ok().body(product)
     }
 
     @DeleteMapping("/api/products/{id}")
-    fun delete(
+    fun deleteById(
         @PathVariable id: Long,
     ): ResponseEntity<Void> {
         repository.deleteById(id) ?: return ResponseEntity.notFound().build()
