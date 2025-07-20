@@ -1,6 +1,7 @@
 package ecommerce.controller.api
 
 import ecommerce.model.Product
+import ecommerce.model.ProductDTO
 import ecommerce.service.ProductService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -16,27 +17,28 @@ import java.net.URI
 @RestController
 @RequestMapping("/api")
 class ProductController(private val productService: ProductService) {
-
     @PostMapping("/products")
     fun createProduct(
         @RequestBody product: Product,
-    ): ResponseEntity<Void> {
-        productService.insert(product)
-        return ResponseEntity.created(URI("/products/${product.id}")).build()
+    ): ResponseEntity<ProductDTO> {
+        val created = productService.insert(product)
+        val dto = ProductDTO.from(created)
+        return ResponseEntity.created(URI("/products/${dto.id}")).body(dto)
     }
 
     @GetMapping("/products")
-    fun getProducts(): ResponseEntity<List<Product>> {
+    fun getProducts(): ResponseEntity<List<ProductDTO>> {
         val products = productService.findAll()
-        return ResponseEntity.ok(products)
+        val dtos = products.map { ProductDTO.from(it) }
+        return ResponseEntity.ok(dtos)
     }
 
     @GetMapping("/products/{id}")
     fun getProduct(
         @PathVariable id: Long,
-    ): ResponseEntity<Product> {
+    ): ResponseEntity<ProductDTO> {
         val product = productService.findById(id) ?: return ResponseEntity.notFound().build()
-        return ResponseEntity.ok(product)
+        return ResponseEntity.ok(ProductDTO.from(product))
     }
 
     @PutMapping("/products/{id}")
@@ -48,7 +50,7 @@ class ProductController(private val productService: ProductService) {
         if (updated) {
             return ResponseEntity.ok().build()
         }
-        return    ResponseEntity.notFound().build()
+        return ResponseEntity.notFound().build()
     }
 
     @DeleteMapping("/products/{id}")
