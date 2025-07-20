@@ -10,7 +10,7 @@ import org.springframework.test.annotation.DirtiesContext
 
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
-class ProductControllerTest {
+class ProductAPITest {
     @Test
     fun `create() should be able return 'created 201' response`() {
         val response =

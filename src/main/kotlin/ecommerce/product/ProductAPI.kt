@@ -12,9 +12,9 @@ import org.springframework.web.bind.annotation.RequestBody
 import java.net.URI
 import java.util.concurrent.atomic.AtomicLong
 
-@Controller
-class ProductController(private val repository: ProductRepository) {
-    private val index = AtomicLong(1)
+@RestController
+class ProductAPI(private val repository: ProductStore) {
+    private val index = AtomicLong(0)
 
     @PostMapping("/api/products")
     fun create(
