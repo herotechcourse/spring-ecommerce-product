@@ -13,24 +13,24 @@ import java.net.URI
 import java.util.concurrent.atomic.AtomicLong
 
 @RestController
-class ProductAPI(private val repository: ProductStore) {
+class ProductAPI(private val store: ProductStore) {
     private val index = AtomicLong(0)
 
     @PostMapping("/api/products")
-    fun create(
+    fun createProduct(
         @RequestBody product: Product,
     ): ResponseEntity<Product> {
         val id = index.getAndIncrement()
         val newProduct = Product.withId(product, id)
 
-        repository.save(id, newProduct)
+        store.save(id, newProduct)
         return ResponseEntity.created(URI.create("/products/$id")).body(product)
     }
 
     @GetMapping("/api/products")
     fun getProducts(): ResponseEntity<List<Product>> {
-        if (repository.isEmptyOrNull()) return ResponseEntity.noContent().build()
-        return ResponseEntity.ok(repository.findAll())
+        if (store.isEmptyOrNull()) return ResponseEntity.noContent().build()
+        return ResponseEntity.ok(store.findAll())
     }
 
     @PutMapping("/api/products/{id}")
@@ -38,17 +38,17 @@ class ProductAPI(private val repository: ProductStore) {
         @RequestBody newProduct: Product,
         @PathVariable id: Long,
     ): ResponseEntity<Product> {
-        val product = repository.findById(id) ?: return ResponseEntity.notFound().build()
+        val product = store.findById(id) ?: return ResponseEntity.notFound().build()
         product.update(newProduct)
-        repository.update(id, product)
+        store.update(id, product)
         return ResponseEntity.ok().body(product)
     }
 
     @DeleteMapping("/api/products/{id}")
-    fun deleteById(
+    fun deleteProductById(
         @PathVariable id: Long,
     ): ResponseEntity<Void> {
-        repository.deleteById(id) ?: return ResponseEntity.notFound().build()
+        store.deleteById(id) ?: return ResponseEntity.notFound().build()
         return ResponseEntity.noContent().build()
     }
 }

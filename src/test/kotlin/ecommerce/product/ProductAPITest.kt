@@ -1,5 +1,8 @@
 package ecommerce.product
 
+import ecommerce.TextFixture.AMERICANO
+import ecommerce.TextFixture.FLAT_WHITE
+import ecommerce.TextFixture.createProduct
 import io.restassured.RestAssured
 import io.restassured.http.ContentType
 import org.assertj.core.api.Assertions.assertThat
@@ -12,7 +15,7 @@ import org.springframework.test.annotation.DirtiesContext
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 class ProductAPITest {
     @Test
-    fun `create() should be able return 'created 201' response`() {
+    fun `createProduct() should be able return 'created 201' response`() {
         val response =
             RestAssured
                 .given().log().all()
@@ -25,7 +28,7 @@ class ProductAPITest {
     }
 
     @Test
-    fun `read() should be able to read a product and return 'ok 200' response`() {
+    fun `getProducts() should be able to read a product and return 'ok 200' response`() {
         createProduct(AMERICANO)
 
         val response =
@@ -40,7 +43,7 @@ class ProductAPITest {
     }
 
     @Test
-    fun `read() should be able to read products, and return 'ok 200' response`() {
+    fun `getProducts() should be able to read products, and return 'ok 200' response`() {
         createProduct(AMERICANO)
         createProduct(FLAT_WHITE)
 
@@ -56,7 +59,7 @@ class ProductAPITest {
     }
 
     @Test
-    fun `read() should return 'no-content 204' response`() {
+    fun `getProducts() should return 'no-content 204' response`() {
         val response =
             RestAssured
                 .given().log().all()
@@ -68,7 +71,7 @@ class ProductAPITest {
     }
 
     @Test
-    fun `update() should be able to update product, and return 'ok 200' response`() {
+    fun `updateProduct() should be able to update product, and return 'ok 200' response`() {
         createProduct(AMERICANO)
 
         val response =
@@ -83,7 +86,7 @@ class ProductAPITest {
     }
 
     @Test
-    fun `update() should return 'not found 404' response, when failed to update product`() {
+    fun `updateProduct() should return 'not found 404' response, when failed to update product`() {
         val response =
             RestAssured
                 .given().log().all()
@@ -96,7 +99,7 @@ class ProductAPITest {
     }
 
     @Test
-    fun `delete() should be able to delete product, and return '204' response`() {
+    fun `deleteProductById() should be able to delete product, and return '204' response`() {
         createProduct(AMERICANO)
 
         val response =
@@ -109,7 +112,7 @@ class ProductAPITest {
     }
 
     @Test
-    fun `delete() should return 'not found 404' response, when list of products is empty`() {
+    fun `deleteProductById() should return 'not found 404' response, when list of products is empty`() {
         val response =
             RestAssured
                 .given().log().all()
@@ -120,7 +123,7 @@ class ProductAPITest {
     }
 
     @Test
-    fun `delete() should return 'not found 404' response, when product id not found`() {
+    fun `deleteProductById() should return 'not found 404' response, when product id not found`() {
         createProduct(AMERICANO)
 
         val response =
@@ -130,35 +133,5 @@ class ProductAPITest {
                 .then().log().all().extract()
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value())
-    }
-
-    companion object {
-        fun createProduct(product: Product) {
-            val response =
-                RestAssured
-                    .given().log().all()
-                    .body(product)
-                    .contentType(ContentType.JSON)
-                    .`when`().post("/api/products")
-                    .then().log().all().extract()
-
-            assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value())
-        }
-
-        val FLAT_WHITE =
-            Product(
-                name = "Flat white L",
-                price = 6.50,
-                imageUrl =
-                    "https://st.kakaocdn.net/product/gift/product/20231010111814_9a667f9eccc943648797925498bdd8a3.jpg",
-            )
-
-        val AMERICANO =
-            Product(
-                name = "Iced Americano T",
-                price = 4.50,
-                imageUrl =
-                    "https://st.kakaocdn.net/product/gift/product/20231010111814_9a667f9eccc943648797925498bdd8a3.jpg",
-            )
     }
 }
