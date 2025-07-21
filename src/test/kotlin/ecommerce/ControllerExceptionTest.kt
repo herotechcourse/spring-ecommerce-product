@@ -15,13 +15,13 @@ class ControllerExceptionTest {
     fun handleExceptionUsingExceptionHandler() {
         val response =
             RestAssured
-                .given().log().all().body(Product(name = "colaaaaaaaaaaaaaaaaaaaaaaaaaaaa", price = 4.5, imageUrl = "https://cola.jpg"))
+                .given().log().all().body(Product(name = "colaaaaaaaaaaaaaaaaaaaaaaaaaaaa", price = 0.0, imageUrl = "abchttps://cola.jpg"))
                 .contentType(ContentType.JSON)
                 .`when`().post("/products")
                 .then().log().all().extract()
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value())
-        assertThat(response.headers().toString()).contains("Product name cannot exceed 15 characters")
+        assertThat(response.body().asString()).contains("Product name cannot exceed 15 characters")
     }
 
     @Test
