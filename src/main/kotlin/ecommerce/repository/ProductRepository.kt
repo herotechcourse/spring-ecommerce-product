@@ -1,6 +1,7 @@
 package ecommerce.repository
 
 import ecommerce.product.Product
+import org.springframework.dao.DataAccessException
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.jdbc.core.RowMapper
 import org.springframework.stereotype.Repository
@@ -61,12 +62,24 @@ class ProductRepository(private val jdbcTemplate: JdbcTemplate) {
             WHERE id = ?
             """.trimIndent()
 
-        return jdbcTemplate.update(sql, product.name, product.price, product.imageUrl, id).takeIf { it == 1 }
+        return try {
+            jdbcTemplate.update(sql, product.name, product.price, product.imageUrl, id)
+                .takeIf { it == 1 }
+        } catch (ex: DataAccessException) {
+            throw RuntimeException("Failed to update product with id $id", ex)
+        }
+//        return jdbcTemplate.update(sql, product.name, product.price, product.imageUrl, id).takeIf { it == 1 }
     }
 
     fun deleteById(id: Long): Int? {
         if (isEmptyOrNull()) return null
         val sql = "DELETE FROM products WHERE id = ?"
-        return jdbcTemplate.update(sql, id).takeIf { it == 1 }
+
+        return try {
+            jdbcTemplate.update(sql, id).takeIf { it == 1 }
+        } catch (ex: DataAccessException) {
+            throw RuntimeException("Failed to update product with id $id", ex)
+        }
+//        return jdbcTemplate.update(sql, id).takeIf { it == 1 }
     }
 }
