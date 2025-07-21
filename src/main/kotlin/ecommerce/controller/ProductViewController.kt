@@ -9,10 +9,10 @@ import org.springframework.web.bind.annotation.RequestMapping
 
 @Controller
 @RequestMapping("/products")
-class ProductViewController {
-    @GetMapping("")
+class ProductViewController(private val productRepository: ProductRepository) {
+    @GetMapping("/list")
     fun read(model: Model): String {
-        model.addAttribute("products", ProductRepository().findAll())
+        model.addAttribute("products", productRepository.findAll())
         return "products"
     }
 
@@ -26,7 +26,7 @@ class ProductViewController {
         @PathVariable("id") id: Long,
         model: Model,
     ): String {
-        val product = ProductRepository().findById(id)
+        val product = productRepository.findById(id)
         model.addAttribute("product", product)
         return "edit_product_form"
     }

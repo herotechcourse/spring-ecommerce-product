@@ -19,7 +19,7 @@ class ProductRepositoryTest {
 
     @BeforeEach
     fun setUp() {
-        productRepository = ProductRepository()
+        productRepository = ProductRepository(jdbcTemplate)
         jdbcTemplate.execute("DROP TABLE products IF EXISTS")
         jdbcTemplate.execute(
             """
