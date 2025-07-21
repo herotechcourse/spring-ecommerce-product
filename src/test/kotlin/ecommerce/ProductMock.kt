@@ -5,12 +5,13 @@ import io.restassured.RestAssured
 import io.restassured.http.ContentType
 import org.assertj.core.api.Assertions.assertThat
 import org.springframework.http.HttpStatus
+import java.math.BigDecimal
 
 object ProductMock {
     val FLAT_WHITE =
         Product(
             name = "Flat white L",
-            price = 6.50,
+            price = BigDecimal.valueOf(6.50),
             imageUrl =
                 "https://st.kakaocdn.net/product/gift/product/20231010111814_9a667f9eccc943648797925498bdd8a3.jpg",
         )
@@ -18,7 +19,7 @@ object ProductMock {
     val AMERICANO =
         Product(
             name = "Iced Americano T",
-            price = 4.50,
+            price = BigDecimal.valueOf(4.50),
             imageUrl =
                 "https://st.kakaocdn.net/product/gift/product/20231010111814_9a667f9eccc943648797925498bdd8a3.jpg",
         )

@@ -1,11 +1,19 @@
 package ecommerce.product
 
-class Product(var id: Long? = null, var name: String?, var price: Double?, var imageUrl: String?) {
-    //    fun update(newProduct: Product) {
-//        this.name = newProduct.name
-//        this.price = newProduct.price
-//        this.imageUrl = newProduct.imageUrl
-//    }
+import java.math.BigDecimal
+
+class Product(
+    var id: Long? = null,
+
+//    @field:NotBlank(message = "Name cannot be blank")
+//    @field:Size(max = 15, message = "Name must be at most 255 characters")
+    var name: String?,
+
+//    @field:NotNull(message = "Price is required")
+//    @field:Positive(message = "Price must be greater than zero")
+    var price: BigDecimal?,
+    var imageUrl: String?
+) {
     fun updateWith(partial: Product): Product {
         return Product(
             name = partial.name ?: this.name,
