@@ -19,7 +19,7 @@ class ProductRepositoryTest {
 
     @BeforeEach
     fun setUp() {
-        productRepository = ProductRepository(jdbcTemplate)
+        productRepository = ProductRepository()
         jdbcTemplate.execute("DROP TABLE products IF EXISTS")
         jdbcTemplate.execute(
             """
@@ -36,12 +36,6 @@ class ProductRepositoryTest {
             10.2,
             "url.com",
         )
-    }
-
-    @Test
-    fun count() {
-        val count = productRepository.count()
-        assertThat(count).isEqualTo(1)
     }
 
     @Test
