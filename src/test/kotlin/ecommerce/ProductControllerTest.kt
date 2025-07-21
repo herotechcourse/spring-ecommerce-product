@@ -58,40 +58,40 @@ class ProductControllerTest {
     fun read() {
         val products = productRepository.findAllProducts()
         assertThat(products.size).isEqualTo(4)
-        with(products[0]) {
-            assertThat(id).isEqualTo(1)
-            assertThat(name).isEqualTo("Coca-Cola")
-            assertThat(price).isEqualTo(2.00)
-            assertThat(imageUrl).isEqualTo("https://mcdonalds.com.mt/wp-content/uploads/2024/06/COCA-COLA-WEBSITE-IMG.jpg")
-        }
-        with(products[1]) {
-            assertThat(id).isEqualTo(2)
-            assertThat(name).isEqualTo("Fanta")
-            assertThat(price).isEqualTo(2.50)
-            assertThat(
-                imageUrl,
-            ).isEqualTo(
-                "https://www.cokesolutions.com/content/dam/cokesolutions/us/images/Products/" +
-                    "Fanta-Orange-PET.jpg",
+
+        val expectedProducts =
+            listOf(
+                Product(
+                    id = 1,
+                    name = "Coca-Cola",
+                    price = 2.00,
+                    imageUrl = "https://mcdonalds.com.mt/wp-content/uploads/2024/06/COCA-COLA-WEBSITE-IMG.jpg",
+                ),
+                Product(
+                    id = 2,
+                    name = "Fanta",
+                    price = 2.50,
+                    imageUrl =
+                        "https://www.cokesolutions.com/content/dam/cokesolutions/us/images/Products/" +
+                            "Fanta-Orange-PET.jpg",
+                ),
+                Product(
+                    id = 3,
+                    name = "Cappuccino",
+                    price = 4.39,
+                    imageUrl =
+                        "https://www.tchibo.de/kaffeeakademie/media/pages/global-images/" +
+                            "fb95bb5370-1729609446/adobestock_219364830-1440x700-crop-42-46.jpg",
+                ),
+                Product(
+                    id = 4,
+                    name = "Tea",
+                    price = 1.59,
+                    imageUrl = "https://cupitol.com/wp-content/uploads/2019/08/tea-drinking-1.jpg",
+                ),
             )
-        }
-        with(products[2]) {
-            assertThat(id).isEqualTo(3)
-            assertThat(name).isEqualTo("Cappuccino")
-            assertThat(price).isEqualTo(4.39)
-            assertThat(
-                imageUrl,
-            ).isEqualTo(
-                "https://www.tchibo.de/kaffeeakademie/media/pages/global-images/fb95bb5370-1729609446/" +
-                    "adobestock_219364830-1440x700-crop-42-46.jpg",
-            )
-        }
-        with(products[3]) {
-            assertThat(id).isEqualTo(4)
-            assertThat(name).isEqualTo("Tea")
-            assertThat(price).isEqualTo(1.59)
-            assertThat(imageUrl).isEqualTo("https://cupitol.com/wp-content/uploads/2019/08/tea-drinking-1.jpg")
-        }
+
+        assertThat(products).isEqualTo(expectedProducts)
     }
 
     @Test

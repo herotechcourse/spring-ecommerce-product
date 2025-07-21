@@ -5,7 +5,7 @@ import jakarta.validation.constraints.Pattern
 import jakarta.validation.constraints.Positive
 import jakarta.validation.constraints.Size
 
-class Product(
+data class Product(
     var id: Long? = null,
     @field:NotBlank(message = "Product name cannot be blank")
     @field:Size(max = 15, message = "Product name must be 15 characters or less")
