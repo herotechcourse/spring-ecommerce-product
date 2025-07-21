@@ -1,7 +1,11 @@
 package ecommerce.controller
 
-import ecommerce.model.Product
+import ecommerce.dto.CreateProductRequest
+import ecommerce.dto.ProductResponse
+import ecommerce.dto.UpdateProductRequest
 import ecommerce.service.ProductService
+import ecommerce.utils.toModel
+import ecommerce.utils.toResponse
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
@@ -16,36 +20,35 @@ import java.net.URI
 class ProductController(private val productService: ProductService) {
     @PostMapping("/products")
     fun createProduct(
-        @RequestBody newProduct: Product,
-    ): ResponseEntity<Product> {
-        productService.createProduct(newProduct)
-        return ResponseEntity.created(URI.create("/products/${newProduct.id}")).build()
+        @RequestBody newProduct: CreateProductRequest,
+    ): ResponseEntity<Void> {
+        val product = newProduct.toModel()
+        productService.createProduct(product)
+        return ResponseEntity.created(URI.create("/products/${product.id}")).build()
     }
 
     @GetMapping("/products/{id}")
     fun getProductById(
         @PathVariable("id") id: Long,
-    ): ResponseEntity<Product> {
-        try {
-            productService.getProductById(id)
-        } catch (ex: Exception) {
-            ex.printStackTrace()
-        }
-        return ResponseEntity.ok().body(productService.getProductById(id))
+    ): ResponseEntity<ProductResponse> {
+        val product = productService.getProductById(id) ?: return ResponseEntity.notFound().build()
+        return ResponseEntity.ok().body(product.toResponse())
     }
 
     @GetMapping("/products")
-    fun getProducts(): ResponseEntity<List<Product>> {
-        return ResponseEntity.ok().body(productService.getAllProducts())
+    fun getProducts(): ResponseEntity<List<ProductResponse>> {
+        val products = productService.getAllProducts().map { it.toResponse() }
+        return ResponseEntity.ok().body(products)
     }
 
     @PutMapping("/products/{id}")
     fun updateProduct(
         @PathVariable("id") id: Long,
-        @RequestBody product: Product,
-    ): ResponseEntity<Product> {
-        productService.updateProduct(id, product)
-        return ResponseEntity.ok().body(product)
+        @RequestBody request: UpdateProductRequest,
+    ): ResponseEntity<ProductResponse> {
+        val updatedProduct = request.toModel(id)
+        productService.updateProduct(id, updatedProduct)
+        return ResponseEntity.ok().body(updatedProduct.toResponse())
     }
 
     @DeleteMapping("/products/{id}")
