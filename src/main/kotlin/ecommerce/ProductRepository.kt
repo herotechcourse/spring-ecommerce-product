@@ -1,5 +1,6 @@
 package ecommerce
 
+import jakarta.validation.ValidationException
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.jdbc.core.RowMapper
 import org.springframework.stereotype.Repository
@@ -7,15 +8,14 @@ import java.sql.ResultSet
 
 @Repository
 class ProductRepository(private val jdbcTemplate: JdbcTemplate) {
-    private val productRowMapper =
-        RowMapper<Product> { rs: ResultSet, _ ->
-            Product(
-                rs.getLong("id"),
-                rs.getString("name"),
-                rs.getDouble("price"),
-                rs.getString("image_url"),
-            )
-        }
+    private val productRowMapper = RowMapper<Product> { rs: ResultSet, _ ->
+        Product(
+            rs.getLong("id"),
+            rs.getString("name"),
+            rs.getDouble("price"),
+            rs.getString("image_url"),
+        )
+    }
 
     fun findAllProducts(): List<Product> {
         val sql = "SELECT id, name, price, image_url FROM products"
@@ -23,15 +23,28 @@ class ProductRepository(private val jdbcTemplate: JdbcTemplate) {
         return products
     }
 
+    fun existsByName(name: String, excludeId: Long? = null): Boolean {
+        val sql = "SELECT COUNT(*) FROM products WHERE name = ? AND (? IS NULL OR id != ?)"
+        val count = jdbcTemplate.queryForObject(sql, Int::class.java, name, excludeId, excludeId) ?: 0
+        return count > 0
+    }
+
     fun insert(product: Product) {
-        val sql = "INSERT INTO products (name, price, image_url) VALUES (?, ?, ?)"
-        jdbcTemplate.update(sql, product.name, product.price, product.imageUrl)
+        if (existsByName(product.name)) {
+            throw ValidationException("Product name must be unique")
+        }
+        val sql = "INSERT INTO products (name, price, image_url) VALUES (?, ?, ?) RETURNING id"
+        val id = jdbcTemplate.queryForObject(sql, Long::class.java, product.name, product.price, product.imageUrl)
+        product.id = id
     }
 
     fun edit(
         product: Product,
         productId: Long,
     ) {
+        if (existsByName(product.name, productId)) {
+            throw ValidationException("Product name must be unique")
+        }
         val sql = "UPDATE products SET name = ?, price = ?, image_url = ? WHERE id = ?"
         jdbcTemplate.update(sql, product.name, product.price, product.imageUrl, productId)
     }

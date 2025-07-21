@@ -60,10 +60,10 @@ In such cases, your application must respond with enough information for the cli
 
 ### Feature List
 
-- [ ] Product Name
-    - [ ] Product name is no longer than 15 characters (including spaces)
-    - [ ] Allow only specific special characters: `( ), [ ], +, -, &, /, _`. All other special characters are not allowed
-    - [ ] The name must be unique across all products
+- [x] Product Name
+    - [x] Product name is no longer than 15 characters (including spaces)
+    - [x] Allow only specific special characters: `( ), [ ], +, -, &, /, _`. All other special characters are not allowed
+    - [x] The name must be unique across all products
 
 - [ ] Product Price
   - [ ] Must be greater than 0

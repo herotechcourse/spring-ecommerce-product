@@ -1,7 +1,12 @@
 package ecommerce
 
+import jakarta.validation.Valid
+import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.validation.FieldError
+import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.annotation.DeleteMapping
+import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
@@ -14,7 +19,7 @@ import java.net.URI
 class ProductApiController(private val productRepository: ProductRepository) {
     @PostMapping("/products")
     fun create(
-        @RequestBody product: Product,
+        @Valid @RequestBody product: Product,
     ): ResponseEntity<Void> {
         productRepository.insert(product)
         return ResponseEntity.created(URI.create("/products/${product.id}")).build()
@@ -28,7 +33,7 @@ class ProductApiController(private val productRepository: ProductRepository) {
 
     @PutMapping("/products/{id}")
     fun update(
-        @RequestBody newProduct: Product,
+        @Valid @RequestBody newProduct: Product,
         @PathVariable id: Long,
     ): ResponseEntity<Void> {
         productRepository.edit(newProduct, id)
@@ -41,5 +46,16 @@ class ProductApiController(private val productRepository: ProductRepository) {
     ): ResponseEntity<Void> {
         productRepository.delete(id)
         return ResponseEntity.noContent().build()
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException::class)
+    fun handleValidationExceptions(ex: MethodArgumentNotValidException): ResponseEntity<Map<String, String>> {
+        val errors = mutableMapOf<String, String>()
+        ex.bindingResult.allErrors.forEach { error ->
+            val fieldName = (error as FieldError).field
+            val errorMessage = error.defaultMessage ?: "Invalid value"
+            errors[fieldName] = errorMessage
+        }
+        return ResponseEntity(errors, HttpStatus.BAD_REQUEST)
     }
 }
