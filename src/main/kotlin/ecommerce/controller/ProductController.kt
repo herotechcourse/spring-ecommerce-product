@@ -1,10 +1,10 @@
 package ecommerce.controller
 
 import ecommerce.dto.ProductRequest
+import ecommerce.dto.ProductResponse
 import ecommerce.model.Product
-import ecommerce.model.toDto
 import ecommerce.repository.ProductRepository
-import ecommerce.repository.ProductResponse
+import ecommerce.service.ProductService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -19,7 +19,10 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/api/products")
-class ProductController(private val productRepository: ProductRepository) {
+class ProductController(
+    private val productRepository: ProductRepository,
+    private val productService: ProductService,
+) {
     @PostMapping(consumes = ["application/json"])
     @ResponseBody
     fun createProduct(
@@ -38,7 +41,7 @@ class ProductController(private val productRepository: ProductRepository) {
     fun getProduct(
         @PathVariable id: Long,
     ): ResponseEntity<ProductResponse> {
-        return productRepository.findById(id)?.let { ResponseEntity.ok(it.toDto()) } ?: ResponseEntity.notFound().build()
+        return ResponseEntity.ok(productService.findById(id))
     }
 
     @PutMapping("/{id}")
