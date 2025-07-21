@@ -3,6 +3,7 @@ package ecommerce
 import jakarta.validation.ValidationException
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.jdbc.core.RowMapper
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert
 import org.springframework.stereotype.Repository
 import java.sql.ResultSet
 
@@ -33,9 +34,22 @@ class ProductRepository(private val jdbcTemplate: JdbcTemplate) {
         if (existsByName(product.name)) {
             throw ValidationException("Product name must be unique")
         }
-        val sql = "INSERT INTO products (name, price, image_url) VALUES (?, ?, ?) RETURNING id"
-        val id = jdbcTemplate.queryForObject(sql, Long::class.java, product.name, product.price, product.imageUrl)
+        val jdbcInsert = SimpleJdbcInsert(jdbcTemplate)
+            .withTableName("products")
+            .usingGeneratedKeyColumns("id")
+        val parameters = mapOf(
+            "name" to product.name,
+            "price" to product.price,
+            "image_url" to product.imageUrl
+        )
+        val id = jdbcInsert.executeAndReturnKey(parameters).toLong()
         product.id = id
+//        if (existsByName(product.name)) {
+//            throw ValidationException("Product name must be unique")
+//        }
+//        val sql = "INSERT INTO products (name, price, image_url) VALUES (?, ?, ?) RETURNING id"
+//        val id = jdbcTemplate.queryForObject(sql, Long::class.java, product.name, product.price, product.imageUrl)
+//        product.id = id
     }
 
     fun edit(

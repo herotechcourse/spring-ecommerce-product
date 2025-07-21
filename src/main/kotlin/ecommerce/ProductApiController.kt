@@ -1,6 +1,7 @@
 package ecommerce
 
 import jakarta.validation.Valid
+import jakarta.validation.ValidationException
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.validation.FieldError
@@ -48,6 +49,7 @@ class ProductApiController(private val productRepository: ProductRepository) {
         return ResponseEntity.noContent().build()
     }
 
+
     @ExceptionHandler(MethodArgumentNotValidException::class)
     fun handleValidationExceptions(ex: MethodArgumentNotValidException): ResponseEntity<Map<String, String>> {
         val errors = mutableMapOf<String, String>()
@@ -57,5 +59,10 @@ class ProductApiController(private val productRepository: ProductRepository) {
             errors[fieldName] = errorMessage
         }
         return ResponseEntity(errors, HttpStatus.BAD_REQUEST)
+    }
+
+    @ExceptionHandler(ValidationException::class)
+    fun handleValidationException(ex: ValidationException): ResponseEntity<Map<String, String>> {
+        return ResponseEntity(mapOf("error" to (ex.message ?: "Validation error")), HttpStatus.BAD_REQUEST)
     }
 }

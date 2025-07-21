@@ -85,6 +85,13 @@
             font-size: 14px;
         }
 
+        .error {
+            color: red;
+            font-size: 12px;
+            margin-top: 2px;
+            display: block;
+        }
+
         .form-buttons {
             margin-top: 15px;
         }
@@ -139,14 +146,23 @@
     <form id="productForm">
         <input type="hidden" id="id" name="id"/>
 
+        <div>
         <label for="name">Name</label>
         <input type="text" id="name" name="name" required/>
+        <span id="nameError" class="error"></span>
+        </div>
 
+        <div>
         <label for="price">Price</label>
         <input type="number" id="price" name="price" step="0.01" required/>
+        <span id="priceError" class="error"></span>
+        </div>
 
+        <div>
         <label for="imageUrl">Image URL</label>
         <input type="text" id="imageUrl" name="imageUrl" required/>
+        <span id="imageUrlError" class="error"></span>
+        </div>
 
         <div class="form-buttons">
             <button type="submit">Save</button>
@@ -161,6 +177,15 @@
     const productForm = document.getElementById('productForm');
     const formTitle = document.getElementById('formTitle');
     const cancelBtn = document.getElementById('cancelBtn');
+    const nameError = document.getElementById('nameError');
+    const priceError = document.getElementById('priceError');
+    const imageUrlError = document.getElementById('imageUrlError');
+
+    function clearErrors() {
+        nameError.textContent = '';
+        priceError.textContent = '';
+        imageUrlError.textContent = '';
+    }
 
     // Show empty form for adding product
     showAddFormBtn.addEventListener('click', () => {
@@ -169,12 +194,14 @@
         productForm.name.value = '';
         productForm.price.value = '';
         productForm.imageUrl.value = '';
+        clearErrors();
         productFormContainer.style.display = 'block';
     });
 
     // Cancel button hides form
     cancelBtn.addEventListener('click', () => {
         productFormContainer.style.display = 'none';
+        clearErrors();
     });
 
     // Edit button functionality
@@ -185,15 +212,17 @@
             productForm.name.value = btn.getAttribute('data-name');
             productForm.price.value = btn.getAttribute('data-price');
             productForm.imageUrl.value = btn.getAttribute('data-imageurl');
+            clearErrors();
             productFormContainer.style.display = 'block';
         });
     });
 
     productForm.addEventListener('submit', (e) => {
         e.preventDefault();
+        clearErrors();
 
         const id = productForm.id.value;
-        const isEdit = id !== ""; // if id is set, it's an edit
+        const isEdit = id !== "";
         const method = isEdit ? 'PUT' : 'POST';
         const url = isEdit ? `/products/${id}` : '/products';
 
@@ -202,6 +231,27 @@
             price: parseFloat(productForm.price.value),
             imageUrl: productForm.imageUrl.value
         };
+
+        // Client-side validation
+        let hasErrors = false;
+        if (product.name.length > 15) {
+            nameError.textContent = 'Product name must be 15 characters or less';
+            hasErrors = true;
+        }
+        if (!/^[a-zA-Z0-9 ()\[\]+&/_-]+$/.test(product.name)) {
+            nameError.textContent = 'Product name can only contain letters, numbers, spaces, and allowed special characters: (), [], +, -, &, /, _';
+            hasErrors = true;
+        }
+        if (isNaN(product.price) || product.price <= 0) {
+            priceError.textContent = 'Price must be greater than 0';
+            hasErrors = true;
+        }
+        if (!product.imageUrl.match(/^https?:\/\/.*/)) {
+            imageUrlError.textContent = 'Image URL must start with http:// or https://';
+            hasErrors = true;
+        }
+
+        if (hasErrors) return;
 
         fetch(url, {
             method: method,
@@ -212,7 +262,17 @@
                 alert(isEdit ? 'Product updated' : 'Product created');
                 window.location.reload();
             } else {
-                alert('Failed to save product');
+                response.json().then(errors => {
+                    if (errors.error) {
+                        nameError.textContent = errors.error;
+                    } else {
+                        if (errors.name) nameError.textContent = errors.name;
+                        if (errors.price) priceError.textContent = errors.price;
+                        if (errors.imageUrl) imageUrlError.textContent = errors.imageUrl;
+                    }
+                }).catch(() => {
+                    alert('Error parsing server response');
+                });
             }
         }).catch(() => {
             alert('Error saving product');
