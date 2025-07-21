@@ -36,13 +36,16 @@ class ProductRepository(private val jdbcTemplate: JdbcTemplate) {
         )
     }
 
-    fun updateProduct(product: Product) {
+    fun updateProduct(
+        id: Long,
+        product: ProductRequest,
+    ) {
         jdbcTemplate.update(
             "UPDATE products SET name=?, price= ?, image_url = ? where id = ?",
             product.name,
             product.price,
             product.imageUrl,
-            product.id,
+            id,
         )
     }
 

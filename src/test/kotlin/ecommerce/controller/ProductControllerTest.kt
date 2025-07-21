@@ -1,5 +1,6 @@
 package ecommerce.controller
 
+import ecommerce.dto.ProductRequest
 import ecommerce.model.Product
 import ecommerce.repository.ProductRepository
 import io.restassured.RestAssured
@@ -32,9 +33,9 @@ class ProductControllerTest {
 
         jdbcTemplate.execute(createQuery())
 
-        val product1 = Product(1L, "cafe", 39.00, "www.test")
-        val product2 = Product(2L, "table", 39.00, "www.test")
-        val product3 = Product(3L, "chair", 39.00, "www.test")
+        val product1 = ProductRequest("cafe", 39.00, "www.test")
+        val product2 = ProductRequest("table", 39.00, "www.test")
+        val product3 = ProductRequest("chair", 39.00, "www.test")
         RestAssured
             .given().log().all().body(product1)
             .contentType(ContentType.JSON)

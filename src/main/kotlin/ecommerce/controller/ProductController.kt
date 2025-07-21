@@ -31,23 +31,25 @@ class ProductController(private val productRepository: ProductRepository) {
     fun getProduct(
         @PathVariable id: Long,
     ): ResponseEntity<Product> {
-        val product = productRepository.findById(id) ?: throw NoSuchElementException()
+        val product = productRepository.findById(id) ?: return ResponseEntity.notFound().build()
         return ResponseEntity.ok(product)
     }
 
-    @PutMapping
+    @PutMapping("/{id}")
     fun updateProduct(
-        @RequestBody product: Product,
-    ): ResponseEntity<Product> {
-        productRepository.updateProduct(product)
-        return ResponseEntity.ok().build()
+        @PathVariable id: Long,
+        @RequestBody product: ProductRequest,
+    ): ResponseEntity<Void> {
+        val oldProduct = productRepository.findById(id) ?: return ResponseEntity.notFound().build()
+        productRepository.updateProduct(id, product)
+        return ResponseEntity(HttpStatus.OK)
     }
 
     @DeleteMapping("/{id}")
     fun deleteProduct(
         @PathVariable id: Long,
-    ): ResponseEntity<Product> {
+    ): ResponseEntity<Void> {
         productRepository.deleteProduct(id)
-        return ResponseEntity.ok().build()
+        return ResponseEntity(HttpStatus.OK)
     }
 }
