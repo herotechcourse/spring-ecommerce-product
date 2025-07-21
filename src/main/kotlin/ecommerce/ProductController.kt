@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PatchMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.ResponseBody
 import java.net.URI
@@ -37,7 +36,8 @@ class ProductController(private val productRepository: ProductRepository) {
         @RequestBody newProduct: Product,
         @PathVariable id: Long,
     ): ResponseEntity<Void> {
-        productRepository.update(newProduct, id)
+        if (!productRepository.update(newProduct, id))
+            return ResponseEntity.notFound().build()
         return ResponseEntity.ok().build()
     }
 
@@ -46,7 +46,8 @@ class ProductController(private val productRepository: ProductRepository) {
     fun delete(
         @PathVariable id: Long,
     ): ResponseEntity<Void> {
-        productRepository.delete(id)
+        if (!productRepository.delete(id))
+            return ResponseEntity.notFound().build()
         return ResponseEntity.noContent().build()
     }
 

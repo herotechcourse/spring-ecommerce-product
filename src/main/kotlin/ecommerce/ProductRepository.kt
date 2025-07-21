@@ -23,20 +23,23 @@ class ProductRepository(private val jdbcTemplate: JdbcTemplate) {
         return products
     }
 
-    fun insert(product: Product) {
+    fun insert(product: Product): Boolean {
         val sql = "insert into products (name, price, image_url) values (?, ?, ?)"
-        jdbcTemplate.update(sql, product.name, product.price, product.imageUrl)
+        val rowsAffected = jdbcTemplate.update(sql, product.name, product.price, product.imageUrl)
+        return rowsAffected > 0
     }
 
-    fun update(
+    fun update (
         product: Product,
         productId: Long,
-    ) {
+    ): Boolean {
         val sql = "UPDATE products SET name = ?, price = ?, image_url = ? WHERE id = ?"
-        jdbcTemplate.update(sql, product.name, product.price, product.imageUrl, productId)
+        val rowsAffected = jdbcTemplate.update(sql, product.name, product.price, product.imageUrl, productId)
+        return rowsAffected > 0
     }
 
-    fun delete(id: Long): Int {
-        return jdbcTemplate.update("delete from products where id = ?", id)
+    fun delete(id: Long): Boolean {
+        val rowsAffected = jdbcTemplate.update("delete from products where id = ?", id)
+        return rowsAffected > 0
     }
 }
