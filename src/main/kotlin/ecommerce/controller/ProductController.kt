@@ -26,7 +26,7 @@ class ProductController {
     fun create(
         @RequestBody product: Product,
     ): ResponseEntity<Void> {
-        ProductRepository(jdbcTemplate).save(product)
+        ProductRepository().save(product)
         return ResponseEntity.created(URI.create("/products/")).build()
     }
 
@@ -37,7 +37,7 @@ class ProductController {
 
     @GetMapping("")
     fun read(model: Model): String {
-        model.addAttribute("products", ProductRepository(jdbcTemplate).findAll())
+        model.addAttribute("products", ProductRepository().findAll())
         return "products"
     }
 
@@ -46,7 +46,7 @@ class ProductController {
         @PathVariable("id") id: Long,
         model: Model,
     ): String {
-        val product = ProductRepository(jdbcTemplate).findById(id)
+        val product = ProductRepository().findById(id)
         model.addAttribute("product", product)
         return "edit_product_form"
     }
@@ -56,7 +56,7 @@ class ProductController {
         @PathVariable("id") id: Long,
         @RequestBody newProduct: Product,
     ): ResponseEntity<Void> {
-        ProductRepository(jdbcTemplate).update(id, newProduct)
+        ProductRepository().update(id, newProduct)
         return ResponseEntity.ok().build()
     }
 
@@ -64,7 +64,7 @@ class ProductController {
     fun delete(
         @PathVariable("id") id: Long,
     ): ResponseEntity<Void> {
-        ProductRepository(jdbcTemplate).deleteById(id)
+        ProductRepository().deleteById(id)
         return ResponseEntity.noContent().build()
     }
 }
