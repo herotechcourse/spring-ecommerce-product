@@ -18,9 +18,9 @@ class ProductController(private val productRepository: ProductRepository) {
     @ResponseBody
     fun create(
         @RequestBody product: Product,
-    ): ResponseEntity<Void> {
-        productRepository.insert(product)
-        return ResponseEntity.created(URI.create("/products/${product.id}")).build()
+    ): ResponseEntity<Unit> {
+        val id = productRepository.insertWithKeyHolder(product)
+        return ResponseEntity.created(URI.create("/products/$id")).build()
     }
 
     @GetMapping("/products")
@@ -35,7 +35,7 @@ class ProductController(private val productRepository: ProductRepository) {
     fun update(
         @RequestBody newProduct: Product,
         @PathVariable id: Long,
-    ): ResponseEntity<Void> {
+    ): ResponseEntity<Unit> {
         if (!productRepository.update(newProduct, id))
             return ResponseEntity.notFound().build()
         return ResponseEntity.ok().build()
@@ -45,7 +45,7 @@ class ProductController(private val productRepository: ProductRepository) {
     @ResponseBody
     fun delete(
         @PathVariable id: Long,
-    ): ResponseEntity<Void> {
+    ): ResponseEntity<Unit> {
         if (!productRepository.delete(id))
             return ResponseEntity.notFound().build()
         return ResponseEntity.noContent().build()

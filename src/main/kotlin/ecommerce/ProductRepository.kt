@@ -2,6 +2,8 @@ package ecommerce
 
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.jdbc.core.RowMapper
+import org.springframework.jdbc.support.GeneratedKeyHolder
+import org.springframework.jdbc.support.KeyHolder
 import org.springframework.stereotype.Repository
 import java.sql.ResultSet
 
@@ -27,6 +29,21 @@ class ProductRepository(private val jdbcTemplate: JdbcTemplate) {
         val sql = "insert into products (name, price, image_url) values (?, ?, ?)"
         val rowsAffected = jdbcTemplate.update(sql, product.name, product.price, product.imageUrl)
         return rowsAffected > 0
+    }
+
+    fun insertWithKeyHolder(product: Product): Long {
+        val sql = "insert into products (name, price, image_url) values (?, ?, ?)"
+
+        val keyHolder: KeyHolder = GeneratedKeyHolder()
+        jdbcTemplate.update({
+            it.prepareStatement(sql, arrayOf("id")).apply {
+                setString(1, product.name)
+                setDouble(2, product.price)
+                setString(3, product.imageUrl)
+            }
+        }, keyHolder)
+
+        return keyHolder.key!!.toLong()
     }
 
     fun update (
