@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.HttpStatus
 import org.springframework.jdbc.core.JdbcTemplate
+import org.springframework.jdbc.support.GeneratedKeyHolder
 import org.springframework.test.annotation.DirtiesContext
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
@@ -18,25 +19,6 @@ import org.springframework.test.annotation.DirtiesContext
 class ProductControllerTest {
     @Autowired
     private lateinit var jdbcTemplate: JdbcTemplate
-
-    @BeforeEach
-    fun setUp() {
-        jdbcTemplate.execute(
-            """
-            CREATE TABLE IF NOT EXISTS products (
-            id INT PRIMARY KEY AUTO_INCREMENT,
-            product_name VARCHAR(255) NOT NULL,
-            price DOUBLE CHECK (price >= 0),
-            image_url VARCHAR(255))
-            """.trimIndent(),
-        )
-        jdbcTemplate.update(
-            "INSERT INTO products(product_name,price,image_url) VALUES (?,?,?)",
-            "Product 1",
-            10.2,
-            "url.com",
-        )
-    }
 
     @Test
     fun create() {
@@ -71,6 +53,16 @@ class ProductControllerTest {
 
     @Test
     fun update() {
+        val keyHolder = GeneratedKeyHolder()
+        jdbcTemplate.update({
+            val ps = it.prepareStatement("INSERT INTO products(product_name, price, image_url) VALUES (?, ?, ?)", arrayOf("id"))
+            ps.setString(1, "Product 1")
+            ps.setDouble(2, 10.2)
+            ps.setString(3, "url.com")
+            ps
+        }, keyHolder)
+
+        val generatedId = keyHolder.key!!.toLong()
         val response =
             RestAssured
                 .given().log().all()
@@ -82,7 +74,7 @@ class ProductControllerTest {
                     ),
                 )
                 .contentType(ContentType.JSON)
-                .`when`().put("/products/1")
+                .`when`().put("/products/${generatedId}")
                 .then().log().all().extract()
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
@@ -90,10 +82,20 @@ class ProductControllerTest {
 
     @Test
     fun delete() {
+        val keyHolder = GeneratedKeyHolder()
+        jdbcTemplate.update({
+            val ps = it.prepareStatement("INSERT INTO products(product_name, price, image_url) VALUES (?, ?, ?)", arrayOf("id"))
+            ps.setString(1, "Product 1")
+            ps.setDouble(2, 10.2)
+            ps.setString(3, "url.com")
+            ps
+        }, keyHolder)
+
+        val generatedId = keyHolder.key!!.toLong()
         val response =
             RestAssured
                 .given().log().all()
-                .`when`().delete("/products/1")
+                .`when`().delete("/products/${generatedId}")
                 .then().log().all().extract()
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value())
