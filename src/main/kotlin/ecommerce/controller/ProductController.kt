@@ -32,8 +32,7 @@ class ProductController(private val productRepository: ProductRepository) {
     fun getProduct(
         @PathVariable id: Long,
     ): ResponseEntity<ProductResponse> {
-        val product = productRepository.findById(id) ?: return ResponseEntity.notFound().build()
-        return ResponseEntity.ok(product.toDto())
+        return productRepository.findById(id)?.let { ResponseEntity.ok(it.toDto()) } ?: ResponseEntity.notFound().build()
     }
 
     @PutMapping("/{id}")
@@ -41,16 +40,21 @@ class ProductController(private val productRepository: ProductRepository) {
         @PathVariable id: Long,
         @RequestBody product: ProductRequest,
     ): ResponseEntity<Void> {
-        val oldProduct = productRepository.findById(id) ?: return ResponseEntity.notFound().build()
-        productRepository.updateProduct(id, product)
-        return ResponseEntity(HttpStatus.OK)
+        productRepository.findById(id) ?: return ResponseEntity.notFound().build()
+        return when (productRepository.updateProduct(id, product)) {
+            true -> ResponseEntity(HttpStatus.OK)
+            false -> ResponseEntity(HttpStatus.BAD_REQUEST)
+        }
     }
 
     @DeleteMapping("/{id}")
     fun deleteProduct(
         @PathVariable id: Long,
     ): ResponseEntity<Void> {
-        productRepository.deleteProduct(id)
-        return ResponseEntity(HttpStatus.OK)
+        productRepository.findById(id) ?: return ResponseEntity.notFound().build()
+        return when (productRepository.deleteProduct(id)) {
+            true -> ResponseEntity(HttpStatus.NO_CONTENT)
+            false -> ResponseEntity(HttpStatus.BAD_REQUEST)
+        }
     }
 }
