@@ -1,7 +1,7 @@
 # spring-ecommerce-product
 
 ## Product
-  -[x] Create a simple CRUD HTTP API
+-[x] Create a simple CRUD HTTP API
 - [x] Create a Product
 - [x] Retrieve a Product
 - [x] Retrieve a list of Products
@@ -22,4 +22,6 @@
 - [x] Database configuration
 - [x] Connect the repository with the DB through the service layer
 - [x] Build a schema for the database
+
+## Validation & Handling Exception
 
