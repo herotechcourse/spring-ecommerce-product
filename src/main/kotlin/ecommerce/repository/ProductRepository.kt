@@ -2,6 +2,7 @@ package ecommerce.repository
 
 import ecommerce.dto.ProductRequest
 import ecommerce.model.Product
+import org.springframework.dao.EmptyResultDataAccessException
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.jdbc.core.RowMapper
 import org.springframework.stereotype.Repository
@@ -20,7 +21,11 @@ class ProductRepository(private val jdbcTemplate: JdbcTemplate) {
         }
 
     fun findById(id: Long): Product? {
-        return jdbcTemplate.queryForObject("select id, name, price, image_url from products where id = ?", productRowMapper, id)
+        return try {
+            jdbcTemplate.queryForObject("select id, name, price, image_url from products where id = ?", productRowMapper, id)
+        } catch (e: EmptyResultDataAccessException) {
+            null
+        }
     }
 
     fun getAll(): List<Product> {
@@ -39,17 +44,17 @@ class ProductRepository(private val jdbcTemplate: JdbcTemplate) {
     fun updateProduct(
         id: Long,
         product: ProductRequest,
-    ) {
-        jdbcTemplate.update(
+    ): Boolean {
+        return jdbcTemplate.update(
             "UPDATE products SET name=?, price= ?, image_url = ? where id = ?",
             product.name,
             product.price,
             product.imageUrl,
             id,
-        )
+        ) > 0
     }
 
-    fun deleteProduct(id: Long) {
-        jdbcTemplate.update("delete from products where id = ?", id.toLong())
+    fun deleteProduct(id: Long): Boolean {
+        return jdbcTemplate.update("delete from products where id = ?", id.toLong()) > 0
     }
 }
