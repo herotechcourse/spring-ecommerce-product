@@ -105,7 +105,7 @@
 
     async function addProduct(json) {
         try {
-            await fetch("http://localhost:8080/products", {
+            await fetch("http://localhost:8080/api/products", {
                 method: "POST",
                 body: json,
                 headers: {
@@ -140,7 +140,7 @@
 
     async function updateProduct(json) {
         try {
-            await fetch("http://localhost:8080/products", {
+            await fetch("http://localhost:8080/api/products", {
                 method: "PUT",
                 body: json,
                 headers: {
@@ -163,7 +163,7 @@
     async function deleteProduct(id) {
         debugger;
         try {
-            await fetch(`http://localhost:8080/products/${id}`, {
+            await fetch(`http://localhost:8080/api/products/${id}`, {
                 method: "DELETE",
             }).then((response) => {
                 if (!response.ok) {
