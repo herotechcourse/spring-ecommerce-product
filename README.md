@@ -52,14 +52,14 @@ Implement validation of user input.
 
 ### Feature List - Step 2-1
 - Product Name
-  - [ ] Must be no more than 15 characters, including spaces. 
-  - [ ] Allowed special characters: ( ), [ ], +, -, &, /, _
-  - [ ] All other special characters are not allowed.
+  - [x] Must be no more than 15 characters, including spaces. 
+  - [x] Allowed special characters: ( ), [ ], +, -, &, /, _
+  - [x] All other special characters are not allowed.
   - [ ] The name must be unique across all products.
 - Product Price
-  - [ ] Must be greater than 0.
+  - [x] Must be greater than 0.
 - Product Image URL
-  - [ ] Must start with http:// or https://.
+  - [x] Must start with http:// or https://.
 
 ## Learnings
 ### JDBC & DAO
@@ -105,7 +105,13 @@ class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.message)
     }
 }
-- ```
+```
+- we can use `jakarta.validation.constraints.*` to validate user input
+- it does not directly throw an exception, but the Spring framework does
+- Spring throws:
+  - javax.validation.ConstraintViolationException when a constraint is violated on method parameters.
+  - org.springframework.web.bind.MethodArgumentNotValidException when validation of request bodies fails.
+
 
 ## Considerations
 
