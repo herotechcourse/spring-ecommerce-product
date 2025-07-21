@@ -37,11 +37,13 @@ class ProductRepository(private val jdbcTemplate: JdbcTemplate) {
         id: Long,
         product: Product,
     ) {
+        findById(id)
         val sql = "update products set product_name = ?, price = ?, image_url = ? where id = ?"
         jdbcTemplate.update(sql, product.name, product.price, product.imageUrl, id)
     }
 
     fun deleteById(id: Long) {
+        findById(id)
         val sql = "delete from products where id = ?"
         jdbcTemplate.update(sql, id)
     }
