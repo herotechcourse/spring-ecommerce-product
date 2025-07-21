@@ -2,7 +2,6 @@ package ecommerce.controller
 
 import ecommerce.model.Product
 import ecommerce.repository.ProductRepository
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
@@ -17,10 +16,9 @@ import org.springframework.web.bind.annotation.ResponseBody
 
 @Controller
 @RequestMapping("/products")
-class ProductAdminController {
-    @Autowired
-    private lateinit var productRepository: ProductRepository
-
+class ProductAdminController(
+    private val productRepository: ProductRepository,
+) {
     @PostMapping(consumes = ["application/json"])
     @ResponseBody
     fun createProduct(
