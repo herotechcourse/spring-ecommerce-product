@@ -2,20 +2,21 @@ package ecommerce
 
 import ecommerce.exception.NotFoundException
 import ecommerce.model.Product
-import org.assertj.core.api.Assertions.*
+import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
 class CollectionProductStoreTest {
-
     private lateinit var productStore: CollectionProductStore
 
     @BeforeEach
     fun setUp() {
-        val products = mutableListOf(
-            Product(id = 1L, name = "Phone", price = 500.0, imageUrl = "phone.jpg"),
-            Product(id = 2L, name = "Laptop", price = 1500.0, imageUrl = "laptop.jpg"),
-        )
+        val products =
+            mutableListOf(
+                Product(id = 1L, name = "Phone", price = 500.0, imageUrl = "phone.jpg"),
+                Product(id = 2L, name = "Laptop", price = 1500.0, imageUrl = "laptop.jpg"),
+            )
         productStore = CollectionProductStore(products)
     }
 

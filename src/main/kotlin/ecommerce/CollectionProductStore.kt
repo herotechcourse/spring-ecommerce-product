@@ -6,7 +6,6 @@ import org.springframework.stereotype.Repository
 
 @Repository
 class CollectionProductStore(val products: MutableList<Product>) : ProductStore {
-
     override fun countProducts(): Int {
         return products.size
     }
@@ -16,7 +15,7 @@ class CollectionProductStore(val products: MutableList<Product>) : ProductStore 
     }
 
     override fun findById(id: Long): Product? {
-        return products.firstOrNull() { it.id == id } ?: throw NotFoundException("Product with id $id not found")
+        return products.firstOrNull { it.id == id } ?: throw NotFoundException("Product with id $id not found")
     }
 
     override fun save(product: Product) {
@@ -24,7 +23,10 @@ class CollectionProductStore(val products: MutableList<Product>) : ProductStore 
         products.add(newProduct)
     }
 
-    override fun update(id: Long, product: Product) {
+    override fun update(
+        id: Long,
+        product: Product,
+    ) {
         val updatedProduct = findById(id)
         updatedProduct?.name = product.name
         updatedProduct?.price = product.price

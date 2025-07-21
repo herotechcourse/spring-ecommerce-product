@@ -9,7 +9,6 @@ import java.sql.ResultSet
 
 @Repository
 class JdbcProductStore(private val jdbcTemplate: JdbcTemplate) : ProductStore {
-
     private val productRowMapper =
         RowMapper<Product> { rs: ResultSet, _ ->
             Product(
@@ -36,18 +35,20 @@ class JdbcProductStore(private val jdbcTemplate: JdbcTemplate) : ProductStore {
             ?: throw NotFoundException("Product with id $id not found")
     }
 
-
     override fun save(product: Product) {
         val sql = "insert into products(product_name,price,image_url) values (?,?,?)"
         jdbcTemplate.update(sql, product.name, product.price, product.imageUrl)
     }
 
-    override fun update(id: Long, product: Product) {
+    override fun update(
+        id: Long,
+        product: Product,
+    ) {
         val sql = "update products set product_name = ?, price = ?, image_url = ? where id = ?"
         jdbcTemplate.update(sql, product.name, product.price, product.imageUrl, id)
     }
 
-    override fun delete(id: Long) : Int {
+    override fun delete(id: Long): Int {
         val sql = "delete from products where id = ?"
         return jdbcTemplate.update(sql, id)
     }

@@ -10,7 +10,6 @@ import org.springframework.jdbc.core.JdbcTemplate
 
 @JdbcTest
 class JdbcProductStoreTest {
-
     @Autowired
     lateinit var jdbcTemplate: JdbcTemplate
 
@@ -45,7 +44,6 @@ class JdbcProductStoreTest {
         assertThat(savedProducts).anyMatch { it.name == "Tablet" && it.price == 299.99 }
     }
 
-
     @Test
     fun `should update existing product`() {
         val updatedProduct = Product(name = "Updated Phone", price = 499.99, imageUrl = "updated_phone.jpg")
@@ -62,5 +60,4 @@ class JdbcProductStoreTest {
         val rowNum = productStore.delete(1L)
         assertThat(rowNum).isEqualTo(1)
     }
-
 }

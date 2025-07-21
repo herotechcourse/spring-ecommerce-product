@@ -22,7 +22,6 @@ class ProductController(
     @Qualifier("jdbcProductStore")
     private val productStore: ProductStore,
 ) {
-
     @PostMapping("")
     @ResponseBody
     fun create(
