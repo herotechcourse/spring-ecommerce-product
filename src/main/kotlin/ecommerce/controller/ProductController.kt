@@ -1,10 +1,9 @@
 package ecommerce.controller
 
+import ecommerce.ProductStore
 import ecommerce.model.Product
-import ecommerce.repository.ProductRepository
-import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.http.ResponseEntity
-import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -14,20 +13,48 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.ResponseBody
 import java.net.URI
 
 @Controller
 @RequestMapping("/products")
-class ProductController {
-    @Autowired
-    private lateinit var jdbcTemplate: JdbcTemplate
+class ProductController(
+    @Qualifier("jdbcProductStore")
+    private val productStore: ProductStore,
+) {
 
     @PostMapping("")
+    @ResponseBody
     fun create(
         @RequestBody product: Product,
     ): ResponseEntity<Void> {
-        ProductRepository(jdbcTemplate).save(product)
-        return ResponseEntity.created(URI.create("/products/")).build()
+        val id = productStore.save(product)
+        return ResponseEntity.created(URI.create("/products/$id")).build()
+    }
+
+    @GetMapping("")
+    fun read(model: Model): String {
+        model.addAttribute("products", productStore.findAll())
+        return "products"
+    }
+
+    @PutMapping("/{id}")
+    @ResponseBody
+    fun update(
+        @PathVariable("id") id: Long,
+        @RequestBody newProduct: Product,
+    ): ResponseEntity<Void> {
+        productStore.update(id, newProduct)
+        return ResponseEntity.ok().build()
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseBody
+    fun delete(
+        @PathVariable("id") id: Long,
+    ): ResponseEntity<Void> {
+        productStore.delete(id)
+        return ResponseEntity.noContent().build()
     }
 
     @GetMapping("/new")
@@ -35,36 +62,13 @@ class ProductController {
         return "create_product_form"
     }
 
-    @GetMapping("")
-    fun read(model: Model): String {
-        model.addAttribute("products", ProductRepository(jdbcTemplate).findAll())
-        return "products"
-    }
-
     @GetMapping("/edit/{id}")
     fun showUpdateForm(
         @PathVariable("id") id: Long,
         model: Model,
     ): String {
-        val product = ProductRepository(jdbcTemplate).findById(id)
+        val product = productStore.findById(id)
         model.addAttribute("product", product)
         return "edit_product_form"
-    }
-
-    @PutMapping("/{id}")
-    fun update(
-        @PathVariable("id") id: Long,
-        @RequestBody newProduct: Product,
-    ): ResponseEntity<Void> {
-        ProductRepository(jdbcTemplate).update(id, newProduct)
-        return ResponseEntity.ok().build()
-    }
-
-    @DeleteMapping("/{id}")
-    fun delete(
-        @PathVariable("id") id: Long,
-    ): ResponseEntity<Void> {
-        ProductRepository(jdbcTemplate).deleteById(id)
-        return ResponseEntity.noContent().build()
     }
 }
