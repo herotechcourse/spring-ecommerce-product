@@ -2,10 +2,8 @@ package ecommerce.api
 
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.jdbc.core.RowMapper
-import org.springframework.stereotype.Service
 import java.sql.ResultSet
 
-@Service
 class ProductService(private val db: JdbcTemplate) {
     private val productRowMapper =
         RowMapper<Product> { rs: ResultSet, _ ->
@@ -18,7 +16,7 @@ class ProductService(private val db: JdbcTemplate) {
         }
 
     fun findAll(): List<Product> {
-        val products = db.query("""select * from product;""", productRowMapper)
+        val products = db.query("SELECT * FROM product;", productRowMapper)
         return products
     }
 
@@ -27,7 +25,7 @@ class ProductService(private val db: JdbcTemplate) {
         try {
             product =
                 db.queryForObject(
-                    """select id, name, price, imageUrl from product where id = ?""",
+                    "SELECT id, name, price, imageUrl FROM product WHERE id = ?",
                     productRowMapper,
                     id,
                 )
@@ -40,7 +38,7 @@ class ProductService(private val db: JdbcTemplate) {
 
     fun insert(product: Product) {
         db.update(
-            """INSERT INTO product (name, price, imageUrl) VALUES (?, ?, ?);""",
+            "INSERT INTO product (name, price, imageUrl) VALUES (?, ?, ?);",
             product.name,
             product.price,
             product.imageUrl,
@@ -52,7 +50,7 @@ class ProductService(private val db: JdbcTemplate) {
         product: Product,
     ) {
         db.update(
-            """UPDATE product set name = ?, price = ?, imageUrl = ? WHERE id = ?""",
+            "UPDATE product SET name = ?, price = ?, imageUrl = ? WHERE id = ?",
             product.name,
             product.price,
             product.imageUrl,
@@ -61,7 +59,7 @@ class ProductService(private val db: JdbcTemplate) {
     }
 
     fun delete(id: Long): Int {
-        val value = db.update("""DELETE FROM product WHERE id = ?""", id)
+        val value = db.update("DELETE FROM product WHERE id = ?", id)
         return value
     }
 }
