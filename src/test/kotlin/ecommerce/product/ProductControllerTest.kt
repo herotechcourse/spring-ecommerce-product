@@ -81,7 +81,7 @@ class ProductControllerTest {
                 .given().log().all()
                 .body(FLAT_WHITE)
                 .contentType(ContentType.JSON)
-                .`when`().put("/api/products/1")
+                .`when`().patch("/api/products/1")
                 .then().log().all().extract()
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
@@ -94,7 +94,7 @@ class ProductControllerTest {
                 .given().log().all()
                 .body(FLAT_WHITE)
                 .contentType(ContentType.JSON)
-                .`when`().put("/api/products/1")
+                .`when`().patch("/api/products/1")
                 .then().log().all().extract()
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value())
