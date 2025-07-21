@@ -1,5 +1,6 @@
 package ecommerce.repository
 
+import ecommerce.dto.ProductRequest
 import ecommerce.model.Product
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.jdbc.core.RowMapper
@@ -26,7 +27,7 @@ class ProductRepository(private val jdbcTemplate: JdbcTemplate) {
         return jdbcTemplate.query("select id, name, price, image_url from products", productRowMapper)
     }
 
-    fun createProduct(product: Product) {
+    fun createProduct(product: ProductRequest) {
         jdbcTemplate.update(
             "insert into products (name, price, image_url) values (?,?,?)",
             product.name,

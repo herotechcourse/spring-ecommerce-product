@@ -1,5 +1,6 @@
 package ecommerce.repository
 
+import ecommerce.dto.ProductRequest
 import ecommerce.model.Product
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
@@ -54,7 +55,7 @@ class ProductRepositoryTest {
 
     @Test
     fun create() {
-        val product = Product(1, "update", 11.00, "test.com")
+        val product = ProductRequest("update", 11.00, "test.com")
         productRepository.createProduct(product)
         val products = productRepository.getAll()
         assertThat(products).hasSize(5)

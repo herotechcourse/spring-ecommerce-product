@@ -1,5 +1,6 @@
 package ecommerce.controller
 
+import ecommerce.dto.ProductRequest
 import ecommerce.model.Product
 import ecommerce.repository.ProductRepository
 import org.springframework.http.HttpStatus
@@ -20,7 +21,7 @@ class ProductController(private val productRepository: ProductRepository) {
     @PostMapping(consumes = ["application/json"])
     @ResponseBody
     fun createProduct(
-        @RequestBody product: Product,
+        @RequestBody product: ProductRequest,
     ): ResponseEntity<Void> {
         productRepository.createProduct(product)
         return ResponseEntity(HttpStatus.CREATED)
