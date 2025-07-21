@@ -53,5 +53,24 @@ The required database tables are initialized automatically when the application 
 - TODO why do we combine Controller and ControllerView
 - read and learn SQL commands in H2 console
 
+## Step 2-1
+
+When a product is created or updated, the client may send invalid data.
+In such cases, your application must respond with enough information for the client to understand what is wrong and why.
+
+### Feature List
+
+- [ ] Product Name
+    - [ ] Product name is no longer than 15 characters (including spaces)
+    - [ ] Allow only specific special characters: `( ), [ ], +, -, &, /, _`. All other special characters are not allowed
+    - [ ] The name must be unique across all products
+
+- [ ] Product Price
+  - [ ] Must be greater than 0
+
+- [ ] Product Image URL
+  - [ ] Must start with ``http://`` or ``https://``
+    
+
 
 
