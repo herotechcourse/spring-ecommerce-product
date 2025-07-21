@@ -127,31 +127,37 @@
 
     document.getElementById("updateProductForm").addEventListener("submit", function (event) {
         event.preventDefault();
-        const form = event.target;
-        const formData = new FormData(form);
-        const formObject = {};
-        formData.forEach((value, key) => {
-            formObject[key] = value
-        })
-        const json = JSON.stringify(formObject)
-        console.log(json)
-        updateProduct(json)
+        const id = document.getElementById("id").value;
+        const newProduct = {
+            name: document.getElementById("updateName").value,
+            price: parseFloat(document.getElementById("updatePrice").value),
+            imageUrl: document.getElementById("updateImageUrl").value
+        };
+        const json = JSON.stringify(newProduct)
+        updateProduct(json, id)
     })
 
-    async function updateProduct(json) {
+    async function updateProduct(json, id) {
         try {
-            await fetch("http://localhost:8080/api/products", {
+            await fetch(`http://localhost:8080/api/products/${id}`, {
                 method: "PUT",
                 body: json,
                 headers: {
                     "Content-Type": "application/json",
                 },
             }).then((response) => {
+                if (response.status === 404) {
+                    alert(`Product not found, id: ${id}`);
+                    throw Error("fetch failed")
+                }
                 if (!response.ok) {
                     alert("Update failed");
                     throw Error("fetch failed")
                 }
-                alert("Update successful")
+                if (response.ok) {
+                    alert("Update successful")
+                }
+
             })
         } catch (error) {
             console.log(error.message)
