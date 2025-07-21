@@ -51,4 +51,3 @@
 - [x] create table
 - [x] Convert Controller for db usage
 - [x] Create Product Repository to handle DB logic
-- [ ] Implement Services to move business logic from Controller
