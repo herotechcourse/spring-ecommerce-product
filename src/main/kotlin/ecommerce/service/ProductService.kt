@@ -1,6 +1,7 @@
 package ecommerce.service
 
 import ecommerce.model.Product
+import ecommerce.model.ProductPatchDTO
 import ecommerce.store.ProductStore
 import org.springframework.stereotype.Service
 
@@ -12,12 +13,14 @@ class ProductService(private val productStore: ProductStore) {
 
     fun insert(product: Product): Product = productStore.insertProduct(product)
 
-    fun update(
-        id: Long,
-        product: Product,
-    ): Boolean {
-        if (productStore.findProductById(id) == null) return false
-        productStore.updateProduct(id, product)
+    fun update(id: Long, dto: ProductPatchDTO): Boolean {
+        val product = productStore.findProductById(id) ?: return false
+
+        dto.name?.let { product.name = it }
+        dto.price?.let { product.price = it }
+        dto.imageUrl?.let { product.imageUrl = it }
+
+        productStore.patchProduct(id, dto)
         return true
     }
 

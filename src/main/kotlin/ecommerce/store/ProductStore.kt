@@ -1,6 +1,7 @@
 package ecommerce.store
 
 import ecommerce.model.Product
+import ecommerce.model.ProductPatchDTO
 
 interface ProductStore {
     fun findAllProducts(): List<Product>
@@ -9,10 +10,7 @@ interface ProductStore {
 
     fun insertProduct(product: Product): Product
 
-    fun updateProduct(
-        id: Long,
-        product: Product,
-    )
+    fun patchProduct(id: Long, patch: ProductPatchDTO)
 
     fun deleteProduct(id: Long): Int
 }

@@ -1,6 +1,7 @@
 package ecommerce.store
 
 import ecommerce.model.Product
+import ecommerce.model.ProductPatchDTO
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.jdbc.core.RowMapper
 import org.springframework.jdbc.support.GeneratedKeyHolder
@@ -43,17 +44,28 @@ class JdbcProductStore(private val db: JdbcTemplate) : ProductStore {
         return product.copy(id = keyHolder.key?.toLong() ?: throw IllegalStateException("No ID returned"))
     }
 
-    override fun updateProduct(
-        id: Long,
-        product: Product,
-    ) {
-        db.update(
-            "UPDATE product SET name = ?, price = ?, imageUrl = ? WHERE id = ?",
-            product.name,
-            product.price,
-            product.imageUrl,
-            id,
-        )
+    override fun patchProduct(id: Long, patch: ProductPatchDTO) {
+        val updates = mutableListOf<String>()
+        val params = mutableListOf<Any>()
+
+        if (patch.name != null) {
+            updates.add("name = ?")
+            params.add(patch.name)
+        }
+        if (patch.price != null) {
+            updates.add("price = ?")
+            params.add(patch.price)
+        }
+        if (patch.imageUrl != null) {
+            updates.add("imageUrl = ?")
+            params.add(patch.imageUrl)
+        }
+        if (updates.isEmpty()) {
+            return
+        }
+        val sql = "UPDATE product SET ${updates.joinToString(", ")} WHERE id = ?"
+        params.add(id)
+        db.update(sql, *params.toTypedArray())
     }
 
     override fun deleteProduct(id: Long): Int {

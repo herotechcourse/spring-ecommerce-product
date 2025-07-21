@@ -27,15 +27,15 @@
         <fieldset>
             <label>
                 Name
-                <input type="text" id="name" name="name" required />
+                <input type="text" id="name" name="name" />
             </label>
             <label>
                 Price
-                <input type="number" id="price" name="price" step="0.01" required />
+                <input type="number" id="price" name="price" step="0.01" />
             </label>
             <label>
                 Image URL
-                <input type="url" id="imageUrl" name="imageUrl" required />
+                <input type="url" id="imageUrl" name="imageUrl" />
             </label>
         </fieldset>
         <input type="submit" value="Update" />
@@ -65,13 +65,26 @@
     document.getElementById("product-form").addEventListener("submit", async function (event) {
         event.preventDefault();
         const id = document.getElementById("product-id").value;
-        const name = document.getElementById("name").value;
-        const price = parseFloat(document.getElementById("price").value);
-        const imageUrl = document.getElementById("imageUrl").value;
-        const product = { name, price, imageUrl };
+
+        const product = {};
+
+        const name = document.getElementById("name").value.trim();
+        if (name) product.name = name;
+
+        const priceValue = document.getElementById("price").value;
+        if (priceValue) product.price = parseFloat(priceValue);
+
+        const imageUrl = document.getElementById("imageUrl").value.trim();
+        if (imageUrl) product.imageUrl = imageUrl;
+
+        if (Object.keys(product).length === 0) {
+            alert("Please fill in at least one field to update.");
+            return;
+        }
+
         try {
             const response = await fetch(`/api/products/${id}`, {
-                method: "PUT",
+                method: "PATCH",
                 headers: {
                     "Content-Type": "application/json"
                 },
