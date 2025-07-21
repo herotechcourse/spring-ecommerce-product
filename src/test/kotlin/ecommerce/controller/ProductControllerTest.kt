@@ -53,7 +53,7 @@ class ProductControllerTest {
                 .then().log().all().extract()
 
         Assertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
-        AssertionsForClassTypes.assertThat(response.asString()).contains("Product 1")
+        AssertionsForClassTypes.assertThat(response.asString()).contains("Tablet")
     }
 
     @Test
