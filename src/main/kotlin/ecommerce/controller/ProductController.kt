@@ -1,8 +1,9 @@
 package ecommerce.controller
 
 import ecommerce.dto.ProductRequest
-import ecommerce.model.Product
+import ecommerce.model.toDto
 import ecommerce.repository.ProductRepository
+import ecommerce.repository.ProductResponse
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -30,9 +31,9 @@ class ProductController(private val productRepository: ProductRepository) {
     @GetMapping("/{id}")
     fun getProduct(
         @PathVariable id: Long,
-    ): ResponseEntity<Product> {
+    ): ResponseEntity<ProductResponse> {
         val product = productRepository.findById(id) ?: return ResponseEntity.notFound().build()
-        return ResponseEntity.ok(product)
+        return ResponseEntity.ok(product.toDto())
     }
 
     @PutMapping("/{id}")
