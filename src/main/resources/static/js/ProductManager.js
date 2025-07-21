@@ -21,17 +21,34 @@ function productManager() {
             const res = await fetch(`${API_ENDPOINT}/${id}`, { method: "DELETE" });
             return res;
         },
+
         async update(id, name, price, imageUrl) {
-            const payload = { name, price, imageUrl };
+            const payload = {};
+
+            if (name) payload.name = name;
+            if (price) payload.price = price;
+            if (imageUrl) payload.imageUrl = imageUrl;
 
             const options = {
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(payload)
             };
 
-            const res = await fetch(`${API_ENDPOINT}/${id}`, { ...options, method: "PUT" });
+            const res = await fetch(`${API_ENDPOINT}/${id}`, { ...options, method: "PATCH" });
             return res;
         }
+
+        // async update(id, name, price, imageUrl) {
+        //     const payload = { name, price, imageUrl };
+        //
+        //     const options = {
+        //         headers: { "Content-Type": "application/json" },
+        //         body: JSON.stringify(payload)
+        //     };
+        //
+        //     const res = await fetch(`${API_ENDPOINT}/${id}`, { ...options, method: "PUT" });
+        //     return res;
+        // }
     }
 
     async function fetchProducts() {
@@ -80,9 +97,9 @@ function productManager() {
     function getFormValues(form) {
         const formFields = getFormFields(form);
         const id = formFields.id.value;
-        const name = formFields.name.value;
-        const price = parseFloat(formFields.price.value);
-        const imageUrl = formFields.imageUrl.value;
+        const name = formFields.name.value || undefined;
+        const price = formFields.price.value ? parseFloat(formFields.price.value): undefined;
+        const imageUrl = formFields.imageUrl.value || undefined;
         return { id, name, price, imageUrl };
     }
 

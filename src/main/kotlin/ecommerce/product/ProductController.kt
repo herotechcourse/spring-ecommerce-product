@@ -4,9 +4,9 @@ import ecommerce.repository.ProductRepository
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PatchMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
@@ -35,15 +35,17 @@ class ProductController(private val repository: ProductRepository) {
         return ResponseEntity.ok(repository.findAll())
     }
 
-    @PutMapping("/{id}")
-    fun update(
-        @RequestBody newProduct: Product,
+    @PatchMapping("/{id}")
+    fun patchUpdate(
+        @RequestBody partialProduct: Product,
         @PathVariable id: Long,
     ): ResponseEntity<Product> {
-        val product = repository[id] ?: return ResponseEntity.notFound().build()
-        product.update(newProduct)
-        repository.updateById(id, product)
-        return ResponseEntity.ok().body(product)
+        val existingProduct = repository[id] ?: return ResponseEntity.notFound().build()
+
+        val updatedProduct = existingProduct.updateWith(partialProduct)
+        repository.updateById(id, updatedProduct)
+
+        return ResponseEntity.ok().body(updatedProduct)
     }
 
     @DeleteMapping("/{id}")

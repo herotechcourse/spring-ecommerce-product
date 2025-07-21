@@ -1,10 +1,17 @@
 package ecommerce.product
 
-class Product(var id: Long? = null, var name: String, var price: Double, var imageUrl: String?) {
-    fun update(newProduct: Product) {
-        this.name = newProduct.name
-        this.price = newProduct.price
-        this.imageUrl = newProduct.imageUrl
+class Product(var id: Long? = null, var name: String?, var price: Double?, var imageUrl: String?) {
+    //    fun update(newProduct: Product) {
+//        this.name = newProduct.name
+//        this.price = newProduct.price
+//        this.imageUrl = newProduct.imageUrl
+//    }
+    fun updateWith(partial: Product): Product {
+        return Product(
+            name = partial.name ?: this.name,
+            price = partial.price ?: this.price,
+            imageUrl = partial.imageUrl ?: this.imageUrl
+        )
     }
 
     override fun equals(other: Any?): Boolean {
