@@ -47,6 +47,33 @@ The required database tables are initialized automatically when the application 
     - [x] Configure the database settings
     - [x] use Spring's JdbcTemplate
 
+## Learnings
+### JDBC & DAO
+- my `ProductRepository` class is a DAO (Data Access Object): a design pattern for data access abstraction, meaning that
+I don't expose how the products are stored and retrieved
+- JDBC is a Java API that defines how a client can access a database 
+-> I can execute SQL statements, retrieve results, handle database connections
+
+### HashCode & Equals
+- the `hashCode()` and `equals()` functions are provided by data classes in Kotlin. Equals checks the equality of 
+two objects and hashcode generates a hashcode that can be useful when using collections like HashMap or HashSet.
+- In this project we need to override them,
+because our products are the same if their `id` is the same, the other attributes can differ
+```
+For example, if you have
+
+id = 1, name = "green apple"
+id = 1, name = "red apple"
+these should be considered the same apple — it just changed color over time.
+
+On the other hand
+
+id = 1, name = "green apple"
+id = 2, name = "green apple"
+represent completely different apples, because their IDs are different.
+```
+
+
 ## Considerations
 
 - TODO read about difference btw RestController and Controller
