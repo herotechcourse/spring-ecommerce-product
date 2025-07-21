@@ -1,5 +1,6 @@
-package ecommerce.repository
+package ecommerce
 
+import ecommerce.exception.NotFoundException
 import ecommerce.model.Product
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.jdbc.core.RowMapper
@@ -7,7 +8,8 @@ import org.springframework.stereotype.Repository
 import java.sql.ResultSet
 
 @Repository
-class ProductRepository(private val jdbcTemplate: JdbcTemplate) {
+class JdbcProductStore(private val jdbcTemplate: JdbcTemplate) : ProductStore {
+
     private val productRowMapper =
         RowMapper<Product> { rs: ResultSet, _ ->
             Product(
@@ -18,36 +20,35 @@ class ProductRepository(private val jdbcTemplate: JdbcTemplate) {
             )
         }
 
-    fun count(): Int {
+    override fun countProducts(): Int {
         val sql = "SELECT COUNT(*) FROM products"
         return jdbcTemplate.queryForObject(sql, Int::class.java) ?: 0
     }
 
-    fun findAll(): List<Product> {
+    override fun findAll(): List<Product> {
         val sql = "Select * from products"
         return jdbcTemplate.query(sql, productRowMapper)
     }
 
-    fun findById(id: Long): Product? {
-        val sql = "Select * from products where id = ?"
+    override fun findById(id: Long): Product {
+        val sql = "SELECT * FROM products WHERE id = ?"
         return jdbcTemplate.queryForObject(sql, productRowMapper, id)
+            ?: throw NotFoundException("Product with id $id not found")
     }
 
-    fun save(product: Product) {
+
+    override fun save(product: Product) {
         val sql = "insert into products(product_name,price,image_url) values (?,?,?)"
         jdbcTemplate.update(sql, product.name, product.price, product.imageUrl)
     }
 
-    fun update(
-        id: Long,
-        product: Product,
-    ) {
+    override fun update(id: Long, product: Product) {
         val sql = "update products set product_name = ?, price = ?, image_url = ? where id = ?"
         jdbcTemplate.update(sql, product.name, product.price, product.imageUrl, id)
     }
 
-    fun deleteById(id: Long) {
+    override fun delete(id: Long) : Int {
         val sql = "delete from products where id = ?"
-        jdbcTemplate.update(sql, id)
+        return jdbcTemplate.update(sql, id)
     }
 }
