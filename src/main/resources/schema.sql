@@ -1,8 +1,8 @@
 create table PRODUCTS
 (
-    id        int          not null AUTO_INCREMENT,
-    name      varchar(100) not null,
+    id        INT AUTO_INCREMENT,
+    name      VARCHAR(100),
     price     DECIMAL(10, 2),
-    image_url varchar(500) not null,
+    image_url VARCHAR(500),
     PRIMARY KEY (id)
 );
