@@ -65,11 +65,11 @@ In such cases, your application must respond with enough information for the cli
     - [x] Allow only specific special characters: `( ), [ ], +, -, &, /, _`. All other special characters are not allowed
     - [x] The name must be unique across all products
 
-- [ ] Product Price
-  - [ ] Must be greater than 0
+- [x] Product Price
+  - [x] Must be greater than 0
 
-- [ ] Product Image URL
-  - [ ] Must start with ``http://`` or ``https://``
+- [x] Product Image URL
+  - [x] Must start with ``http://`` or ``https://``
     
 
 
