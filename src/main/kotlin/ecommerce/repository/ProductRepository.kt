@@ -1,0 +1,50 @@
+package ecommerce.repository
+
+import ecommerce.model.Product
+import org.springframework.jdbc.core.JdbcTemplate
+import org.springframework.jdbc.core.RowMapper
+import org.springframework.stereotype.Repository
+import java.sql.ResultSet
+
+@Repository
+class ProductRepository(private val jdbcTemplate: JdbcTemplate) {
+    private val productRowMapper =
+        RowMapper<Product> { rs: ResultSet, _ ->
+            Product(
+                id = rs.getLong("id"),
+                name = rs.getString("product_name"),
+                price = rs.getDouble("price"),
+                imageUrl = rs.getString("image_url"),
+            )
+        }
+
+    fun findAll(): List<Product> {
+        val sql = "select * from products"
+        return jdbcTemplate.query(sql, productRowMapper)
+    }
+
+    fun findById(id: Long): Product? {
+        val sql = "select * from products where id = ?"
+        return jdbcTemplate.queryForObject(sql, productRowMapper, id)
+    }
+
+    fun save(product: Product) {
+        val sql = "insert into products(product_name,price,image_url) values (?,?,?)"
+        jdbcTemplate.update(sql, product.name, product.price, product.imageUrl)
+    }
+
+    fun update(
+        id: Long,
+        product: Product,
+    ) {
+        findById(id)
+        val sql = "update products set product_name = ?, price = ?, image_url = ? where id = ?"
+        jdbcTemplate.update(sql, product.name, product.price, product.imageUrl, id)
+    }
+
+    fun deleteById(id: Long) {
+        findById(id)
+        val sql = "delete from products where id = ?"
+        jdbcTemplate.update(sql, id)
+    }
+}
