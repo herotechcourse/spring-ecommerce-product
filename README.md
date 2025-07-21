@@ -7,7 +7,7 @@ HTTP requests and responses must be in **JSON** format. <br/>
 Since no separate database is used at this point, data is stored in memory using an appropriate Kotlin Collection
 Framework. <br/>
 
-### Feature list
+### Feature list - Step 1-1
 
 - [x] resource representation class to store data
     - [x] is wrapped in a collection
@@ -27,7 +27,7 @@ However, if you're interested in asynchronous behavior using JavaScript, feel fr
 API to apply AJAX or similar techniques.<br/>
 For product images, do not upload files; instead, use direct image URLs. <br/>
 
-### Feature list
+### Feature list - Step 1-2
 
 - [x] admin interface
     - [x] uses Thymeleaf
@@ -39,13 +39,27 @@ For product images, do not upload files; instead, use direct image URLs. <br/>
 Refactor the application using an H2 in-memory database instead of Kotlin collections.
 The required database tables are initialized automatically when the application starts.
 
-### Feature List
+### Feature list - Step 1-3
 
 - [x] connect to a database
     - [x] Add the required Gradle dependencies
     - [x] Define the database schema
     - [x] Configure the database settings
     - [x] use Spring's JdbcTemplate
+
+## Step 2-1 
+Implement validation of user input.
+
+### Feature List - Step 2-1
+- Product Name
+  - [ ] Must be no more than 15 characters, including spaces. 
+  - [ ] Allowed special characters: ( ), [ ], +, -, &, /, _
+  - [ ] All other special characters are not allowed.
+  - [ ] The name must be unique across all products.
+- Product Price
+  - [ ] Must be greater than 0.
+- Product Image URL
+  - [ ] Must start with http:// or https://.
 
 ## Learnings
 ### JDBC & DAO
@@ -73,6 +87,25 @@ id = 2, name = "green apple"
 represent completely different apples, because their IDs are different.
 ```
 
+### Exceptions in Controllers
+- `@Controller` and `@ControllerAdvice` classes can have 
+`@ExceptionHandler` methods to handle exceptions from controller methods, as the following example shows:
+```kotlin
+@ExceptionHandler(IllegalArgumentException::class)
+fun handleIllegalArgumentException(e: IllegalArgumentException): ResponseEntity<String> {
+return ResponseEntity.badRequest().body(e.message)
+}
+```
+- `@ControllerAdvice` can hanlde exceptions on a global level:
+```kotlin
+@ControllerAdvice
+class GlobalExceptionHandler {
+    @ExceptionHandler
+    fun handleNotFoundException(e: NotFoundException): ResponseEntity<String> {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.message)
+    }
+}
+- ```
 
 ## Considerations
 
