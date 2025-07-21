@@ -25,7 +25,7 @@ functionality, readability, and test reliability.
 - [x] **Improve constructor readability**  
   If a class constructor has many parameters, split them into multiple lines for clarity.
 
-- [x] **Rename or refactor `Product.toEntity`** -> to `Product.withId`
+- [ ] **Rename or refactor `Product.toEntity`**
   The current method name may be misleading. Consider renaming it or using a constructor with named arguments.
 - [ ] Check/Read about Entity and DTO
 
@@ -57,3 +57,8 @@ functionality, readability, and test reliability.
 - [ ] **Add tests for uncovered features**  
   Identify and write tests for product-related features that are currently missing test coverage.
     
+---
+
+### Additional
+- [ ] Change price to BigDecimal
+- [x] Create object to collect all SQL lines
