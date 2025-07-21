@@ -35,19 +35,19 @@ class CRUDTest {
             listOf(
                 Product(
                     id = 1L,
-                    name = "vanilla ice cream",
+                    name = "vanilla ice",
                     price = 1.99,
                     imageUrl = "https://laurenslatest.com/wp-content/uploads/2020/08/vanilla-ice-cream-5-copy-360x361.jpg",
                 ),
                 Product(
                     id = 2L,
-                    name = "pistachio ice cream",
+                    name = "pistachio ice",
                     price = 2.49,
                     imageUrl = "https://greenhealthycooking.com/wp-content/uploads/2017/06/Pistachio-Ice-Cream-Photo.jpg",
                 ),
                 Product(
                     id = 3L,
-                    name = "chocolate ice cream",
+                    name = "chocolate ice",
                     price = 1.49,
                     imageUrl = "https://www.cravethegood.com/wp-content/uploads/2021/04/sous-vide-chocolate-ice-cream-15.jpg",
                 ),
@@ -66,17 +66,17 @@ class CRUDTest {
 
     @Test
     fun create() {
+        val request = ProductRequest(
+            name = "orange ice",
+            price = 2.80,
+            imageUrl = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRf8Fdb-33SCOszWX_UF-92pCwX4Rcam0uVCg&s"
+        )
+
         val response =
             RestAssured
                 .given().log().all()
                 .port(port)
-                .body(
-                    Product(
-                        name = "Orange ice cream",
-                        price = 2.80,
-                        imageUrl = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRf8Fdb-33SCOszWX_UF-92pCwX4Rcam0uVCg&s",
-                    ),
-                )
+                .body(request)
                 .contentType(ContentType.JSON)
                 .`when`().post("/api/products")
                 .then().log().all().extract()
@@ -105,8 +105,8 @@ class CRUDTest {
                 .given().log().all()
                 .port(port)
                 .body(
-                    Product(
-                        name = "lemon ice cream",
+                    ProductRequest(
+                        name = "lemon ice",
                         price = 3.60,
                         imageUrl =
                             "https://www.carnation.co.uk/sites/default/files/2020" +
@@ -127,8 +127,8 @@ class CRUDTest {
                 .given().log().all()
                 .port(port)
                 .body(
-                    Product(
-                        name = "vanilla ice cream",
+                    ProductRequest(
+                        name = "vanilla ice",
                         price = 3.60,
                         imageUrl = "https://laurenslatest.com/wp-content/uploads/2020/08/vanilla-ice-cream-5-copy-360x361.jpg",
                     ),
@@ -137,7 +137,7 @@ class CRUDTest {
                 .`when`().put("/api/products/4")
                 .then().log().all().extract()
 
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value())
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value())
     }
 
     @Test
@@ -163,6 +163,6 @@ class CRUDTest {
                 .`when`().delete("/api/products/4")
                 .then().log().all().extract()
 
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value())
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value())
     }
 }

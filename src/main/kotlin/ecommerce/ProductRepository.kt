@@ -43,4 +43,15 @@ class ProductRepository(private val jdbc: JdbcTemplate) {
     fun delete(id: Long): Boolean {
         return jdbc.update("DELETE FROM products WHERE id = ?", id) > 0
     }
+
+    fun existsById(id: Long): Boolean {
+        val sql = "SELECT COUNT(*) FROM products WHERE id = ?"
+        val count = jdbc.queryForObject(sql, Int::class.java, id)
+        return count != null && count > 0
+    }
+
+    fun existsByName(name: String): Boolean {
+        val count = jdbc.queryForObject("SELECT COUNT(*) FROM products WHERE name = ?", Long::class.java, name)
+        return count != null && count > 0
+    }
 }

@@ -20,14 +20,14 @@
 
 ### step2
 
-- [ ] validate user input
-  - [ ] product name
-    - [ ] length is maximum 15 characters
-    - [ ] allow only the following special characters: `()`, `[]`, `+`, `-`, `&`, `/`, `_`
-    - [ ] must be unique
-  - [ ] product price must be greater than 0
-  - [ ] product image must start with `http://` or `https://`
+- [x] validate user input
+  - [x] product name
+    - [x] length is maximum 15 characters
+    - [x] allow only the following special characters: `()`, `[]`, `+`, `-`, `&`, `/`, `_`
+    - [x] must be unique
+  - [x] product price must be greater than 0
+  - [x] product image must start with `http://` or `https://`
 
-- [ ] error handling
-  - [ ] return `400 Bad Request` for invalid input
-  - [ ] respond a clear error message for each invalid field
+- [x] error handling
+  - [x] return `400 Bad Request` for invalid input
+  - [x] respond a clear error message for each invalid field
