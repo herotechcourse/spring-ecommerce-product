@@ -1,6 +1,6 @@
 package ecommerce.model
 
-import ecommerce.repository.ProductResponse
+import ecommerce.dto.ProductResponse
 
 class Product(
     val id: Long,

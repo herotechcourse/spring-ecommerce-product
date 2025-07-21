@@ -1,8 +1,8 @@
 package ecommerce.controller
 
 import ecommerce.dto.ProductRequest
+import ecommerce.dto.ProductResponse
 import ecommerce.model.Product
-import ecommerce.repository.ProductResponse
 import io.restassured.RestAssured
 import io.restassured.http.ContentType
 import org.assertj.core.api.Assertions.assertThat
