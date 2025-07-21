@@ -43,9 +43,9 @@ class JdbcProductStore(private val jdbcTemplate: JdbcTemplate) : ProductStore {
     override fun update(
         id: Long,
         product: Product,
-    ) {
+    ): Int {
         val sql = "update products set product_name = ?, price = ?, image_url = ? where id = ?"
-        jdbcTemplate.update(sql, product.name, product.price, product.imageUrl, id)
+        return jdbcTemplate.update(sql, product.name, product.price, product.imageUrl, id)
     }
 
     override fun delete(id: Long): Int {

@@ -26,11 +26,12 @@ class CollectionProductStore(val products: MutableList<Product>) : ProductStore 
     override fun update(
         id: Long,
         product: Product,
-    ) {
+    ): Int {
         val updatedProduct = findById(id)
         updatedProduct?.name = product.name
         updatedProduct?.price = product.price
         updatedProduct?.imageUrl = product.imageUrl
+        return 1
     }
 
     override fun delete(id: Long): Int {
