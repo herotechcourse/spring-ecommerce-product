@@ -15,24 +15,24 @@ import java.net.URI
 
 @RestController
 @RequestMapping("/products")
-class ProductController {
+class ProductController(private val productRepository: ProductRepository) {
     @GetMapping
     fun getProducts(): ResponseEntity<List<Product>> {
-        return ResponseEntity.ok().body(ProductRepository().findAll())
+        return ResponseEntity.ok().body(productRepository.findAll())
     }
 
     @GetMapping("/{id}")
     fun getProductById(
         @PathVariable("id") id: Long,
     ): ResponseEntity<Product> {
-        return ResponseEntity.ok().body(ProductRepository().findById(id))
+        return ResponseEntity.ok().body(productRepository.findById(id))
     }
 
     @PostMapping("")
     fun create(
         @RequestBody product: Product,
     ): ResponseEntity<Void> {
-        ProductRepository().save(product)
+        productRepository.save(product)
         return ResponseEntity.created(URI.create("/products/")).build()
     }
 
@@ -41,7 +41,7 @@ class ProductController {
         @PathVariable("id") id: Long,
         @RequestBody newProduct: Product,
     ): ResponseEntity<Void> {
-        ProductRepository().update(id, newProduct)
+        productRepository.update(id, newProduct)
         return ResponseEntity.ok().build()
     }
 
@@ -49,7 +49,7 @@ class ProductController {
     fun delete(
         @PathVariable("id") id: Long,
     ): ResponseEntity<Void> {
-        ProductRepository().deleteById(id)
+        productRepository.deleteById(id)
         return ResponseEntity.noContent().build()
     }
 }
