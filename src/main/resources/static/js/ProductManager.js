@@ -1,9 +1,41 @@
 function productManager() {
+    const API_ENDPOINT = "http://localhost:8080/api/products";
 
-    const API = "http://localhost:8080/api/products";
+    const API = {
+        async fetchProducts() {
+            const res = await fetch(API_ENDPOINT);
+            return res;
+        },
+        async create(name, price, imageUrl) {
+            const payload = { name, price, imageUrl };
+
+            const options = {
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload)
+            };
+
+            const res = await fetch(API_ENDPOINT, { ...options, method: "POST" });
+            return res;
+        },
+        async delete(id) {
+            const res = await fetch(`${API_ENDPOINT}/${id}`, { method: "DELETE" });
+            return res;
+        },
+        async update(id, name, price, imageUrl) {
+            const payload = { name, price, imageUrl };
+
+            const options = {
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload)
+            };
+
+            const res = await fetch(`${API_ENDPOINT}/${id}`, { ...options, method: "PUT" });
+            return res;
+        }
+    }
 
     async function fetchProducts() {
-        const res = await fetch(API);
+        const res = await API.fetchProducts();
         if (res.status === 204) {
             document.getElementById("product-list").innerHTML = "No products.";
             return;
@@ -12,75 +44,118 @@ function productManager() {
         renderProducts(products);
     }
 
+    function toggleForm(formId) {
+        const forms = document.querySelectorAll("form");
+        forms.forEach(form => form.classList.remove("active"));
+        document.querySelector(`form[id=${formId}]`).classList.add("active");
+    }
+
     function renderProducts(products) {
         const list = document.getElementById("product-list");
         list.innerHTML = '';
-        products.forEach(p => {
+        products.forEach(product => {
             const div = document.createElement("div");
             div.innerHTML = `
-                        <strong>${p.name}</strong> - $${p.price} <br>
-                        <img src="${p.imageUrl}" alt="${p.name}" width="150" height="100"><br>
-                        <button onclick="editProduct(${p.id})">Edit</button>
-                        <button onclick="deleteProduct(${p.id})">Delete</button>
+                        <strong>${product.name}</strong> - $${product.price} <br>
+                        <img src="${product.imageUrl}" alt="${product.name}" width="150" height="100"><br>
+                        <button class="edit-button">Edit</button>
+                        <button class="delete-button">Delete</button>
                         <hr/>
                     `;
+            div.querySelector("button.edit-button").addEventListener("click", () => { handleProductEditButtonClick(product) })
+            div.querySelector("button.delete-button").addEventListener("click", () => { deleteProduct(product.id) })
+
             list.appendChild(div);
         });
     }
 
-    async function createOrUpdateProduct(e) {
+    function getFormFields(form) {
+        const id = form.querySelector("input[name=product-id]");
+        const name = form.querySelector("input[name=product-name]");
+        const price = form.querySelector("input[name=product-price]");
+        const imageUrl = form.querySelector("input[name=product-image]");
+        return { id, name, price, imageUrl };
+    }
+
+    function getFormValues(form) {
+        const formFields = getFormFields(form);
+        const id = formFields.id.value;
+        const name = formFields.name.value;
+        const price = parseFloat(formFields.price.value);
+        const imageUrl = formFields.imageUrl.value;
+        return { id, name, price, imageUrl };
+    }
+
+    async function handleCreateProductSubmit(e) {
         e.preventDefault();
-        const id = document.getElementById("product-id").value;
-        const name = document.getElementById("product-name").value;
-        const price = parseFloat(document.getElementById("product-price").value);
-        const imageUrl = document.getElementById("product-image").value;
 
-        const payload = { name, price, imageUrl };
-        const options = {
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(payload)
-        };
+        const form = document.getElementById("product-form");
+        const { name, price, imageUrl } = getFormValues(form);
+        const res = await API.create(name, price, imageUrl)
 
-        if (id) {
-            // Update
-            const res = await fetch(`${API}/${id}`, { ...options, method: "PUT" });
-            if (res.ok) {
-                resetForm();
-                fetchProducts();
-            }
-        } else {
-            // Create
-            const res = await fetch(API, { ...options, method: "POST" });
-            if (res.ok) {
-                resetForm();
-                fetchProducts();
-            }
+        if (res.ok) {
+            resetForm(form);
+            fetchProducts();
         }
     }
 
-    function editProduct(id) {
-        fetch(`${API}`)
-            .then(res => res.json())
-            .then(data => {
-                const product = data.find(p => p.id === id);
-                document.getElementById("product-id").value = product.id;
-                document.getElementById("product-name").value = product.name;
-                document.getElementById("product-price").value = product.price;
-                document.getElementById("product-image").value = product.imageUrl;
-            });
+    function handleProductEditButtonClick(product) {
+        toggleForm("update-product-form");
+
+        const form = document.getElementById("update-product-form");
+        const formFields = getFormFields(form);
+
+        formFields.id.value = product.id;
+        formFields.name.value = product.name;
+        formFields.price.value = product.price;
+        formFields.imageUrl.value = product.imageUrl;
+    }
+
+    async function handleEditProductSubmit(e) {
+        e.preventDefault();
+
+        const form = document.getElementById("update-product-form");
+        const { id, name, price, imageUrl } = getFormValues(form);
+        const res = await API.update(id, name, price, imageUrl)
+
+        if (res.ok) {
+            toggleForm("product-form");
+            resetForm(form);
+            fetchProducts();
+        }
     }
 
     async function deleteProduct(id) {
-        const res = await fetch(`${API}/${id}`, { method: "DELETE" });
-        if (res.ok) fetchProducts();
+        const res = await API.delete(id);
+
+        if (res.ok) {
+            fetchProducts()
+        }
     }
 
-    function resetForm() {
-        document.getElementById("product-id").value = "";
-        document.getElementById("product-form").reset();
+    function resetForm(form) {
+        form.reset();
+        form.querySelector("input[name=product-id]").value = "";
+        form.querySelector("input[name=product-name]").value = "";
+        form.querySelector("input[name=product-price]").value = "";
+        form.querySelector("input[name=product-image]").value = "";
     }
 
-    document.getElementById("product-form").addEventListener("submit", createOrUpdateProduct);
+    function setupCreateProductForm() {
+        const form = document.getElementById("product-form");
+        form.addEventListener("submit", handleCreateProductSubmit);
+    }
+
+    function setupEditProductForm() {
+        const form = document.getElementById("update-product-form");
+        form.addEventListener("submit", handleEditProductSubmit);
+
+        const cancelEditButton = form.querySelector("button.cancel-edit-button");
+        cancelEditButton.addEventListener("click", () => toggleForm("product-form"));
+    }
+
+    setupCreateProductForm();
+    setupEditProductForm();
 
     fetchProducts();
 }
