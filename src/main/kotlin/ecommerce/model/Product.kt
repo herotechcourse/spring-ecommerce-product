@@ -4,7 +4,7 @@ class Product(
     val id: Long? = null,
     var name: String = "",
     var price: Double = 0.0,
-    var imageUrl: String = ""
+    var imageUrl: String = "",
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
