@@ -2,7 +2,7 @@ package ecommerce.controller
 
 import ecommerce.dto.ProductRequest
 import ecommerce.model.Product
-import ecommerce.repository.ProductRepository
+import ecommerce.repository.ProductResponse
 import io.restassured.RestAssured
 import io.restassured.http.ContentType
 import org.assertj.core.api.Assertions.assertThat
@@ -20,15 +20,11 @@ import org.springframework.test.annotation.DirtiesContext
     properties = ["spring.sql.init.mode=never"],
 )
 class ProductControllerTest {
-    private lateinit var productRepository: ProductRepository
-
     @Autowired
     private lateinit var jdbcTemplate: JdbcTemplate
 
     @BeforeEach
     fun setUp() {
-        productRepository = ProductRepository(jdbcTemplate)
-
         jdbcTemplate.execute("DROP TABLE products IF EXISTS")
 
         jdbcTemplate.execute(createQuery())
@@ -117,7 +113,6 @@ class ProductControllerTest {
 
     @Test
     fun getProduct() {
-        val product = Product(1L, "cafe", 39.00, "www.test")
         val response =
             RestAssured
                 .given().log().all()
@@ -128,6 +123,33 @@ class ProductControllerTest {
                 .response()
 
         assertThat(response.statusCode).isEqualTo(HttpStatus.OK.value())
-        assertThat(response.`as`(Product::class.java)).isEqualTo(product)
+        assertThat(response.`as`(ProductResponse::class.java).id).isEqualTo(1L)
+        assertThat(response.`as`(ProductResponse::class.java).name).isEqualTo("cafe")
+        assertThat(response.`as`(ProductResponse::class.java).price).isEqualTo(39.00)
+        assertThat(response.`as`(ProductResponse::class.java).imageUrl).isEqualTo("www.test")
+    }
+
+    @Test
+    fun deleteProduct() {
+        val delete =
+            RestAssured
+                .given().log().all()
+                .`when`()
+                .request("DELETE", "/api/products/1")
+                .then()
+                .extract()
+                .response()
+
+        val after =
+            RestAssured
+                .given().log().all()
+                .`when`()
+                .request("GET", "/api/products/1")
+                .then()
+                .extract()
+                .response()
+
+        assertThat(delete.statusCode).isEqualTo(HttpStatus.OK.value())
+        assertThat(after.statusCode).isEqualTo(HttpStatus.NOT_FOUND.value())
     }
 }
