@@ -1,5 +1,4 @@
-INSERT INTO PRODUCTS (name, price, image_url)
-VALUES
+INSERT INTO PRODUCTS (name, price, image_url) VALUES
     ('Espresso', 2.50, 'https://upload.wikimedia.org/wikipedia/commons/4/45/A_small_cup_of_coffee.JPG'),
     ('Cappuccino', 3.20, 'https://upload.wikimedia.org/wikipedia/commons/c/c8/Cappuccino_at_Sightglass_Coffee.jpg'),
     ('Latte Macchiato', 3.80, 'https://media.istockphoto.com/id/532485409/photo/a-glass-of-latte-macchiatto.webp?a=1&b=1&s=612x612&w=0&k=20&c=1_j2qv3r7x7opMaA51M1t2df26vusUgX-9S4-xq_b4I='),

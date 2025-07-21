@@ -19,16 +19,23 @@ class ProductRepository(private val jdbcTemplate: JdbcTemplate) {
         }
 
     fun findById(id: Long): Product? {
-        return jdbcTemplate.queryForObject("select id, name, price, image_url from products where id = ?", productRowMapper, id)
+        return jdbcTemplate.queryForObject(
+            "SELECT id, name, price, image_url FROM products WHERE id = ?",
+            productRowMapper,
+            id,
+        )
     }
 
     fun getAll(): List<Product> {
-        return jdbcTemplate.query("select id, name, price, image_url from products", productRowMapper)
+        return jdbcTemplate.query(
+            "SELECT id, name, price, image_url FROM products",
+            productRowMapper,
+        )
     }
 
     fun createProduct(product: Product) {
         jdbcTemplate.update(
-            "insert into products (name, price, image_url) values (?,?,?)",
+            "INSERT INTO products (name, price, image_url) VALUES (?, ?, ?)",
             product.name,
             product.price,
             product.imageUrl,
@@ -37,7 +44,7 @@ class ProductRepository(private val jdbcTemplate: JdbcTemplate) {
 
     fun updateProduct(product: Product) {
         jdbcTemplate.update(
-            "UPDATE products SET name=?, price= ?, image_url = ? where id = ?",
+            "UPDATE products SET name = ?, price = ?, image_url = ? WHERE id = ?",
             product.name,
             product.price,
             product.imageUrl,
@@ -46,6 +53,9 @@ class ProductRepository(private val jdbcTemplate: JdbcTemplate) {
     }
 
     fun deleteProduct(id: Long) {
-        jdbcTemplate.update("delete from products where id = ?", id.toLong())
+        jdbcTemplate.update(
+            "DELETE FROM products WHERE id = ?",
+            id,
+        )
     }
 }
