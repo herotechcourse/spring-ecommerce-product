@@ -25,7 +25,9 @@ class ProductController(private val productRepository: ProductRepository) {
     fun getProductById(
         @PathVariable("id") id: Long,
     ): ResponseEntity<Product> {
-        return ResponseEntity.ok().body(productRepository.findById(id))
+        val product =
+            productRepository.findById(id)
+        return ResponseEntity.ok().body(product)
     }
 
     @PostMapping("")
