@@ -7,6 +7,9 @@ import org.junit.jupiter.api.Test
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.HttpStatus
 import org.springframework.test.annotation.DirtiesContext
+import ecommerce.ProductMock.FLAT_WHITE
+import ecommerce.ProductMock.AMERICANO
+import ecommerce.ProductMock.createProduct
 
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
@@ -16,7 +19,9 @@ class ProductControllerTest {
         val response =
             RestAssured
                 .given().log().all()
-                .body(AMERICANO)
+                .body({
+
+                })
                 .contentType(ContentType.JSON)
                 .`when`().post("/api/products")
                 .then().log().all().extract()
@@ -130,35 +135,5 @@ class ProductControllerTest {
                 .then().log().all().extract()
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value())
-    }
-
-    companion object {
-        fun createProduct(product: Product) {
-            val response =
-                RestAssured
-                    .given().log().all()
-                    .body(product)
-                    .contentType(ContentType.JSON)
-                    .`when`().post("/api/products")
-                    .then().log().all().extract()
-
-            assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value())
-        }
-
-        val FLAT_WHITE =
-            Product(
-                name = "Flat white L",
-                price = 6.50,
-                imageUrl =
-                    "https://st.kakaocdn.net/product/gift/product/20231010111814_9a667f9eccc943648797925498bdd8a3.jpg",
-            )
-
-        val AMERICANO =
-            Product(
-                name = "Iced Americano T",
-                price = 4.50,
-                imageUrl =
-                    "https://st.kakaocdn.net/product/gift/product/20231010111814_9a667f9eccc943648797925498bdd8a3.jpg",
-            )
     }
 }
