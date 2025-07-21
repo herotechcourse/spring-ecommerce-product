@@ -18,18 +18,13 @@ class ProductRepository(private val jdbcTemplate: JdbcTemplate) {
             )
         }
 
-    fun count(): Int {
-        val sql = "SELECT COUNT(*) FROM products"
-        return jdbcTemplate.queryForObject(sql, Int::class.java) ?: 0
-    }
-
     fun findAll(): List<Product> {
-        val sql = "Select * from products"
+        val sql = "select * from products"
         return jdbcTemplate.query(sql, productRowMapper)
     }
 
     fun findById(id: Long): Product? {
-        val sql = "Select * from products where id = ?"
+        val sql = "select * from products where id = ?"
         return jdbcTemplate.queryForObject(sql, productRowMapper, id)
     }
 
