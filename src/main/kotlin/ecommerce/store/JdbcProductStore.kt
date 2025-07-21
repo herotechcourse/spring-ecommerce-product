@@ -44,7 +44,10 @@ class JdbcProductStore(private val db: JdbcTemplate) : ProductStore {
         return product.copy(id = keyHolder.key?.toLong() ?: throw IllegalStateException("No ID returned"))
     }
 
-    override fun patchProduct(id: Long, patch: ProductPatchDTO) {
+    override fun patchProduct(
+        id: Long,
+        patch: ProductPatchDTO,
+    ) {
         val updates = mutableListOf<String>()
         val params = mutableListOf<Any>()
 

@@ -13,7 +13,10 @@ class ProductService(private val productStore: ProductStore) {
 
     fun insert(product: Product): Product = productStore.insertProduct(product)
 
-    fun update(id: Long, dto: ProductPatchDTO): Boolean {
+    fun update(
+        id: Long,
+        dto: ProductPatchDTO,
+    ): Boolean {
         val product = productStore.findProductById(id) ?: return false
 
         dto.name?.let { product.name = it }
