@@ -140,16 +140,16 @@ class ProductControllerTest {
                 .extract()
                 .response()
 
-        val after =
+        val products =
             RestAssured
                 .given().log().all()
                 .`when`()
-                .request("GET", "/api/products/1")
+                .request("GET", "/api/products")
                 .then()
                 .extract()
                 .response()
 
-        assertThat(delete.statusCode).isEqualTo(HttpStatus.OK.value())
-        assertThat(after.statusCode).isEqualTo(HttpStatus.NOT_FOUND.value())
+        assertThat(delete.statusCode).isEqualTo(HttpStatus.NO_CONTENT.value())
+        assertThat(products.body.jsonPath().getList("", Product::class.java)).hasSize(2)
     }
 }
