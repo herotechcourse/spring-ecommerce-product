@@ -14,7 +14,7 @@ class ProductRepository(private val jdbcTemplate: JdbcTemplate) {
             Product(
                 rs.getLong("id"),
                 rs.getString("name"),
-                rs.getDouble("price"),
+                rs.getBigDecimal("price"),
                 rs.getString("image_url"),
             )
         }
