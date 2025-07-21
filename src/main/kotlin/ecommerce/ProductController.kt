@@ -23,11 +23,19 @@ class ProductController(private val productRepository: ProductRepository) {
         return ResponseEntity.badRequest().body(errors)
     }
 
+    @ExceptionHandler(IllegalArgumentException::class)
+    fun handleSameProductNameException(e: IllegalArgumentException): ResponseEntity<String> {
+        return ResponseEntity.badRequest().body(e.message)
+    }
+
     @PostMapping("/products")
     @ResponseBody
     fun create(
         @RequestBody @Valid product: Product,
     ): ResponseEntity<Unit> {
+        if (productRepository.existsByName(product.name)) {
+            throw IllegalArgumentException("Product with name ${product.name} already exists")
+        }
         val id = productRepository.insertWithKeyHolder(product)
         return ResponseEntity.created(URI.create("/products/$id")).build()
     }
@@ -45,6 +53,9 @@ class ProductController(private val productRepository: ProductRepository) {
         @RequestBody @Valid newProduct: Product,
         @PathVariable id: Long,
     ): ResponseEntity<Unit> {
+//        if (productRepository.existsByName(newProduct.name)) {
+//            throw IllegalArgumentException("Product with name '${newProduct.name}' already exists")
+//        }
         if (!productRepository.update(newProduct, id))
             return ResponseEntity.notFound().build()
         return ResponseEntity.ok().build()

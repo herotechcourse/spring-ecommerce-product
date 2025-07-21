@@ -42,6 +42,6 @@ class ControllerExceptionTest {
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value())
         assertThat(sameNameResponse.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value())
-        assertThat(sameNameResponse.headers().toString()).contains("Product with name 'cola' already exists")
+        assertThat(sameNameResponse.body().asString()).contains("Product with name cola already exists")
     }
 }
