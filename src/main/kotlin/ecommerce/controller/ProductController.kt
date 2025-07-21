@@ -1,6 +1,7 @@
 package ecommerce.controller
 
 import ecommerce.dto.ProductRequest
+import ecommerce.model.Product
 import ecommerce.model.toDto
 import ecommerce.repository.ProductRepository
 import ecommerce.repository.ProductResponse
@@ -26,6 +27,11 @@ class ProductController(private val productRepository: ProductRepository) {
     ): ResponseEntity<Void> {
         productRepository.createProduct(product)
         return ResponseEntity(HttpStatus.CREATED)
+    }
+
+    @GetMapping
+    fun getAllProducts(): ResponseEntity<List<Product>> {
+        return ResponseEntity.ok(productRepository.getAll())
     }
 
     @GetMapping("/{id}")
