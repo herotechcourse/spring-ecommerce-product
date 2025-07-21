@@ -1,9 +1,12 @@
 package ecommerce
 
+import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
+import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.annotation.DeleteMapping
+import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PatchMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -14,10 +17,16 @@ import java.net.URI
 
 @Controller
 class ProductController(private val productRepository: ProductRepository) {
+    @ExceptionHandler(MethodArgumentNotValidException::class)
+    fun handleConstraintViolations(e: MethodArgumentNotValidException): ResponseEntity<String> {
+        val errors = e.bindingResult.fieldErrors.joinToString("; ") { "${it.field}: ${it.defaultMessage}" }
+        return ResponseEntity.badRequest().body(errors)
+    }
+
     @PostMapping("/products")
     @ResponseBody
     fun create(
-        @RequestBody product: Product,
+        @RequestBody @Valid product: Product,
     ): ResponseEntity<Unit> {
         val id = productRepository.insertWithKeyHolder(product)
         return ResponseEntity.created(URI.create("/products/$id")).build()
@@ -25,7 +34,7 @@ class ProductController(private val productRepository: ProductRepository) {
 
     @GetMapping("/products")
     @ResponseBody
-    fun read(): ResponseEntity<List<Product>> {
+    fun read(): @Valid ResponseEntity<List<Product>> {
         val products = productRepository.findAllProducts()
         return ResponseEntity.ok().body(products)
     }
@@ -33,7 +42,7 @@ class ProductController(private val productRepository: ProductRepository) {
     @PatchMapping("/products/{id}")
     @ResponseBody
     fun update(
-        @RequestBody newProduct: Product,
+        @RequestBody @Valid newProduct: Product,
         @PathVariable id: Long,
     ): ResponseEntity<Unit> {
         if (!productRepository.update(newProduct, id))
