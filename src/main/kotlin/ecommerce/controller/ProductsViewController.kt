@@ -15,6 +15,6 @@ class ProductsViewController(
     @GetMapping
     fun getProducts(model: Model): String {
         model.addAttribute("products", productRepository.getAll())
-        return "table"
+        return "index"
     }
 }
