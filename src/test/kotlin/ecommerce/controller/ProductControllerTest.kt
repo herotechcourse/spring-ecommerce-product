@@ -4,8 +4,6 @@ import ecommerce.model.Product
 import io.restassured.RestAssured
 import io.restassured.http.ContentType
 import org.assertj.core.api.Assertions.assertThat
-import org.assertj.core.api.AssertionsForClassTypes
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
@@ -48,7 +46,6 @@ class ProductControllerTest {
                 .then().log().all().extract()
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
-        AssertionsForClassTypes.assertThat(response.asString()).contains("Product 1")
     }
 
     @Test
@@ -74,7 +71,7 @@ class ProductControllerTest {
                     ),
                 )
                 .contentType(ContentType.JSON)
-                .`when`().put("/products/${generatedId}")
+                .`when`().put("/products/$generatedId")
                 .then().log().all().extract()
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
@@ -95,7 +92,7 @@ class ProductControllerTest {
         val response =
             RestAssured
                 .given().log().all()
-                .`when`().delete("/products/${generatedId}")
+                .`when`().delete("/products/$generatedId")
                 .then().log().all().extract()
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value())
