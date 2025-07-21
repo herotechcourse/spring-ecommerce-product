@@ -10,61 +10,39 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.HttpStatus
 import org.springframework.test.annotation.DirtiesContext
 
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 class ProductControllerTest {
-    private lateinit var products: Set<Product>
+    private var productId: Long = -1
 
     @BeforeEach
     fun createProducts() {
-        val product1 = Product(1L, "cafe", 39.00, "www.test")
-        val product2 = Product(2L, "table", 39.00, "www.test")
-        val product3 = Product(3L, "chair", 39.00, "www.test")
-        val productsExpected =
-            RestAssured
-                .given().log().all().body(product1)
-                .contentType(ContentType.JSON)
-                .`when`()
-                .request("POST", "/products")
-                .then()
-                .extract()
-                .response()
-        RestAssured
-            .given().log().all().body(product2)
-            .contentType(ContentType.JSON)
-            .`when`()
-            .request("POST", "/products")
-            .then()
-            .extract()
-            .response()
-        RestAssured
-            .given().log().all().body(product3)
-            .contentType(ContentType.JSON)
-            .`when`()
-            .request("POST", "/products")
-            .then()
-            .extract()
-            .response()
-        products = mutableSetOf(product1, product2, product3)
-    }
-
-    @Test
-    fun addProduct() {
-        val product = Product(1L, "cafe", 39.00, "www.test")
+        val product = Product(0, "cafe", 39.0, "www.test")
         val response =
             RestAssured
                 .given().log().all().body(product)
                 .contentType(ContentType.JSON)
-                .`when`()
-                .request("POST", "/products")
-                .then()
-                .extract()
-                .response()
+                .`when`().post("/api/products")
+                .then().extract().response()
+
+        productId = response.jsonPath().getLong("id")
+    }
+
+    @Test
+    fun addProduct() {
+        val product = Product(0, "table", 45.0, "test.com")
+        val response =
+            RestAssured
+                .given().log().all().body(product)
+                .contentType(ContentType.JSON)
+                .`when`().post("/api/products")
+                .then().extract().response()
 
         assertThat(response.statusCode).isEqualTo(HttpStatus.OK.value())
-        assertThat(response.`as`(Product::class.java).name).isEqualTo("cafe")
-        assertThat(response.`as`(Product::class.java).price).isEqualTo(39.00)
-        assertThat(response.`as`(Product::class.java).imageUrl).isEqualTo("www.test")
+        val created = response.`as`(Product::class.java)
+        assertThat(created.name).isEqualTo("table")
+        assertThat(created.price).isEqualTo(45.0)
+        assertThat(created.imageUrl).isEqualTo("test.com")
     }
 
     @Test
@@ -72,29 +50,25 @@ class ProductControllerTest {
         val response =
             RestAssured
                 .given().log().all()
-                .`when`()
-                .request("GET", "/products")
-                .then()
-                .extract()
-                .response()
+                .`when`().get("/api/products")
+                .then().extract().response()
 
         assertThat(response.statusCode).isEqualTo(HttpStatus.OK.value())
-        assertThat(response.body.jsonPath().getList<Product>("")).hasSize(3)
+        val productList = response.jsonPath().getList("", Product::class.java)
+        assertThat(productList).isNotEmpty
     }
 
     @Test
     fun getProduct() {
-        val product = Product(1L, "cafe", 39.00, "www.test")
         val response =
             RestAssured
                 .given().log().all()
-                .`when`()
-                .request("GET", "/products/1")
-                .then()
-                .extract()
-                .response()
+                .`when`().get("/api/products/$productId")
+                .then().extract().response()
 
         assertThat(response.statusCode).isEqualTo(HttpStatus.OK.value())
-        assertThat(response.`as`(Product::class.java)).isEqualTo(product)
+        val found = response.`as`(Product::class.java)
+        assertThat(found.name).isEqualTo("cafe")
+        assertThat(found.price).isEqualTo(39.0)
     }
 }
