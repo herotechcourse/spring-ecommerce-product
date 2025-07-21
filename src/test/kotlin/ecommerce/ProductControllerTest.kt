@@ -46,6 +46,7 @@ class ProductControllerTest {
                 .contentType(ContentType.JSON).`when`().post("/products").then().log().all().extract()
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value())
+        assertThat(response.headers().toString()).contains("/products/5" )
     }
 
     @Test
