@@ -102,7 +102,7 @@ class ProductControllerTest {
                 .contentType(ContentType.JSON)
                 .body(
                     Product(
-                        name = "Fanta",
+                        name = "Fanta-new",
                         price = 5.60,
                         imageUrl =
                             "https://www.cokesolutions.com/content/dam/cokesolutions/us/images/" +

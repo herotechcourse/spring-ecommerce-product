@@ -6,13 +6,12 @@ import jakarta.validation.constraints.Positive
 import jakarta.validation.constraints.Size
 
 class Product(
-
     var id: Long? = null,
     @field:NotBlank(message = "Product name cannot be blank")
     @field:Size(max = 15, message = "Product name must be 15 characters or less")
     @field:Pattern(
         regexp = "^[a-zA-Z0-9 \\(\\)\\[\\]\\+\\-&/_]+$",
-        message = "Product name can only contain letters, numbers, spaces, and allowed special characters: (), [], +, -, &, /, _"
+        message = "Product name can only contain letters, numbers, spaces, and allowed special characters: (), [], +, -, &, /, _",
     )
     var name: String = "",
     @field:Positive(message = "Price must be greater than 0")
@@ -20,7 +19,7 @@ class Product(
     @field:NotBlank(message = "Image URL cannot be blank")
     @field:Pattern(
         regexp = "^https?://.*",
-        message = "Image URL must start with http:// or https://"
+        message = "Image URL must start with http:// or https://",
     )
     var imageUrl: String = "",
 )

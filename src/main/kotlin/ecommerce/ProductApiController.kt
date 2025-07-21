@@ -49,7 +49,6 @@ class ProductApiController(private val productRepository: ProductRepository) {
         return ResponseEntity.noContent().build()
     }
 
-
     @ExceptionHandler(MethodArgumentNotValidException::class)
     fun handleValidationExceptions(ex: MethodArgumentNotValidException): ResponseEntity<Map<String, String>> {
         val errors = mutableMapOf<String, String>()

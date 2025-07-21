@@ -9,14 +9,15 @@ import java.sql.ResultSet
 
 @Repository
 class ProductRepository(private val jdbcTemplate: JdbcTemplate) {
-    private val productRowMapper = RowMapper<Product> { rs: ResultSet, _ ->
-        Product(
-            rs.getLong("id"),
-            rs.getString("name"),
-            rs.getDouble("price"),
-            rs.getString("image_url"),
-        )
-    }
+    private val productRowMapper =
+        RowMapper<Product> { rs: ResultSet, _ ->
+            Product(
+                rs.getLong("id"),
+                rs.getString("name"),
+                rs.getDouble("price"),
+                rs.getString("image_url"),
+            )
+        }
 
     fun findAllProducts(): List<Product> {
         val sql = "SELECT id, name, price, image_url FROM products"
@@ -24,7 +25,10 @@ class ProductRepository(private val jdbcTemplate: JdbcTemplate) {
         return products
     }
 
-    fun existsByName(name: String, excludeId: Long? = null): Boolean {
+    fun existsByName(
+        name: String,
+        excludeId: Long? = null,
+    ): Boolean {
         val sql = "SELECT COUNT(*) FROM products WHERE name = ? AND (? IS NULL OR id != ?)"
         val count = jdbcTemplate.queryForObject(sql, Int::class.java, name, excludeId, excludeId) ?: 0
         return count > 0
@@ -34,22 +38,15 @@ class ProductRepository(private val jdbcTemplate: JdbcTemplate) {
         if (existsByName(product.name)) {
             throw ValidationException("Product name must be unique")
         }
-        val jdbcInsert = SimpleJdbcInsert(jdbcTemplate)
-            .withTableName("products")
-            .usingGeneratedKeyColumns("id")
-        val parameters = mapOf(
-            "name" to product.name,
-            "price" to product.price,
-            "image_url" to product.imageUrl
-        )
+        val jdbcInsert = SimpleJdbcInsert(jdbcTemplate).withTableName("products").usingGeneratedKeyColumns("id")
+        val parameters =
+            mapOf(
+                "name" to product.name,
+                "price" to product.price,
+                "image_url" to product.imageUrl,
+            )
         val id = jdbcInsert.executeAndReturnKey(parameters).toLong()
         product.id = id
-//        if (existsByName(product.name)) {
-//            throw ValidationException("Product name must be unique")
-//        }
-//        val sql = "INSERT INTO products (name, price, image_url) VALUES (?, ?, ?) RETURNING id"
-//        val id = jdbcTemplate.queryForObject(sql, Long::class.java, product.name, product.price, product.imageUrl)
-//        product.id = id
     }
 
     fun edit(
