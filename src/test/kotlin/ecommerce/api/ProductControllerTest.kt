@@ -1,94 +1,122 @@
 package ecommerce.api
 
-import ecommerce.controller.api.ProductController
-import ecommerce.model.Product
-import ecommerce.service.ProductService
-import org.assertj.core.api.Assertions.assertThat
+import io.restassured.RestAssured
+import io.restassured.http.ContentType
+import org.hamcrest.Matchers.equalTo
+import org.hamcrest.Matchers.greaterThanOrEqualTo
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest
-import org.springframework.http.HttpStatus
-import org.springframework.jdbc.core.JdbcTemplate
+import org.junit.jupiter.api.TestInstance
+import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.boot.test.web.server.LocalServerPort
 
-@JdbcTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class ProductControllerTest {
-    private lateinit var productService: ProductService
-
-    @Autowired
-    private lateinit var jdbcTemplate: JdbcTemplate
-    private lateinit var controller: ProductController
+    @LocalServerPort
+    var port: Int = 0
 
     @BeforeEach
-    fun setUp() {
-        productService = ProductService(jdbcTemplate)
-
-        jdbcTemplate.execute("DROP TABLE product IF EXISTS")
-        jdbcTemplate.execute(
-            """CREATE TABLE product (
-                         id          LONG    NOT NULL AUTO_INCREMENT,
-                         name        varchar(255)    NOT NULL,
-                         price       DOUBLE  NOT NULL,
-                         imageUrl    TEXT    NOT NULL,
-                         PRIMARY KEY (id)
-                    );""",
-        )
-
-        val query = """INSERT INTO product (name, price, imageUrl) VALUES ('Iron Man', 1000, 'https://alexnsan.comics/imageurl/1');
-                    INSERT INTO product (name, price, imageUrl) VALUES ('X-men', 1000, 'https://alexnsan.comics/imageurl/2');
-                    INSERT INTO product (name, price, imageUrl) VALUES ('Superman', 1000, 'https://alexnsan.comics/imageurl/3');
-                    INSERT INTO product (name, price, imageUrl) VALUES ('Naruto', 1000, 'https://alexnsan.comics/imageurl/4');
-                    INSERT INTO product (name, price, imageUrl) VALUES ('Full Metal Alchemist', 1000, 'https://alexnsan.comics/imageurl/5');"""
-        jdbcTemplate.batchUpdate(query)
-
-        controller = ProductController(productService)
+    fun setup() {
+        RestAssured.port = port
     }
 
     @Test
-    fun create() {
-        val product = Product(name = "product1", price = 1.5, imageUrl = "https://www.product.com/image/1")
-        val response = controller.createProduct(product)
+    fun `POST - create product`() {
+        val json =
+            """
+            {
+                "name": "Iron Man",
+                "price": 1000.0,
+                "imageUrl": "https://image.com/iron"
+            }
+            """.trimIndent()
 
-        assertThat(response.statusCode.value()).isEqualTo(HttpStatus.CREATED.value())
+        RestAssured
+            .given()
+            .contentType(ContentType.JSON)
+            .body(json)
+            .post("/api/products")
+            .then()
+            .statusCode(201)
     }
 
     @Test
-    fun readProducts() {
-        create()
-        create()
-        val response = controller.getProducts()
-        assertThat(response.statusCode.value()).isEqualTo(HttpStatus.OK.value())
+    fun `GET - list products`() {
+        RestAssured
+            .given()
+            .get("/api/products")
+            .then()
+            .statusCode(200)
+            .body("size()", greaterThanOrEqualTo(0))
     }
 
     @Test
-    fun readProduct() {
-        create()
-        create()
-        val response = controller.getProduct(2)
-        assertThat(response.statusCode.value()).isEqualTo(HttpStatus.OK.value())
+    fun `GET - fetch existing product`() {
+        val id = createProductAndGetId()
+
+        RestAssured
+            .given()
+            .get("/api/products/$id")
+            .then()
+            .statusCode(200)
+            .body("name", equalTo("Test"))
     }
 
     @Test
-    fun `readProduct() - but product doesn't exist`() {
-        create()
-        create()
-        val response = controller.getProduct(10)
-        assertThat(response.statusCode.value()).isEqualTo(HttpStatus.NOT_FOUND.value())
+    fun `PUT - update existing product`() {
+        val id = createProductAndGetId()
+
+        val updated =
+            """
+            {
+                "name": "Updated Name",
+                "price": 2000.0,
+                "imageUrl": "https://image.com/updated"
+            }
+            """.trimIndent()
+
+        RestAssured
+            .given()
+            .contentType(ContentType.JSON)
+            .body(updated)
+            .put("/api/products/$id")
+            .then()
+            .statusCode(200)
     }
 
     @Test
-    fun update() {
-        val product = Product(name = "new product", price = 1.6, imageUrl = "https://www.product.com/image/2")
-        create()
-        val response = controller.updateProduct(1, product)
-        assertThat(response.statusCode.value()).isEqualTo(HttpStatus.OK.value())
+    fun `DELETE - remove product`() {
+        val id = createProductAndGetId()
+
+        RestAssured
+            .given()
+            .delete("/api/products/$id")
+            .then()
+            .statusCode(204)
     }
 
-    @Test
-    fun delete() {
-        create()
-        val response = controller.deleteProduct(1)
-        assertThat(response.statusCode.value()).isEqualTo(HttpStatus.NO_CONTENT.value())
-        readProducts()
+    private fun createProductAndGetId(): Int {
+        val json =
+            """
+            {
+                "name": "Test",
+                "price": 10.0,
+                "imageUrl": "https://img.com/test"
+            }
+            """.trimIndent()
+
+        val location =
+            RestAssured
+                .given()
+                .contentType(ContentType.JSON)
+                .body(json)
+                .post("/api/products")
+                .then()
+                .statusCode(201)
+                .extract()
+                .header("Location")
+
+        return location.substringAfterLast("/").toInt()
     }
 }

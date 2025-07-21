@@ -2,41 +2,49 @@ package ecommerce.api
 
 import ecommerce.model.Product
 import ecommerce.service.ProductService
+import ecommerce.store.JdbcProductStore
+import ecommerce.store.ProductStore
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest
+import org.springframework.context.annotation.Import
 import org.springframework.jdbc.core.JdbcTemplate
 
 @JdbcTest
+@Import(JdbcProductStore::class)
 class ProductServiceTest {
     private lateinit var productService: ProductService
 
     @Autowired
     private lateinit var jdbcTemplate: JdbcTemplate
 
+    @Autowired
+    private lateinit var productStore: ProductStore
+
     @BeforeEach
     fun setUp() {
-        productService = ProductService(jdbcTemplate)
+        productService = ProductService(productStore)
 
-        jdbcTemplate.execute("DROP TABLE product IF EXISTS")
+        jdbcTemplate.execute("DROP TABLE IF EXISTS product;")
         jdbcTemplate.execute(
-            """CREATE TABLE product (
-                         id          LONG    NOT NULL AUTO_INCREMENT,
-                         name        varchar(255)    NOT NULL,
-                         price       DOUBLE  NOT NULL,
-                         imageUrl    TEXT    NOT NULL,
-                         PRIMARY KEY (id)
-                    );""",
+            """
+            CREATE TABLE product (
+                id LONG AUTO_INCREMENT PRIMARY KEY,
+                name VARCHAR(255) NOT NULL,
+                price DOUBLE NOT NULL,
+                imageUrl TEXT NOT NULL
+            );
+            """.trimIndent(),
         )
 
-        val query = """INSERT INTO product (name, price, imageUrl) VALUES ('Iron Man', 1000, 'https://alexnsan.comics/imageurl/1');
-                    INSERT INTO product (name, price, imageUrl) VALUES ('X-men', 1000, 'https://alexnsan.comics/imageurl/2');
-                    INSERT INTO product (name, price, imageUrl) VALUES ('Superman', 1000, 'https://alexnsan.comics/imageurl/3');
-                    INSERT INTO product (name, price, imageUrl) VALUES ('Naruto', 1000, 'https://alexnsan.comics/imageurl/4');
-                    INSERT INTO product (name, price, imageUrl) VALUES ('Full Metal Alchemist', 1000, 'https://alexnsan.comics/imageurl/5');"""
-        jdbcTemplate.batchUpdate(query)
+        val insertSql = "INSERT INTO product (name, price, imageUrl) VALUES (?, ?, ?)"
+        jdbcTemplate.update(insertSql, "Iron Man", 1000.0, "https://alexnsan.comics/imageurl/1")
+        jdbcTemplate.update(insertSql, "X-men", 1000.0, "https://alexnsan.comics/imageurl/2")
+        jdbcTemplate.update(insertSql, "Superman", 1000.0, "https://alexnsan.comics/imageurl/3")
+        jdbcTemplate.update(insertSql, "Naruto", 1000.0, "https://alexnsan.comics/imageurl/4")
+        jdbcTemplate.update(insertSql, "Full Metal Alchemist", 1000.0, "https://alexnsan.comics/imageurl/5")
     }
 
     @Test
@@ -55,13 +63,14 @@ class ProductServiceTest {
     fun insert() {
         val product = Product(name = "Iron body", price = 99.0, imageUrl = "https://alexnsan.comics/imageurl/123")
         productService.insert(product)
-        val target = productService.findById(6)
-        assertThat(target?.name).isEqualTo(product.name)
+        val allProducts = productService.findAll()
+        val lastProduct = allProducts.last()
+        assertThat(lastProduct.name).isEqualTo(product.name)
     }
 
     @Test
     fun update() {
-        val id = 1.toLong()
+        val id = 1L
         val newProduct = Product(name = "Iron body", price = 99.0, imageUrl = "https://alexnsan.comics/imageurl/123")
 
         productService.update(id, newProduct)
@@ -74,9 +83,10 @@ class ProductServiceTest {
 
     @Test
     fun delete() {
-        val id = 1.toLong()
+        val id = 1L
         val result = productService.delete(id)
 
-        assertThat(result).isEqualTo(1)
+        assertThat(result).isTrue
+        assertThat(productService.findById(id)).isNull()
     }
 }
