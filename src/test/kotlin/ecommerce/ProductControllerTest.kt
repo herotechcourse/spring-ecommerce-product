@@ -58,7 +58,7 @@ class ProductControllerTest {
     fun `update existing product`() {
         val response =
             RestAssured.given().log().all().body(Product(name = "fanta", price = 5.6, imageUrl = "https://fanta.jpg"))
-                .contentType(ContentType.JSON).`when`().put("/products/1").then().log().all().extract()
+                .contentType(ContentType.JSON).`when`().patch("/products/1").then().log().all().extract()
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
     }
