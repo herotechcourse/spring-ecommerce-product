@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Spring E-commerce</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
@@ -20,48 +21,30 @@
 </header>
 <main class="container">
     <h1>Edit Product</h1>
-    <!-- Hidden input to store the product ID -->
-    <input type="hidden" id="product-id" />
     <!-- Product edit form -->
     <form id="product-form">
+        <!-- Hidden input for ID -->
+        <input type="hidden" id="product-id" th:value="${product.id}" />
+
         <fieldset>
             <label>
                 Name
-                <input type="text" id="name" name="name" />
+                <input type="text" id="name" name="name" th:value="${product.name}" />
             </label>
             <label>
                 Price
-                <input type="number" id="price" name="price" step="0.01" />
+                <input type="number" id="price" name="price" step="0.01" th:value="${product.price}" />
             </label>
             <label>
                 Image URL
-                <input type="url" id="imageUrl" name="imageUrl" />
+                <input type="url" id="imageUrl" name="imageUrl" th:value="${product.imageUrl}" />
             </label>
         </fieldset>
         <input type="submit" value="Update" />
     </form>
 </main>
-<script>
-    document.addEventListener("DOMContentLoaded", async () => {
-        const pathParts = window.location.pathname.split("/");
-        const id = pathParts[pathParts.length - 1];
-        document.getElementById("product-id").value = id;
-        try {
-            const response = await fetch(`/api/products/${id}`);
-            if (!response.ok) {
-                alert("Failed to load product. Status: " + response.status);
-                return;
-            }
-            const product = await response.json();
-            document.getElementById("name").value = product.name;
-            document.getElementById("price").value = product.price;
-            document.getElementById("imageUrl").value = product.imageUrl;
-        } catch (error) {
-            console.error("Error fetching product:", error);
-            alert("An error occurred while fetching the product.");
-        }
-    });
 
+<script>
     document.getElementById("product-form").addEventListener("submit", async function (event) {
         event.preventDefault();
         const id = document.getElementById("product-id").value;

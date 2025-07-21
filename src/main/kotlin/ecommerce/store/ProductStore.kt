@@ -10,7 +10,10 @@ interface ProductStore {
 
     fun insertProduct(product: Product): Product
 
-    fun patchProduct(id: Long, patch: ProductPatchDTO)
+    fun patchProduct(
+        id: Long,
+        patch: ProductPatchDTO,
+    )
 
     fun deleteProduct(id: Long): Int
 }
