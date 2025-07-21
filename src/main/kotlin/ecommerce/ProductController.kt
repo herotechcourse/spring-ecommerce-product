@@ -36,7 +36,7 @@ class ProductController(private val productRepository: ProductRepository) {
         @RequestBody newProduct: Product,
         @PathVariable id: Long,
     ): ResponseEntity<Void> {
-        productRepository.edit(newProduct, id)
+        productRepository.update(newProduct, id)
         return ResponseEntity.ok().build()
     }
 

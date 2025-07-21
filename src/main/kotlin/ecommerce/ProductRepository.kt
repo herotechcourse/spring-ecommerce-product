@@ -28,7 +28,7 @@ class ProductRepository(private val jdbcTemplate: JdbcTemplate) {
         jdbcTemplate.update(sql, product.name, product.price, product.imageUrl)
     }
 
-    fun edit(
+    fun update(
         product: Product,
         productId: Long,
     ) {
