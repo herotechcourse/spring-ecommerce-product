@@ -2,6 +2,7 @@ package ecommerce
 
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.Pattern
+import jakarta.validation.constraints.Positive
 import jakarta.validation.constraints.Size
 
 class Product(
@@ -14,6 +15,12 @@ class Product(
         message = "Product name can only contain letters, numbers, spaces, and allowed special characters: (), [], +, -, &, /, _"
     )
     var name: String = "",
+    @field:Positive(message = "Price must be greater than 0")
     var price: Double = 0.00,
+    @field:NotBlank(message = "Image URL cannot be blank")
+    @field:Pattern(
+        regexp = "^https?://.*",
+        message = "Image URL must start with http:// or https://"
+    )
     var imageUrl: String = "",
 )
