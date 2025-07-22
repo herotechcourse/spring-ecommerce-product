@@ -15,9 +15,10 @@ import java.net.URI
 @RestController
 @RequestMapping("/api/products")
 class ProductController(private val productService: ProductService) {
-
     @PostMapping
-    fun createProduct(@RequestBody @Valid request: ProductRequest): ResponseEntity<Void> {
+    fun createProduct(
+        @RequestBody @Valid request: ProductRequest,
+    ): ResponseEntity<Void> {
         val id = productService.createProduct(request)
         return ResponseEntity.created(URI.create("/api/products/$id")).build()
     }
@@ -38,9 +39,10 @@ class ProductController(private val productService: ProductService) {
     }
 
     @DeleteMapping("/{id}")
-    fun deleteProduct(@PathVariable id: Long): ResponseEntity<Void> {
+    fun deleteProduct(
+        @PathVariable id: Long,
+    ): ResponseEntity<Void> {
         productService.deleteProduct(id)
         return ResponseEntity.noContent().build()
     }
-
 }

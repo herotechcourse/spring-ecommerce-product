@@ -28,7 +28,7 @@ class CRUDTest {
         jdbcTemplate.execute("DROP TABLE products IF EXISTS")
         jdbcTemplate.execute(
             "CREATE TABLE IF NOT EXISTS products(" +
-                    "id BIGINT AUTO_INCREMENT, name VARCHAR(255) NOT NULL, price DOUBLE NOT NULL, image_url VARCHAR(512) NOT NULL)",
+                "id BIGINT AUTO_INCREMENT, name VARCHAR(255) NOT NULL, price DOUBLE NOT NULL, image_url VARCHAR(512) NOT NULL)",
         )
 
         val products =
@@ -66,11 +66,12 @@ class CRUDTest {
 
     @Test
     fun create() {
-        val request = ProductRequest(
-            name = "orange ice",
-            price = 2.80,
-            imageUrl = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRf8Fdb-33SCOszWX_UF-92pCwX4Rcam0uVCg&s"
-        )
+        val request =
+            ProductRequest(
+                name = "orange ice",
+                price = 2.80,
+                imageUrl = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRf8Fdb-33SCOszWX_UF-92pCwX4Rcam0uVCg&s",
+            )
 
         val response =
             RestAssured
@@ -110,7 +111,7 @@ class CRUDTest {
                         price = 3.60,
                         imageUrl =
                             "https://www.carnation.co.uk/sites/default/files/2020" +
-                                    "-05/Final%20Lemon%20Curd%20Ice%20Cream%20mobile.jpg",
+                                "-05/Final%20Lemon%20Curd%20Ice%20Cream%20mobile.jpg",
                     ),
                 )
                 .contentType(ContentType.JSON)

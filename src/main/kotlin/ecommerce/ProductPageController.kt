@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.GetMapping
 
 @Controller
 class ProductPageController(private val productService: ProductService) {
-
     @GetMapping("/products")
     fun getProducts(model: Model): String {
         val products = productService.getAllProducts()

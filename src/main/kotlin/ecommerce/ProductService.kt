@@ -21,7 +21,10 @@ class ProductService(private val productRepository: ProductRepository) {
         return productRepository.getAll()
     }
 
-    fun updateProduct(id: Long, request: ProductRequest) {
+    fun updateProduct(
+        id: Long,
+        request: ProductRequest,
+    ) {
         validateUniqueName(request.name)
         val updated = productRepository.update(id, request.toEntity(id))
         if (!updated) throw ResponseStatusException(HttpStatus.NOT_FOUND, "[Error] Product not found")
@@ -31,5 +34,4 @@ class ProductService(private val productRepository: ProductRepository) {
         val deleted = productRepository.delete(id)
         if (!deleted) throw RuntimeException("[Error] Product not found")
     }
-
 }
