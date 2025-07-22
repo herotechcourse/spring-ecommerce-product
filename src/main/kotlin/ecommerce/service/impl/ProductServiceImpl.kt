@@ -2,6 +2,7 @@ package ecommerce.service.impl
 
 import ecommerce.dto.ProductRequest
 import ecommerce.dto.ProductResponse
+import ecommerce.exception.ProductCreationException
 import ecommerce.exception.ProductNotFoundException
 import ecommerce.model.toDto
 import ecommerce.repository.ProductRepository
@@ -20,8 +21,13 @@ class ProductServiceImpl(private val productRepository: ProductRepository) : Pro
         return products.map { it.toDto() }
     }
 
-    override fun createProduct(productRequest: ProductRequest): ProductResponse {
-        TODO("Not yet implemented")
+    override fun createProduct(productRequest: ProductRequest): Boolean {
+        val created = productRepository.createProduct(productRequest)
+        return if (created) {
+            true
+        } else {
+            throw ProductCreationException("Failed to create product")
+        }
     }
 
     override fun updateProduct(

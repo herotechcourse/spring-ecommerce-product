@@ -8,7 +8,7 @@ interface ProductService {
 
     fun findAll(): List<ProductResponse>
 
-    fun createProduct(productRequest: ProductRequest): ProductResponse
+    fun createProduct(productRequest: ProductRequest): Boolean
 
     fun updateProduct(
         id: Long,

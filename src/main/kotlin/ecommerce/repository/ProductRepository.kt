@@ -32,13 +32,13 @@ class ProductRepository(private val jdbcTemplate: JdbcTemplate) {
         return jdbcTemplate.query("select id, name, price, image_url from products", productRowMapper)
     }
 
-    fun createProduct(product: ProductRequest) {
-        jdbcTemplate.update(
+    fun createProduct(product: ProductRequest): Boolean {
+        return jdbcTemplate.update(
             "insert into products (name, price, image_url) values (?,?,?)",
             product.name,
             product.price,
             product.imageUrl,
-        )
+        ) > 0
     }
 
     fun updateProduct(

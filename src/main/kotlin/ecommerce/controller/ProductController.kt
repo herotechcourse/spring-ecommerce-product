@@ -25,7 +25,7 @@ class ProductController(
     fun createProduct(
         @RequestBody product: ProductRequest,
     ): ResponseEntity<Void> {
-        productRepository.createProduct(product)
+        productService.createProduct(product)
         return ResponseEntity(HttpStatus.CREATED)
     }
 
