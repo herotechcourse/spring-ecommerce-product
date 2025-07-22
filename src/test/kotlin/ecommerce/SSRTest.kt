@@ -1,5 +1,7 @@
 package ecommerce
 
+import ecommerce.entity.Product
+import ecommerce.repository.ProductRepository
 import io.restassured.RestAssured
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach

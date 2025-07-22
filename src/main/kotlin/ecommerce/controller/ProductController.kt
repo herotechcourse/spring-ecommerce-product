@@ -1,5 +1,8 @@
-package ecommerce
+package ecommerce.controller
 
+import ecommerce.dto.ProductRequest
+import ecommerce.service.ProductService
+import ecommerce.entity.Product
 import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping

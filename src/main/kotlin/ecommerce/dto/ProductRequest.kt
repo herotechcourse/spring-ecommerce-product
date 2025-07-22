@@ -1,11 +1,10 @@
-package ecommerce
+package ecommerce.dto
 
+import ecommerce.entity.Product
 import jakarta.validation.constraints.DecimalMin
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.Pattern
 import jakarta.validation.constraints.Size
-
-// TODO: depreciate validation checks in Product and html
 
 data class ProductRequest(
     @field:NotBlank

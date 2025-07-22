@@ -1,5 +1,7 @@
 package ecommerce
 
+import ecommerce.entity.Product
+import ecommerce.repository.ProductRepository
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test

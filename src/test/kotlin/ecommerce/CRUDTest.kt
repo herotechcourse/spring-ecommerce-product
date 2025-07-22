@@ -1,5 +1,8 @@
 package ecommerce
 
+import ecommerce.dto.ProductRequest
+import ecommerce.entity.Product
+import ecommerce.repository.ProductRepository
 import io.restassured.RestAssured
 import io.restassured.http.ContentType
 import org.assertj.core.api.Assertions.assertThat
@@ -111,7 +114,7 @@ class CRUDTest {
                         price = 3.60,
                         imageUrl =
                             "https://www.carnation.co.uk/sites/default/files/2020" +
-                                "-05/Final%20Lemon%20Curd%20Ice%20Cream%20mobile.jpg",
+                                    "-05/Final%20Lemon%20Curd%20Ice%20Cream%20mobile.jpg",
                     ),
                 )
                 .contentType(ContentType.JSON)

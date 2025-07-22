@@ -1,5 +1,8 @@
-package ecommerce
+package ecommerce.service
 
+import ecommerce.dto.ProductRequest
+import ecommerce.entity.Product
+import ecommerce.repository.ProductRepository
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
 import org.springframework.web.server.ResponseStatusException

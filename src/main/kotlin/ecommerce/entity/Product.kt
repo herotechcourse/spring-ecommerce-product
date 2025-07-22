@@ -1,4 +1,4 @@
-package ecommerce
+package ecommerce.entity
 
 class Product(
     var id: Long? = null,
