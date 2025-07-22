@@ -30,6 +30,10 @@ class ProductServiceImpl(private val productRepository: ProductRepository) : Pro
         }
     }
 
+    override fun existsById(id: Long): Boolean {
+        return productRepository.existById(id)
+    }
+
     override fun updateProduct(
         id: Long,
         productRequest: ProductRequest,

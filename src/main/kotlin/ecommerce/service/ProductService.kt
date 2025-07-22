@@ -10,6 +10,8 @@ interface ProductService {
 
     fun createProduct(productRequest: ProductRequest): Boolean
 
+    fun existsById(id: Long): Boolean
+
     fun updateProduct(
         id: Long,
         productRequest: ProductRequest,

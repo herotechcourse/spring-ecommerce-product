@@ -41,6 +41,10 @@ class ProductRepository(private val jdbcTemplate: JdbcTemplate) {
         ) > 0
     }
 
+    fun existById(id: Long): Boolean {
+        return jdbcTemplate.queryForObject("SELECT COUNT(*) FROM products WHERE id =?", Boolean::class.java, id) ?: false
+    }
+
     fun updateProduct(
         id: Long,
         product: ProductRequest,
