@@ -79,6 +79,10 @@ class ProductControllerTest {
         create()
         val response = controller.updateProduct(1, product)
         assertThat(response.statusCode.value()).isEqualTo(HttpStatus.OK.value())
+        val actual = response.body
+        assertThat(actual?.name).isEqualTo(product.name)
+        assertThat(actual?.price).isEqualTo(product.price)
+        assertThat(actual?.imageUrl).isEqualTo(product.imageUrl)
     }
 
     @Test
