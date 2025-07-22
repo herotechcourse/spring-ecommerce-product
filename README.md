@@ -55,11 +55,65 @@ Implement validation of user input.
   - [x] Must be no more than 15 characters, including spaces. 
   - [x] Allowed special characters: ( ), [ ], +, -, &, /, _
   - [x] All other special characters are not allowed.
-  - [ ] The name must be unique across all products.
+  - [x] The name must be unique across all products.
 - Product Price
   - [x] Must be greater than 0.
 - Product Image URL
   - [x] Must start with http:// or https://.
+
+## Step 2-2
+Implement user account features including registration, login, and authentication 
+so that users can access member-only functionality in the future.
+
+### Feature List - Step 2-2
+- [ ] A member registers with an email and password.
+- [ ] To receive an access token, the client must send email and password.
+- [ ] If the credentials match a registered user, issue a token.
+- [ ] Implement the API to send and receive HTTP messages as shown below:
+1. **Register**
+- [ ] Request
+```http request
+POST /api/members/register HTTP/1.1
+Content-Type: application/json
+host: localhost:8080
+
+{
+"email": "admin@email.com",
+"password": "password"
+}
+```
+- [ ] Response
+```http request
+HTTP/1.1 201
+Content-Type: application/json
+
+{
+"token": ""
+}
+```
+
+2. **Login**
+- [ ] Request
+```http request
+POST /api/members/login HTTP/1.1
+Content-Type: application/json
+host: localhost:8080
+
+{
+"email": "admin@email.com",
+"password": "password"
+}
+```
+- [ ] Response
+```http request
+HTTP/1.1 200
+Content-Type: application/json
+
+{
+"token": ""
+}
+```
+
 
 ## Learnings
 ### JDBC & DAO
@@ -96,7 +150,7 @@ fun handleIllegalArgumentException(e: IllegalArgumentException): ResponseEntity<
 return ResponseEntity.badRequest().body(e.message)
 }
 ```
-- `@ControllerAdvice` can hanlde exceptions on a global level:
+- `@ControllerAdvice` can handle exceptions on a global level:
 ```kotlin
 @ControllerAdvice
 class GlobalExceptionHandler {
