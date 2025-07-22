@@ -18,11 +18,7 @@ class ProductService(private val productStore: ProductStore) {
         dto: ProductPatchDTO,
     ): Boolean {
         val product = productStore.findProductById(id) ?: return false
-
-        dto.name?.let { product.name = it }
-        dto.price?.let { product.price = it }
-        dto.imageUrl?.let { product.imageUrl = it }
-
+        product.updateFrom(dto)
         productStore.patchProduct(id, dto)
         return true
     }
