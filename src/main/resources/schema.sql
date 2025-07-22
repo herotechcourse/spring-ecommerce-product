@@ -1,8 +1,17 @@
 CREATE TABLE PRODUCTS
 (
-    id        BIGINT          NOT NULL AUTO_INCREMENT,
-    name      VARCHAR(100) NOT NULL,
+    id        BIGINT         NOT NULL AUTO_INCREMENT,
+    name      VARCHAR(100)   NOT NULL,
     price     DECIMAL(10, 2) NOT NULL,
-    image_url VARCHAR(500) NOT NULL,
+    image_url VARCHAR(500)   NOT NULL,
+    PRIMARY KEY (id)
+);
+
+CREATE TABLE MEMBERS
+(
+    id       BIGINT       NOT NULL AUTO_INCREMENT,
+    email    VARCHAR(255) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    role     VARCHAR(50)  NOT NULL,
     PRIMARY KEY (id)
 );
