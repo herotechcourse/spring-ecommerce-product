@@ -45,20 +45,20 @@ functionality, readability, and test reliability.
 
 ### Test
 
-- [ ] **Review `@DirtiesContext` usage**  
+- [x] **Review `@DirtiesContext` usage**  
   Evaluate if resetting the context before each test is necessary. Remove if redundant.
 
-- [ ] **Verify each response field**  
+- [x] **Verify each response field**  
   Ensure that tests validate not only response status and list size, but also every field in the returned objects.
 
 - [x] **Separate test fixtures**  
   Move hardcoded `Product` objects in test classes into a dedicated fixture or utility class.
 
-- [ ] **Add tests for uncovered features**  
+- [x] **Add tests for uncovered features**  
   Identify and write tests for product-related features that are currently missing test coverage.
     
 ---
 
 ### Additional
-- [ ] Change price to BigDecimal
+- [x] Change price to BigDecimal
 - [x] Create an object to collect all SQL lines
