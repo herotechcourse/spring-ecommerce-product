@@ -30,11 +30,22 @@
 - [x] `imageUrl` Not Blank, Follows pattern
 - [x] `quantity` Cannot be negative (0 included)
 
+### UserDTO
+
+
 ### ProductPatchDTO
 - Same as Product but allows single field to be updated
 
 ### ErrorResponse
 - To standardise return error messages
+
+### TokenResponse
+- Response when token is generated
+
+### TokenRequest
+- Request to generate Token
+
+###
 
 ## mapper
 ### ProductRowMapper
@@ -51,9 +62,6 @@
 - `existsByName(name: String)`: Boolean
 
 ## service
-### interfaces
-- [x] `ProductServiceInterface`
-
 ### ProductService
 - Handles the logic between Controller and DB
 - [x] `getAllProducts()`: ResponseEntity<List<ProductDTO>>
@@ -61,6 +69,9 @@
 - [x] `createProduct(product: ProductDTO):`  ResponseEntity<Void>
 - [x] `updateProduct(id: Long, product: ProductDTO)`: ResponseEntity<Void>
 - [x] `fun deleteProduct(id: Long)`: ResponseEntity<Void>
+
+### AuthService
+
 
 ## Schema
 ### Products
