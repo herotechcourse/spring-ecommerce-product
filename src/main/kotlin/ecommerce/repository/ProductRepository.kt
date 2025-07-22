@@ -21,7 +21,7 @@ class ProductRepository(
         return jdbcTemplate.queryForObject(sql, productRowMapper, id)
     }
 
-    fun create(product: ProductDTO): Long  {
+    fun create(product: ProductDTO): Long {
         val insert =
             SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("products")
