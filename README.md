@@ -98,4 +98,9 @@ Implement user account features including registration, login, and authenticatio
   - [x] has id
   - [x] has email
 
-- [ ] create interface ``AuthorizationExtractor``
+- [x] create interface ``AuthorizationExtractor``
+- [x] create  ``BearerAuthorizationExtractor``
+
+  Needed to extract the token from the Authorization: Bearer <token> header
+
+- [x] create class `AuthorizationException` - exception for handling authorization errors
