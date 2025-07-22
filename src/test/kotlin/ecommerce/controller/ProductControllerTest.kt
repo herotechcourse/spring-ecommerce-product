@@ -29,9 +29,9 @@ class ProductControllerTest {
 
         jdbcTemplate.execute(createQuery())
 
-        val product1 = ProductRequest("cafe", 39.00, "www.test")
-        val product2 = ProductRequest("table", 39.00, "www.test")
-        val product3 = ProductRequest("chair", 39.00, "www.test")
+        val product1 = ProductRequest("cafe", 39.00, "http://www.test.com/test.jpg")
+        val product2 = ProductRequest("table", 39.00, "http://www.test.com/test.jpg")
+        val product3 = ProductRequest("chair", 39.00, "http://www.test.com/test.jpg")
         RestAssured
             .given().log().all().body(product1)
             .contentType(ContentType.JSON)
@@ -75,7 +75,7 @@ class ProductControllerTest {
     fun addProduct() {
         val response =
             RestAssured
-                .given().log().all().body("""{ "name": "Screen", "price": 190.0, "imageUrl": "ciao" }""")
+                .given().log().all().body("""{ "name": "Screen", "price": 190.0, "imageUrl": "http://www.test.com/test.jpg" }""")
                 .contentType(ContentType.JSON)
                 .`when`()
                 .request("POST", "/api/products")
@@ -126,7 +126,7 @@ class ProductControllerTest {
         assertThat(response.`as`(ProductResponse::class.java).id).isEqualTo(1L)
         assertThat(response.`as`(ProductResponse::class.java).name).isEqualTo("cafe")
         assertThat(response.`as`(ProductResponse::class.java).price).isEqualTo(39.00)
-        assertThat(response.`as`(ProductResponse::class.java).imageUrl).isEqualTo("www.test")
+        assertThat(response.`as`(ProductResponse::class.java).imageUrl).isEqualTo("http://www.test.com/test.jpg")
     }
 
     @Test
