@@ -4,8 +4,12 @@
 ### GlobalExceptionHandler
 - `handleEmptyResult` -> if no element is found with the ID
 - `handleHttpMessageNotReadable` -> if there is a missing field
-- `handleDuplicateProductName` -> if there is a duplicate nae present
+- `handleDuplicateProductName` -> if name is already taken
 - `handleValidationException` -> if there is a error for validation
+
+## exception
+- `DuplicateProductNameException`
+- `EntityNotFoundException`
 
 ## Controller
 ### ProductController
@@ -26,6 +30,9 @@
 - [x] `imageUrl` Not Blank, Follows pattern
 - [x] `quantity` Cannot be negative (0 included)
 
+### ProductPatchDTO
+- Same as Product but allows single field to be upadted
+
 ### ErrorResponse
 - To standardise return error messages
 
@@ -44,7 +51,6 @@
 - `existsByName(name: String)`: Boolean
 
 ## service
-
 ### interfaces
 - [x] `ProductServiceInterface`
 
@@ -56,7 +62,7 @@
 - [x] `updateProduct(id: Long, product: ProductDTO)`: ResponseEntity<Void>
 - [x] `fun deleteProduct(id: Long)`: ResponseEntity<Void>
 
-### Schema
-#### Products
+## Schema
+### Products
 - id, name, description, price, image_url, quantity
 - [x] id is `UNIQUE`
