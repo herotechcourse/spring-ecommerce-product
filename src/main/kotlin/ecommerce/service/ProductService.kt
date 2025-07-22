@@ -5,22 +5,21 @@ import ecommerce.dto.ProductPatchDTO
 import ecommerce.exception.DuplicateProductNameException
 import ecommerce.exception.EntityNotFoundException
 import ecommerce.repository.ProductRepository
-import ecommerce.service.interfaces.ProductServiceInterface
 import org.springframework.stereotype.Service
 import java.net.URI
 
 @Service
-class ProductService(private val productRepository: ProductRepository) : ProductServiceInterface {
-    override fun getAllProducts(): List<ProductDTO> {
+class ProductService(private val productRepository: ProductRepository) {
+    fun getAllProducts(): List<ProductDTO> {
         return productRepository.findAll()
     }
 
-    override fun getProductById(id: Long): ProductDTO {
+    fun getProductById(id: Long): ProductDTO {
         return productRepository.findById(id)
             ?: throw EntityNotFoundException("Product with id: $id not found")
     }
 
-    override fun createProduct(product: ProductDTO): URI {
+    fun createProduct(product: ProductDTO): URI {
         if (productRepository.existsByName(product.name)) {
             throw DuplicateProductNameException(product.name)
         }
@@ -28,7 +27,7 @@ class ProductService(private val productRepository: ProductRepository) : Product
         return URI.create("/products/$id")
     }
 
-    override fun updateProduct(
+    fun updateProduct(
         id: Long,
         product: ProductDTO,
     ) {
@@ -37,7 +36,7 @@ class ProductService(private val productRepository: ProductRepository) : Product
         }
     }
 
-    override fun patchProduct(
+    fun patchProduct(
         id: Long,
         patch: ProductPatchDTO,
     ) {
@@ -57,7 +56,7 @@ class ProductService(private val productRepository: ProductRepository) : Product
         productRepository.update(id, updatedProduct)
     }
 
-    override fun deleteProduct(id: Long) {
+    fun deleteProduct(id: Long) {
         if (productRepository.deleteById(id) == 0) {
             throw EntityNotFoundException("Product with id: $id not found")
         }
