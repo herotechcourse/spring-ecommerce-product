@@ -64,7 +64,7 @@ class ProductControllerTest {
     }
 
     @Test
-    fun `PUT - update existing product`() {
+    fun `PATCH - update existing product`() {
         val id = createProductAndGetId()
 
         val updated =
@@ -80,7 +80,7 @@ class ProductControllerTest {
             .given()
             .contentType(ContentType.JSON)
             .body(updated)
-            .put("/api/products/$id")
+            .patch("/api/products/$id")
             .then()
             .statusCode(200)
     }
