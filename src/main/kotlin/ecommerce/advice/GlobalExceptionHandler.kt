@@ -3,8 +3,8 @@ package ecommerce.advice
 import com.fasterxml.jackson.databind.exc.MismatchedInputException
 import ecommerce.dto.ErrorResponse
 import ecommerce.exception.DuplicateProductNameException
+import ecommerce.exception.EntityNotFoundException
 import jakarta.servlet.http.HttpServletRequest
-import org.springframework.dao.EmptyResultDataAccessException
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.http.converter.HttpMessageNotReadableException
@@ -14,9 +14,12 @@ import org.springframework.web.bind.annotation.RestControllerAdvice
 
 @RestControllerAdvice
 class GlobalExceptionHandler {
-    @ExceptionHandler(EmptyResultDataAccessException::class)
-    fun handleEmptyResult(request: HttpServletRequest): ResponseEntity<ErrorResponse> {
-        return errorResponse(HttpStatus.NOT_FOUND, "Resource not found", request)
+    @ExceptionHandler(EntityNotFoundException::class)
+    fun handleEmptyResult(
+        err: EntityNotFoundException,
+        request: HttpServletRequest,
+    ): ResponseEntity<ErrorResponse> {
+        return errorResponse(HttpStatus.NOT_FOUND, "${err.message}", request)
     }
 
     @ExceptionHandler(HttpMessageNotReadableException::class)
