@@ -20,7 +20,7 @@ class ProductControllerTest {
     fun create() {
         val product =
             ProductDTO(
-                name = "Product 1",
+                name = "ControllerCre",
                 price = 10.0,
                 imageUrl = "http://localhost:8080/image/upload/product1.jpg",
                 description = "Product 1",
@@ -67,7 +67,7 @@ class ProductControllerTest {
                 .given().log().all()
                 .body(
                     ProductDTO(
-                        name = "Product 2",
+                        name = "Product2",
                         price = 10.0,
                         imageUrl = "http://localhost:8080/image/upload/product1.jpg",
                         description = "Product 1",

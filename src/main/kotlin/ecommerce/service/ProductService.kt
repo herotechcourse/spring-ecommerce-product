@@ -43,7 +43,7 @@ class ProductService(private val productRepository: ProductRepository) : Product
     ) {
         val existing =
             productRepository.findById(id)
-                ?: throw IllegalArgumentException("Product with id: $id not found")
+                ?: throw EntityNotFoundException("Product with id: $id not found")
 
         val updatedProduct =
             existing.copy(

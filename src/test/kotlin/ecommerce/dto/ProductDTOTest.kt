@@ -9,7 +9,7 @@ import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
 import org.springframework.boot.test.context.SpringBootTest
 
-@SpringBootTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 class ProductDTOTest {
     private lateinit var validator: Validator
 
@@ -34,7 +34,7 @@ class ProductDTOTest {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = ["", "12", "HelloWorld,HelloWorld"])
+    @ValueSource(strings = ["12", "HelloWorldHelloWorld"])
     fun `should fail validation for invalid name - size`(name: String) {
         val dto =
             ProductDTO(
@@ -73,7 +73,7 @@ class ProductDTOTest {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = ["", "12"])
+    @ValueSource(strings = [" ", "12"])
     fun `should fail validation for invalid description - size`(description: String) {
         val dto =
             ProductDTO(

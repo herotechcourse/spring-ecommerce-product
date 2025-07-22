@@ -33,7 +33,11 @@ class ProductRepositoryTest {
     @Test
     fun update() {
         val id = createProduct("update")
-        val row = productRepository.update(id, ProductDTO(name = "Product 2", price = 10.5, imageUrl = "url.com", description = "description"))
+        val row =
+            productRepository.update(
+                id,
+                ProductDTO(name = "Product 2", price = 10.5, imageUrl = "url.com", description = "description"),
+            )
         assertThat(row).isEqualTo(1)
     }
 
@@ -46,6 +50,7 @@ class ProductRepositoryTest {
 
     private fun createProduct(name: String): Long {
         return productRepository.create(
-            ProductDTO(name = name, description = "description", price = 10.5, imageUrl = "url.com"))
+            ProductDTO(name = name, description = "description", price = 10.5, imageUrl = "url.com"),
+        )
     }
 }
