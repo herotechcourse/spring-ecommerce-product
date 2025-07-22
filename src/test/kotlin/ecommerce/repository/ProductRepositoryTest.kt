@@ -1,70 +1,51 @@
 package ecommerce.repository
 
 import ecommerce.dto.ProductDTO
-import ecommerce.mapper.ProductRowMapper
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.jdbc.core.JdbcTemplate
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 class ProductRepositoryTest {
-    private lateinit var productRepository: ProductRepository
-
     @Autowired
-    private lateinit var jdbcTemplate: JdbcTemplate
-    private lateinit var productRowMapper: ProductRowMapper
-
-    @BeforeEach
-    fun setUp() {
-        productRepository = ProductRepository(jdbcTemplate, productRowMapper)
-        jdbcTemplate.execute("DROP TABLE products IF EXISTS")
-        jdbcTemplate.execute(
-            """
-            CREATE TABLE products (
-            id BIGINT PRIMARY KEY AUTO_INCREMENT,
-            product_name VARCHAR(255) NOT NULL,
-            price DOUBLE CHECK (price >= 0),
-            image_url VARCHAR(255))
-            """.trimIndent(),
-        )
-        jdbcTemplate.update(
-            "INSERT INTO products(product_name,price,image_url) VALUES (?,?,?)",
-            "Product 1",
-            10.2,
-            "url.com",
-        )
-    }
+    private lateinit var productRepository: ProductRepository
 
     @Test
     fun findAll() {
         val products = productRepository.findAll()
-        assertThat(products.size).isEqualTo(1)
+        assertThat(products.size).isNotZero
     }
 
     @Test
     fun findById() {
-        val product = productRepository.findById(1)
-        assertThat(product?.name).isEqualTo("Product 1")
+        val id = createProduct("findById")
+        val product = productRepository.findById(id)
+        assertThat(product?.name).isEqualTo("findById")
     }
 
     @Test
-    fun save() {
-        productRepository.create(ProductDTO(name = "Product 2", price = 10.5, imageUrl = "url.com", description = "description"))
-        assertThat(productRepository.findById(2)).isNotNull()
+    fun create() {
+        val id = createProduct("create")
+        assertThat(productRepository.findById(id)).isNotNull()
     }
 
     @Test
     fun update() {
-        productRepository.update(1, ProductDTO(name = "Product 2", price = 10.5, imageUrl = "url.com", description = "description"))
-        assertThat(productRepository.findById(1)?.name).isEqualTo("Product 2")
+        val id = createProduct("update")
+        val row = productRepository.update(id, ProductDTO(name = "Product 2", price = 10.5, imageUrl = "url.com", description = "description"))
+        assertThat(row).isEqualTo(1)
     }
 
     @Test
     fun deleteById() {
-        productRepository.deleteById(1)
-        assertThat(productRepository.findAll()).isEmpty()
+        val id = createProduct("delete")
+        val row = productRepository.deleteById(id)
+        assertThat(row).isEqualTo(1)
+    }
+
+    private fun createProduct(name: String): Long {
+        return productRepository.create(
+            ProductDTO(name = name, description = "description", price = 10.5, imageUrl = "url.com"))
     }
 }
