@@ -1,17 +1,17 @@
 package ecommerce
 
-import ecommerce.product.Product
+import ecommerce.product.ProductRequest
 import io.restassured.RestAssured
 import io.restassured.http.ContentType
 import org.assertj.core.api.Assertions.assertThat
 import org.springframework.http.HttpStatus
 
 object TextFixture {
-    fun createProduct(product: Product) {
+    fun createProduct(request: ProductRequest) {
         val response =
             RestAssured
                 .given().log().all()
-                .body(product)
+                .body(request)
                 .contentType(ContentType.JSON)
                 .`when`().post("/api/products")
                 .then().log().all().extract()
@@ -20,17 +20,17 @@ object TextFixture {
     }
 
     val FLAT_WHITE =
-        Product(
+        ProductRequest(
             name = "Flat white L",
-            price = 6.50,
+            price = "6.50",
             imageUrl =
                 "https://st.kakaocdn.net/product/gift/product/20231010111814_9a667f9eccc943648797925498bdd8a3.jpg",
         )
 
     val AMERICANO =
-        Product(
+        ProductRequest(
             name = "Iced Americano T",
-            price = 4.50,
+            price = "4.50",
             imageUrl =
                 "https://st.kakaocdn.net/product/gift/product/20231010111814_9a667f9eccc943648797925498bdd8a3.jpg",
         )

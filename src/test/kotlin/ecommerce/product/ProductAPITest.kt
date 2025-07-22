@@ -39,7 +39,7 @@ class ProductAPITest {
                 .then().log().all().extract()
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
-        assertThat(response.jsonPath().getList("", Product::class.java)).hasSize(1)
+        assertThat(response.jsonPath().getList("", ProductResponse::class.java)).hasSize(1)
     }
 
     @Test
@@ -55,11 +55,11 @@ class ProductAPITest {
                 .then().log().all().extract()
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
-        assertThat(response.jsonPath().getList("", Product::class.java)).hasSize(2)
+        assertThat(response.jsonPath().getList("", ProductResponse::class.java)).hasSize(2)
     }
 
     @Test
-    fun `getProducts() should return 'no-content 204' response`() {
+    fun `getProducts() should return 'ok 200' response`() {
         val response =
             RestAssured
                 .given().log().all()
@@ -67,7 +67,7 @@ class ProductAPITest {
                 .`when`().get("/api/products")
                 .then().log().all().extract()
 
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value())
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
     }
 
     @Test
