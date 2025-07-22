@@ -42,7 +42,7 @@ class ProductControllerTest {
     @Test
     fun create() {
         val response =
-            RestAssured.given().log().all().body(Product(name = "cola", price = 4.5, imageUrl = "https://cola.jpg"))
+            RestAssured.given().log().all().body(Product(name = "iced latte", price = 4.5, imageUrl = "https://cola.jpg"))
                 .contentType(ContentType.JSON).`when`().post("/products").then().log().all().extract()
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value())
@@ -59,7 +59,7 @@ class ProductControllerTest {
     fun `update existing product`() {
         val response =
             RestAssured.given().log().all().body(Product(name = "fanta", price = 5.6, imageUrl = "https://fanta.jpg"))
-                .contentType(ContentType.JSON).`when`().patch("/products/1").then().log().all().extract()
+                .contentType(ContentType.JSON).`when`().put("/products/1").then().log().all().extract()
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
     }

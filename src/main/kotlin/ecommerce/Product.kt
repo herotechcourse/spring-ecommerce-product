@@ -8,7 +8,7 @@ data class Product(
     var id: Long? = null,
 
     @field:Pattern(
-        regexp = "^[a-zA-Z0-9()\\[\\]+\\-&/_]+$",
+        regexp = "^[a-zA-Z0-9()\\[\\]+\\-&/_ ]+$",
         message = "Only letters, digits and these special characters are allowed: () [] + - & / _"
     )
     @field:Size(max = 15, message = "Product name cannot exceed 15 characters")
