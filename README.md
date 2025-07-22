@@ -86,3 +86,12 @@ updateProductForm.html
   - [x] define the product schema
   - [x] add some sample data
   - [x] configure the database setting with `application.properties`
+
+## Features 2.1
+
+- [ ] Product name Validation
+  - [ ] Apart from alphanumerics character, it can contain  `( ), [ ], +, -, &, /, _`
+  - [ ] I should contain less than 15 characters
+  - [ ] Name should be unique
+- [ ] Price should be a positive number
+- [ ] Image URL must start with `http:// or https://`.
