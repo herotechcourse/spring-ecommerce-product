@@ -85,18 +85,18 @@ In such cases, your application must respond with enough information for the cli
   - Must start with http:// or https://.
 
 ## Features Step 2-1
-- [ ] Add Spring Validation dependency:
+- [x] Add Spring Validation dependency:
  ```
 implementation("org.springframework.boot:spring-boot-starter-validation")
 ```
-- [ ] Add validation annotations in ProductRequest:
+- [x] Add validation annotations in ProductRequest:
   - @NotBlank for name
   - @Size(max = 15)
   - @Pattern for allowed characters 
   - @Positive for price 
   - @Pattern for image URL 
-- [ ] Use @Valid in controller endpoints 
-- [ ] Check uniqueness of product name in service layer 
-- [ ] Extend @RestControllerAdvice to handle validation errors 
-- [ ] Return 400 Bad Request with structured error message
+- [x] Use @Valid in controller endpoints 
+- [x] Check uniqueness of product name in service layer
+- [x] Extend @RestControllerAdvice to handle validation errors 
+- [x] Return 400 Bad Request with structured error message
 
