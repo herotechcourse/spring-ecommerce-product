@@ -1,6 +1,7 @@
 package ecommerce.api
 
 import ecommerce.model.Product
+import ecommerce.model.ProductPatchDTO
 import ecommerce.service.ProductService
 import ecommerce.store.JdbcProductStore
 import ecommerce.store.ProductStore
@@ -71,7 +72,7 @@ class ProductServiceTest {
     @Test
     fun update() {
         val id = 1L
-        val newProduct = Product(name = "Iron body", price = 99.0, imageUrl = "https://alexnsan.comics/imageurl/123")
+        val newProduct = ProductPatchDTO(name = "Iron body", price = 99.0, imageUrl = "https://alexnsan.comics/imageurl/123")
 
         productService.update(id, newProduct)
 
