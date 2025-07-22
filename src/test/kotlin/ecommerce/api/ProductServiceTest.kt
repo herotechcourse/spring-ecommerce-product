@@ -1,0 +1,93 @@
+package ecommerce.api
+
+import ecommerce.model.Product
+import ecommerce.model.ProductPatchDTO
+import ecommerce.service.ProductService
+import ecommerce.store.JdbcProductStore
+import ecommerce.store.ProductStore
+import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest
+import org.springframework.context.annotation.Import
+import org.springframework.jdbc.core.JdbcTemplate
+
+@JdbcTest
+@Import(JdbcProductStore::class)
+class ProductServiceTest {
+    private lateinit var productService: ProductService
+
+    @Autowired
+    private lateinit var jdbcTemplate: JdbcTemplate
+
+    @Autowired
+    private lateinit var productStore: ProductStore
+
+    @BeforeEach
+    fun setUp() {
+        productService = ProductService(productStore)
+
+        jdbcTemplate.execute("DROP TABLE IF EXISTS product;")
+        jdbcTemplate.execute(
+            """
+            CREATE TABLE product (
+                id LONG AUTO_INCREMENT PRIMARY KEY,
+                name VARCHAR(255) NOT NULL,
+                price DOUBLE NOT NULL,
+                imageUrl TEXT NOT NULL
+            );
+            """.trimIndent(),
+        )
+
+        val insertSql = "INSERT INTO product (name, price, imageUrl) VALUES (?, ?, ?)"
+        jdbcTemplate.update(insertSql, "Iron Man", 1000.0, "https://alexnsan.comics/imageurl/1")
+        jdbcTemplate.update(insertSql, "X-men", 1000.0, "https://alexnsan.comics/imageurl/2")
+        jdbcTemplate.update(insertSql, "Superman", 1000.0, "https://alexnsan.comics/imageurl/3")
+        jdbcTemplate.update(insertSql, "Naruto", 1000.0, "https://alexnsan.comics/imageurl/4")
+        jdbcTemplate.update(insertSql, "Full Metal Alchemist", 1000.0, "https://alexnsan.comics/imageurl/5")
+    }
+
+    @Test
+    fun findAll() {
+        val products = productService.findAll()
+        assertThat(products).hasSize(5)
+    }
+
+    @Test
+    fun findById() {
+        val product = productService.findById(1)
+        assertThat(product?.name).isEqualTo("Iron Man")
+    }
+
+    @Test
+    fun insert() {
+        val product = Product(name = "Iron body", price = 99.0, imageUrl = "https://alexnsan.comics/imageurl/123")
+        productService.insert(product)
+        val allProducts = productService.findAll()
+        val lastProduct = allProducts.last()
+        assertThat(lastProduct.name).isEqualTo(product.name)
+    }
+
+    @Test
+    fun update() {
+        val id = 1L
+        val newProduct = ProductPatchDTO(name = "Iron body", price = 99.0, imageUrl = "https://alexnsan.comics/imageurl/123")
+
+        productService.update(id, newProduct)
+
+        val target = productService.findById(id)
+
+        assertThat(target?.id).isEqualTo(id)
+        assertThat(target?.name).isEqualTo(newProduct.name)
+    }
+
+    @Test
+    fun delete() {
+        val id = 1L
+        val result = productService.delete(id)
+
+        assertThat(result).isTrue
+        assertThat(productService.findById(id)).isNull()
+    }
+}

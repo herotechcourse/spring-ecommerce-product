@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Spring E-commerce</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css"
+    >
+</head>
+<body>
+<header class="container">
+    <nav>
+        <ul>
+            <li><strong><a href="/">Home</a></strong></li>
+        </ul>
+        <ul>
+            <li><a href="/add/product">Add Product</a></li>
+        </ul>
+    </nav>
+</header>
+<main class="container">
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Price</th>
+            <th>Image URL</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody id="product-table-body">
+        <tr th:each="product : ${products}">
+            <td th:text="${product.id}">1</td>
+            <td th:text="${product.name}">Example Product</td>
+            <td th:text="${product.price}">9.99</td>
+            <td th:text="${product.imageUrl}">http://example.com/image.jpg</td>
+            <td>
+                <a th:href="@{/update/product/{id}(id=${product.id})}">Edit</a>
+                <button type="button"
+                        class="delete-button"
+                        style="background-color: red"
+                        th:attr="data-id=${product.id}">
+                    Delete
+                </button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</main>
+
+<script>
+    function attachDeleteHandlers() {
+        document.querySelectorAll(".delete-button").forEach(button => {
+            button.addEventListener("click", async (event) => {
+                const id = event.target.getAttribute("data-id");
+                if (!confirm(`Are you sure you want to delete product ${id}?`)) return;
+                try {
+                    const response = await fetch(`/api/products/${id}`, {
+                        method: "DELETE"
+                    });
+                    if (response.ok) {
+                        window.location.reload();
+                    } else {
+                        alert("Failed to delete product. Status: " + response.status);
+                    }
+                } catch (error) {
+                    console.error("Error:", error);
+                    alert("An error occurred while deleting the product.");
+                }
+            });
+        });
+    }
+
+    document.addEventListener("DOMContentLoaded", attachDeleteHandlers);
+</script>
+</body>
+</html>
