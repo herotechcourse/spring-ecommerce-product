@@ -77,7 +77,7 @@ class ProductStore(private val jdbcTemplate: JdbcTemplate) {
     ): PreparedStatement {
         return connection.prepareStatement(sql, arrayOf("id")).apply {
             setString(1, request.name)
-            setString(2, request.price)
+            setString(2, request.price.toPlainString())
             setString(3, request.imageUrl)
         }
     }
