@@ -29,13 +29,13 @@ functionality, readability, and test reliability.
   The current method name may be misleading. Consider renaming it or using a constructor with named arguments.
 - [x] Check/Read about Entity and DTO
 
-- [ ] **Remove manual ID generation**  
+- [x] **Remove manual ID generation**  
   H2 database handles IDs via AUTO_INCREMENT. Remove controller logic that manually assigns IDs.
 
 - [x] **Adjust controller for JSON responses**  
   Replace `@Controller` with `@RestController` or add `@ResponseBody` to return JSON directly.
 
-- [ ] **Clarify update return type**  
+- [x] **Clarify update return type**  
   Refactor `ProductRepository.update()` to return a meaningful type (e.g., `Boolean`) indicating success or failure.
 
 - [x] **Optimize database column types**  
@@ -61,4 +61,4 @@ functionality, readability, and test reliability.
 
 ### Additional
 - [ ] Change price to BigDecimal
-- [x] Create object to collect all SQL lines
+- [x] Create an object to collect all SQL lines

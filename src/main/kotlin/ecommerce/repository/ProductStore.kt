@@ -1,9 +1,15 @@
 package ecommerce.repository
 
 import ecommerce.product.Product
+import ecommerce.product.ProductRequest
+import ecommerce.product.toEntity
+import ecommerce.sql.ConstantsSQL
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.jdbc.core.RowMapper
+import org.springframework.jdbc.support.GeneratedKeyHolder
 import org.springframework.stereotype.Repository
+import java.sql.Connection
+import java.sql.PreparedStatement
 import java.sql.ResultSet
 
 @Repository
@@ -13,60 +19,76 @@ class ProductStore(private val jdbcTemplate: JdbcTemplate) {
             Product(
                 rs.getLong("id"),
                 rs.getString("name"),
-                rs.getDouble("price"),
+                rs.getBigDecimal("price"),
                 rs.getString("image_url"),
             )
         }
 
-    fun isEmptyOrNull(): Boolean {
-        return count() == 0
-    }
-
     fun count(): Int? {
-        val sql = "SELECT count(*) FROM products"
+        val sql = ConstantsSQL.COUNT_ALL
         return jdbcTemplate.queryForObject(sql, Int::class.java) ?: 0
     }
 
     fun findAll(): List<Product> {
-        val sql = "SELECT id, name, price, image_url FROM products"
+        val sql = ConstantsSQL.SELECT_ALL
         return jdbcTemplate.query(sql, rowMapper)
     }
 
     fun findById(id: Long): Product? {
-        val sql = "SELECT id, name, price, image_url FROM products WHERE id = ?"
+        val sql = ConstantsSQL.SELECT_BY_ID
         return jdbcTemplate.queryForObject(sql, rowMapper, id).takeIf { it != null }
     }
 
-    fun save(
-        id: Long,
-        product: Product,
-    ): Int? {
-        val sql =
-            """
-            INSERT INTO products (id, name, price, image_url)
-            VALUES (?, ?, ?, ?)
-            """.trimIndent()
-
-        return jdbcTemplate.update(sql, id, product.name, product.price, product.imageUrl)
+    fun create(request: ProductRequest): Product {
+        val id = createAndReturnId(request)
+        return request.toEntity(id)
     }
 
     fun update(
         id: Long,
-        product: Product,
-    ): Int? {
-        val sql =
-            """
-            UPDATE products 
-            SET name = ?, price = ?, image_url = ?
-            WHERE id = ?
-            """.trimIndent()
-
-        return jdbcTemplate.update(sql, product.name, product.price, product.imageUrl, id).takeIf { it == 1 }
+        request: ProductRequest,
+    ): Product? {
+        if (!existsById(id)) return null
+        val sql = ConstantsSQL.UPDATE_BY_ID.trimIndent()
+        val entity = request.toEntity(id)
+        val result = jdbcTemplate.update(sql, entity.name, entity.price, entity.imageUrl, entity.id) == 1
+        return if (result) entity else null
     }
 
-    fun deleteById(id: Long): Int? {
-        if (isEmptyOrNull()) return null
-        val sql = "DELETE FROM products WHERE id = ?"
-        return jdbcTemplate.update(sql, id).takeIf { it == 1 }
+    fun deleteById(id: Long): Boolean {
+        if (!existsById(id)) return false
+        val sql = ConstantsSQL.DELETE_BY_ID.trimIndent()
+
+        return jdbcTemplate.update(sql, id) == 1
+    }
+
+    fun existsById(id: Long): Boolean {
+        val sql = ConstantsSQL.COUNT_BY_ID
+        val found = jdbcTemplate.queryForObject(sql, Int::class.java, id)
+        return found != null && found > 0
+    }
+
+    private fun createAndReturnId(request: ProductRequest): Long {
+        val sql = ConstantsSQL.INSERT.trimIndent()
+        val keyHolder = GeneratedKeyHolder()
+
+        jdbcTemplate.update({ connection ->
+            createPreparedStatement(connection, sql, request)
+        }, keyHolder)
+
+        return keyHolder.key?.toLong()
+            ?: throw IllegalStateException("Failed to retrieve generated ID")
+    }
+
+    private fun createPreparedStatement(
+        connection: Connection,
+        sql: String,
+        request: ProductRequest,
+    ): PreparedStatement {
+        return connection.prepareStatement(sql, arrayOf("id")).apply {
+            setString(1, request.name)
+            setString(2, request.price)
+            setString(3, request.imageUrl)
+        }
     }
 }
