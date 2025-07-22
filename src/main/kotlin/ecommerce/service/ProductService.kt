@@ -1,41 +1,65 @@
 package ecommerce.service
 
 import ecommerce.dto.ProductDTO
+import ecommerce.dto.ProductPatchDTO
 import ecommerce.exception.DuplicateProductNameException
+import ecommerce.exception.EntityNotFoundException
 import ecommerce.repository.ProductRepository
 import ecommerce.service.interfaces.ProductServiceInterface
-import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
 import java.net.URI
 
 @Service
 class ProductService(private val productRepository: ProductRepository) : ProductServiceInterface {
-    override fun getAllProducts(): ResponseEntity<List<ProductDTO>> {
-        return ResponseEntity.ok().body(productRepository.findAll())
+    override fun getAllProducts(): List<ProductDTO> {
+        return productRepository.findAll()
     }
 
-    override fun getProductById(id: Long): ResponseEntity<ProductDTO> {
-        return ResponseEntity.ok().body(productRepository.findById(id))
+    override fun getProductById(id: Long): ProductDTO {
+        return productRepository.findById(id)
+            ?: throw EntityNotFoundException("Product with id: $id not found")
     }
 
-    override fun createProduct(product: ProductDTO): ResponseEntity<Void> {
+    override fun createProduct(product: ProductDTO): URI {
         if (productRepository.existsByName(product.name)) {
             throw DuplicateProductNameException(product.name)
         }
         val id = productRepository.create(product)
-        return ResponseEntity.created(URI.create("/products/$id")).build()
+        return URI.create("/products/$id")
     }
 
     override fun updateProduct(
         id: Long,
         product: ProductDTO,
-    ): ResponseEntity<Void> {
-        productRepository.update(id, product)
-        return ResponseEntity.ok().build()
+    ) {
+        if (productRepository.update(id, product) == 0) {
+            throw EntityNotFoundException("Product with id: $id not found")
+        }
     }
 
-    override fun deleteProduct(id: Long): ResponseEntity<Void> {
-        productRepository.deleteById(id)
-        return ResponseEntity.noContent().build()
+    override fun patchProduct(
+        id: Long,
+        patch: ProductPatchDTO,
+    ) {
+        val existing =
+            productRepository.findById(id)
+                ?: throw IllegalArgumentException("Product with id: $id not found")
+
+        val updatedProduct =
+            existing.copy(
+                name = patch.name ?: existing.name,
+                description = patch.description ?: existing.description,
+                price = patch.price ?: existing.price,
+                imageUrl = patch.imageUrl ?: existing.imageUrl,
+                quantity = patch.quantity ?: existing.quantity,
+            )
+
+        productRepository.update(id, updatedProduct)
+    }
+
+    override fun deleteProduct(id: Long) {
+        if (productRepository.deleteById(id) == 0) {
+            throw EntityNotFoundException("Product with id: $id not found")
+        }
     }
 }

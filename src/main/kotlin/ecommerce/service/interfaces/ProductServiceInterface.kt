@@ -1,19 +1,25 @@
 package ecommerce.service.interfaces
 
 import ecommerce.dto.ProductDTO
-import org.springframework.http.ResponseEntity
+import ecommerce.dto.ProductPatchDTO
+import java.net.URI
 
 interface ProductServiceInterface {
-    fun getAllProducts(): ResponseEntity<List<ProductDTO>>
+    fun getAllProducts(): List<ProductDTO>
 
-    fun getProductById(id: Long): ResponseEntity<ProductDTO>
+    fun getProductById(id: Long): ProductDTO
 
-    fun createProduct(product: ProductDTO): ResponseEntity<Void>
+    fun createProduct(product: ProductDTO): URI
 
     fun updateProduct(
         id: Long,
         product: ProductDTO,
-    ): ResponseEntity<Void>
+    )
 
-    fun deleteProduct(id: Long): ResponseEntity<Void>
+    fun patchProduct(
+        id: Long,
+        patch: ProductPatchDTO,
+    )
+
+    fun deleteProduct(id: Long)
 }
