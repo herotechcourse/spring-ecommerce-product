@@ -2,7 +2,10 @@
 
 ## Advice
 ### GlobalExceptionHandler
-
+- `handleEmptyResult` -> if no element is found with the ID
+- `handleHttpMessageNotReadable` -> if there is a missing field
+- `handleDuplicateProductName` -> if there is a duplicate nae present
+- `handleValidationException` -> if there is a error for validation
 
 ## Controller
 ### ProductController

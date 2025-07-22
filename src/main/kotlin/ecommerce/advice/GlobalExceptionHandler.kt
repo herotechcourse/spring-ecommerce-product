@@ -1,50 +1,71 @@
 package ecommerce.advice
 
 import com.fasterxml.jackson.databind.exc.MismatchedInputException
-import org.springframework.dao.DataIntegrityViolationException
+import ecommerce.dto.ErrorResponse
+import ecommerce.exception.DuplicateProductNameException
+import jakarta.servlet.http.HttpServletRequest
 import org.springframework.dao.EmptyResultDataAccessException
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.http.converter.HttpMessageNotReadableException
+import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RestControllerAdvice
 
 @RestControllerAdvice
 class GlobalExceptionHandler {
     @ExceptionHandler(EmptyResultDataAccessException::class)
-    fun handleEmptyResult(ex: EmptyResultDataAccessException): ResponseEntity<String> {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND)
-            .body("Resource not found: ${ex.message}")
+    fun handleEmptyResult(request: HttpServletRequest): ResponseEntity<ErrorResponse> {
+        return errorResponse(HttpStatus.NOT_FOUND, "Resource not found", request)
     }
 
     @ExceptionHandler(HttpMessageNotReadableException::class)
-    fun handleHttpMessageNotReadable(ex: HttpMessageNotReadableException): ResponseEntity<String> {
+    fun handleHttpMessageNotReadable(
+        ex: HttpMessageNotReadableException,
+        request: HttpServletRequest,
+    ): ResponseEntity<ErrorResponse> {
         val rootCause = ex.cause
-
         val message =
             when (rootCause) {
-                is MismatchedInputException -> {
+                is com.fasterxml.jackson.databind.exc.MismatchedInputException -> {
                     val fieldName = rootCause.path?.firstOrNull()?.fieldName ?: "unknown"
                     "Missing or invalid value for field: '$fieldName'"
                 }
                 else -> "Invalid request payload"
             }
-        return ResponseEntity(message, HttpStatus.BAD_REQUEST)
+        return errorResponse(HttpStatus.BAD_REQUEST, message, request)
     }
 
-    @ExceptionHandler(DataIntegrityViolationException::class)
-    fun handleDataIntegrityViolationException(ex: DataIntegrityViolationException): ResponseEntity<String> {
-        val rootCause = ex.rootCause?.message ?: ex.message ?: "Data integrity violation"
+    @ExceptionHandler(DuplicateProductNameException::class)
+    fun handleDuplicateProductName(
+        ex: DuplicateProductNameException,
+        request: HttpServletRequest,
+    ): ResponseEntity<ErrorResponse> {
+        return errorResponse(HttpStatus.CONFLICT, ex.message ?: "Duplicate product", request)
+    }
 
-        val message =
-            if (rootCause.contains("unique", ignoreCase = true) ||
-                rootCause.contains("constraint", ignoreCase = true)
-            ) {
-                "Duplicate product name is not allowed"
-            } else {
-                "Database constraint violation"
-            }
+    @ExceptionHandler(MethodArgumentNotValidException::class)
+    fun handleValidationException(
+        ex: MethodArgumentNotValidException,
+        request: HttpServletRequest,
+    ): ResponseEntity<ErrorResponse> {
+        val errors = ex.bindingResult.fieldErrors.associate { it.field to (it.defaultMessage ?: "Invalid value") }
+        return errorResponse(HttpStatus.BAD_REQUEST, errors, request)
+    }
 
-        return ResponseEntity(message, HttpStatus.BAD_REQUEST)
+    private fun errorResponse(
+        status: HttpStatus,
+        message: Any,
+        request: HttpServletRequest,
+    ): ResponseEntity<ErrorResponse> {
+        val error = status.reasonPhrase
+        val response =
+            ErrorResponse(
+                status = status.value(),
+                error = error,
+                message = message,
+                path = request.requestURI,
+            )
+        return ResponseEntity.status(status).body(response)
     }
 }
