@@ -18,7 +18,8 @@ class ProductRepository(
 
     fun findById(id: Long): ProductDTO? {
         val sql = "select * from products where id = ?"
-        return jdbcTemplate.queryForObject(sql, productRowMapper, id)
+        val res = jdbcTemplate.query(sql, productRowMapper, id)
+        return res.firstOrNull()
     }
 
     fun existsByName(name: String): Boolean {
@@ -46,15 +47,13 @@ class ProductRepository(
     fun update(
         id: Long,
         product: ProductDTO,
-    ) {
-        findById(id)
+    ): Int {
         val sql = "update products set name = ?, price = ?, image_url = ? where id = ?"
-        jdbcTemplate.update(sql, product.name, product.price, product.imageUrl, id)
+        return jdbcTemplate.update(sql, product.name, product.price, product.imageUrl, id)
     }
 
-    fun deleteById(id: Long) {
-        findById(id)
+    fun deleteById(id: Long): Int {
         val sql = "delete from products where id = ?"
-        jdbcTemplate.update(sql, id)
+        return jdbcTemplate.update(sql, id)
     }
 }
