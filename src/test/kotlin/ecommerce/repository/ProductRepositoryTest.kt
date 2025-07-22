@@ -7,6 +7,8 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest
 import org.springframework.jdbc.core.JdbcTemplate
+import kotlin.test.assertFalse
+import kotlin.test.assertTrue
 
 @JdbcTest
 class ProductRepositoryTest {
@@ -58,6 +60,12 @@ class ProductRepositoryTest {
         productRepository.createProduct(product)
         val products = productRepository.getAll()
         assertThat(products).hasSize(5)
+    }
+
+    @Test
+    fun `Exists by name`() {
+        assertTrue(productRepository.existsByName("Coffee"))
+        assertFalse(productRepository.existsByName("test"))
     }
 
     private fun createQuery(): String {
