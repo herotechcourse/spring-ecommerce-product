@@ -66,6 +66,19 @@ Implement user account features including registration, login, and authenticatio
 so that users can access member-only functionality in the future.
 
 ### Feature List - Step 2-2
+- Member
+- [x] create `Member` model with:
+  - [x] id
+  - [x] password
+  - [x] email
+  - [ ] maybe username?
+  - [x] role
+- [x] validate these attributes with Jakarta
+- [ ] catch exceptions on invalid data
+- [x] define a database table in `schema.sql`
+- [ ] create a `MemberRepository`
+
+- Authentication
 - [ ] A member registers with an email and password.
 - [ ] To receive an access token, the client must send email and password.
 - [ ] If the credentials match a registered user, issue a token.

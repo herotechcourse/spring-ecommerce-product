@@ -6,3 +6,12 @@ create table PRODUCTS
     image_url VARCHAR(500),
     PRIMARY KEY (id)
 );
+
+create table MEMBERS
+(
+    id        INT AUTO_INCREMENT,
+    email     VARCHAR(20) UNIQUE,
+    password  VARCHAR(50),
+    role      VARCHAR(10),
+    PRIMARY KEY (id)
+);
