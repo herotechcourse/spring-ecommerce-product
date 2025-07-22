@@ -24,19 +24,9 @@ class ProductStore(private val jdbcTemplate: JdbcTemplate) {
             )
         }
 
-    fun count(): Int? {
-        val sql = ConstantsSQL.COUNT_ALL
-        return jdbcTemplate.queryForObject(sql, Int::class.java) ?: 0
-    }
-
     fun findAll(): List<Product> {
         val sql = ConstantsSQL.SELECT_ALL
         return jdbcTemplate.query(sql, rowMapper)
-    }
-
-    fun findById(id: Long): Product? {
-        val sql = ConstantsSQL.SELECT_BY_ID
-        return jdbcTemplate.queryForObject(sql, rowMapper, id).takeIf { it != null }
     }
 
     fun create(request: ProductRequest): Product {
