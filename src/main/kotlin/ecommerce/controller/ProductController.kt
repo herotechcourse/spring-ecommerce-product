@@ -2,6 +2,7 @@ package ecommerce.controller
 
 import ecommerce.dto.ProductDTO
 import ecommerce.service.ProductService
+import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
@@ -26,13 +27,13 @@ class ProductController(private val productService: ProductService) {
 
     @PostMapping("")
     fun create(
-        @RequestBody product: ProductDTO,
+        @RequestBody @Valid product: ProductDTO,
     ): ResponseEntity<Void> = productService.createProduct(product)
 
     @PutMapping("/{id}")
     fun update(
         @PathVariable("id") id: Long,
-        @RequestBody newProduct: ProductDTO,
+        @RequestBody @Valid newProduct: ProductDTO,
     ): ResponseEntity<Void> = productService.updateProduct(id, newProduct)
 
     @PatchMapping("/{id}")
