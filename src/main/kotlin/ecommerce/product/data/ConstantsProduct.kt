@@ -1,11 +1,12 @@
 package ecommerce.product.data
 
 object ConstantsProduct {
-
     object Validation {
         // letters, digits, space, (), [], +, -, &, /, _
-        const val PRODUCT_NAME_PATTERN = "^[\\w\\s\\[\\]\\(\\)\\+\\-&/_]*$"
-
-        const val SCHEMA_SQL_URL_LIMIT = 255
+        const val NAME_ALLOWED_PATTERN = "^[\\w\\s\\[\\]\\(\\)\\+\\-&/_]*$"
+        const val NAME_MAX_LENGTH = 15
+        const val IMAGE_URL_MAX_LENGTH = 255
+        const val PRICE_MIN = "0.10"
+        const val PRICE_DECIMAL_SCALE = 2
     }
 }

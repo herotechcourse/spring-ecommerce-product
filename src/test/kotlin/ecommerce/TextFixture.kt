@@ -66,7 +66,7 @@ object TextFixture {
             DummyRequest(
                 name = "Flat white L",
                 price = BigDecimal("6.50"),
-                imageUrl = superLongUrl(SCHEMA_SQL_URL_LIMIT),
+                imageUrl = superLongUrl(IMAGE_URL_MAX_LENGTH),
             )
     }
 
