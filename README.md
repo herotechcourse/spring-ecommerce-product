@@ -106,3 +106,6 @@ Implement user account features including registration, login, and authenticatio
 - [x] create class `AuthorizationException` - exception for handling authorization errors
 - [x] create class `JwtTokenProvider` - class for creating, validating and extracting payload from JWT
 - [x] create `AuthService` class to handle authentication logic, including token generation and user registration
+- [x] create `AuthController` class with endpoints for user registration (`/api/members/register`), login (`/api/members/login`), and retrieving user info (`/api/members/me`)
+      
+  - implement authentication controller with endpoints for registration, login, and user info
