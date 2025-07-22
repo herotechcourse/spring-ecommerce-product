@@ -62,10 +62,10 @@ class ProductServiceTest {
         val id = 1.toLong()
         val newProduct = Product(name = "Iron body", price = 99.0, imageUrl = "https://alexnsan.comics/imageurl/123")
 
-        productService.update(id, newProduct)
-
+        val affectedRow = productService.update(id, newProduct)
         val target = productService.findById(id)
 
+        assertThat(affectedRow).isEqualTo(1)
         assertThat(target?.id).isEqualTo(id)
         assertThat(target?.name).isEqualTo(newProduct.name)
     }

@@ -2,8 +2,10 @@ package ecommerce.api
 
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.jdbc.core.RowMapper
+import org.springframework.stereotype.Repository
 import java.sql.ResultSet
 
+@Repository
 class ProductService(private val db: JdbcTemplate) {
     private val productRowMapper =
         RowMapper<Product> { rs: ResultSet, _ ->
@@ -21,19 +23,16 @@ class ProductService(private val db: JdbcTemplate) {
     }
 
     fun findById(id: Long): Product? {
-        var product: Product?
         try {
-            product =
-                db.queryForObject(
-                    "SELECT id, name, price, imageUrl FROM product WHERE id = ?",
-                    productRowMapper,
-                    id,
-                )
+            return db.queryForObject(
+                "SELECT id, name, price, imageUrl FROM product WHERE id = ?",
+                productRowMapper,
+                id,
+            )
         } catch (exception: Exception) {
             println(exception.message)
             return null
         }
-        return product
     }
 
     fun insert(product: Product) {
@@ -48,14 +47,17 @@ class ProductService(private val db: JdbcTemplate) {
     fun update(
         id: Long,
         product: Product,
-    ) {
-        db.update(
-            "UPDATE product SET name = ?, price = ?, imageUrl = ? WHERE id = ?",
-            product.name,
-            product.price,
-            product.imageUrl,
-            id,
-        )
+    ): Int {
+        findById(id) ?: return 0
+        val value =
+            db.update(
+                "UPDATE product SET name = ?, price = ?, imageUrl = ? WHERE id = ?",
+                product.name,
+                product.price,
+                product.imageUrl,
+                id,
+            )
+        return value
     }
 
     fun delete(id: Long): Int {
