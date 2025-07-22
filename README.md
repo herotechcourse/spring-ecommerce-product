@@ -85,9 +85,13 @@ Implement user account features including registration, login, and authenticatio
 
 - [x] add Members table in ``schema.sql``
 
-- [ ] create ``TokenRequest`` data class
-  - [ ] has email
-  - [ ] has password 
+- [x] create ``TokenRequest`` data class
+  - [x] has email
+  - [x] has password 
   
-- [ ] create ``TokenResponse`` data class
-  - [ ] has accessToken: String
+- [x] create ``TokenResponse`` data class
+  - [x] has accessToken: String
+
+- [ ] create ``MemberResponse`` data class
+  - [ ] has id
+  - [ ] has email
