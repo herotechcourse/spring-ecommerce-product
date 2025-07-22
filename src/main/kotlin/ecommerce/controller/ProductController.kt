@@ -46,11 +46,8 @@ class ProductController(
         @PathVariable id: Long,
         @RequestBody product: ProductRequest,
     ): ResponseEntity<Void> {
-        productRepository.findById(id) ?: return ResponseEntity.notFound().build()
-        return when (productRepository.updateProduct(id, product)) {
-            true -> ResponseEntity(HttpStatus.OK)
-            false -> ResponseEntity(HttpStatus.BAD_REQUEST)
-        }
+        productService.updateProduct(id, product)
+        return ResponseEntity.noContent().build()
     }
 
     @DeleteMapping("/{id}")

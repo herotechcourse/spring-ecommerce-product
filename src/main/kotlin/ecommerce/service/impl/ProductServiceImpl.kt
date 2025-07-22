@@ -4,6 +4,7 @@ import ecommerce.dto.ProductRequest
 import ecommerce.dto.ProductResponse
 import ecommerce.exception.ProductCreationException
 import ecommerce.exception.ProductNotFoundException
+import ecommerce.exception.ProductUpdateException
 import ecommerce.model.toDto
 import ecommerce.repository.ProductRepository
 import ecommerce.service.ProductService
@@ -31,14 +32,16 @@ class ProductServiceImpl(private val productRepository: ProductRepository) : Pro
     }
 
     override fun existsById(id: Long): Boolean {
-        return productRepository.existById(id)
+        return productRepository.existsById(id)
     }
 
     override fun updateProduct(
         id: Long,
         productRequest: ProductRequest,
-    ): ProductResponse? {
-        TODO("Not yet implemented")
+    ) {
+        if (!productRepository.existsById(id)) throw ProductNotFoundException("Product not found, id: $id")
+        val updated = productRepository.updateProduct(id, productRequest)
+        if (!updated) throw ProductUpdateException("Failed to update product, id: $id")
     }
 
     override fun deleteProduct(id: Long): Boolean {
