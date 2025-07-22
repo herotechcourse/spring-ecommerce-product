@@ -31,7 +31,7 @@
 - [x] `quantity` Cannot be negative (0 included)
 
 ### ProductPatchDTO
-- Same as Product but allows single field to be upadted
+- Same as Product but allows single field to be updated
 
 ### ErrorResponse
 - To standardise return error messages
