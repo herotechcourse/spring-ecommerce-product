@@ -126,4 +126,22 @@ class GlobalExceptionHandlerTest {
             response.body.jsonPath().get<String>("price"),
         ).contains("Price must be greater than 0")
     }
+
+    @Test
+    fun `Should throw if url is not valid`() {
+        val product = ProductRequest("Table", 10.0, "www.test.com")
+        val response =
+            RestAssured
+                .given().log().all().body(product)
+                .contentType(ContentType.JSON)
+                .`when`()
+                .request("POST", "/api/products")
+                .then()
+                .extract()
+                .response()
+        assertThat(response.statusCode).isEqualTo(HttpStatus.BAD_REQUEST.value())
+        assertThat(
+            response.body.jsonPath().get<String>("imageUrl"),
+        ).contains("Invalid URL format, example: https://example.com/image.jpg")
+    }
 }
