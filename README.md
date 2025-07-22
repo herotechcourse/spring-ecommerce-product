@@ -60,3 +60,34 @@ Database tables must be initialized automatically when the application starts.
   - [x] Set up application.properties to enable H2-Console
 - [x] use Spring's JdbcTemplate
 - [x] Use SQL scripts for table creation and initial data.
+
+## Functional Requirements Step 2-1 – Validation & Exception Handling
+
+When a product is created or updated, the client may send invalid data.  
+In such cases, the API must respond with a clear and structured error message to help the client understand what went wrong.
+
+###  Validation Rules
+
+- **Product Name**
+  - Maximum length: 15 characters (including spaces)
+  - Only these special characters are allowed: `()`, `[]`, `+`, `-`, `&`, `/`, `_`
+  - Must be unique across all products
+
+- **Product Price**
+  - Must be greater than 0
+
+- **Product Image URL**
+  - Must start with `http://` or `https://`
+
+###  Error Handling
+- If validation fails, the API should return a `400 Bad Request` with a meaningful error message.
+- Responses must be in JSON format, containing information about the invalid fields and reasons.
+
+## Features Step 2-1
+
+- [ ] Create a `ProductRequest` DTO class to receive and validate incoming product data
+- [ ] Annotate fields in the DTO using `jakarta.validation.constraints` (e.g., `@Size`, `@Pattern`, `@Min`)
+- [ ] Replace usage of the `Product` class in `@RequestBody` with `ProductRequest` in both `ProductRestController` and `ProductAdminController`
+- [ ] Use `@Valid` in controller methods to trigger validation automatically
+- [ ] Add a global exception handler using `@RestControllerAdvice` to return readable error messages when validation fails
+- [ ] Ensure that the name is checked for uniqueness before creating/updating products
