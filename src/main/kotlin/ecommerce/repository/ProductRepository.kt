@@ -21,19 +21,20 @@ class ProductRepository(
         return jdbcTemplate.queryForObject(sql, productRowMapper, id)
     }
 
-    fun create(product: ProductDTO): Long{
+    fun create(product: ProductDTO): Long  {
         val insert =
             SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("products")
                 .usingGeneratedKeyColumns("id")
 
-        val parameters = mapOf(
-            "name" to product.name,
-            "description" to product.description,
-            "price" to product.price,
-            "image_url" to product.imageUrl,
-            "quantity" to product.quantity,
-        )
+        val parameters =
+            mapOf(
+                "name" to product.name,
+                "description" to product.description,
+                "price" to product.price,
+                "image_url" to product.imageUrl,
+                "quantity" to product.quantity,
+            )
         return insert.executeAndReturnKey(parameters).toLong()
     }
 

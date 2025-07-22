@@ -1,5 +1,6 @@
 package ecommerce.repository
 
+import ecommerce.mapper.ProductRowMapper
 import ecommerce.model.Product
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
@@ -14,10 +15,11 @@ class ProductRepositoryTest {
 
     @Autowired
     private lateinit var jdbcTemplate: JdbcTemplate
+    private lateinit var productRowMapper: ProductRowMapper
 
     @BeforeEach
     fun setUp() {
-        productRepository = ProductRepository(jdbcTemplate)
+        productRepository = ProductRepository(jdbcTemplate, productRowMapper)
         jdbcTemplate.execute("DROP TABLE products IF EXISTS")
         jdbcTemplate.execute(
             """

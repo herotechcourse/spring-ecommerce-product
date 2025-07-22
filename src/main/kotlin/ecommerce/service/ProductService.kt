@@ -1,8 +1,8 @@
 package ecommerce.service
 
 import ecommerce.dto.ProductDTO
-import ecommerce.service.interfaces.ProductServiceInterface
 import ecommerce.repository.ProductRepository
+import ecommerce.service.interfaces.ProductServiceInterface
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
 import java.net.URI
@@ -19,7 +19,7 @@ class ProductService(private val productRepository: ProductRepository) : Product
 
     override fun createProduct(product: ProductDTO): ResponseEntity<Void> {
         val id = productRepository.create(product)
-        return ResponseEntity.created(URI.create("/products/${id}")).build()
+        return ResponseEntity.created(URI.create("/products/$id")).build()
     }
 
     override fun updateProduct(
