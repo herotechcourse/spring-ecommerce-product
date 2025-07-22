@@ -21,6 +21,11 @@ class ProductRepository(
         return jdbcTemplate.queryForObject(sql, productRowMapper, id)
     }
 
+    fun existsByName(name: String): Boolean {
+        val sql = "select count(*) from products where name = ?"
+        return jdbcTemplate.queryForObject(sql, Long::class.java, name)!! > 0
+    }
+
     fun create(product: ProductDTO): Long {
         val insert =
             SimpleJdbcInsert(jdbcTemplate)
