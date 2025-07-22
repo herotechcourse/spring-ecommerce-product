@@ -1,5 +1,6 @@
 package ecommerce.service
 
+import ecommerce.TestSecurityConfig
 import ecommerce.entity.Product
 import ecommerce.repository.ProductRepository
 import io.restassured.RestAssured
@@ -9,9 +10,11 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.web.server.LocalServerPort
+import org.springframework.context.annotation.Import
 import org.springframework.jdbc.core.JdbcTemplate
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@Import(TestSecurityConfig::class)
 class SSRTest() {
     private lateinit var productRepository: ProductRepository
 

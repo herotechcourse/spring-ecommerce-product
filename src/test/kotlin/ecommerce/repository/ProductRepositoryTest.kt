@@ -9,7 +9,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest
 import org.springframework.jdbc.core.JdbcTemplate
 
 @JdbcTest
-class DBTest {
+class ProductRepositoryTest {
     private lateinit var productRepository: ProductRepository
 
     @Autowired

@@ -1,5 +1,6 @@
 package ecommerce.controller
 
+import ecommerce.TestSecurityConfig
 import ecommerce.dto.ProductRequest
 import ecommerce.entity.Product
 import ecommerce.repository.ProductRepository
@@ -11,10 +12,12 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.web.server.LocalServerPort
+import org.springframework.context.annotation.Import
 import org.springframework.http.HttpStatus
 import org.springframework.jdbc.core.JdbcTemplate
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@Import(TestSecurityConfig::class)
 class CRUDTest {
     private lateinit var productRepository: ProductRepository
 
@@ -114,7 +117,7 @@ class CRUDTest {
                         price = 3.60,
                         imageUrl =
                             "https://www.carnation.co.uk/sites/default/files/2020" +
-                                    "-05/Final%20Lemon%20Curd%20Ice%20Cream%20mobile.jpg",
+                                "-05/Final%20Lemon%20Curd%20Ice%20Cream%20mobile.jpg",
                     ),
                 )
                 .contentType(ContentType.JSON)
