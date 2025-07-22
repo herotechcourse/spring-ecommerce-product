@@ -194,7 +194,7 @@
 
         const id = productForm.id.value;
         const isEdit = id !== ""; // if id is set, it's an edit
-        const method = isEdit ? 'PATCH' : 'POST';
+        const method = isEdit ? 'PUT' : 'POST';
         const url = isEdit ? `/products/${id}` : '/products';
 
         const product = {

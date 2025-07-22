@@ -8,9 +8,9 @@ import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PatchMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.ResponseBody
 import java.net.URI
@@ -47,15 +47,14 @@ class ProductController(private val productRepository: ProductRepository) {
         return ResponseEntity.ok().body(products)
     }
 
-    @PatchMapping("/products/{id}")
+    @PutMapping("/products/{id}")
     @ResponseBody
     fun update(
         @RequestBody @Valid newProduct: Product,
         @PathVariable id: Long,
     ): ResponseEntity<Unit> {
-//        if (productRepository.existsByName(newProduct.name)) {
-//            throw IllegalArgumentException("Product with name '${newProduct.name}' already exists")
-//        }
+        if (!productRepository.existsById(id))
+            return create(newProduct)
         if (!productRepository.update(newProduct, id))
             return ResponseEntity.notFound().build()
         return ResponseEntity.ok().build()
