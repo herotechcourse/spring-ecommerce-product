@@ -92,6 +92,6 @@ Implement user account features including registration, login, and authenticatio
 - [x] create ``TokenResponse`` data class
   - [x] has accessToken: String
 
-- [ ] create ``MemberResponse`` data class
-  - [ ] has id
-  - [ ] has email
+- [x] create ``MemberResponse`` data class
+  - [x] has id
+  - [x] has email
