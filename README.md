@@ -38,15 +38,15 @@
 ## service
 
 ### interfaces
-#### ProductServiceInterface
+- [x] `ProductServiceInterface`
 
 ### ProductService
 - Handles the logic between Controller and DB
-- [ ] `getAllProducts()`: ResponseEntity<List<ProductDTO>>
-- [ ] `getProductById(id: Long)`: ResponseEntity<ProductDTO>
-- [ ] `createProduct(product: ProductDTO):`  ResponseEntity<Void>
-- [ ] `updateProduct(id: Long, product: ProductDTO)`: ResponseEntity<Void>
-- [ ] `fun deleteProduct(id: Long)`: ResponseEntity<Void>
+- [x] `getAllProducts()`: ResponseEntity<List<ProductDTO>>
+- [x] `getProductById(id: Long)`: ResponseEntity<ProductDTO>
+- [x] `createProduct(product: ProductDTO):`  ResponseEntity<Void>
+- [x] `updateProduct(id: Long, product: ProductDTO)`: ResponseEntity<Void>
+- [x] `fun deleteProduct(id: Long)`: ResponseEntity<Void>
 
 ### Schema
 #### Products
