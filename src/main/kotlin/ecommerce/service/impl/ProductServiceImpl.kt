@@ -2,6 +2,7 @@ package ecommerce.service.impl
 
 import ecommerce.dto.ProductRequest
 import ecommerce.dto.ProductResponse
+import ecommerce.exception.ProductAlreadyInDBException
 import ecommerce.exception.ProductCreationException
 import ecommerce.exception.ProductNotFoundException
 import ecommerce.exception.ProductUpdateException
@@ -23,6 +24,12 @@ class ProductServiceImpl(private val productRepository: ProductRepository) : Pro
     }
 
     override fun createProduct(productRequest: ProductRequest): Boolean {
+        if (productRepository.existsByName(
+                productRequest.name,
+            )
+        ) {
+            throw ProductAlreadyInDBException("Product already exists with name: ${productRequest.name}")
+        }
         val created = productRepository.createProduct(productRequest)
         return if (created) {
             true
