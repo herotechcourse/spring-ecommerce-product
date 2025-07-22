@@ -69,6 +69,8 @@ so that users can access member-only functionality in the future.
 - [ ] A member registers with an email and password.
 - [ ] To receive an access token, the client must send email and password.
 - [ ] If the credentials match a registered user, issue a token.
+- [ ] Return 401 Unauthorized if the Authorization header is missing or the token is invalid.
+- [ ] Return 403 Forbidden for incorrect login attempts or denied actions (e.g., password reset or change with invalid input).
 - [ ] Implement the API to send and receive HTTP messages as shown below:
 1. **Register**
 - [ ] Request
