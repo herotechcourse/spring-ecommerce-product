@@ -26,4 +26,14 @@ class GlobalExceptionHandler {
             )
         return ResponseEntity(errorMessage, HttpStatus.BAD_REQUEST)
     }
+
+    @ExceptionHandler(ProductUpdateException::class)
+    fun handleUpdateException(ex: ProductUpdateException): ResponseEntity<ErrorMessageModel> {
+        val errorMessage =
+            ErrorMessageModel(
+                HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                ex.message,
+            )
+        return ResponseEntity(errorMessage, HttpStatus.INTERNAL_SERVER_ERROR)
+    }
 }
