@@ -2,6 +2,7 @@ package ecommerce.service.impl
 
 import ecommerce.dto.ProductRequest
 import ecommerce.dto.ProductResponse
+import ecommerce.exception.ProductNotFoundException
 import ecommerce.model.toDto
 import ecommerce.repository.ProductRepository
 import ecommerce.service.ProductService
@@ -10,7 +11,7 @@ import org.springframework.stereotype.Service
 @Service
 class ProductServiceImpl(private val productRepository: ProductRepository) : ProductService {
     override fun findById(id: Long): ProductResponse? {
-        val product = productRepository.findById(id) ?: throw NoSuchElementException("Product not found, id: $id")
+        val product = productRepository.findById(id) ?: throw ProductNotFoundException("Product not found, id: $id")
         return product.toDto()
     }
 

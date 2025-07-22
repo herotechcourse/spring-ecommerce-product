@@ -7,8 +7,13 @@ import org.springframework.web.bind.annotation.RestControllerAdvice
 
 @RestControllerAdvice
 class GlobalExceptionHandler {
-    @ExceptionHandler(NoSuchElementException::class)
-    fun handleUserNotFound(ex: NoSuchElementException): ResponseEntity<String?> {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.message)
+    @ExceptionHandler(ProductNotFoundException::class)
+    fun handleUserNotFound(ex: ProductNotFoundException): ResponseEntity<ErrorMessageModel> {
+        val errorMessage =
+            ErrorMessageModel(
+                HttpStatus.NOT_FOUND.value(),
+                ex.message,
+            )
+        return ResponseEntity(errorMessage, HttpStatus.NOT_FOUND)
     }
 }
