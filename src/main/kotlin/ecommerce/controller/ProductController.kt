@@ -1,5 +1,7 @@
-package ecommerce
+package ecommerce.controller
 
+import ecommerce.repository.ProductRepository
+import ecommerce.model.Product
 import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.MethodArgumentNotValidException

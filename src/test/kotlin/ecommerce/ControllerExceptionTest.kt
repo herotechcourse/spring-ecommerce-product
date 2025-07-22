@@ -1,5 +1,6 @@
 package ecommerce
 
+import ecommerce.model.Product
 import io.restassured.RestAssured
 import io.restassured.http.ContentType
 import org.assertj.core.api.Assertions.assertThat
@@ -15,7 +16,13 @@ class ControllerExceptionTest {
     fun handleExceptionUsingExceptionHandler() {
         val response =
             RestAssured
-                .given().log().all().body(Product(name = "colaaaaaaaaaaaaaaaaaaaaaaaaaaaa", price = 0.0, imageUrl = "abchttps://cola.jpg"))
+                .given().log().all().body(
+                    Product(
+                        name = "colaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                        price = 0.0,
+                        imageUrl = "abchttps://cola.jpg"
+                    )
+                )
                 .contentType(ContentType.JSON)
                 .`when`().post("/products")
                 .then().log().all().extract()

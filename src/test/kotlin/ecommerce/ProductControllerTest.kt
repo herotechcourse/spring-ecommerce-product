@@ -1,5 +1,7 @@
 package ecommerce
 
+import ecommerce.model.Product
+import ecommerce.repository.ProductRepository
 import io.restassured.RestAssured
 import io.restassured.http.ContentType
 import org.assertj.core.api.Assertions.assertThat
@@ -42,7 +44,13 @@ class ProductControllerTest {
     @Test
     fun create() {
         val response =
-            RestAssured.given().log().all().body(Product(name = "iced latte", price = 4.5, imageUrl = "https://cola.jpg"))
+            RestAssured.given().log().all().body(
+                Product(
+                    name = "iced latte",
+                    price = 4.5,
+                    imageUrl = "https://cola.jpg"
+                )
+            )
                 .contentType(ContentType.JSON).`when`().post("/products").then().log().all().extract()
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value())

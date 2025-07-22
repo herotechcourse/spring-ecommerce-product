@@ -1,4 +1,4 @@
-package ecommerce
+package ecommerce.model
 
 import jakarta.validation.constraints.Pattern
 import jakarta.validation.constraints.Positive
