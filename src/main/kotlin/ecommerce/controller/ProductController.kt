@@ -2,7 +2,6 @@ package ecommerce.controller
 
 import ecommerce.dto.ProductRequest
 import ecommerce.dto.ProductResponse
-import ecommerce.model.Product
 import ecommerce.repository.ProductRepository
 import ecommerce.service.ProductService
 import org.springframework.http.HttpStatus
@@ -31,8 +30,8 @@ class ProductController(
     }
 
     @GetMapping
-    fun getAllProducts(): ResponseEntity<List<Product>> {
-        return ResponseEntity.ok(productRepository.getAll())
+    fun getAllProducts(): ResponseEntity<List<ProductResponse>> {
+        return ResponseEntity.ok(productService.findAll())
     }
 
     @GetMapping("/{id}")

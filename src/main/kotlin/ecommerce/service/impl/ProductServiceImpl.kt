@@ -16,7 +16,8 @@ class ProductServiceImpl(private val productRepository: ProductRepository) : Pro
     }
 
     override fun findAll(): List<ProductResponse> {
-        TODO("Not yet implemented")
+        val products = productRepository.getAll()
+        return products.map { it.toDto() }
     }
 
     override fun createProduct(productRequest: ProductRequest): ProductResponse {
