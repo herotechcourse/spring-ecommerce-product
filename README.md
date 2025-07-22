@@ -67,5 +67,36 @@ Database tables must be initialized automatically when the application starts.
   - Handle ProductNotFoundException with a 404 Not Found response.
   - Handle ProductCreationException and ProductUpdateException with 500 Internal Server Error.
   - Catch generic RuntimeException and return a 400 Bad Request.
-- [x]Return consistent error responses using a custom ErrorMessageModel
+- [x] Return consistent error responses using a custom ErrorMessageModel
+
+## Functional Requirements step 2-1
+When a product is created or updated, the client may send invalid data.
+In such cases, your application must respond with enough information for the client to understand what is wrong and why.
+
+### Validation Rules:
+- Product Name
+  - Must be no more than 15 characters, including spaces.
+  - Allowed special characters: ( ), [ ], +, -, &, /, _
+    - All other special characters are not allowed.
+  - The name must be unique across all products.
+- Product Price
+  - Must be greater than 0.
+- Product Image URL
+  - Must start with http:// or https://.
+
+## Features Step 2-1
+- [ ] Add Spring Validation dependency:
+ ```
+implementation("org.springframework.boot:spring-boot-starter-validation")
+```
+- [ ] Add validation annotations in ProductRequest:
+  - @NotBlank for name
+  - @Size(max = 15)
+  - @Pattern for allowed characters 
+  - @Positive for price 
+  - @Pattern for image URL 
+- [ ] Use @Valid in controller endpoints 
+- [ ] Check uniqueness of product name in service layer 
+- [ ] Extend @RestControllerAdvice to handle validation errors 
+- [ ] Return 400 Bad Request with structured error message
 
