@@ -30,7 +30,7 @@ class GlobalExceptionHandler {
         val rootCause = ex.cause
         val message =
             when (rootCause) {
-                is com.fasterxml.jackson.databind.exc.MismatchedInputException -> {
+                is MismatchedInputException -> {
                     val fieldName = rootCause.path?.firstOrNull()?.fieldName ?: "unknown"
                     "Missing or invalid value for field: '$fieldName'"
                 }
