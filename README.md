@@ -25,9 +25,9 @@ functionality, readability, and test reliability.
 - [x] **Improve constructor readability**  
   If a class constructor has many parameters, split them into multiple lines for clarity.
 
-- [ ] **Rename or refactor `Product.toEntity`**
+- [x] **Rename or refactor `Product.toEntity`**
   The current method name may be misleading. Consider renaming it or using a constructor with named arguments.
-- [ ] Check/Read about Entity and DTO
+- [x] Check/Read about Entity and DTO
 
 - [ ] **Remove manual ID generation**  
   H2 database handles IDs via AUTO_INCREMENT. Remove controller logic that manually assigns IDs.

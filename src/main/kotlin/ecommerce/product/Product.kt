@@ -1,23 +1,19 @@
 package ecommerce.product
 
-class Product(
-    var id: Long? = null,
-    var name: String,
-    var price: Double,
-    var imageUrl: String?,
-) {
-    fun update(newProduct: Product) {
-        this.name = newProduct.name
-        this.price = newProduct.price
-        this.imageUrl = newProduct.imageUrl
-    }
+import java.math.BigDecimal
 
-    companion object {
-        fun withId(
-            product: Product,
-            id: Long,
-        ): Product {
-            return Product(id, product.name, product.price, product.imageUrl)
-        }
-    }
+data class Product(
+    val id: Long,
+    val name: String,
+    val price: BigDecimal,
+    val imageUrl: String,
+)
+
+fun Product.toResponse(): ProductResponse {
+    return ProductResponse(
+        this.id,
+        this.name,
+        this.price.toPlainString(),
+        this.imageUrl,
+    )
 }
