@@ -17,5 +17,5 @@ interface ProductService {
         productRequest: ProductRequest,
     )
 
-    fun deleteProduct(id: Long): Boolean
+    fun deleteProduct(id: Long)
 }

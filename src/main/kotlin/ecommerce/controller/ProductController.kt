@@ -54,10 +54,7 @@ class ProductController(
     fun deleteProduct(
         @PathVariable id: Long,
     ): ResponseEntity<Void> {
-        productRepository.findById(id) ?: return ResponseEntity.notFound().build()
-        return when (productRepository.deleteProduct(id)) {
-            true -> ResponseEntity(HttpStatus.NO_CONTENT)
-            false -> ResponseEntity(HttpStatus.BAD_REQUEST)
-        }
+        productService.deleteProduct(id)
+        return ResponseEntity.noContent().build()
     }
 }

@@ -44,7 +44,9 @@ class ProductServiceImpl(private val productRepository: ProductRepository) : Pro
         if (!updated) throw ProductUpdateException("Failed to update product, id: $id")
     }
 
-    override fun deleteProduct(id: Long): Boolean {
-        TODO("Not yet implemented")
+    override fun deleteProduct(id: Long) {
+        if (!productRepository.existsById(id)) throw ProductNotFoundException("Product not found, id: $id")
+        val deleted = productRepository.deleteProduct(id)
+        if (!deleted) throw ProductUpdateException("Failed to delete product, id: $id")
     }
 }
