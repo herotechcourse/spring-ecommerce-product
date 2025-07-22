@@ -1,8 +1,8 @@
-package ecommerce.repository
+package ecommerce.store
 
-import ecommerce.product.Product
-import ecommerce.product.ProductRequest
-import ecommerce.product.toEntity
+import ecommerce.product.data.Product
+import ecommerce.product.data.ProductRequest
+import ecommerce.product.data.toEntity
 import ecommerce.sql.ConstantsSQL
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.jdbc.core.RowMapper

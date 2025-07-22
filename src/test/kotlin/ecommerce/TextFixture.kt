@@ -1,8 +1,8 @@
 package ecommerce
 
 import ecommerce.product.DummyRequest
-import ecommerce.product.ProductRequest
-import ecommerce.product.ProductResponse
+import ecommerce.product.data.ProductRequest
+import ecommerce.product.data.ProductResponse
 import io.restassured.RestAssured
 import io.restassured.http.ContentType
 import org.assertj.core.api.Assertions.assertThat

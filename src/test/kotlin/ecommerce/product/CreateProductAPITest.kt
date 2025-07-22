@@ -3,6 +3,7 @@ package ecommerce.product
 import ecommerce.TextFixture
 import ecommerce.TextFixture.AMERICANO
 import ecommerce.TextFixture.AssertTamplate.assertProductEquals
+import ecommerce.product.data.ProductResponse
 import io.restassured.RestAssured
 import io.restassured.http.ContentType
 import org.assertj.core.api.Assertions.assertThat

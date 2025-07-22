@@ -1,6 +1,9 @@
 package ecommerce.product
 
-import ecommerce.repository.ProductStore
+import ecommerce.product.data.ProductRequest
+import ecommerce.product.data.ProductResponse
+import ecommerce.product.data.toResponse
+import ecommerce.store.ProductStore
 import org.springframework.dao.DataAccessException
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity

@@ -4,6 +4,7 @@ import ecommerce.TextFixture.AMERICANO
 import ecommerce.TextFixture.AssertTamplate.assertProductEquals
 import ecommerce.TextFixture.FLAT_WHITE
 import ecommerce.TextFixture.createProduct
+import ecommerce.product.data.ProductResponse
 import io.restassured.RestAssured
 import io.restassured.common.mapper.TypeRef
 import io.restassured.http.ContentType
