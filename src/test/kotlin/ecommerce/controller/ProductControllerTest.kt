@@ -53,7 +53,7 @@ class ProductControllerTest {
         val response =
             RestAssured
                 .given().log().all()
-                .`when`().get("/products/${id}")
+                .`when`().get("/products/$id")
                 .then().log().all().extract()
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
@@ -122,14 +122,14 @@ class ProductControllerTest {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value())
     }
 
-    private fun createProduct(name:String):Long {
+    private fun createProduct(name: String): Long {
         return productRepository.create(
             ProductDTO(
                 name = name,
                 price = 10.0,
                 imageUrl = "url.com",
                 description = "description",
-            )
+            ),
         )
     }
 }

@@ -1,7 +1,7 @@
 package ecommerce.repository
 
+import ecommerce.dto.ProductDTO
 import ecommerce.mapper.ProductRowMapper
-import ecommerce.model.Product
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -52,13 +52,13 @@ class ProductRepositoryTest {
 
     @Test
     fun save() {
-        productRepository.save(Product(name = "Product 2", price = 10.5, imageUrl = "url.com"))
+        productRepository.create(ProductDTO(name = "Product 2", price = 10.5, imageUrl = "url.com", description = "description"))
         assertThat(productRepository.findById(2)).isNotNull()
     }
 
     @Test
     fun update() {
-        productRepository.update(1, Product(name = "Product 2", price = 10.5, imageUrl = "url.com"))
+        productRepository.update(1, ProductDTO(name = "Product 2", price = 10.5, imageUrl = "url.com", description = "description"))
         assertThat(productRepository.findById(1)?.name).isEqualTo("Product 2")
     }
 

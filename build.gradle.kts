@@ -35,6 +35,11 @@ dependencies {
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     testImplementation("io.rest-assured:rest-assured:5.3.1")
+
+    testImplementation("org.junit.jupiter:junit-jupiter-api")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
+    testImplementation("jakarta.validation:jakarta.validation-api:3.0.2")
+    testImplementation("org.hibernate.validator:hibernate-validator:8.0.1.Final")
 }
 
 kotlin {
