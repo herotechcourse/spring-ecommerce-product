@@ -90,4 +90,40 @@ class GlobalExceptionHandlerTest {
             response.body.jsonPath().get<String>("name"),
         ).contains("Invalid characters in name. Allowed: letters, numbers, spaces, (, ), [, ], +, -, &, /, _")
     }
+
+    @Test
+    fun `Should throw if price is 0`() {
+        val product = ProductRequest("Table", 0.0, "http://www.test.com/test.jpg")
+        val response =
+            RestAssured
+                .given().log().all().body(product)
+                .contentType(ContentType.JSON)
+                .`when`()
+                .request("POST", "/api/products")
+                .then()
+                .extract()
+                .response()
+        assertThat(response.statusCode).isEqualTo(HttpStatus.BAD_REQUEST.value())
+        assertThat(
+            response.body.jsonPath().get<String>("price"),
+        ).contains("Price must be greater than 0")
+    }
+
+    @Test
+    fun `Should throw if price is lower`() {
+        val product = ProductRequest("Table", -10.0, "http://www.test.com/test.jpg")
+        val response =
+            RestAssured
+                .given().log().all().body(product)
+                .contentType(ContentType.JSON)
+                .`when`()
+                .request("POST", "/api/products")
+                .then()
+                .extract()
+                .response()
+        assertThat(response.statusCode).isEqualTo(HttpStatus.BAD_REQUEST.value())
+        assertThat(
+            response.body.jsonPath().get<String>("price"),
+        ).contains("Price must be greater than 0")
+    }
 }
