@@ -2,7 +2,7 @@ package ecommerce.product
 
 import ecommerce.TextFixture
 import ecommerce.TextFixture.AMERICANO
-import ecommerce.TextFixture.AssertTamplate.assertProductEquals
+import ecommerce.TextFixture.AssertTemplate.assertProductEquals
 import ecommerce.product.data.ProductResponse
 import io.restassured.RestAssured
 import io.restassured.http.ContentType

@@ -1,7 +1,7 @@
 package ecommerce.product
 
 import ecommerce.TextFixture.AMERICANO
-import ecommerce.TextFixture.AssertTamplate.assertProductEquals
+import ecommerce.TextFixture.AssertTemplate.assertProductEquals
 import ecommerce.TextFixture.FLAT_WHITE
 import ecommerce.TextFixture.createProduct
 import ecommerce.product.data.ProductResponse

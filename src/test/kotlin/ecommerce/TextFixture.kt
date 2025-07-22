@@ -1,7 +1,7 @@
 package ecommerce
 
 import ecommerce.product.DummyRequest
-import ecommerce.product.data.ConstantsProduct.Validation.SCHEMA_SQL_URL_LIMIT
+import ecommerce.product.data.ConstantsProduct.Validation.IMAGE_URL_MAX_LENGTH
 import ecommerce.product.data.ProductRequest
 import ecommerce.product.data.ProductResponse
 import io.restassured.RestAssured
@@ -40,7 +40,7 @@ object TextFixture {
         )
 
     object Dummy {
-        private fun superLongUrl(n: Int): String = "o".repeat(n + 1)
+        private fun superLongUrl(urlLimit: Int): String = "o".repeat(urlLimit + 1)
 
         val NO_NAME =
             DummyRequest(
@@ -70,7 +70,7 @@ object TextFixture {
             )
     }
 
-    object AssertTamplate {
+    object AssertTemplate {
         fun assertProductEquals(
             actual: ProductResponse,
             expected: ProductRequest,
