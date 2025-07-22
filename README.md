@@ -38,9 +38,9 @@
 
 - [ ] user registration
   - [ ] handle `POST /api/members/register` requests
-    - [ ] receive `email` and `password` in JSON body
-    - [ ] hash password?
-    - [ ] create user in database
+    - [x] receive `email` and `password` in JSON body
+    - [x] hash password
+    - [x] create user in database
     - [ ] return token when successful registration (`200`)
 
 - [ ] user login
