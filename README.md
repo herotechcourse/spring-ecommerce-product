@@ -38,7 +38,7 @@ functionality, readability, and test reliability.
 - [ ] **Clarify update return type**  
   Refactor `ProductRepository.update()` to return a meaningful type (e.g., `Boolean`) indicating success or failure.
 
-- [ ] **Optimize database column types**  
+- [x] **Optimize database column types**  
   Update `schema.sql` to use appropriate types like `VARCHAR(n)` instead of `TEXT` for `image_url`.
 
 ---

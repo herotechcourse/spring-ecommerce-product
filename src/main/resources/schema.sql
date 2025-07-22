@@ -1,7 +1,7 @@
 CREATE TABLE products
 (
-    id        BIGINT PRIMARY KEY AUTO_INCREMENT,
+    id        LONG PRIMARY KEY AUTO_INCREMENT,
     name      VARCHAR(255),
-    price     DOUBLE,
+    price     DECIMAL(10, 2),
     image_url VARCHAR(255)
 );
