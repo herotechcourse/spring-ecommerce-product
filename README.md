@@ -104,3 +104,4 @@ Implement user account features including registration, login, and authenticatio
   Needed to extract the token from the Authorization: Bearer <token> header
 
 - [x] create class `AuthorizationException` - exception for handling authorization errors
+- [x] create class `JwtTokenProvider` - class for creating, validating and extracting payload from JWT
