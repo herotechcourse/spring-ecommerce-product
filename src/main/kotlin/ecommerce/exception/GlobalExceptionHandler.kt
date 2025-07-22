@@ -56,4 +56,14 @@ class GlobalExceptionHandler {
             }
         return ResponseEntity.badRequest().body(errors)
     }
+
+    @ExceptionHandler(ProductAlreadyInDBException::class)
+    fun handleUpdateException(ex: ProductAlreadyInDBException): ResponseEntity<ErrorMessageModel> {
+        val errorMessage =
+            ErrorMessageModel(
+                HttpStatus.CONFLICT.value(),
+                ex.message,
+            )
+        return ResponseEntity(errorMessage, HttpStatus.CONFLICT)
+    }
 }
