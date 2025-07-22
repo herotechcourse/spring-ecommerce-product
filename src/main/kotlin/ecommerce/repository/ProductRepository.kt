@@ -1,44 +1,48 @@
 package ecommerce.repository
 
-import ecommerce.model.Product
+import ecommerce.dto.ProductDTO
+import ecommerce.mapper.ProductRowMapper
 import org.springframework.jdbc.core.JdbcTemplate
-import org.springframework.jdbc.core.RowMapper
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert
 import org.springframework.stereotype.Repository
-import java.sql.ResultSet
 
 @Repository
-class ProductRepository(private val jdbcTemplate: JdbcTemplate) {
-    private val productRowMapper =
-        RowMapper<Product> { rs: ResultSet, _ ->
-            Product(
-                id = rs.getLong("id"),
-                name = rs.getString("product_name"),
-                price = rs.getDouble("price"),
-                imageUrl = rs.getString("image_url"),
-            )
-        }
-
-    fun findAll(): List<Product> {
+class ProductRepository(
+    private val jdbcTemplate: JdbcTemplate,
+    private val productRowMapper: ProductRowMapper,
+) {
+    fun findAll(): List<ProductDTO> {
         val sql = "select * from products"
         return jdbcTemplate.query(sql, productRowMapper)
     }
 
-    fun findById(id: Long): Product? {
+    fun findById(id: Long): ProductDTO? {
         val sql = "select * from products where id = ?"
         return jdbcTemplate.queryForObject(sql, productRowMapper, id)
     }
 
-    fun save(product: Product) {
-        val sql = "insert into products(product_name,price,image_url) values (?,?,?)"
-        jdbcTemplate.update(sql, product.name, product.price, product.imageUrl)
+    fun create(product: ProductDTO): Long{
+        val insert =
+            SimpleJdbcInsert(jdbcTemplate)
+                .withTableName("products")
+                .usingGeneratedKeyColumns("id")
+
+        val parameters = mapOf(
+            "name" to product.name,
+            "description" to product.description,
+            "price" to product.price,
+            "image_url" to product.imageUrl,
+            "quantity" to product.quantity,
+        )
+        return insert.executeAndReturnKey(parameters).toLong()
     }
 
     fun update(
         id: Long,
-        product: Product,
+        product: ProductDTO,
     ) {
         findById(id)
-        val sql = "update products set product_name = ?, price = ?, image_url = ? where id = ?"
+        val sql = "update products set name = ?, price = ?, image_url = ? where id = ?"
         jdbcTemplate.update(sql, product.name, product.price, product.imageUrl, id)
     }
 
