@@ -3,6 +3,7 @@
 ## Advice
 ### GlobalExceptionHandler
 
+
 ## Controller
 ### ProductController
 - RestController
@@ -22,6 +23,9 @@
 - [x] `imageUrl` Not Blank, Follows pattern
 - [x] `quantity` Cannot be negative (0 included)
 
+### ErrorResponse
+- To standardise return error messages
+
 ## mapper
 ### ProductRowMapper
 - [x] Converts the DB data to Kotlin class object
@@ -34,6 +38,7 @@
 - `create(product: ProductDTO)`: Long
 - `update(id: Long, product: ProductDTO)`
 - `deleteById(id: Long)`
+- `existsByName(name: String)`: Boolean
 
 ## service
 
