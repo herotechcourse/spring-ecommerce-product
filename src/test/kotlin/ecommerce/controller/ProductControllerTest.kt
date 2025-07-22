@@ -1,6 +1,8 @@
 package ecommerce.controller
 
-import ecommerce.model.Product
+import ecommerce.dto.ProductDTO
+import ecommerce.dto.ProductPatchDTO
+import ecommerce.repository.ProductRepository
 import io.restassured.RestAssured
 import io.restassured.http.ContentType
 import org.assertj.core.api.Assertions.assertThat
@@ -8,21 +10,20 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.HttpStatus
-import org.springframework.jdbc.core.JdbcTemplate
-import org.springframework.jdbc.support.GeneratedKeyHolder
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 class ProductControllerTest {
     @Autowired
-    private lateinit var jdbcTemplate: JdbcTemplate
+    lateinit var productRepository: ProductRepository
 
     @Test
     fun create() {
         val product =
-            Product(
+            ProductDTO(
                 name = "Product 1",
                 price = 10.0,
                 imageUrl = "http://localhost:8080/image/upload/product1.jpg",
+                description = "Product 1",
             )
         val response =
             RestAssured
@@ -47,29 +48,51 @@ class ProductControllerTest {
     }
 
     @Test
-    fun update() {
-        val keyHolder = GeneratedKeyHolder()
-        jdbcTemplate.update({
-            val ps = it.prepareStatement("INSERT INTO products(product_name, price, image_url) VALUES (?, ?, ?)", arrayOf("id"))
-            ps.setString(1, "Product 1")
-            ps.setDouble(2, 10.2)
-            ps.setString(3, "url.com")
-            ps
-        }, keyHolder)
+    fun `Returns Product`() {
+        val id = createProduct("Get One Product")
+        val response =
+            RestAssured
+                .given().log().all()
+                .`when`().get("/products/${id}")
+                .then().log().all().extract()
 
-        val generatedId = keyHolder.key!!.toLong()
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
+    }
+
+    @Test
+    fun update() {
+        val key = createProduct("Update")
         val response =
             RestAssured
                 .given().log().all()
                 .body(
-                    Product(
+                    ProductDTO(
                         name = "Product 2",
                         price = 10.0,
                         imageUrl = "http://localhost:8080/image/upload/product1.jpg",
+                        description = "Product 1",
                     ),
                 )
                 .contentType(ContentType.JSON)
-                .`when`().put("/products/$generatedId")
+                .`when`().put("/products/$key")
+                .then().log().all().extract()
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
+    }
+
+    @Test
+    fun patch() {
+        val key = createProduct("Patch")
+        val response =
+            RestAssured
+                .given().log().all()
+                .body(
+                    ProductPatchDTO(
+                        price = 19.0,
+                    ),
+                )
+                .contentType(ContentType.JSON)
+                .`when`().patch("/products/$key")
                 .then().log().all().extract()
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
@@ -77,20 +100,11 @@ class ProductControllerTest {
 
     @Test
     fun delete() {
-        val keyHolder = GeneratedKeyHolder()
-        jdbcTemplate.update({
-            val ps = it.prepareStatement("INSERT INTO products(product_name, price, image_url) VALUES (?, ?, ?)", arrayOf("id"))
-            ps.setString(1, "Product 1")
-            ps.setDouble(2, 10.2)
-            ps.setString(3, "url.com")
-            ps
-        }, keyHolder)
-
-        val generatedId = keyHolder.key!!.toLong()
+        val id = createProduct("Delete")
         val response =
             RestAssured
                 .given().log().all()
-                .`when`().delete("/products/$generatedId")
+                .`when`().delete("/products/$id")
                 .then().log().all().extract()
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value())
@@ -106,5 +120,16 @@ class ProductControllerTest {
                 .then().log().all().extract()
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value())
+    }
+
+    private fun createProduct(name:String):Long {
+        return productRepository.create(
+            ProductDTO(
+                name = name,
+                price = 10.0,
+                imageUrl = "url.com",
+                description = "description",
+            )
+        )
     }
 }
