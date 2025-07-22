@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.ResponseBody
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
@@ -23,8 +22,7 @@ class ProductController(
     private val productRepository: ProductRepository,
     private val productService: ProductService,
 ) {
-    @PostMapping(consumes = ["application/json"])
-    @ResponseBody
+    @PostMapping
     fun createProduct(
         @RequestBody product: ProductRequest,
     ): ResponseEntity<Void> {
