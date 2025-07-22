@@ -19,7 +19,7 @@ functionality, readability, and test reliability.
 - [x] **remove application.yml**
   For Spring Boot configuration, only needs either application.properties or application.yml
 
-- [ ] **Fix Edit/Delete button issue**  
+- [x] **Fix Edit/Delete button issue**  
   Resolve the problem where Edit and Delete buttons do not function on the HTML page.
 
 - [x] **Improve constructor readability**  
@@ -51,7 +51,7 @@ functionality, readability, and test reliability.
 - [ ] **Verify each response field**  
   Ensure that tests validate not only response status and list size, but also every field in the returned objects.
 
-- [ ] **Separate test fixtures**  
+- [x] **Separate test fixtures**  
   Move hardcoded `Product` objects in test classes into a dedicated fixture or utility class.
 
 - [ ] **Add tests for uncovered features**  
