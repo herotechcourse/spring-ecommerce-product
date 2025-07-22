@@ -89,9 +89,9 @@ updateProductForm.html
 
 ## Features 2.1
 
-- [ ] Product name Validation
-  - [ ] Apart from alphanumerics character, it can contain  `( ), [ ], +, -, &, /, _`
-  - [ ] I should contain less than 15 characters
-  - [ ] Name should be unique
-- [ ] Price should be a positive number
-- [ ] Image URL must start with `http:// or https://`.
+- [x] Product name Validation
+  - [x] Apart from alphanumerics character, it can contain  `( ), [ ], +, -, &, /, _`
+  - [x] I should contain less than 15 characters
+  - [x] Name should be unique
+- [x] Price should be a positive number
+- [x] Image URL must start with `http:// or https://`.

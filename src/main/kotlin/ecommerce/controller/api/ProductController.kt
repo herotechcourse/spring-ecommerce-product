@@ -4,6 +4,7 @@ import ecommerce.model.Product
 import ecommerce.model.ProductDTO
 import ecommerce.model.ProductPatchDTO
 import ecommerce.service.ProductService
+import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
@@ -18,9 +19,10 @@ import java.net.URI
 @RestController
 @RequestMapping("/api")
 class ProductController(private val productService: ProductService) {
+
     @PostMapping("/products")
     fun createProduct(
-        @RequestBody product: Product,
+        @Valid @RequestBody product: Product,
     ): ResponseEntity<ProductDTO> {
         val created = productService.insert(product)
         val dto = ProductDTO.from(created)
