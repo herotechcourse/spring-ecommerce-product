@@ -1,9 +1,9 @@
-package ecommerce
+package ecommerce.service
 
 import ecommerce.entity.Product
 import ecommerce.repository.ProductRepository
 import io.restassured.RestAssured
-import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -75,7 +75,7 @@ class SSRTest() {
         val html = response.body.asString()
 
         products.forEach {
-            assertThat(html).contains(it.name)
+            Assertions.assertThat(html).contains(it.name)
         }
     }
 
@@ -89,6 +89,6 @@ class SSRTest() {
 
         val html = response.body.asString()
 
-        assertThat(html).doesNotContain("melon")
+        Assertions.assertThat(html).doesNotContain("melon")
     }
 }

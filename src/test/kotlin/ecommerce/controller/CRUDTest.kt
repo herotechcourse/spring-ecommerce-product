@@ -1,11 +1,11 @@
-package ecommerce
+package ecommerce.controller
 
 import ecommerce.dto.ProductRequest
 import ecommerce.entity.Product
 import ecommerce.repository.ProductRepository
 import io.restassured.RestAssured
 import io.restassured.http.ContentType
-import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -85,7 +85,7 @@ class CRUDTest {
                 .`when`().post("/api/products")
                 .then().log().all().extract()
 
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value())
+        Assertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value())
     }
 
     @Test
@@ -98,8 +98,8 @@ class CRUDTest {
                 .`when`().get("/api/products")
                 .then().log().all().extract()
 
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
-        assertThat(response.jsonPath().getList("", Product::class.java)).hasSize(3)
+        Assertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
+        Assertions.assertThat(response.jsonPath().getList("", Product::class.java)).hasSize(3)
     }
 
     @Test
@@ -121,7 +121,7 @@ class CRUDTest {
                 .`when`().put("/api/products/1")
                 .then().log().all().extract()
 
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
+        Assertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
     }
 
     @Test
@@ -141,7 +141,7 @@ class CRUDTest {
                 .`when`().put("/api/products/4")
                 .then().log().all().extract()
 
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value())
+        Assertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value())
     }
 
     @Test
@@ -155,7 +155,7 @@ class CRUDTest {
                 .`when`().delete("/api/products/1")
                 .then().log().all().extract()
 
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value())
+        Assertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value())
     }
 
     @Test
@@ -167,6 +167,6 @@ class CRUDTest {
                 .`when`().delete("/api/products/4")
                 .then().log().all().extract()
 
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value())
+        Assertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value())
     }
 }

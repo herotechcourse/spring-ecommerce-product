@@ -1,9 +1,8 @@
-package ecommerce
+package ecommerce.dto
 
-import ecommerce.dto.ProductRequest
 import jakarta.validation.Validation
 import jakarta.validation.Validator
-import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
@@ -26,7 +25,7 @@ class ProductRequestTest {
 
         val violations = validator.validate(product)
 
-        assertThat(violations).isEmpty()
+        Assertions.assertThat(violations).isEmpty()
     }
 
     @Test
@@ -40,8 +39,8 @@ class ProductRequestTest {
 
         val violations = validator.validate(product)
 
-        assertThat(violations).hasSize(1)
-        assertThat(violations.first().message).isEqualTo("[Error] Name must not exceed 15 characters.")
+        Assertions.assertThat(violations).hasSize(1)
+        Assertions.assertThat(violations.first().message).isEqualTo("[Error] Name must not exceed 15 characters.")
     }
 
     @Test
@@ -55,8 +54,8 @@ class ProductRequestTest {
 
         val violations = validator.validate(product)
 
-        assertThat(violations).hasSize(1)
-        assertThat(violations.first().message).isEqualTo("[Error] Name contains invalid special characters.")
+        Assertions.assertThat(violations).hasSize(1)
+        Assertions.assertThat(violations.first().message).isEqualTo("[Error] Name contains invalid special characters.")
     }
 
     @Test
@@ -70,8 +69,8 @@ class ProductRequestTest {
 
         val violations = validator.validate(product)
 
-        assertThat(violations).hasSize(1)
-        assertThat(violations.first().message).isEqualTo("[Error] Price must be greater than 0.")
+        Assertions.assertThat(violations).hasSize(1)
+        Assertions.assertThat(violations.first().message).isEqualTo("[Error] Price must be greater than 0.")
     }
 
     @Test
@@ -85,8 +84,8 @@ class ProductRequestTest {
 
         val violations = validator.validate(product)
 
-        assertThat(violations).hasSize(1)
-        assertThat(violations.first().message).isEqualTo("[Error] Image URL must start with http:// or https://")
+        Assertions.assertThat(violations).hasSize(1)
+        Assertions.assertThat(violations.first().message).isEqualTo("[Error] Image URL must start with http:// or https://")
     }
 
     @Test
@@ -100,11 +99,11 @@ class ProductRequestTest {
 
         val violations = validator.validate(product)
 
-        assertThat(violations).hasSize(4)
+        Assertions.assertThat(violations).hasSize(4)
 
         val messages = violations.map { it.message }
 
-        assertThat(messages).containsExactlyInAnyOrder(
+        Assertions.assertThat(messages).containsExactlyInAnyOrder(
             "[Error] Name must not exceed 15 characters.",
             "[Error] Name contains invalid special characters.",
             "[Error] Price must be greater than 0.",

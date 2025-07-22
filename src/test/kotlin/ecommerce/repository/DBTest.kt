@@ -1,8 +1,7 @@
-package ecommerce
+package ecommerce.repository
 
 import ecommerce.entity.Product
-import ecommerce.repository.ProductRepository
-import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -62,7 +61,7 @@ class DBTest {
     @Test
     fun getAll() {
         val products = productRepository.getAll()
-        assertThat(products.size).isEqualTo(3)
+        Assertions.assertThat(products.size).isEqualTo(3)
     }
 
     @Test
@@ -73,7 +72,7 @@ class DBTest {
 
         val products = productRepository.getAll()
 
-        assertThat(products.any { it.name == "Carotte ice cream" }).isTrue()
+        Assertions.assertThat(products.any { it.name == "Carotte ice cream" }).isTrue()
     }
 
     @Test
@@ -84,8 +83,8 @@ class DBTest {
 
         val products = productRepository.getAll()
 
-        assertThat(products.first().name).isEqualTo(product.name)
-        assertThat(products.any { it.name == "Vanilla ice cream" }).isFalse()
+        Assertions.assertThat(products.first().name).isEqualTo(product.name)
+        Assertions.assertThat(products.any { it.name == "Vanilla ice cream" }).isFalse()
     }
 
     @Test
@@ -94,7 +93,7 @@ class DBTest {
 
         val products = productRepository.getAll()
 
-        assertThat(products.size).isEqualTo(2)
-        assertThat(products.any { it.name == "Vanilla ice cream" }).isFalse()
+        Assertions.assertThat(products.size).isEqualTo(2)
+        Assertions.assertThat(products.any { it.name == "Vanilla ice cream" }).isFalse()
     }
 }
