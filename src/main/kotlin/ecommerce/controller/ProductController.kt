@@ -4,6 +4,7 @@ import ecommerce.dto.ProductRequest
 import ecommerce.dto.ProductResponse
 import ecommerce.repository.ProductRepository
 import ecommerce.service.ProductService
+import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -23,7 +24,7 @@ class ProductController(
 ) {
     @PostMapping
     fun createProduct(
-        @RequestBody product: ProductRequest,
+        @Valid @RequestBody product: ProductRequest,
     ): ResponseEntity<Void> {
         productService.createProduct(product)
         return ResponseEntity(HttpStatus.CREATED)
@@ -44,7 +45,7 @@ class ProductController(
     @PutMapping("/{id}")
     fun updateProduct(
         @PathVariable id: Long,
-        @RequestBody product: ProductRequest,
+        @Valid @RequestBody product: ProductRequest,
     ): ResponseEntity<Void> {
         productService.updateProduct(id, product)
         return ResponseEntity.noContent().build()
