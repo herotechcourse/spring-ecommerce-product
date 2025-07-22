@@ -70,7 +70,17 @@ In such cases, your application must respond with enough information for the cli
 
 - [x] Product Image URL
   - [x] Must start with ``http://`` or ``https://``
-    
 
+## Step 2-2
+
+Implement user account features including registration, login, and authentication so that users can access member-only functionality in the future.
+
+### Feature List
+
+- [ ] create a Member data class
+  - [ ] Member has ID
+  - [ ] Member has email
+  - [ ] Member has password
+  - [ ] Member has role (initial "USER")
 
 
