@@ -1,6 +1,7 @@
 package ecommerce.product
 
 import ecommerce.TextFixture.AMERICANO
+import ecommerce.TextFixture.AssertTamplate.assertProductEquals
 import ecommerce.TextFixture.FLAT_WHITE
 import ecommerce.TextFixture.createProduct
 import io.restassured.RestAssured
@@ -13,63 +14,7 @@ import org.springframework.test.annotation.DirtiesContext
 
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
-class ProductAPITest {
-    @Test
-    fun `createProduct() should be able return 'created 201' response`() {
-        val response =
-            RestAssured
-                .given().log().all()
-                .body(AMERICANO)
-                .contentType(ContentType.JSON)
-                .`when`().post("/api/products")
-                .then().log().all().extract()
-
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value())
-    }
-
-    @Test
-    fun `getProducts() should be able to read a product and return 'ok 200' response`() {
-        createProduct(AMERICANO)
-
-        val response =
-            RestAssured
-                .given().log().all()
-                .contentType(ContentType.JSON)
-                .`when`().get("/api/products")
-                .then().log().all().extract()
-
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
-        assertThat(response.jsonPath().getList("", ProductResponse::class.java)).hasSize(1)
-    }
-
-    @Test
-    fun `getProducts() should be able to read products, and return 'ok 200' response`() {
-        createProduct(AMERICANO)
-        createProduct(FLAT_WHITE)
-
-        val response =
-            RestAssured
-                .given().log().all()
-                .contentType(ContentType.JSON)
-                .`when`().get("/api/products")
-                .then().log().all().extract()
-
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
-        assertThat(response.jsonPath().getList("", ProductResponse::class.java)).hasSize(2)
-    }
-
-    @Test
-    fun `getProducts() should return 'ok 200' response`() {
-        val response =
-            RestAssured
-                .given().log().all()
-                .contentType(ContentType.JSON)
-                .`when`().get("/api/products")
-                .then().log().all().extract()
-
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
-    }
-
+class UpdateDeleteProductAPITest {
     @Test
     fun `updateProduct() should be able to update product, and return 'ok 200' response`() {
         createProduct(AMERICANO)
@@ -82,7 +27,9 @@ class ProductAPITest {
                 .`when`().put("/api/products/1")
                 .then().log().all().extract()
 
+        val product = response.body().`as`(ProductResponse::class.java)
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
+        assertProductEquals(product, FLAT_WHITE, 1)
     }
 
     @Test

@@ -11,19 +11,16 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
-import java.util.concurrent.atomic.AtomicLong
 
 @RestController
 class ProductAPI(private val store: ProductStore) {
-    private val index = AtomicLong(0)
-
     @PostMapping(PRODUCTS_ENDPOINT)
     fun createProduct(
         @RequestBody request: ProductRequest,
     ): ResponseEntity<ProductResponse> {
         return try {
-            val product = store.create(request)
-            return ResponseEntity.status(HttpStatus.CREATED).body(product.toResponse())
+            val createdProduct = store.create(request)
+            return ResponseEntity.status(HttpStatus.CREATED).body(createdProduct.toResponse())
         } catch (exception: DataAccessException) {
             ResponseEntity.status(HttpStatus.BAD_REQUEST).build()
         }
@@ -39,10 +36,10 @@ class ProductAPI(private val store: ProductStore) {
         @RequestBody request: ProductRequest,
         @PathVariable id: Long,
     ): ResponseEntity<ProductResponse> {
-        val updated = store.update(id, request)
-        return when (updated) {
+        val updatedProduct = store.update(id, request)
+        return when (updatedProduct) {
             null -> ResponseEntity.notFound().build()
-            else -> ResponseEntity.ok(updated.toResponse())
+            else -> ResponseEntity.ok(updatedProduct.toResponse())
         }
     }
 
