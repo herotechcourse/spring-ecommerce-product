@@ -6,25 +6,25 @@
 ## Controller
 ### ProductController
 - RestController
-- [ ] `Get` all products
-- [ ] `Get` product by Id
-- [ ] `POST` Create a Product
-- [ ] `PUT` update the whole product by ID
-- [ ] `PATCH` update one or more attributes of Product by ID
-- [ ] `DELETE` delete the product by ID
+- [x] `Get` all products
+- [x] `Get` product by Id
+- [x] `POST` Create a Product
+- [x] `PUT` update the whole product by ID
+- [x] `PATCH` update one or more attributes of Product by ID
+- [x] `DELETE` delete the product by ID
 
 ## dto
 ### ProductDTO
 - Validation for product modal
-- [ ] `name`: Not blank, Maximum of 15, Minimum of 1, starts with http or https
-- [ ] `description`: Not blank, Minimum of 3
-- [ ] `price`: is Positive
-- [ ] `imageUrl` Not Blank, Follows pattern
-- [ ] `quantity` Cannot be negative (0 included)
+- [x] `name`: Not blank, Maximum of 15, Minimum of 1, starts with http or https
+- [x] `description`: Not blank, Minimum of 3
+- [x] `price`: is Positive
+- [x] `imageUrl` Not Blank, Follows pattern
+- [x] `quantity` Cannot be negative (0 included)
 
 ## mapper
 ### ProductRowMapper
-- [ ] Converts the DB data to Kotlin class object
+- [x] Converts the DB data to Kotlin class object
 
 ## repository
 ### ProductRepository
@@ -51,4 +51,4 @@
 ### Schema
 #### Products
 - id, name, description, price, image_url, quantity
-- [ ] id is `UNIQUE`
+- [x] id is `UNIQUE`
