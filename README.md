@@ -77,10 +77,17 @@ Implement user account features including registration, login, and authenticatio
 
 ### Feature List
 
-- [ ] create a Member data class
-  - [ ] Member has ID
-  - [ ] Member has email
-  - [ ] Member has password
-  - [ ] Member has role (initial "USER")
+- [x] create a ``Member`` data class
+  - [x] Member has ID
+  - [x] Member has email
+  - [x] Member has password
+  - [x] Member has role (initial "USER")
 
+- [x] add Members table in ``schema.sql``
 
+- [ ] create ``TokenRequest`` data class
+  - [ ] has email
+  - [ ] has password 
+  
+- [ ] create ``TokenResponse`` data class
+  - [ ] has accessToken: String
