@@ -1,53 +1,54 @@
 # spring-ecommerce-product
 
-## CRUD Operations for `Product` -> `Step 1-1`
-### Model
-- [x] Product
-  - [x] id: long?
-  - [x] name: String
-  - [x] price: Double
-  - [x] imageUrl: String
+## Advice
+### GlobalExceptionHandler
 
-### Controller
-- [x] Create
-  - [x] Create and returns the new Product
-- [x] Read All
-  - [x] Returns the products
-- [x] Update
-  - [x] Returns the Updated Product
-  - [x] Throws NotFoundException if Product not found
-- [x] Delete
-  - [x] Returns ok status if deleted
-  - [x] Throws NotFoundException if Product not found
-- private fun findProduct
-  - [x] finds the product
-  - [x] Throws notFoundException
+## Controller
+### ProductController
+- RestController
+- [ ] `Get` all products
+- [ ] `Get` product by Id
+- [ ] `POST` Create a Product
+- [ ] `PUT` update the whole product by ID
+- [ ] `PATCH` update one or more attributes of Product by ID
+- [ ] `DELETE` delete the product by ID
 
-### Exceptions
-- [x] NotFoundException
-  - [x] Handled using ControllerAdvice
+## dto
+### ProductDTO
+- Validation for product modal
+- [ ] `name`: Not blank, Maximum of 15, Minimum of 1, starts with http or https
+- [ ] `description`: Not blank, Minimum of 3
+- [ ] `price`: is Positive
+- [ ] `imageUrl` Not Blank, Follows pattern
+- [ ] `quantity` Cannot be negative (0 included)
 
-## Admin Interface Implementation for `Product` -> `Step 1-2`
+## mapper
+### ProductRowMapper
+- [ ] Converts the DB data to Kotlin class object
 
-### Views
-- [x] View all products
- - [x] added new page for `products.html`
- - [x] Changed Read All for ThymeLeaf returns the page as String
-- [x] Add a new product
-  - [x] `products/new` method for showing the new product form
-  - [x] create request handled by JS
-- [x] Update a product
-  - [x] `products/edit/${id}` method for showing the product form to edit
-  - [x] update request handled by JS
-- [x] Delete a product
-  - [x] Send delete request using JS
-- [x] Template for styling Footer and Header
+## repository
+### ProductRepository
+- Handle communication with db
+- `findAll()`: List<ProductDTO>
+- `findById(id: Long)`: ProductDTO?
+- `create(product: ProductDTO)`: Long
+- `update(id: Long, product: ProductDTO)`
+- `deleteById(id: Long)`
 
-## Integrate DB in Project `Product` -> `Step 1-3`
-- [x] install db dependency
-- [x] create schema.sql
-- [x] create data.sql
-- [x] add rules in application.properties
-- [x] create table
-- [x] Convert Controller for db usage
-- [x] Create Product Repository to handle DB logic
+## service
+
+### interfaces
+#### ProductServiceInterface
+
+### ProductService
+- Handles the logic between Controller and DB
+- [ ] `getAllProducts()`: ResponseEntity<List<ProductDTO>>
+- [ ] `getProductById(id: Long)`: ResponseEntity<ProductDTO>
+- [ ] `createProduct(product: ProductDTO):`  ResponseEntity<Void>
+- [ ] `updateProduct(id: Long, product: ProductDTO)`: ResponseEntity<Void>
+- [ ] `fun deleteProduct(id: Long)`: ResponseEntity<Void>
+
+### Schema
+#### Products
+- id, name, description, price, image_url, quantity
+- [ ] id is `UNIQUE`
