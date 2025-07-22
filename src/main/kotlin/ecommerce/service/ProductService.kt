@@ -1,6 +1,7 @@
 package ecommerce.service
 
 import ecommerce.dto.ProductDTO
+import ecommerce.exception.DuplicateProductNameException
 import ecommerce.repository.ProductRepository
 import ecommerce.service.interfaces.ProductServiceInterface
 import org.springframework.http.ResponseEntity
@@ -18,6 +19,9 @@ class ProductService(private val productRepository: ProductRepository) : Product
     }
 
     override fun createProduct(product: ProductDTO): ResponseEntity<Void> {
+        if (productRepository.existsByName(product.name)) {
+            throw DuplicateProductNameException(product.name)
+        }
         val id = productRepository.create(product)
         return ResponseEntity.created(URI.create("/products/$id")).build()
     }
