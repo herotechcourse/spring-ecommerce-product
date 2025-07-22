@@ -60,3 +60,12 @@ Database tables must be initialized automatically when the application starts.
   - [x] Set up application.properties to enable H2-Console
 - [x] use Spring's JdbcTemplate
 - [x] Use SQL scripts for table creation and initial data.
+- [x] Create a Service Layer to encapsulate business logic:
+  - Define a ProductService interface with methods like findById, createProduct, updateProduct, and getAll, delete. 
+  - Provide a concrete implementation ProductServiceImpl that delegates to the ProductRepository.
+- [x] Implement centralized exception handling with a @RestControllerAdvice:
+  - Handle ProductNotFoundException with a 404 Not Found response.
+  - Handle ProductCreationException and ProductUpdateException with 500 Internal Server Error.
+  - Catch generic RuntimeException and return a 400 Bad Request.
+- [x]Return consistent error responses using a custom ErrorMessageModel
+
