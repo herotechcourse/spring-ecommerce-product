@@ -178,15 +178,12 @@ Content - Type: application/json
 
 ## Features
 
-- [ ] Implement member registration with a valid email and password.
-- [ ] Allow members to log in by submitting their credentials.
-- [ ] If login is successful, the API returns a valid JWT token.
-- [ ] Secure API access using Authorization headers.
-- [ ] Return appropriate HTTP status codes for error cases.
-    - Return 401 Unauthorized if the Authorization header is missing or the token is invalid.
-    - Return 403 Forbidden for incorrect login attempts or denied actions (e.g., password reset or change with invalid
-      input).
-- [ ] Use the JJWT library to generate tokens.
+- [x] Implement member registration with a valid email and password.
+- [x] Allow members to log in by submitting their credentials.
+- [x] If login is successful, the API returns a valid JWT token.
+- [x] Return 403 Forbidden for incorrect login attempts or denied actions (e.g., password reset or change with invalid
+  input).
+- [x] Use the JJWT library to generate tokens.
   ```
   implementation("io.jsonwebtoken:jjwt:0.9.1")
   ```
