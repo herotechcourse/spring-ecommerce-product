@@ -74,20 +74,22 @@ so that users can access member-only functionality in the future.
   - [ ] maybe username?
   - [x] role
 - [x] validate these attributes with Jakarta
-- [ ] catch exceptions on invalid data
+- [x] catch exceptions on invalid data
 - [x] define a database table in `schema.sql`
-- [ ] create a `MemberRepository`
+- [x] create a `MemberRepository`
 
 - Authentication
-- [ ] A member registers with an email and password.
-- [ ] To receive an access token, the client must send email and password.
-- [ ] If the credentials match a registered user, issue a token.
+- [x] A member registers with an email and password.
+- [x] To receive an access token, the client must send email and password.
+- [x] If the credentials match a registered user, issue a token.
+  - [x] JWT token
 - [ ] Return 401 Unauthorized if the Authorization header is missing or the token is invalid.
 - [ ] Return 403 Forbidden for incorrect login attempts or denied actions (e.g., password reset or change with invalid input).
+- [ ] Let user use token to retrieve information.
 - [ ] Implement the API to send and receive HTTP messages as shown below:
 1. **Register**
 - [ ] Request
-```http request
+```http
 POST /api/members/register HTTP/1.1
 Content-Type: application/json
 host: localhost:8080
@@ -98,7 +100,7 @@ host: localhost:8080
 }
 ```
 - [ ] Response
-```http request
+```http
 HTTP/1.1 201
 Content-Type: application/json
 
@@ -109,7 +111,7 @@ Content-Type: application/json
 
 2. **Login**
 - [ ] Request
-```http request
+```http
 POST /api/members/login HTTP/1.1
 Content-Type: application/json
 host: localhost:8080
@@ -120,7 +122,7 @@ host: localhost:8080
 }
 ```
 - [ ] Response
-```http request
+```http
 HTTP/1.1 200
 Content-Type: application/json
 
