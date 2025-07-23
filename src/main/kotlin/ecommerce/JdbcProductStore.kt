@@ -1,6 +1,5 @@
 package ecommerce
 
-import ecommerce.exception.NotFoundException
 import ecommerce.model.Product
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.jdbc.core.RowMapper
@@ -32,7 +31,7 @@ class JdbcProductStore(private val jdbcTemplate: JdbcTemplate) : ProductStore {
     override fun findById(id: Long): Product {
         val sql = "SELECT * FROM products WHERE id = ?"
         return jdbcTemplate.queryForObject(sql, productRowMapper, id)
-            ?: throw NotFoundException("Product with id $id not found")
+            ?: throw NoSuchElementException("Product with id $id not found")
     }
 
     override fun save(product: Product) {

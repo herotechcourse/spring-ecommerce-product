@@ -1,6 +1,5 @@
 package ecommerce
 
-import ecommerce.exception.NotFoundException
 import ecommerce.model.Product
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
@@ -41,7 +40,7 @@ class CollectionProductStoreTest {
     @Test
     fun `should throw exception when product not found`() {
         assertThatThrownBy { productStore.findById(99L) }
-            .isInstanceOf(NotFoundException::class.java)
+            .isInstanceOf(NoSuchElementException::class.java)
             .hasMessageContaining("Product with id 99 not found")
     }
 
@@ -71,12 +70,12 @@ class CollectionProductStoreTest {
 
         assertThat(productStore.countProducts()).isEqualTo(1)
         assertThatThrownBy { productStore.findById(2L) }
-            .isInstanceOf(NotFoundException::class.java)
+            .isInstanceOf(NoSuchElementException::class.java)
     }
 
     @Test
     fun `should throw exception when deleting non-existent product`() {
         assertThatThrownBy { productStore.delete(99L) }
-            .isInstanceOf(NotFoundException::class.java)
+            .isInstanceOf(NoSuchElementException::class.java)
     }
 }
