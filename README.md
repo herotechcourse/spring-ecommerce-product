@@ -62,41 +62,43 @@ In such cases, your application must respond with enough information for the cli
 
 - [x] Product Name
     - [x] Product name is no longer than 15 characters (including spaces)
-    - [x] Allow only specific special characters: `( ), [ ], +, -, &, /, _`. All other special characters are not allowed
+    - [x] Allow only specific special characters: `( ), [ ], +, -, &, /, _`. All other special characters are not
+      allowed
     - [x] The name must be unique across all products
 
 - [x] Product Price
-  - [x] Must be greater than 0
+    - [x] Must be greater than 0
 
 - [x] Product Image URL
-  - [x] Must start with ``http://`` or ``https://``
+    - [x] Must start with ``http://`` or ``https://``
 
 ## Step 2-2
 
-Implement user account features including registration, login, and authentication so that users can access member-only functionality in the future.
+Implement user account features including registration, login, and authentication so that users can access member-only
+functionality in the future.
 
 ### Feature List
 
 - [x] create a ``Member`` data class
-  - [x] Member has ID
-  - [x] Member has email
-  - [x] Member has password
-  - [x] Member has role (initial "USER")
+    - [x] Member has ID
+    - [x] Member has email
+    - [x] Member has password
+    - [x] Member has role (initial "USER")
 
 - [x] add Members table in ``schema.sql``
 
 - [x] Create `MemberRepository` class - repository for working with the MEMBERS table, similar to `ProductRepository`
 
 - [x] create ``TokenRequest`` data class
-  - [x] has email
-  - [x] has password 
-  
+    - [x] has email
+    - [x] has password
+
 - [x] create ``TokenResponse`` data class
-  - [x] has accessToken: String
+    - [x] has accessToken: String
 
 - [x] create ``MemberResponse`` data class
-  - [x] has id
-  - [x] has email
+    - [x] has id
+    - [x] has email
 
 - [x] create interface ``AuthorizationExtractor``
 - [x] create  ``BearerAuthorizationExtractor``
@@ -106,6 +108,53 @@ Implement user account features including registration, login, and authenticatio
 - [x] create class `AuthorizationException` - exception for handling authorization errors
 - [x] create class `JwtTokenProvider` - class for creating, validating and extracting payload from JWT
 - [x] create `AuthService` class to handle authentication logic, including token generation and user registration
-- [x] create `AuthController` class with endpoints for user registration (`/api/members/register`), login (`/api/members/login`), and retrieving user info (`/api/members/me`)
-      
-  - implement authentication controller with endpoints for registration, login, and user info
+- [x] create `AuthController` class with endpoints for user registration (`/api/members/register`), login (
+  `/api/members/login`), and retrieving user info (`/api/members/me`)
+
+    - implement authentication controller with endpoints for registration, login, and user info
+
+## Step 2-3
+
+Using the token received after login, implement functionality that allows the user to add products to their own cart
+
+### Feature List
+
+- [ ] Users can retrieve the list of products in their cart.
+    - [ ] GET `/api/wishes` returns list of products in JSON format
+    - [ ] Requires valid JWT token in `Authorization: Bearer <token>` header
+
+- [ ] Users can add products to their cart.
+    - [ ] POST `/api/wishes` accepts product ID in JSON body
+    - [ ] Requires valid JWT token in `Authorization: Bearer <token>` header
+    - [ ] Validates product existence and prevents duplicates
+
+- [ ] Users can remove products from their cart.
+    - [ ] DELETE `/api/wishes/{productId}` removes product by ID
+    - [ ] Requires valid JWT token in `Authorization: Bearer <token>` header
+
+- [ ] Add `CART_ITEMS` table in `schema.sql`
+    - [ ] Links `member_id` to `MEMBERS` and `product_id` to `PRODUCTS`
+
+- [ ] Create `CartItem` data class
+   - [ ] Contains `id`, `memberId`, `productId`
+
+- [ ] Create `CartRequest` data class
+  - [ ] Contains `productId` with validation
+
+- [ ] Create `CartResponse` data class
+  - [ ] Contains `id` and `Product` object
+
+- [ ] Create `CartRepository` class
+  - [ ] Uses `JdbcTemplate` to manage `CART_ITEMS` table
+
+- [ ] Create `CartService` class
+  - [ ] Handles business logic for cart operations
+
+- [ ] Create `WishController` class
+    - [ ] Implements `/api/wishes` endpoints with `@LoginMember` for authentication
+
+- [ ] Create `LoginMember` annotation and `LoginMemberArgumentResolver`
+  - [ ] Injects authenticated `Member` into controller methods
+
+- [ ] Create `CheckLoginInterceptor`
+  - [ ] Protects `/api/wishes/**` routes with token validation
