@@ -25,20 +25,20 @@ class UserRepositoryTest {
             CREATE TABLE users (
                 id BIGINT AUTO_INCREMENT PRIMARY KEY,
                 email VARCHAR(255) NOT NULL UNIQUE,
-                password_hash VARCHAR(255) NOT NULL,
+                password VARCHAR(255) NOT NULL,
                 role VARCHAR(50) NOT NULL
             )
             """.trimIndent(),
         )
 
         jdbcTemplate.update(
-            "INSERT INTO users (email, password_hash, role) VALUES (?, ?, ?)",
+            "INSERT INTO users (email, password, role) VALUES (?, ?, ?)",
             "admin@example.com",
             "$2a$10$7Q0N9Fg56qE.L3HqRkDYBeLPDe/s3ZPaXL/3O1chLn5XwB1Qh7v2.",
             "ADMIN",
         )
         jdbcTemplate.update(
-            "INSERT INTO users (email, password_hash, role) VALUES (?, ?, ?)",
+            "INSERT INTO users (email, password, role) VALUES (?, ?, ?)",
             "user@example.com",
             "$2a$10\$P0hS6GH5z9TbG1vhGQKZtOj.4/ZuvKSh6Iz36mSHb.9uKYZ9a3Lty",
             "USER",
@@ -47,7 +47,7 @@ class UserRepositoryTest {
 
     @Test
     fun `should create user`() {
-        val user = User(email = "newuser@example.com", passwordHash = "hashedpass", role = "USER")
+        val user = User(email = "newuser@example.com", password = "testpass", role = "USER")
         val id = userRepository.create(user)
 
         val createdUser = userRepository.getByEmail("newuser@example.com")

@@ -3,7 +3,7 @@ package ecommerce.entity
 class User(
     var id: Long? = null,
     var email: String,
-    var passwordHash: String,
+    var password: String,
     var role: String = "USER",
 ) {
     override fun equals(other: Any?): Boolean {

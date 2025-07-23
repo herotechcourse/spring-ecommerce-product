@@ -12,7 +12,7 @@ class UserRepository(private val jdbc: JdbcTemplate) {
             User(
                 id = rs.getLong("id"),
                 email = rs.getString("email"),
-                passwordHash = rs.getString("password_hash"),
+                password = rs.getString("password"),
                 role = rs.getString("role"),
             )
         }
@@ -23,9 +23,9 @@ class UserRepository(private val jdbc: JdbcTemplate) {
 
     fun create(user: User): Long {
         jdbc.update(
-            "INSERT INTO users (email, password_hash, role) VALUES (?, ?, ?)",
+            "INSERT INTO users (email, password, role) VALUES (?, ?, ?)",
             user.email,
-            user.passwordHash,
+            user.password,
             user.role,
         )
         return jdbc.queryForObject("SELECT MAX(id) FROM users", Long::class.java)!!
@@ -37,8 +37,7 @@ class UserRepository(private val jdbc: JdbcTemplate) {
     }
 
     fun getByEmail(email: String): User? {
-        val sql = "SELECT * FROM users WHERE email = ?"
-        val users = jdbc.query(sql, rowMapper, email)
+        val users = jdbc.query("SELECT * FROM users WHERE email = ?", rowMapper, email)
         return users.firstOrNull()
     }
 }

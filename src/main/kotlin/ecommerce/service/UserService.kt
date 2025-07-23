@@ -2,22 +2,27 @@ package ecommerce.service
 
 import ecommerce.entity.User
 import ecommerce.repository.UserRepository
-import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 
 @Service
 class UserService(
     private val userRepository: UserRepository,
-    private val passwordEncoder: PasswordEncoder,
 ) {
     fun register(
         email: String,
-        rawPassword: String,
+        password: String,
     ): Long {
-        if (userRepository.existsByEmail(email)) throw IllegalArgumentException("Email already in use")
+        if (userRepository.existsByEmail(email)) throw IllegalArgumentException("[Error] Email already in use.")
 
-        val hashedPassword = passwordEncoder.encode(rawPassword)
-        val user = User(email = email, passwordHash = hashedPassword, role = "USER")
+        val user = User(email = email, password = password, role = "USER")
         return userRepository.create(user)
+    }
+
+    fun getByEmail(email: String): User? {
+        return userRepository.getByEmail(email)
+    }
+
+    fun checkPassword(user: User, rawPassword: String): Boolean {
+        return rawPassword == user.password
     }
 }
