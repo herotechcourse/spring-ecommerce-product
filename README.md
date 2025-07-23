@@ -85,7 +85,7 @@ Implement user account features including registration, login, and authenticatio
 
 - [x] add Members table in ``schema.sql``
 
-- [ ] Create `MemberRepository` class - repository for working with the MEMBERS table, similar to `ProductRepository`
+- [x] Create `MemberRepository` class - repository for working with the MEMBERS table, similar to `ProductRepository`
 
 - [x] create ``TokenRequest`` data class
   - [x] has email

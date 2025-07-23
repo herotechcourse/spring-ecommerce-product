@@ -1,22 +1,23 @@
 package ecommerce.auth.service
 
-import ecommerce.auth.security.JwtTokenProvider
 import ecommerce.auth.exception.AuthorizationException
+import ecommerce.auth.security.JwtTokenProvider
 import ecommerce.member.domain.Member
-import ecommerce.member.repository.MemberRepository
 import ecommerce.member.dto.MemberResponse
 import ecommerce.member.dto.TokenRequest
 import ecommerce.member.dto.TokenResponse
+import ecommerce.member.repository.MemberRepository
 import org.springframework.stereotype.Service
 
 @Service
 class AuthService(
     private val jwtTokenProvider: JwtTokenProvider,
-    private val memberRepository: MemberRepository
+    private val memberRepository: MemberRepository,
 ) {
     fun createToken(tokenRequest: TokenRequest): TokenResponse {
-        val member = memberRepository.findByEmail(tokenRequest.email)
-            ?: throw AuthorizationException()
+        val member =
+            memberRepository.findByEmail(tokenRequest.email)
+                ?: throw AuthorizationException()
         if (member.password != tokenRequest.password) {
             throw AuthorizationException()
         }
@@ -36,8 +37,9 @@ class AuthService(
             throw AuthorizationException()
         }
         val email = jwtTokenProvider.getPayload(token)
-        val member = memberRepository.findByEmail(email)
-            ?: throw AuthorizationException()
+        val member =
+            memberRepository.findByEmail(email)
+                ?: throw AuthorizationException()
         return MemberResponse(member.id!!, member.email)
     }
 }

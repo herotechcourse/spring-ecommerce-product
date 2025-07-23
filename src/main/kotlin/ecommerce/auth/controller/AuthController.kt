@@ -1,9 +1,9 @@
 package ecommerce.auth.controller
 
-import ecommerce.auth.service.AuthService
 import ecommerce.auth.exception.AuthorizationException
 import ecommerce.auth.extractor.AuthorizationExtractor
 import ecommerce.auth.extractor.BearerAuthorizationExtractor
+import ecommerce.auth.service.AuthService
 import ecommerce.member.dto.MemberResponse
 import ecommerce.member.dto.TokenRequest
 import ecommerce.member.dto.TokenResponse
@@ -24,18 +24,22 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/api/members")
 class AuthController(
-    private val authService: AuthService
+    private val authService: AuthService,
 ) {
     private val authorizationExtractor: AuthorizationExtractor<String> = BearerAuthorizationExtractor()
 
     @PostMapping("/register")
-    fun register(@Valid @RequestBody tokenRequest: TokenRequest): ResponseEntity<TokenResponse> {
+    fun register(
+        @Valid @RequestBody tokenRequest: TokenRequest,
+    ): ResponseEntity<TokenResponse> {
         val tokenResponse = authService.register(tokenRequest)
         return ResponseEntity.status(HttpStatus.CREATED).body(tokenResponse)
     }
 
     @PostMapping("/login")
-    fun login(@Valid @RequestBody tokenRequest: TokenRequest): ResponseEntity<TokenResponse> {
+    fun login(
+        @Valid @RequestBody tokenRequest: TokenRequest,
+    ): ResponseEntity<TokenResponse> {
         val tokenResponse = authService.createToken(tokenRequest)
         return ResponseEntity.ok().body(tokenResponse)
     }

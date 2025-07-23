@@ -13,7 +13,6 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.HttpStatus
 import org.springframework.jdbc.core.JdbcTemplate
 
-
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 class AuthControllerTest {
     @Autowired
@@ -33,22 +32,23 @@ class AuthControllerTest {
                 password VARCHAR(100) NOT NULL,
                 role VARCHAR(50) NOT NULL
             )
-            """
+            """,
         )
         memberRepository.insert(Member(email = "example@email.com", password = "password123qwerty"))
     }
 
     @Test
     fun `register with valid credentials should return 201 and token`() {
-        val response = RestAssured.given()
-            .log().all()
-            .contentType(ContentType.JSON)
-            .body(TokenRequest(email = "newuser@email.com", password = "password123qwerty"))
-            .`when`()
-            .post("/api/members/register")
-            .then()
-            .log().all()
-            .extract()
+        val response =
+            RestAssured.given()
+                .log().all()
+                .contentType(ContentType.JSON)
+                .body(TokenRequest(email = "newuser@email.com", password = "password123qwerty"))
+                .`when`()
+                .post("/api/members/register")
+                .then()
+                .log().all()
+                .extract()
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value())
         assertThat(response.jsonPath().getString("accessToken")).isNotEmpty()
@@ -56,15 +56,16 @@ class AuthControllerTest {
 
     @Test
     fun `register with invalid email format should return 400`() {
-        val response = RestAssured.given()
-            .log().all()
-            .contentType(ContentType.JSON)
-            .body(TokenRequest(email = "invalid-email", password = "password123qwerty"))
-            .`when`()
-            .post("/api/members/register")
-            .then()
-            .log().all()
-            .extract()
+        val response =
+            RestAssured.given()
+                .log().all()
+                .contentType(ContentType.JSON)
+                .body(TokenRequest(email = "invalid-email", password = "password123qwerty"))
+                .`when`()
+                .post("/api/members/register")
+                .then()
+                .log().all()
+                .extract()
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value())
         assertThat(response.jsonPath().getString("email")).isEqualTo("Email must be a valid email address")
@@ -72,15 +73,16 @@ class AuthControllerTest {
 
     @Test
     fun `register with blank email should return 400`() {
-        val response = RestAssured.given()
-            .log().all()
-            .contentType(ContentType.JSON)
-            .body(TokenRequest(email = "", password = "password123qwerty"))
-            .`when`()
-            .post("/api/members/register")
-            .then()
-            .log().all()
-            .extract()
+        val response =
+            RestAssured.given()
+                .log().all()
+                .contentType(ContentType.JSON)
+                .body(TokenRequest(email = "", password = "password123qwerty"))
+                .`when`()
+                .post("/api/members/register")
+                .then()
+                .log().all()
+                .extract()
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value())
         assertThat(response.jsonPath().getString("email")).isEqualTo("Email cannot be blank")
@@ -88,15 +90,16 @@ class AuthControllerTest {
 
     @Test
     fun `register with short password should return 400`() {
-        val response = RestAssured.given()
-            .log().all()
-            .contentType(ContentType.JSON)
-            .body(TokenRequest(email = "newuser@email.com", password = "short"))
-            .`when`()
-            .post("/api/members/register")
-            .then()
-            .log().all()
-            .extract()
+        val response =
+            RestAssured.given()
+                .log().all()
+                .contentType(ContentType.JSON)
+                .body(TokenRequest(email = "newuser@email.com", password = "short"))
+                .`when`()
+                .post("/api/members/register")
+                .then()
+                .log().all()
+                .extract()
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value())
         assertThat(response.jsonPath().getString("password")).isEqualTo("Password must be at least 8 characters long")
@@ -104,15 +107,16 @@ class AuthControllerTest {
 
     @Test
     fun `register with existing email should return 403`() {
-        val response = RestAssured.given()
-            .log().all()
-            .contentType(ContentType.JSON)
-            .body(TokenRequest(email = "example@email.com", password = "password123qwerty"))
-            .`when`()
-            .post("/api/members/register")
-            .then()
-            .log().all()
-            .extract()
+        val response =
+            RestAssured.given()
+                .log().all()
+                .contentType(ContentType.JSON)
+                .body(TokenRequest(email = "example@email.com", password = "password123qwerty"))
+                .`when`()
+                .post("/api/members/register")
+                .then()
+                .log().all()
+                .extract()
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.FORBIDDEN.value())
         assertThat(response.jsonPath().getString("error")).isEqualTo("Email is already registered")
@@ -120,15 +124,16 @@ class AuthControllerTest {
 
     @Test
     fun `login with valid credentials should return 200 and token`() {
-        val response = RestAssured.given()
-            .log().all()
-            .contentType(ContentType.JSON)
-            .body(TokenRequest(email = "example@email.com", password = "password123qwerty"))
-            .`when`()
-            .post("/api/members/login")
-            .then()
-            .log().all()
-            .extract()
+        val response =
+            RestAssured.given()
+                .log().all()
+                .contentType(ContentType.JSON)
+                .body(TokenRequest(email = "example@email.com", password = "password123qwerty"))
+                .`when`()
+                .post("/api/members/login")
+                .then()
+                .log().all()
+                .extract()
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
         assertThat(response.jsonPath().getString("accessToken")).isNotEmpty()
@@ -136,15 +141,16 @@ class AuthControllerTest {
 
     @Test
     fun `login with invalid email should return 401`() {
-        val response = RestAssured.given()
-            .log().all()
-            .contentType(ContentType.JSON)
-            .body(TokenRequest(email = "nonexistent@email.com", password = "password123qwerty"))
-            .`when`()
-            .post("/api/members/login")
-            .then()
-            .log().all()
-            .extract()
+        val response =
+            RestAssured.given()
+                .log().all()
+                .contentType(ContentType.JSON)
+                .body(TokenRequest(email = "nonexistent@email.com", password = "password123qwerty"))
+                .`when`()
+                .post("/api/members/login")
+                .then()
+                .log().all()
+                .extract()
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value())
         assertThat(response.jsonPath().getString("error")).isEqualTo("Unauthorized")
@@ -152,15 +158,16 @@ class AuthControllerTest {
 
     @Test
     fun `login with invalid password should return 401`() {
-        val response = RestAssured.given()
-            .log().all()
-            .contentType(ContentType.JSON)
-            .body(TokenRequest(email = "existing@email.com", password = "wrongpassword"))
-            .`when`()
-            .post("/api/members/login")
-            .then()
-            .log().all()
-            .extract()
+        val response =
+            RestAssured.given()
+                .log().all()
+                .contentType(ContentType.JSON)
+                .body(TokenRequest(email = "existing@email.com", password = "wrongpassword"))
+                .`when`()
+                .post("/api/members/login")
+                .then()
+                .log().all()
+                .extract()
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value())
         assertThat(response.jsonPath().getString("error")).isEqualTo("Unauthorized")
@@ -168,23 +175,25 @@ class AuthControllerTest {
 
     @Test
     fun `get member info with valid token should return 200 and member details`() {
-        val tokenResponse = RestAssured.given()
-            .contentType(ContentType.JSON)
-            .body(TokenRequest(email = "example@email.com", password = "password123qwerty"))
-            .`when`()
-            .post("/api/members/login")
-            .then()
-            .extract()
-            .jsonPath().getString("accessToken")
+        val tokenResponse =
+            RestAssured.given()
+                .contentType(ContentType.JSON)
+                .body(TokenRequest(email = "example@email.com", password = "password123qwerty"))
+                .`when`()
+                .post("/api/members/login")
+                .then()
+                .extract()
+                .jsonPath().getString("accessToken")
 
-        val response = RestAssured.given()
-            .log().all()
-            .header("Authorization", "Bearer $tokenResponse")
-            .`when`()
-            .get("/api/members/me")
-            .then()
-            .log().all()
-            .extract()
+        val response =
+            RestAssured.given()
+                .log().all()
+                .header("Authorization", "Bearer $tokenResponse")
+                .`when`()
+                .get("/api/members/me")
+                .then()
+                .log().all()
+                .extract()
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
         assertThat(response.jsonPath().getLong("id")).isEqualTo(1L)
@@ -193,14 +202,15 @@ class AuthControllerTest {
 
     @Test
     fun `get member info with invalid token should return 401`() {
-        val response = RestAssured.given()
-            .log().all()
-            .header("Authorization", "Bearer invalid-token")
-            .`when`()
-            .get("/api/members/me")
-            .then()
-            .log().all()
-            .extract()
+        val response =
+            RestAssured.given()
+                .log().all()
+                .header("Authorization", "Bearer invalid-token")
+                .`when`()
+                .get("/api/members/me")
+                .then()
+                .log().all()
+                .extract()
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value())
         assertThat(response.jsonPath().getString("error")).isEqualTo("Unauthorized")
@@ -208,13 +218,14 @@ class AuthControllerTest {
 
     @Test
     fun `get member info without token should return 401`() {
-        val response = RestAssured.given()
-            .log().all()
-            .`when`()
-            .get("/api/members/me")
-            .then()
-            .log().all()
-            .extract()
+        val response =
+            RestAssured.given()
+                .log().all()
+                .`when`()
+                .get("/api/members/me")
+                .then()
+                .log().all()
+                .extract()
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value())
         assertThat(response.jsonPath().getString("error")).isEqualTo("Unauthorized")

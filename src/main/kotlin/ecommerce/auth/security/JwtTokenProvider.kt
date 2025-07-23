@@ -14,8 +14,8 @@ class JwtTokenProvider(
     @Value("\${security.jwt.token.secret-key}")
     secret: String,
     @Value("\${security.jwt.token.expire-length}")
-    private val validityInMilliseconds: Long,) {
-
+    private val validityInMilliseconds: Long,
+) {
     private val secretKey: SecretKey =
         Keys.hmacShaKeyFor(secret.toByteArray(StandardCharsets.UTF_8))
 
@@ -31,20 +31,22 @@ class JwtTokenProvider(
     }
 
     fun getPayload(token: String): String {
-        val claims = Jwts.parser()
-            .verifyWith(secretKey)
-            .build()
-            .parseSignedClaims(token)
-            .payload
+        val claims =
+            Jwts.parser()
+                .verifyWith(secretKey)
+                .build()
+                .parseSignedClaims(token)
+                .payload
         return claims.subject
     }
 
     fun validateToken(token: String): Boolean {
         return try {
-            val claims = Jwts.parser()
-                .verifyWith(secretKey)
-                .build()
-                .parseSignedClaims(token)
+            val claims =
+                Jwts.parser()
+                    .verifyWith(secretKey)
+                    .build()
+                    .parseSignedClaims(token)
             !claims.payload.expiration.before(Date())
         } catch (_: JwtException) {
             false

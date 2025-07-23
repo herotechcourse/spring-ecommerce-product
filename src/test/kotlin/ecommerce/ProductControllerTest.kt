@@ -75,7 +75,7 @@ class ProductControllerTest {
                     price = 2.50,
                     imageUrl =
                         "https://www.cokesolutions.com/content/dam/cokesolutions/us/images/Products/" +
-                                "Fanta-Orange-PET.jpg",
+                            "Fanta-Orange-PET.jpg",
                 ),
                 Product(
                     id = 3,
@@ -83,7 +83,7 @@ class ProductControllerTest {
                     price = 4.39,
                     imageUrl =
                         "https://www.tchibo.de/kaffeeakademie/media/pages/global-images/" +
-                                "fb95bb5370-1729609446/adobestock_219364830-1440x700-crop-42-46.jpg",
+                            "fb95bb5370-1729609446/adobestock_219364830-1440x700-crop-42-46.jpg",
                 ),
                 Product(
                     id = 4,
@@ -108,7 +108,7 @@ class ProductControllerTest {
                         price = 5.60,
                         imageUrl =
                             "https://www.cokesolutions.com/content/dam/cokesolutions/us/images/" +
-                                    "Products/Fanta-Orange-PET.jpg",
+                                "Products/Fanta-Orange-PET.jpg",
                     ),
                 )
                 .`when`()
@@ -133,7 +133,6 @@ class ProductControllerTest {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value())
     }
 
-
 //    @Test
 //    fun `create product with blank name should return 400`() {
 //        val response = RestAssured.given()
@@ -152,15 +151,16 @@ class ProductControllerTest {
 
     @Test
     fun `create product with name longer than 15 characters should return 400`() {
-        val response = RestAssured.given()
-            .log().all()
-            .contentType(ContentType.JSON)
-            .body(Product(name = "Very Long Product Name", price = 2.50, imageUrl = "https://sprite.jpg"))
-            .`when`()
-            .post("/products")
-            .then()
-            .log().all()
-            .extract()
+        val response =
+            RestAssured.given()
+                .log().all()
+                .contentType(ContentType.JSON)
+                .body(Product(name = "Very Long Product Name", price = 2.50, imageUrl = "https://sprite.jpg"))
+                .`when`()
+                .post("/products")
+                .then()
+                .log().all()
+                .extract()
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value())
         assertThat(response.jsonPath().getString("name")).isEqualTo("Product name must be 15 characters or less")
@@ -168,33 +168,35 @@ class ProductControllerTest {
 
     @Test
     fun `create product with invalid name characters should return 400`() {
-        val response = RestAssured.given()
-            .log().all()
-            .contentType(ContentType.JSON)
-            .body(Product(name = "Cola#Invalid", price = 2.50, imageUrl = "https://example.com/sprite.jpg"))
-            .`when`()
-            .post("/products")
-            .then()
-            .log().all()
-            .extract()
+        val response =
+            RestAssured.given()
+                .log().all()
+                .contentType(ContentType.JSON)
+                .body(Product(name = "Cola#Invalid", price = 2.50, imageUrl = "https://example.com/sprite.jpg"))
+                .`when`()
+                .post("/products")
+                .then()
+                .log().all()
+                .extract()
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value())
         assertThat(response.jsonPath().getString("name")).isEqualTo(
-            "Product name can only contain letters, numbers, spaces, and allowed special characters: (), [], +, -, &, /, _"
+            "Product name can only contain letters, numbers, spaces, and allowed special characters: (), [], +, -, &, /, _",
         )
     }
 
     @Test
     fun `create product with non-unique name should return 400`() {
-        val response = RestAssured.given()
-            .log().all()
-            .contentType(ContentType.JSON)
-            .body(Product(name = "Coca-Cola", price = 2.50, imageUrl = "https://cola.jpg"))
-            .`when`()
-            .post("/products")
-            .then()
-            .log().all()
-            .extract()
+        val response =
+            RestAssured.given()
+                .log().all()
+                .contentType(ContentType.JSON)
+                .body(Product(name = "Coca-Cola", price = 2.50, imageUrl = "https://cola.jpg"))
+                .`when`()
+                .post("/products")
+                .then()
+                .log().all()
+                .extract()
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value())
         assertThat(response.jsonPath().getString("error")).isEqualTo("Product name must be unique")
@@ -202,15 +204,16 @@ class ProductControllerTest {
 
     @Test
     fun `create product with non-positive price should return 400`() {
-        val response = RestAssured.given()
-            .log().all()
-            .contentType(ContentType.JSON)
-            .body(Product(name = "Sprite", price = 0.0, imageUrl = "https://sprite.jpg"))
-            .`when`()
-            .post("/products")
-            .then()
-            .log().all()
-            .extract()
+        val response =
+            RestAssured.given()
+                .log().all()
+                .contentType(ContentType.JSON)
+                .body(Product(name = "Sprite", price = 0.0, imageUrl = "https://sprite.jpg"))
+                .`when`()
+                .post("/products")
+                .then()
+                .log().all()
+                .extract()
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value())
         assertThat(response.jsonPath().getString("price")).isEqualTo("Price must be greater than 0")
@@ -218,15 +221,16 @@ class ProductControllerTest {
 
     @Test
     fun `create product with invalid image URL should return 400`() {
-        val response = RestAssured.given()
-            .log().all()
-            .contentType(ContentType.JSON)
-            .body(Product(name = "Sprite", price = 2.50, imageUrl = "ftgeh4iugp://sprite.jpg"))
-            .`when`()
-            .post("/products")
-            .then()
-            .log().all()
-            .extract()
+        val response =
+            RestAssured.given()
+                .log().all()
+                .contentType(ContentType.JSON)
+                .body(Product(name = "Sprite", price = 2.50, imageUrl = "ftgeh4iugp://sprite.jpg"))
+                .`when`()
+                .post("/products")
+                .then()
+                .log().all()
+                .extract()
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value())
         assertThat(response.jsonPath().getString("imageUrl")).isEqualTo("Image URL must start with http:// or https://")
@@ -234,15 +238,16 @@ class ProductControllerTest {
 
     @Test
     fun `update product with non-unique name should return 400`() {
-        val response = RestAssured.given()
-            .log().all()
-            .contentType(ContentType.JSON)
-            .body(Product(name = "Fanta", price = 2.50, imageUrl = "https://example.com/fanta.jpg"))
-            .`when`()
-            .put("/products/1")
-            .then()
-            .log().all()
-            .extract()
+        val response =
+            RestAssured.given()
+                .log().all()
+                .contentType(ContentType.JSON)
+                .body(Product(name = "Fanta", price = 2.50, imageUrl = "https://example.com/fanta.jpg"))
+                .`when`()
+                .put("/products/1")
+                .then()
+                .log().all()
+                .extract()
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value())
         assertThat(response.jsonPath().getString("error")).isEqualTo("Product name must be unique")
