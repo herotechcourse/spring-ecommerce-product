@@ -48,7 +48,6 @@ class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.message)
     }
 
-
     @ExceptionHandler(InvalidInputException::class)
     fun handleInvalidInputException(
         ex: InvalidInputException,
