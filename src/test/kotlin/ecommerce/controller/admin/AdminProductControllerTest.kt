@@ -1,18 +1,18 @@
-package ecommerce.controller
+package ecommerce.controller.admin
 
 import ecommerce.dto.products.ProductDTO
 import ecommerce.dto.products.ProductPatchDTO
 import ecommerce.repository.ProductRepository
 import io.restassured.RestAssured
 import io.restassured.http.ContentType
-import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.HttpStatus
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
-class ProductControllerTest {
+class AdminProductControllerTest {
     @Autowired
     private lateinit var productRepository: ProductRepository
 
@@ -33,7 +33,7 @@ class ProductControllerTest {
                 .`when`().post("/api/products")
                 .then().log().all().extract()
 
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value())
+        Assertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value())
     }
 
     @Test
@@ -44,7 +44,7 @@ class ProductControllerTest {
                 .`when`().get("api/products")
                 .then().log().all().extract()
 
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
+        Assertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
     }
 
     @Test
@@ -56,7 +56,7 @@ class ProductControllerTest {
                 .`when`().get("/api/products/$id")
                 .then().log().all().extract()
 
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
+        Assertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
     }
 
     @Test
@@ -77,7 +77,7 @@ class ProductControllerTest {
                 .`when`().put("/api/products/$key")
                 .then().log().all().extract()
 
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
+        Assertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
     }
 
     @Test
@@ -95,7 +95,7 @@ class ProductControllerTest {
                 .`when`().patch("/api/products/$key")
                 .then().log().all().extract()
 
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
+        Assertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
     }
 
     @Test
@@ -107,7 +107,7 @@ class ProductControllerTest {
                 .`when`().delete("/api/products/$id")
                 .then().log().all().extract()
 
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value())
+        Assertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value())
     }
 
     @Test
@@ -119,7 +119,7 @@ class ProductControllerTest {
                 .`when`().get("/api/products/")
                 .then().log().all().extract()
 
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value())
+        Assertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value())
     }
 
     private fun createProduct(name: String): Long {
