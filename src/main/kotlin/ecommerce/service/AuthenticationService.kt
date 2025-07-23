@@ -35,11 +35,10 @@ class AuthenticationService(
     }
 
     fun logIn(request: RegistrationRequest): TokenResponse {
-        val member = memberRepository.findByEmail(request.email)
-        if (member == null || member.password != request.password) {
-            throw EmailOrPasswordIncorrectException(
-                "Invalid password for email",
-            )
+        val member = memberRepository.findByEmail(request.email) ?: throw EmailOrPasswordIncorrectException("Invalid password for email")
+
+        if (!passwordEncoder.matches(request.password, member.password)) {
+            throw EmailOrPasswordIncorrectException("Invalid password for email")
         }
         val token = tokenService.createToken(request.email)
         return TokenResponse(token)
