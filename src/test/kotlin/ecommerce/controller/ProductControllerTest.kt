@@ -14,7 +14,7 @@ import org.springframework.http.HttpStatus
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 class ProductControllerTest {
     @Autowired
-    lateinit var productRepository: ProductRepository
+    private lateinit var productRepository: ProductRepository
 
     @Test
     fun create() {
@@ -30,7 +30,7 @@ class ProductControllerTest {
                 .given().log().all()
                 .body(product)
                 .contentType(ContentType.JSON)
-                .`when`().post("/products")
+                .`when`().post("/api/products")
                 .then().log().all().extract()
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value())
@@ -41,7 +41,7 @@ class ProductControllerTest {
         val response =
             RestAssured
                 .given().log().all()
-                .`when`().get("/products")
+                .`when`().get("api/products")
                 .then().log().all().extract()
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
@@ -53,7 +53,7 @@ class ProductControllerTest {
         val response =
             RestAssured
                 .given().log().all()
-                .`when`().get("/products/$id")
+                .`when`().get("/api/products/$id")
                 .then().log().all().extract()
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
@@ -74,7 +74,7 @@ class ProductControllerTest {
                     ),
                 )
                 .contentType(ContentType.JSON)
-                .`when`().put("/products/$key")
+                .`when`().put("/api/products/$key")
                 .then().log().all().extract()
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
@@ -92,7 +92,7 @@ class ProductControllerTest {
                     ),
                 )
                 .contentType(ContentType.JSON)
-                .`when`().patch("/products/$key")
+                .`when`().patch("/api/products/$key")
                 .then().log().all().extract()
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
@@ -104,7 +104,7 @@ class ProductControllerTest {
         val response =
             RestAssured
                 .given().log().all()
-                .`when`().delete("/products/$id")
+                .`when`().delete("/api/products/$id")
                 .then().log().all().extract()
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value())
@@ -116,7 +116,7 @@ class ProductControllerTest {
             RestAssured
                 .given().log().all()
                 .contentType(ContentType.JSON)
-                .`when`().get("/products/")
+                .`when`().get("/api/products/")
                 .then().log().all().extract()
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value())

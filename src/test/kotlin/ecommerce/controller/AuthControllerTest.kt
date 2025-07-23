@@ -5,11 +5,11 @@ import ecommerce.dto.UserDTO
 import ecommerce.service.AuthService
 import io.restassured.RestAssured
 import io.restassured.http.ContentType
-import org.apache.http.HttpStatus
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.http.HttpStatus
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 class AuthControllerTest {
@@ -29,10 +29,10 @@ class AuthControllerTest {
                 .given().log().all()
                 .body(user)
                 .contentType(ContentType.JSON)
-                .`when`().post("/auth/signup")
+                .`when`().post("api/auth/signup")
                 .then().log().all().extract()
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.SC_CREATED)
-        assertThat(response.header("Authorization")).isNotEmpty
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value())
+        assertThat(response.header("Authorization")).isNotNull
     }
 
     @Test
@@ -54,10 +54,10 @@ class AuthControllerTest {
                 .given().log().all()
                 .body(tokenRequest)
                 .contentType(ContentType.JSON)
-                .`when`().post("/auth/signin")
+                .`when`().post("api/auth/signIn")
                 .then().log().all().extract()
 
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.SC_OK)
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
         assertThat(response.header("Authorization")).isNotEmpty
     }
 }
