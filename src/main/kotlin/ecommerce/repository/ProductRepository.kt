@@ -2,6 +2,7 @@ package ecommerce.repository
 
 import ecommerce.exception.NotFoundException
 import ecommerce.model.Product
+import ecommerce.model.ProductPatchRequest
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.jdbc.core.RowMapper
 import org.springframework.jdbc.support.GeneratedKeyHolder
@@ -26,11 +27,10 @@ class ProductRepository(private val jdbc: JdbcTemplate) {
         return jdbc.query(sql, productRowMapper)
     }
 
-    // TODO: put ID to the return value's last paraam
     fun findById(id: Long): Product? {
-        val sql = "SELECT * from products where ID = $id"
+        val sql = "SELECT * from products where ID = ?"
         return try {
-            jdbc.queryForObject(sql, productRowMapper)
+            jdbc.queryForObject(sql, productRowMapper, id)
         } catch (_: org.springframework.dao.EmptyResultDataAccessException) {
             throw NotFoundException("Product with Id: $id. Not found.")
         }
@@ -42,7 +42,7 @@ class ProductRepository(private val jdbc: JdbcTemplate) {
         jdbc.update({
             it.prepareStatement(sql, arrayOf("id")).apply {
                 setString(1, product.name)
-                setDouble(2, product.price!!)
+                setDouble(2, product.price) // ← No more !! needed
                 setString(3, product.imageUrl)
             }
         }, keyHolder)
@@ -71,17 +71,17 @@ class ProductRepository(private val jdbc: JdbcTemplate) {
 
     fun patch(
         id: Long,
-        product: Product,
+        patchProduct: ProductPatchRequest,
     ): Product {
-        val existing = findById(id) ?: throw NotFoundException("Product with Id: $id. Not found.")
+        val existing = findById(id) ?: throw NotFoundException("Product with Id[$id] Not found.")
+        val updatedName = patchProduct.name ?: existing.name
+        val updatedPrice = patchProduct.price ?: existing.price
+        val updatedImageUrl = patchProduct.imageUrl ?: existing.imageUrl
 
-        val updatedName = product.name ?: existing.name
-        val updatedPrice = product.price ?: existing.price
-        val updatedImageUrl = product.imageUrl ?: existing.imageUrl
-
+        val updatedProduct = Product(id, updatedName, updatedPrice, updatedImageUrl)
         val sql = "UPDATE products SET name = ?, price = ?, imageUrl = ? WHERE id = ?"
         jdbc.update(sql, updatedName, updatedPrice, updatedImageUrl, id)
 
-        return Product(id, updatedName, updatedPrice, updatedImageUrl)
+        return updatedProduct
     }
 }
