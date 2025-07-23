@@ -1,7 +1,7 @@
 # spring-ecommerce-product
 
 ## Controller
-### ProductController
+### AdminProductController
 - [x] `Get` all products
 - [x] `Get` product by Id
 - [x] `POST` Create a Product
@@ -12,6 +12,13 @@
 ### AuthController
 - [x] `signup` creates user and returns JWT token
 - [x] `login` checks and returns JWT token
+
+### GuestProductController
+- [x] `Get` all products
+
+## Config
+### LoginAdminInterceptor
+### WebConfig
 
 ## Service
 ### ProductService

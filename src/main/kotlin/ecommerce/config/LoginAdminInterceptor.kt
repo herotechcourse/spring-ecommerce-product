@@ -8,10 +8,8 @@ import jakarta.servlet.http.HttpServletResponse
 import org.springframework.stereotype.Component
 import org.springframework.web.servlet.HandlerInterceptor
 
-annotation class LoginMember
-
 @Component
-class LoginMemberInterceptor(
+class LoginAdminInterceptor(
     private val jwtTokenProvider: JwtTokenProvider,
 ) : HandlerInterceptor {
     override fun preHandle(
@@ -21,10 +19,11 @@ class LoginMemberInterceptor(
     ): Boolean {
         val bearer = request.getHeader("Authorization") ?: throw UnauthorisedUserException()
         val token = bearer.replace("Bearer ", "").trim()
+        if (!jwtTokenProvider.validateToken(token)) throw UnauthorisedUserException("Token not valid")
+
         val payload = jwtTokenProvider.getPayload(token)
-        if (payload.role == UserRole.USER) {
-            throw UnauthorisedUserException("Admin role required")
-        }
+        if (payload.role == UserRole.USER) throw UnauthorisedUserException("Admin role required")
+
         return true
     }
 }

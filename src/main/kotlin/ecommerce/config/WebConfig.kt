@@ -6,11 +6,11 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 
 @Configuration
 class WebConfig(
-    private val LoginMemberInterceptor: LoginMemberInterceptor,
+    private val loginAdminInterceptor: LoginAdminInterceptor,
 ) : WebMvcConfigurer {
     override fun addInterceptors(registry: InterceptorRegistry) {
-//        registry.addInterceptor(LoginMemberInterceptor)
-//            .addPathPatterns("/api/products/**")=
+        registry.addInterceptor(loginAdminInterceptor)
+            .addPathPatterns("/api/admin/products/**")
         super.addInterceptors(registry)
     }
 }
