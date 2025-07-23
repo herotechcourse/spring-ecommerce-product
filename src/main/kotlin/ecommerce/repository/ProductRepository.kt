@@ -30,7 +30,7 @@ class ProductRepository(private val jdbc: JdbcTemplate) {
     fun findById(id: Long): Product? {
         val sql = "SELECT * from products where ID = ?"
         return try {
-            jdbc.queryForObject(sql, productRowMapper, id)
+            jdbc.queryForObject(sql, productRowMapper, id) ?: throw NotFoundException("Product with Id: $id. Not found.")
         } catch (_: org.springframework.dao.EmptyResultDataAccessException) {
             throw NotFoundException("Product with Id: $id. Not found.")
         }
