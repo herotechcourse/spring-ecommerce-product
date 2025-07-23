@@ -15,38 +15,38 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import java.net.URI
 
-@RequestMapping(PRODUCT_PATH)
+@RequestMapping("/api/products")
 @RestController
 class ProductController(private val productRepository: ProductRepository) {
     @GetMapping()
     fun getProducts(): List<Product> = productRepository.findAll()
 
-    @GetMapping(PRODUCT_PATH_ID)
+    @GetMapping("/{id}")
     fun getProductById(
         @PathVariable id: Long,
-    ): Product = productRepository.findById(id)!!
+    ): Product = productRepository.findById(id) // Repository throws NotFoundException if not found
 
     @PostMapping()
     fun createProduct(
         @RequestBody product: Product,
     ): ResponseEntity<Product> {
         val saved = productRepository.save(product)
-        return ResponseEntity.created(URI.create("$PRODUCT_PATH/${saved.id}")).body(saved)
+        return ResponseEntity.created(URI.create("/api/products/${saved.id}")).body(saved)
     }
 
-    @PutMapping(PRODUCT_PATH_ID)
+    @PutMapping("/{id}")
     fun updateProductById(
         @RequestBody product: Product,
         @PathVariable id: Long,
     ): Product = productRepository.update(id, product)
 
-    @PatchMapping(PRODUCT_PATH_ID)
+    @PatchMapping("/{id}")
     fun patchProductById(
         @RequestBody patchRequest: ProductPatchRequest,
         @PathVariable id: Long,
     ): Product = productRepository.patch(id, patchRequest)
 
-    @DeleteMapping(PRODUCT_PATH_ID)
+    @DeleteMapping("/{id}")
     fun deleteProductById(
         @PathVariable id: Long,
     ): ResponseEntity<Unit> {
@@ -54,14 +54,10 @@ class ProductController(private val productRepository: ProductRepository) {
         return ResponseEntity.noContent().build()
     }
 
-    @DeleteMapping()
-    fun deleteAllProducts(): ResponseEntity<Unit> {
-        productRepository.deleteAll()
-        return ResponseEntity.noContent().build()
-    }
-
-    companion object {
-        const val PRODUCT_PATH = "/api/products"
-        const val PRODUCT_PATH_ID = "/{id}"
-    }
+    // DISABLED - Too dangerous for production
+    // @DeleteMapping()
+    // fun deleteAllProducts(): ResponseEntity<Unit> {
+    //     productRepository.deleteAll()
+    //     return ResponseEntity.noContent().build()
+    // }
 }
