@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service
 import java.net.URI
 
 @Service
-class ProductService(private val productRepository: ProductRepository) {
+class AdminProductService(private val productRepository: ProductRepository) {
     fun getAllProducts(): List<ProductDTO> {
         return productRepository.findAll()
     }

@@ -2,7 +2,7 @@ package ecommerce.controller.admin
 
 import ecommerce.dto.products.ProductDTO
 import ecommerce.dto.products.ProductPatchDTO
-import ecommerce.service.ProductService
+import ecommerce.service.AdminProductService
 import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -17,24 +17,24 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/api/admin/products")
-class AdminProductController(private val productService: ProductService) {
+class AdminProductController(private val adminProductService: AdminProductService) {
     @GetMapping
     fun getProducts(): ResponseEntity<List<ProductDTO>> {
-        return ResponseEntity.ok().body(productService.getAllProducts())
+        return ResponseEntity.ok().body(adminProductService.getAllProducts())
     }
 
     @GetMapping("/{id}")
     fun getProductById(
         @PathVariable("id") id: Long,
     ): ResponseEntity<ProductDTO> {
-        return ResponseEntity.ok().body(productService.getProductById(id))
+        return ResponseEntity.ok().body(adminProductService.getProductById(id))
     }
 
     @PostMapping("")
     fun create(
         @RequestBody @Valid product: ProductDTO,
     ): ResponseEntity<String> {
-        val uri = productService.createProduct(product)
+        val uri = adminProductService.createProduct(product)
         return ResponseEntity.created(uri).body("Product created")
     }
 
@@ -43,7 +43,7 @@ class AdminProductController(private val productService: ProductService) {
         @PathVariable("id") id: Long,
         @RequestBody @Valid newProduct: ProductDTO,
     ): ResponseEntity<String> {
-        productService.updateProduct(id, newProduct)
+        adminProductService.updateProduct(id, newProduct)
         return ResponseEntity.ok().body("Product updated")
     }
 
@@ -52,7 +52,7 @@ class AdminProductController(private val productService: ProductService) {
         @PathVariable("id") id: Long,
         @RequestBody @Valid patchProduct: ProductPatchDTO,
     ): ResponseEntity<String> {
-        productService.patchProduct(id, patchProduct)
+        adminProductService.patchProduct(id, patchProduct)
         return ResponseEntity.ok().body("Product updated")
     }
 
@@ -60,7 +60,7 @@ class AdminProductController(private val productService: ProductService) {
     fun delete(
         @PathVariable("id") id: Long,
     ): ResponseEntity<String> {
-        productService.deleteProduct(id)
+        adminProductService.deleteProduct(id)
         return ResponseEntity.noContent().build()
     }
 }

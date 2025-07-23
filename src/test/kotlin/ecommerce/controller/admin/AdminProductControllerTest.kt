@@ -30,7 +30,7 @@ class AdminProductControllerTest {
                 .given().log().all()
                 .body(product)
                 .contentType(ContentType.JSON)
-                .`when`().post("/api/products")
+                .`when`().post("/api/admin/products")
                 .then().log().all().extract()
 
         Assertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value())
@@ -41,7 +41,7 @@ class AdminProductControllerTest {
         val response =
             RestAssured
                 .given().log().all()
-                .`when`().get("api/products")
+                .`when`().get("api/admin/products")
                 .then().log().all().extract()
 
         Assertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
@@ -53,7 +53,7 @@ class AdminProductControllerTest {
         val response =
             RestAssured
                 .given().log().all()
-                .`when`().get("/api/products/$id")
+                .`when`().get("/api/admin/products/$id")
                 .then().log().all().extract()
 
         Assertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
@@ -74,7 +74,7 @@ class AdminProductControllerTest {
                     ),
                 )
                 .contentType(ContentType.JSON)
-                .`when`().put("/api/products/$key")
+                .`when`().put("/api/admin/products/$key")
                 .then().log().all().extract()
 
         Assertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
@@ -92,7 +92,7 @@ class AdminProductControllerTest {
                     ),
                 )
                 .contentType(ContentType.JSON)
-                .`when`().patch("/api/products/$key")
+                .`when`().patch("/api/admin/products/$key")
                 .then().log().all().extract()
 
         Assertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
@@ -104,7 +104,7 @@ class AdminProductControllerTest {
         val response =
             RestAssured
                 .given().log().all()
-                .`when`().delete("/api/products/$id")
+                .`when`().delete("/api/admin/products/$id")
                 .then().log().all().extract()
 
         Assertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value())
@@ -116,7 +116,7 @@ class AdminProductControllerTest {
             RestAssured
                 .given().log().all()
                 .contentType(ContentType.JSON)
-                .`when`().get("/api/products/")
+                .`when`().get("/api/admin/products/")
                 .then().log().all().extract()
 
         Assertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value())

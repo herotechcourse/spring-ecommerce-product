@@ -17,30 +17,30 @@ class ProductServiceTest {
     private lateinit var productRepository: ProductRepository
 
     @Autowired
-    private lateinit var productService: ProductService
+    private lateinit var adminProductService: AdminProductService
 
     @Test
     fun getAllProducts() {
-        val products = productService.getAllProducts()
+        val products = adminProductService.getAllProducts()
         assertThat(products).isNotEmpty
     }
 
     @Test
     fun getProductById() {
         val id = createProduct("getProductById")
-        val product = productService.getProductById(id)
+        val product = adminProductService.getProductById(id)
         assertThat(product.id).isEqualTo(id)
     }
 
     @Test
     fun `throws error if no product found getProductById`() {
-        assertThrows<EntityNotFoundException> { productService.getProductById(-3) }
+        assertThrows<EntityNotFoundException> { adminProductService.getProductById(-3) }
     }
 
     @Test
     fun createProduct() {
         val uri =
-            productService.createProduct(
+            adminProductService.createProduct(
                 ProductDTO(name = "Product1", description = "description", price = 10.5, imageUrl = "url.com"),
             )
         assertThat(uri).isNotNull
@@ -50,7 +50,7 @@ class ProductServiceTest {
     fun `throws error if duplicate name createProduct`() {
         createProduct("createProduct")
         assertThrows<DuplicateProductNameException> {
-            productService.createProduct(
+            adminProductService.createProduct(
                 ProductDTO(name = "createProduct", description = "description", price = 10.5, imageUrl = "url.com"),
             )
         }
@@ -59,18 +59,18 @@ class ProductServiceTest {
     @Test
     fun updateProduct() {
         val id = createProduct("updateProduct")
-        productService.updateProduct(
+        adminProductService.updateProduct(
             id = id,
             product = ProductDTO(name = "updateProduct2", description = "description", price = 10.5, imageUrl = "url.com"),
         )
-        val product = productService.getProductById(id)
+        val product = adminProductService.getProductById(id)
         assertThat(product.name).isEqualTo("updateProduct2")
     }
 
     @Test
     fun `throws error if no product found updateProduct`() {
         assertThrows<EntityNotFoundException> {
-            productService.updateProduct(
+            adminProductService.updateProduct(
                 -1,
                 ProductDTO(name = "Product1", description = "description", price = 10.5, imageUrl = "url.com"),
             )
@@ -82,29 +82,29 @@ class ProductServiceTest {
         createProduct("uniqueName")
 
         val id = createProduct("someName")
-        val product = productService.getProductById(id)
+        val product = adminProductService.getProductById(id)
         val newProduct =
             product.copy(
                 name = "uniqueName",
             )
 
         assertThrows<DuplicateProductNameException> {
-            productService.updateProduct(id, newProduct)
+            adminProductService.updateProduct(id, newProduct)
         }
     }
 
     @Test
     fun patchProduct() {
         val id = createProduct("patchProduct")
-        productService.patchProduct(id, ProductPatchDTO(name = "Patched"))
-        val product = productService.getProductById(id)
+        adminProductService.patchProduct(id, ProductPatchDTO(name = "Patched"))
+        val product = adminProductService.getProductById(id)
         assertThat(product.name).isEqualTo("Patched")
     }
 
     @Test
     fun `throws error if no product found patchProduct`() {
         assertThrows<EntityNotFoundException> {
-            productService.patchProduct(
+            adminProductService.patchProduct(
                 -1,
                 ProductPatchDTO(name = "Something"),
             )
@@ -119,20 +119,20 @@ class ProductServiceTest {
         val patch = ProductPatchDTO(name = "uniqueName2")
 
         assertThrows<DuplicateProductNameException> {
-            productService.patchProduct(id, patch)
+            adminProductService.patchProduct(id, patch)
         }
     }
 
     @Test
     fun deleteProduct() {
         val id = createProduct("deleteProduct")
-        productService.deleteProduct(id)
-        assertThrows<EntityNotFoundException> { productService.getProductById(id) }
+        adminProductService.deleteProduct(id)
+        assertThrows<EntityNotFoundException> { adminProductService.getProductById(id) }
     }
 
     @Test
     fun `Throws error if product not found deleteProduct`() {
-        assertThrows<EntityNotFoundException> { productService.deleteProduct(-3) }
+        assertThrows<EntityNotFoundException> { adminProductService.deleteProduct(-3) }
     }
 
     private fun createProduct(name: String): Long {
