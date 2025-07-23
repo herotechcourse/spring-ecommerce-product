@@ -12,12 +12,16 @@
 
 ## Service
 ### ProductService
-- Handles the logic between Controller and DB
-- [x] `getAllProducts()`: ResponseEntity<List<ProductDTO>>
-- [x] `getProductById(id: Long)`: ResponseEntity<ProductDTO>
-- [x] `createProduct(product: ProductDTO):`  ResponseEntity<Void>
-- [x] `updateProduct(id: Long, product: ProductDTO)`: ResponseEntity<Void>
-- [x] `fun deleteProduct(id: Long)`: ResponseEntity<Void>
+- [x] `getAllProducts()`: List<ProductDTO>
+- [x] `getProductById(id: Long)`: ProductDTO
+- [x] `createProduct(product: ProductDTO):`  Void
+- [x] `updateProduct(id: Long, product: ProductDTO)`: Void
+- [x] `fun deleteProduct(id: Long)`: Void
+
+### AuthService
+- [x] `signUp`: String `[AuthToken]`
+- [x] `login`: String `[AuthToken]`
+- [] `logout`: Void
 
 ## Repository
 ### ProductRepository
