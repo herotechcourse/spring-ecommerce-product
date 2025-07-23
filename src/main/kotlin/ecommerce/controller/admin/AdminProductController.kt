@@ -16,8 +16,8 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping("/api/products")
-class ProductController(private val productService: ProductService) {
+@RequestMapping("/api/admin/products")
+class AdminProductController(private val productService: ProductService) {
     @GetMapping
     fun getProducts(): ResponseEntity<List<ProductDTO>> {
         return ResponseEntity.ok().body(productService.getAllProducts())
