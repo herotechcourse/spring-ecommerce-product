@@ -3,6 +3,7 @@ package ecommerce.product.api
 import ecommerce.CustomAssertExtension.shouldEquals
 import ecommerce.TestFixture
 import ecommerce.TestFixture.ValidRequest.AMERICANO
+import ecommerce.TestFixture.postTestProduct
 import ecommerce.product.data.ProductResponse
 import io.restassured.RestAssured
 import io.restassured.http.ContentType

@@ -3,7 +3,7 @@ package ecommerce.product.api
 import ecommerce.CustomAssertExtension.shouldEquals
 import ecommerce.TestFixture.ValidRequest.AMERICANO
 import ecommerce.TestFixture.ValidRequest.FLAT_WHITE
-import ecommerce.TestFixture.createTestProduct
+import ecommerce.TestFixture.postTestProduct
 import ecommerce.product.data.ProductResponse
 import io.restassured.RestAssured
 import io.restassured.http.ContentType
@@ -18,7 +18,7 @@ import org.springframework.test.annotation.DirtiesContext
 class UpdateDeleteProductAPITest {
     @Test
     fun `updateProduct() should be able to update product, and return 'ok 200' response`() {
-        createTestProduct(AMERICANO)
+        postTestProduct(AMERICANO)
 
         val response =
             RestAssured
@@ -48,7 +48,7 @@ class UpdateDeleteProductAPITest {
 
     @Test
     fun `deleteProductById() should be able to delete product, and return '204' response`() {
-        createTestProduct(AMERICANO)
+        postTestProduct(AMERICANO)
 
         val response =
             RestAssured
@@ -72,7 +72,7 @@ class UpdateDeleteProductAPITest {
 
     @Test
     fun `deleteProductById() should return 'not found 404' response, when product id not found`() {
-        createTestProduct(AMERICANO)
+        postTestProduct(AMERICANO)
 
         val response =
             RestAssured

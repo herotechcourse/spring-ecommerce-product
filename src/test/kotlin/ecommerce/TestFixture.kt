@@ -5,8 +5,8 @@ import ecommerce.product.data.DummyRequest
 import ecommerce.product.data.ProductRequest
 import io.restassured.RestAssured
 import io.restassured.http.ContentType
-import org.assertj.core.api.Assertions.assertThat
-import org.springframework.http.HttpStatus
+import io.restassured.response.ExtractableResponse
+import io.restassured.response.Response
 import java.math.BigDecimal
 
 object TestFixture {
@@ -95,16 +95,13 @@ object TestFixture {
             )
     }
 
-    fun createTestProduct(request: ProductRequest) {
-        val response =
-            RestAssured
-                .given().log().all()
-                .body(request)
-                .contentType(ContentType.JSON)
-                .`when`().post("/api/products")
-                .then().log().all().extract()
-
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value())
+    fun postTestProduct(request: ProductRequest): ExtractableResponse<Response> {
+        return RestAssured
+            .given().log().all()
+            .body(request)
+            .contentType(ContentType.JSON)
+            .`when`().post("/api/products")
+            .then().log().all().extract()
     }
 
     private fun superLongUrl(): String = "https://" + "o".repeat(IMAGE_URL_MAX_LENGTH - "https://".length + 1)
