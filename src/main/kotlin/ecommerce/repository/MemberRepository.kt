@@ -1,7 +1,6 @@
 package ecommerce.repository
 
 import ecommerce.model.Member
-import io.jsonwebtoken.security.Password
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.jdbc.core.RowMapper
 import org.springframework.stereotype.Repository
@@ -25,14 +24,19 @@ class MemberRepository(private val jdbcTemplate: JdbcTemplate) {
     }
 
     fun existsByEmail(email: String): Boolean {
-        val sql = "SELECT member FROM members where email = ?"
-        val found = jdbcTemplate.queryForObject(sql, Member::class.java, email)
-        return found != null
+        val sql = "SELECT COUNT(*) FROM members where email = ?"
+        val found = jdbcTemplate.queryForObject(sql, Int::class.java, email) ?: 0
+        return found > 0
     }
 
-    fun findMember(member: Member): Boolean {
-        val sql = "SELECT member FROM members (email, password) VALUES (?, ?, ?)"
-        val found = jdbcTemplate.queryForObject(sql, Member::class.java, member.email, member.password, member.role)
-        return found != null
+    fun findMember(member: Member): Member? {
+        val sql = "SELECT * FROM members WHERE email = ? AND password = ? AND role = ?"
+        val member: Member? = jdbcTemplate.query(
+            sql,
+            memberRowMapper,
+            member.email,
+            member.password,
+            member.role).firstOrNull()
+        return member
     }
 }
