@@ -1,7 +1,6 @@
 package ecommerce.product.api
 
 import ecommerce.product.data.ProductResponse
-import ecommerce.product.helper.CustomAssertExtension.shouldEquals
 import ecommerce.product.helper.TestFixture.ValidRequest.AMERICANO
 import ecommerce.product.helper.TestFixture.ValidRequest.FLAT_WHITE
 import ecommerce.product.helper.TestFixture.postTestProduct
@@ -33,7 +32,10 @@ class GetProductAPITest {
         assertThat(products).isNotEmpty()
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
 
-        products[0].shouldEquals(AMERICANO, 1)
+        assertThat(products[0].id).isEqualTo(1)
+        assertThat(products[0].name).isEqualTo(AMERICANO.name)
+        assertThat(products[0].price).isEqualTo(AMERICANO.price.toPlainString())
+        assertThat(products[0].imageUrl).isEqualTo(AMERICANO.imageUrl)
     }
 
     @Test
@@ -53,8 +55,15 @@ class GetProductAPITest {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
         assertThat(response.jsonPath().getList("", ProductResponse::class.java)).hasSize(2)
 
-        products[0].shouldEquals(AMERICANO, 1)
-        products[1].shouldEquals(FLAT_WHITE, 2)
+        assertThat(products[0].id).isEqualTo(1)
+        assertThat(products[0].name).isEqualTo(AMERICANO.name)
+        assertThat(products[0].price).isEqualTo(AMERICANO.price.toPlainString())
+        assertThat(products[0].imageUrl).isEqualTo(AMERICANO.imageUrl)
+
+        assertThat(products[1].id).isEqualTo(2)
+        assertThat(products[1].name).isEqualTo(FLAT_WHITE.name)
+        assertThat(products[1].price).isEqualTo(FLAT_WHITE.price.toPlainString())
+        assertThat(products[1].imageUrl).isEqualTo(FLAT_WHITE.imageUrl)
     }
 
     @Test

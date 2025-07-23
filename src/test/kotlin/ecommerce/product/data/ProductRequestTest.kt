@@ -1,6 +1,5 @@
 package ecommerce.product.data
 
-import ecommerce.product.helper.CustomAssertExtension.shouldContainViolation
 import ecommerce.product.helper.TestFixture.InvalidRequest.INVALID_IMAGE_URL_CHARACTERS
 import ecommerce.product.helper.TestFixture.InvalidRequest.INVALID_IMAGE_URL_EXCEED
 import ecommerce.product.helper.TestFixture.InvalidRequest.INVALID_NAME_CHARACTERS
@@ -40,7 +39,9 @@ class ProductRequestTest {
         val request = INVALID_NAME_EXCEED
         val violations = validator.validate(request)
 
-        violations.shouldContainViolation(field = "name", NAME_MUST_LENGTH)
+        assertThat(violations).anyMatch {
+            it.propertyPath.toString() == "name" && it.message == NAME_MUST_LENGTH
+        }
     }
 
     @Test
@@ -48,7 +49,9 @@ class ProductRequestTest {
         val request = INVALID_NAME_CHARACTERS
         val violations = validator.validate(request)
 
-        violations.shouldContainViolation(field = "name", NAME_MUST_PATTERN)
+        assertThat(violations).anyMatch {
+            it.propertyPath.toString() == "name" && it.message == NAME_MUST_PATTERN
+        }
     }
 
     @Test
@@ -56,7 +59,9 @@ class ProductRequestTest {
         val request = INVALID_PRICE_TOO_SMALL
         val violations = validator.validate(request)
 
-        violations.shouldContainViolation(field = "price", PRICE_MUST_GREATER)
+        assertThat(violations).anyMatch {
+            it.propertyPath.toString() == "price" && it.message == PRICE_MUST_GREATER
+        }
     }
 
     @Test
@@ -64,7 +69,9 @@ class ProductRequestTest {
         val request = INVALID_IMAGE_URL_CHARACTERS
         val violations = validator.validate(request)
 
-        violations.shouldContainViolation(field = "imageUrl", IMAGE_URL_MUST_PATTERN)
+        assertThat(violations).anyMatch {
+            it.propertyPath.toString() == "imageUrl" && it.message == IMAGE_URL_MUST_PATTERN
+        }
     }
 
     @Test
@@ -72,6 +79,8 @@ class ProductRequestTest {
         val request = INVALID_IMAGE_URL_EXCEED
         val violations = validator.validate(request)
 
-        violations.shouldContainViolation(field = "imageUrl", IMAGE_URL_MUST_LENGTH)
+        assertThat(violations).anyMatch {
+            it.propertyPath.toString() == "imageUrl" && it.message == IMAGE_URL_MUST_LENGTH
+        }
     }
 }
