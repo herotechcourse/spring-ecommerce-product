@@ -54,13 +54,19 @@ class ProductRepository(private val jdbc: JdbcTemplate) {
         product: Product,
     ): Product {
         val sql = "UPDATE products SET name = ?, price = ?, imageUrl = ? WHERE id = ?"
-        jdbc.update(sql, product.name, product.price, product.imageUrl, id)
+        val rowsAffected = jdbc.update(sql, product.name, product.price, product.imageUrl, id)
+        if (rowsAffected == 0) {
+            throw NotFoundException("Product with Id: $id. Not found.")
+        }
         return product.copy(id = id)
     }
 
     fun delete(id: Long) {
         val sql = "DELETE FROM products WHERE ID = ?"
-        jdbc.update(sql, id)
+        val rowsAffected = jdbc.update(sql, id)
+        if (rowsAffected == 0) {
+            throw NotFoundException("Product with Id: $id. Not found.")
+        }
     }
 
 // TODO: how to make it less dangerous? (1. add confirmation param: 'confirmDeletion' 2.@PreAuthrozie("hasRole('ADMIN')" 3.Soft delete: sql = "UPDATE products SET deleted = true, deleted_at = NOW()")
