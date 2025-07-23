@@ -3,7 +3,7 @@
 ## Controller
 ### AdminProductController
 - [x] `Get` all products
-- [x] `Get` product by Id
+- [x] `Get` product by ID
 - [x] `POST` Create a Product
 - [x] `PUT` update the whole product by ID
 - [x] `PATCH` update one or more attributes of Product by ID
@@ -86,7 +86,7 @@
 - `handleEmptyResult` -> if no element is found with the ID
 - `handleHttpMessageNotReadable` -> if there is a missing field
 - `handleDuplicateProductName` -> if name is already taken
-- `handleValidationException` -> if there is a error for validation
+- `handleValidationException` -> if there is error for validation
 
 ## exception
 - `DuplicateProductNameException`
