@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/api/auth")
 class AuthController(
     val authService: AuthService,
 ) {
@@ -27,7 +27,7 @@ class AuthController(
             .build()
     }
 
-    @PostMapping("/signin")
+    @PostMapping("/signIn")
     fun signIn(
         @RequestBody @Valid tokenRequest: TokenRequest,
     ): ResponseEntity<Void> {
