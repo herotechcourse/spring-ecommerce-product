@@ -1,6 +1,7 @@
-package ecommerce.api
+package ecommerce.dao
 
-import org.assertj.core.api.Assertions.assertThat
+import ecommerce.model.Product
+import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -40,13 +41,13 @@ class ProductRepositoryTest {
     @Test
     fun findAll() {
         val products = productRepository.findAll()
-        assertThat(products).hasSize(5)
+        Assertions.assertThat(products).hasSize(5)
     }
 
     @Test
     fun findById() {
         val product = productRepository.findById(1)
-        assertThat(product?.name).isEqualTo("Iron Man")
+        Assertions.assertThat(product?.name).isEqualTo("Iron Man")
     }
 
     @Test
@@ -54,7 +55,7 @@ class ProductRepositoryTest {
         val product = Product(name = "Iron body", price = 99.0, imageUrl = "https://alexnsan.comics/imageurl/123")
         productRepository.insert(product)
         val target = productRepository.findById(6)
-        assertThat(target?.name).isEqualTo(product.name)
+        Assertions.assertThat(target?.name).isEqualTo(product.name)
     }
 
     @Test
@@ -65,9 +66,9 @@ class ProductRepositoryTest {
         val affectedRow = productRepository.update(id, newProduct)
         val target = productRepository.findById(id)
 
-        assertThat(affectedRow).isEqualTo(1)
-        assertThat(target?.id).isEqualTo(id)
-        assertThat(target?.name).isEqualTo(newProduct.name)
+        Assertions.assertThat(affectedRow).isEqualTo(1)
+        Assertions.assertThat(target?.id).isEqualTo(id)
+        Assertions.assertThat(target?.name).isEqualTo(newProduct.name)
     }
 
     @Test
@@ -75,6 +76,6 @@ class ProductRepositoryTest {
         val id = 1.toLong()
         val result = productRepository.delete(id)
 
-        assertThat(result).isEqualTo(1)
+        Assertions.assertThat(result).isEqualTo(1)
     }
 }

@@ -12,7 +12,7 @@ Implement the API to send and receive HTTP messages as shown in the example.
 
 ## Features List
 
-### Domain
+### Model
 
 Product
 
@@ -22,6 +22,17 @@ Product
 - [x] has property `name: String`
 - [x] has property `price: Double`
 - [x] has property `imageUrl: String`
+
+### DAO (Data Access Object)
+
+ProductRepository
+
+- [x] `findAll()` - query to database to get all products
+- [x] `findById()` - query for an object to database
+- [x] `insert()` - query to database to create new product
+- [x] `update()` - query to database to update a product
+- [x] `delete()` - query to database to delete a product
+
 
 ### Controller
 
@@ -45,19 +56,11 @@ ProductController
 
 ProductViewController
 
+- [x] `displayMain()` shows the main page
+    - currently, it redirects to `/products`
 - [x] `displayProducts()` shows list of products with view of products.html
 - [x] `displayCreateProductForm()` shows page for create product form with view of createProductForm.html
 - [x] `displayUpdateProductForm()` shows page for update product form with view of updateProductForm.html
-
-### Service
-
-ProductService
-
-- [x] `findAll()` - query to database to get all products
-- [x] `findById()` - query for an object to database
-- [x] `insert()` - query to database to create new product
-- [x] `update()` - query to database to update a product
-- [x] `delete()` - query to database to delete a product
 
 ### View
 
@@ -83,6 +86,6 @@ updateProductForm.html
 ### etc.
 
 - [x] connect to an H2 in-memory database
-  - [x] define the product schema
-  - [x] add some sample data
-  - [x] configure the database setting with `application.properties`
+    - [x] define the product schema
+    - [x] add some sample data
+    - [x] configure the database setting with `application.properties`

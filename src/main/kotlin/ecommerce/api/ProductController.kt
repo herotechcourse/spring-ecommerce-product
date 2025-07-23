@@ -1,5 +1,7 @@
 package ecommerce.api
 
+import ecommerce.dao.ProductRepository
+import ecommerce.model.Product
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
