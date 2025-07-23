@@ -1,4 +1,4 @@
-package ecommerce
+package ecommerce.product.helper
 
 import ecommerce.product.data.ProductRequest
 import ecommerce.product.data.ProductResponse

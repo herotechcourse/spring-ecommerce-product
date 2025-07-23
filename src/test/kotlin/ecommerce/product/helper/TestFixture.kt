@@ -1,4 +1,4 @@
-package ecommerce
+package ecommerce.product.helper
 
 import ecommerce.product.data.ConstantsProduct.Validation.IMAGE_URL_MAX_LENGTH
 import ecommerce.product.data.DummyRequest
