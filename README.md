@@ -1,16 +1,5 @@
 # spring-ecommerce-product
 
-## Advice
-### GlobalExceptionHandler
-- `handleEmptyResult` -> if no element is found with the ID
-- `handleHttpMessageNotReadable` -> if there is a missing field
-- `handleDuplicateProductName` -> if name is already taken
-- `handleValidationException` -> if there is a error for validation
-
-## exception
-- `DuplicateProductNameException`
-- `EntityNotFoundException`
-
 ## Controller
 ### ProductController
 - RestController
@@ -21,38 +10,16 @@
 - [x] `PATCH` update one or more attributes of Product by ID
 - [x] `DELETE` delete the product by ID
 
-## dto
-### ProductDTO
-- Validation for product modal
-- [x] `name`: Not blank, Maximum of 15, Minimum of 1, starts with http or https
-- [x] `description`: Not blank, Minimum of 3
-- [x] `price`: is Positive
-- [x] `imageUrl` Not Blank, Follows pattern
-- [x] `quantity` Cannot be negative (0 included)
+## Service
+### ProductService
+- Handles the logic between Controller and DB
+- [x] `getAllProducts()`: ResponseEntity<List<ProductDTO>>
+- [x] `getProductById(id: Long)`: ResponseEntity<ProductDTO>
+- [x] `createProduct(product: ProductDTO):`  ResponseEntity<Void>
+- [x] `updateProduct(id: Long, product: ProductDTO)`: ResponseEntity<Void>
+- [x] `fun deleteProduct(id: Long)`: ResponseEntity<Void>
 
-### UserDTO
-
-
-### ProductPatchDTO
-- Same as Product but allows single field to be updated
-
-### ErrorResponse
-- To standardise return error messages
-
-### TokenResponse
-- Response when token is generated
-
-### TokenRequest
-- Request to generate Token
-
-## mapper
-### ProductRowMapper
-- [x] Converts the DB data to Kotlin class object
-
-### UserRowMapper
-- [x] Converts the DB data to Kotlin class object
-
-## repository
+## Repository
 ### ProductRepository
 - Handle communication with db
 - `findAll()`: List<ProductDTO>
@@ -62,16 +29,46 @@
 - `deleteById(id: Long)`
 - `existsByName(name: String)`: Boolean
 
-## service
-### ProductService
-- Handles the logic between Controller and DB
-- [x] `getAllProducts()`: ResponseEntity<List<ProductDTO>>
-- [x] `getProductById(id: Long)`: ResponseEntity<ProductDTO>
-- [x] `createProduct(product: ProductDTO):`  ResponseEntity<Void>
-- [x] `updateProduct(id: Long, product: ProductDTO)`: ResponseEntity<Void>
-- [x] `fun deleteProduct(id: Long)`: ResponseEntity<Void>
+## DTO
+### ProductDTO
+- Validation for product modal
+- [x] `name`: Not blank, Maximum of 15, Minimum of 1, starts with http or https
+- [x] `description`: Not blank, Minimum of 3
+- [x] `price`: is Positive
+- [x] `imageUrl` Not Blank, Follows pattern
+- [x] `quantity` Cannot be negative (0 included)
+### UserDTO
+- Validation for user Modal
+- [x] `email`: Not blank and should be email
+- [x] `password`: Not blank and min length of 6
+- [x] `name`: Not blank
+- [x] `role`: should be admin or user `[Default = user]`
+### AuthTokenPayload
+### UserCreateResponse
+### ProductPatchDTO
+### ErrorResponse
+### TokenResponse
+### TokenRequest
 
-### AuthService
+## mapper
+### ProductRowMapper
+- [x] Converts the DB data to Kotlin class object
+
+### UserRowMapper
+- [x] Converts the DB data to Kotlin class object
+
+## Advice
+### GlobalExceptionHandler
+- `handleEmptyResult` -> if no element is found with the ID
+- `handleHttpMessageNotReadable` -> if there is a missing field
+- `handleDuplicateProductName` -> if name is already taken
+- `handleValidationException` -> if there is a error for validation
+
+## exception
+- `DuplicateProductNameException`
+- `EntityNotFoundException`
+- `UserAlreadyExistsException`
+- `UserCredentialException`
 
 
 ## enums
