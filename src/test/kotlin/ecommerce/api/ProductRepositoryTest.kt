@@ -8,17 +8,17 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest
 import org.springframework.jdbc.core.JdbcTemplate
 
 @JdbcTest
-class ProductServiceTest {
-    private lateinit var productService: ProductService
+class ProductRepositoryTest {
+    private lateinit var productRepository: ProductRepository
 
     @Autowired
     private lateinit var jdbcTemplate: JdbcTemplate
 
     @BeforeEach
     fun setUp() {
-        productService = ProductService(jdbcTemplate)
+        productRepository = ProductRepository(jdbcTemplate)
 
-        jdbcTemplate.execute("DROP TABLE product IF EXISTS")
+        jdbcTemplate.execute("DROP TABLE product CASCADE")
         jdbcTemplate.execute(
             """CREATE TABLE product (
                          id          LONG    NOT NULL AUTO_INCREMENT,
@@ -39,21 +39,21 @@ class ProductServiceTest {
 
     @Test
     fun findAll() {
-        val products = productService.findAll()
+        val products = productRepository.findAll()
         assertThat(products).hasSize(5)
     }
 
     @Test
     fun findById() {
-        val product = productService.findById(1)
+        val product = productRepository.findById(1)
         assertThat(product?.name).isEqualTo("Iron Man")
     }
 
     @Test
     fun insert() {
         val product = Product(name = "Iron body", price = 99.0, imageUrl = "https://alexnsan.comics/imageurl/123")
-        productService.insert(product)
-        val target = productService.findById(6)
+        productRepository.insert(product)
+        val target = productRepository.findById(6)
         assertThat(target?.name).isEqualTo(product.name)
     }
 
@@ -62,8 +62,8 @@ class ProductServiceTest {
         val id = 1.toLong()
         val newProduct = Product(name = "Iron body", price = 99.0, imageUrl = "https://alexnsan.comics/imageurl/123")
 
-        val affectedRow = productService.update(id, newProduct)
-        val target = productService.findById(id)
+        val affectedRow = productRepository.update(id, newProduct)
+        val target = productRepository.findById(id)
 
         assertThat(affectedRow).isEqualTo(1)
         assertThat(target?.id).isEqualTo(id)
@@ -73,7 +73,7 @@ class ProductServiceTest {
     @Test
     fun delete() {
         val id = 1.toLong()
-        val result = productService.delete(id)
+        val result = productRepository.delete(id)
 
         assertThat(result).isEqualTo(1)
     }

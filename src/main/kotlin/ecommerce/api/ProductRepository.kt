@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository
 import java.sql.ResultSet
 
 @Repository
-class ProductService(private val db: JdbcTemplate) {
+class ProductRepository(private val db: JdbcTemplate) {
     private val productRowMapper =
         RowMapper<Product> { rs: ResultSet, _ ->
             Product(

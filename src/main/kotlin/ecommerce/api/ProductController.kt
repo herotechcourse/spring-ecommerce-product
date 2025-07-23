@@ -13,19 +13,19 @@ import java.net.URI
 
 @RestController
 @RequestMapping("/api")
-class ProductController(private val productService: ProductService) {
+class ProductController(private val productRepository: ProductRepository) {
     @PostMapping("/products")
     fun createProduct(
         @RequestBody product: Product,
     ): ResponseEntity<Product> {
-        productService.insert(product)
+        productRepository.insert(product)
         val uri = URI.create("/api/products/${product.id}")
         return ResponseEntity.created(uri).body(product)
     }
 
     @GetMapping("/products")
     fun getProducts(): ResponseEntity<List<Product>> {
-        val products = productService.findAll()
+        val products = productRepository.findAll()
         return ResponseEntity.ok(products)
     }
 
@@ -33,7 +33,7 @@ class ProductController(private val productService: ProductService) {
     fun getProduct(
         @PathVariable id: Long,
     ): ResponseEntity<Product> {
-        val product = productService.findById(id) ?: return ResponseEntity.notFound().build()
+        val product = productRepository.findById(id) ?: return ResponseEntity.notFound().build()
         return ResponseEntity.ok(product)
     }
 
@@ -42,9 +42,9 @@ class ProductController(private val productService: ProductService) {
         @PathVariable id: Long,
         @RequestBody newProduct: Product,
     ): ResponseEntity<Product> {
-        val result = productService.update(id, newProduct)
+        val result = productRepository.update(id, newProduct)
         if (result == 1) {
-            val product = productService.findById(id) ?: return ResponseEntity.notFound().build()
+            val product = productRepository.findById(id) ?: return ResponseEntity.notFound().build()
             return ResponseEntity.ok(product)
         }
         return ResponseEntity.notFound().build()
@@ -54,8 +54,8 @@ class ProductController(private val productService: ProductService) {
     fun deleteProduct(
         @PathVariable id: Long,
     ): ResponseEntity<Void> {
-        productService.findById(id) ?: return ResponseEntity.notFound().build()
-        productService.delete(id)
+        productRepository.findById(id) ?: return ResponseEntity.notFound().build()
+        productRepository.delete(id)
         return ResponseEntity.noContent().build()
     }
 }

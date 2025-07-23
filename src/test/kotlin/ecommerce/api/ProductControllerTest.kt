@@ -10,7 +10,7 @@ import org.springframework.jdbc.core.JdbcTemplate
 
 @JdbcTest
 class ProductControllerTest {
-    private lateinit var productService: ProductService
+    private lateinit var productRepository: ProductRepository
 
     @Autowired
     private lateinit var jdbcTemplate: JdbcTemplate
@@ -18,9 +18,9 @@ class ProductControllerTest {
 
     @BeforeEach
     fun setUp() {
-        productService = ProductService(jdbcTemplate)
+        productRepository = ProductRepository(jdbcTemplate)
 
-        jdbcTemplate.execute("DROP TABLE product IF EXISTS")
+        jdbcTemplate.execute("DROP TABLE product CASCADE")
         jdbcTemplate.execute(
             """CREATE TABLE product (
                          id          LONG    NOT NULL AUTO_INCREMENT,
@@ -38,7 +38,7 @@ class ProductControllerTest {
                     INSERT INTO product (name, price, imageUrl) VALUES ('Full Metal Alchemist', 1000, 'https://alexnsan.comics/imageurl/5');"""
         jdbcTemplate.batchUpdate(query)
 
-        controller = ProductController(productService)
+        controller = ProductController(productRepository)
     }
 
     @Test
