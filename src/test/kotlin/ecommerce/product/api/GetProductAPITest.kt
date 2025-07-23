@@ -1,4 +1,4 @@
-package ecommerce.product
+package ecommerce.product.api
 
 import ecommerce.TextFixture.AMERICANO
 import ecommerce.TextFixture.AssertTemplate.assertProductEquals

@@ -1,4 +1,4 @@
-package ecommerce.product
+package ecommerce.product.api
 
 import ecommerce.TextFixture
 import ecommerce.TextFixture.AMERICANO
