@@ -1,7 +1,7 @@
-package ecommerce
+package ecommerce.repository
 
 import ecommerce.model.Product
-import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -24,15 +24,15 @@ class JdbcProductStoreTest {
     @Test
     fun `should return all products`() {
         val products = productStore.findAll()
-        assertThat(products).isNotEmpty
-        assertThat(products.map { it.name }).contains("Phone", "Laptop")
+        Assertions.assertThat(products).isNotEmpty
+        Assertions.assertThat(products.map { it.name }).contains("Phone", "Laptop")
     }
 
     @Test
     fun `should find product by id`() {
         val product = productStore.findById(2L)
-        assertThat(product).isNotNull
-        assertThat(product.name).isEqualTo("Phone")
+        Assertions.assertThat(product).isNotNull
+        Assertions.assertThat(product.name).isEqualTo("Phone")
     }
 
     @Test
@@ -41,7 +41,7 @@ class JdbcProductStoreTest {
         productStore.save(newProduct) // no return value
 
         val savedProducts = productStore.findAll()
-        assertThat(savedProducts).anyMatch { it.name == "Tablet" && it.price == 299.99 }
+        Assertions.assertThat(savedProducts).anyMatch { it.name == "Tablet" && it.price == 299.99 }
     }
 
     @Test
@@ -50,14 +50,14 @@ class JdbcProductStoreTest {
         productStore.update(1L, updatedProduct)
 
         val product = productStore.findById(1L)
-        assertThat(product.name).isEqualTo("Updated Phone")
-        assertThat(product.price).isEqualTo(499.99)
-        assertThat(product.imageUrl).isEqualTo("updated_phone.jpg")
+        Assertions.assertThat(product.name).isEqualTo("Updated Phone")
+        Assertions.assertThat(product.price).isEqualTo(499.99)
+        Assertions.assertThat(product.imageUrl).isEqualTo("updated_phone.jpg")
     }
 
     @Test
     fun `should delete a product`() {
         val rowNum = productStore.delete(1L)
-        assertThat(rowNum).isEqualTo(1)
+        Assertions.assertThat(rowNum).isEqualTo(1)
     }
 }

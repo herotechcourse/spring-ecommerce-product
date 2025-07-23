@@ -1,8 +1,7 @@
-package ecommerce
+package ecommerce.repository
 
 import ecommerce.model.Product
-import org.assertj.core.api.Assertions.assertThat
-import org.assertj.core.api.Assertions.assertThatThrownBy
+import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
@@ -22,24 +21,24 @@ class CollectionProductStoreTest {
     @Test
     fun `should return correct count of products`() {
         val count = productStore.countProducts()
-        assertThat(count).isEqualTo(2)
+        Assertions.assertThat(count).isEqualTo(2)
     }
 
     @Test
     fun `should return all products`() {
         val all = productStore.findAll()
-        assertThat(all).hasSize(2)
+        Assertions.assertThat(all).hasSize(2)
     }
 
     @Test
     fun `should return product by id`() {
         val product = productStore.findById(1L)
-        assertThat(product?.name).isEqualTo("Phone")
+        Assertions.assertThat(product?.name).isEqualTo("Phone")
     }
 
     @Test
     fun `should throw exception when product not found`() {
-        assertThatThrownBy { productStore.findById(99L) }
+        Assertions.assertThatThrownBy { productStore.findById(99L) }
             .isInstanceOf(NoSuchElementException::class.java)
             .hasMessageContaining("Product with id 99 not found")
     }
@@ -50,8 +49,8 @@ class CollectionProductStoreTest {
         productStore.save(newProduct)
 
         val saved = productStore.findById(3L)
-        assertThat(saved?.name).isEqualTo("Tablet")
-        assertThat(productStore.countProducts()).isEqualTo(3)
+        Assertions.assertThat(saved?.name).isEqualTo("Tablet")
+        Assertions.assertThat(productStore.countProducts()).isEqualTo(3)
     }
 
     @Test
@@ -60,22 +59,22 @@ class CollectionProductStoreTest {
         productStore.update(1L, updated)
 
         val product = productStore.findById(1L)
-        assertThat(product?.name).isEqualTo("Smartphone")
-        assertThat(product?.price).isEqualTo(600.0)
+        Assertions.assertThat(product?.name).isEqualTo("Smartphone")
+        Assertions.assertThat(product?.price).isEqualTo(600.0)
     }
 
     @Test
     fun `should delete a product`() {
         productStore.delete(2L)
 
-        assertThat(productStore.countProducts()).isEqualTo(1)
-        assertThatThrownBy { productStore.findById(2L) }
+        Assertions.assertThat(productStore.countProducts()).isEqualTo(1)
+        Assertions.assertThatThrownBy { productStore.findById(2L) }
             .isInstanceOf(NoSuchElementException::class.java)
     }
 
     @Test
     fun `should throw exception when deleting non-existent product`() {
-        assertThatThrownBy { productStore.delete(99L) }
+        Assertions.assertThatThrownBy { productStore.delete(99L) }
             .isInstanceOf(NoSuchElementException::class.java)
     }
 }

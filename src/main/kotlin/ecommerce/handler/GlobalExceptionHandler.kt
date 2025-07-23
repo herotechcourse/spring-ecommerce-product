@@ -1,4 +1,4 @@
-package ecommerce
+package ecommerce.handler
 
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ControllerAdvice

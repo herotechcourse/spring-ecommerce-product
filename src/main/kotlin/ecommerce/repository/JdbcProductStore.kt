@@ -1,4 +1,4 @@
-package ecommerce
+package ecommerce.repository
 
 import ecommerce.model.Product
 import org.springframework.jdbc.core.JdbcTemplate
