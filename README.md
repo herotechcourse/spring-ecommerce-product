@@ -51,17 +51,17 @@
     - [x] role
   - [x] set token expiration time
 
-- [ ] user login
-  - [ ] handle `POST /api/members/login` requests
-    - [ ] receive `email` and `password` in JSON body
-    - [ ] verify credentials against stored users
-    - [ ] return token when successful login
-    - [ ] return `403` when failed login
+- [x] user login
+  - [x] handle `POST /api/members/login` requests
+    - [x] receive `email` and `password` in JSON body
+    - [x] verify credentials against stored users
+    - [x] return token when successful login
+    - [x] return `403` when failed login
 
 - [ ] Error handling
-  - [ ] `400 Bad Request` if required fields missing or invalid 
+  - [x] `400 Bad Request` if required fields missing or invalid 
   - [ ] `401 Unauthorized` if authorization header missing or invalid 
-  - [ ] `403 Forbidden` if failed login
+  - [x] `403 Forbidden` if failed login
 
 
 

@@ -164,7 +164,6 @@ class MemberControllerTest {
 
     @Test
     fun `logging in with wrong password should return 403`() {
-        // Register the user first
         val registerRequest =
             """
         {
@@ -179,7 +178,6 @@ class MemberControllerTest {
                 .content(registerRequest),
         ).andExpect(MockMvcResultMatchers.status().isOk)
 
-        // Try logging in with incorrect password
         val loginRequest =
             """
         {
