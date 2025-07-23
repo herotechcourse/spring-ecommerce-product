@@ -24,8 +24,8 @@ class ProductController(private val repository: ProductRepository) {
     ): ResponseEntity<Product> {
         val id = index.getAndIncrement()
         val newProduct = Product.toEntity(product, id)
-
         repository.insert(id, newProduct)
+
         return ResponseEntity.created(URI.create("/products/" + newProduct.id)).body(product)
     }
 
@@ -41,7 +41,6 @@ class ProductController(private val repository: ProductRepository) {
         @PathVariable id: Long,
     ): ResponseEntity<Product> {
         val existingProduct = repository[id] ?: return ResponseEntity.notFound().build()
-
         val updatedProduct = existingProduct.updateWith(partialProduct)
         repository.updateById(id, updatedProduct)
 
