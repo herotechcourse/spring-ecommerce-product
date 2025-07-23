@@ -150,7 +150,7 @@ Content - Type: application/json
 }
 ```
 
-###Login
+### Login
 Request
 
 ```kotlin
@@ -187,5 +187,38 @@ Content - Type: application/json
   ```
   implementation("io.jsonwebtoken:jjwt:0.9.1")
   ```
+# Step 2-3
+This step implements cart-related features for authenticated users, allowing each user to manage their own shopping cart.
+
+## Features
+
+- [ ] **Create and assign cart to user (if not exists)**
+  When a user adds a product to their cart for the first time, a new cart is created and linked to that user.
+
+- [ ] **Add product to cart**
+  `POST /api/wishes`
+  Adds a product to the authenticated user's cart.
+  Requires JWT token via `Authorization: Bearer <token>`.
+  Payload:
+
+  ```json
+  {
+    "productId": 1
+  }
+  ```
+
+- [ ] **Get products in user's cart**
+  `GET /api/wishes`
+  Retrieves all products currently in the authenticated user's cart.
+
+- [ ] **Remove product from cart**
+  `DELETE /api/wishes/{productId}`
+  Removes the specified product from the authenticated user's cart.
+
+###  Authentication & Member Injection
+
+All endpoints require the user to be authenticated.
+A custom `@LoginMember` argument resolver is used to inject the authenticated `Member` into controller methods, based on the JWT token.
+
 
 
