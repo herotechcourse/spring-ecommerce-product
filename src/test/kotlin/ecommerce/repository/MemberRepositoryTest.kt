@@ -21,7 +21,7 @@ class MemberRepositoryTest {
         memberRepository = MemberRepository(db)
         db.sql("DROP TABLE MEMBERS IF EXISTS").update()
         val sql =
-            "CREATE TABLE members (id INT AUTO_INCREMENT PRIMARY KEY, email UNIQUE VARCHAR(255), password VARCHAR(255))"
+            "CREATE TABLE members (id INT AUTO_INCREMENT PRIMARY KEY, email VARCHAR(255) UNIQUE, password VARCHAR(255))"
         db.sql(sql).update()
     }
 
@@ -36,5 +36,18 @@ class MemberRepositoryTest {
 
         assertTrue(saved)
         assertThat(count).isEqualTo(1)
+    }
+
+    @Test
+    fun findByEmail() {
+        val user = RegistrationRequest("test@example.com", "test123")
+        val saved = memberRepository.save(user)
+        val count =
+            db.sql("SELECT COUNT(*) FROM members")
+                .query(Int::class.java)
+                .single()
+
+        val member = memberRepository.findByEmail("test@example.com")
+        assertThat(member?.email).isEqualTo("test@example.com")
     }
 }
