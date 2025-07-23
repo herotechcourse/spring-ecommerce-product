@@ -28,8 +28,7 @@ class AuthenticationController(private val authenticationService: Authentication
     fun registerMember(
         @RequestBody request: RegistrationRequest,
     ): ResponseEntity<TokenResponse> {
-        authenticationService.registerMember(request)
         val token = authenticationService.registerMember(request)
-        return ResponseEntity.ok(TokenResponse(token))
+        return ResponseEntity.ok(token)
     }
 }

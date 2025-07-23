@@ -1,6 +1,6 @@
 package ecommerce.dto
 
-class RegistrationRequest(
+data class RegistrationRequest(
     val email: String,
     val password: String,
 )
