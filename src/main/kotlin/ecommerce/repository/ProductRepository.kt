@@ -69,12 +69,6 @@ class ProductRepository(private val jdbc: JdbcTemplate) {
         }
     }
 
-// TODO: how to make it less dangerous? (1. add confirmation param: 'confirmDeletion' 2.@PreAuthrozie("hasRole('ADMIN')" 3.Soft delete: sql = "UPDATE products SET deleted = true, deleted_at = NOW()")
-    fun deleteAll() {
-        val sql = "DELETE FROM products"
-        jdbc.update(sql)
-    }
-
     fun patch(
         id: Long,
         patchProduct: ProductPatchRequest,

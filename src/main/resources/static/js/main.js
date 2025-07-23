@@ -22,30 +22,6 @@ async function deleteProductById(id) {
     }
 }
 
-async function deleteAllProducts() {
-    if (!confirm('Are you sure you want to delete ALL products?')) {
-        return;
-    }
-    try {
-        const response = await fetch(`/api/products`, {
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        })
-        if (response.ok) {
-            document.querySelectorAll('tr[id]').forEach(element => {
-                element.remove();
-            });
-            showNotification("All products deleted", 'success');
-        } else {
-            showNotification("Failed to delete all products", 'error');
-        }
-    } catch (error) {
-        showNotification("Error occurred while deleting products", 'error');
-    }
-}
-
 async function addNewProduct() {
     const name = prompt('Enter product name:');
     const price = prompt('Enter product price:');

@@ -53,11 +53,4 @@ class ProductController(private val productRepository: ProductRepository) {
         productRepository.delete(id)
         return ResponseEntity.noContent().build()
     }
-
-    // DISABLED - Too dangerous for production
-    // @DeleteMapping()
-    // fun deleteAllProducts(): ResponseEntity<Unit> {
-    //     productRepository.deleteAll()
-    //     return ResponseEntity.noContent().build()
-    // }
 }
