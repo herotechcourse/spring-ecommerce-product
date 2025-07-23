@@ -153,8 +153,8 @@ Using the token received after login, implement functionality that allows the us
 - [ ] Create `WishController` class
     - [ ] Implements `/api/wishes` endpoints with `@LoginMember` for authentication
 
-- [ ] Create `LoginMember` annotation and `LoginMemberArgumentResolver`
-  - [ ] Injects authenticated `Member` into controller methods
+- [x] Create `LoginMember` annotation and `LoginMemberArgumentResolver`
+  - [x] Injects authenticated `Member` into controller methods
 
 - [ ] Create `CheckLoginInterceptor`
   - [ ] Protects `/api/wishes/**` routes with token validation
