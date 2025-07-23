@@ -73,12 +73,12 @@ function productManager() {
         products.forEach(product => {
             const div = document.createElement("div");
             div.innerHTML = `
-                        <strong>${product.name}</strong> - $${product.price} <br>
-                        <img src="${product.imageUrl}" alt="${product.name}" width="150" height="100"><br>
-                        <button class="edit-button">Edit</button>
-                        <button class="delete-button">Delete</button>
-                        <hr/>
-                    `;
+                       <strong>${product.name}</strong> - $${product.price} <br>
+                       <img src="${product.imageUrl}" alt="${product.name}" width="150" height="100"><br>
+                       <button class="edit-button">Edit</button>
+                       <button class="delete-button">Delete</button>
+                       <hr/>
+                   `;
             div.querySelector("button.edit-button").addEventListener("click", () => { handleProductEditButtonClick(product) })
             div.querySelector("button.delete-button").addEventListener("click", () => { deleteProduct(product.id) })
 
@@ -142,13 +142,16 @@ function productManager() {
         }
     }
 
+
     async function deleteProduct(id) {
         const res = await API.delete(id);
+
 
         if (res.ok) {
             fetchProducts()
         }
     }
+
 
     function resetForm(form) {
         form.reset();
@@ -158,21 +161,26 @@ function productManager() {
         form.querySelector("input[name=product-image]").value = "";
     }
 
+
     function setupCreateProductForm() {
         const form = document.getElementById("product-form");
         form.addEventListener("submit", handleCreateProductSubmit);
     }
 
+
     function setupEditProductForm() {
         const form = document.getElementById("update-product-form");
         form.addEventListener("submit", handleEditProductSubmit);
+
 
         const cancelEditButton = form.querySelector("button.cancel-edit-button");
         cancelEditButton.addEventListener("click", () => toggleForm("product-form"));
     }
 
+
     setupCreateProductForm();
     setupEditProductForm();
+
 
     fetchProducts();
 }
