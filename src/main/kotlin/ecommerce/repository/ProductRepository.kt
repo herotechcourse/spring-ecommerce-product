@@ -42,7 +42,7 @@ class ProductRepository(private val jdbc: JdbcTemplate) {
         jdbc.update({
             it.prepareStatement(sql, arrayOf("id")).apply {
                 setString(1, product.name)
-                setDouble(2, product.price) // ← No more !! needed
+                setDouble(2, product.price)
                 setString(3, product.imageUrl)
             }
         }, keyHolder)

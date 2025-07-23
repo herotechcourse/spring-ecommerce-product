@@ -24,7 +24,7 @@ class ProductController(private val productRepository: ProductRepository) {
     @GetMapping("/{id}")
     fun getProductById(
         @PathVariable id: Long,
-    ): Product = productRepository.findById(id) // Repository throws NotFoundException if not found
+    ): Product = productRepository.findById(id)
 
     @PostMapping()
     fun createProduct(
