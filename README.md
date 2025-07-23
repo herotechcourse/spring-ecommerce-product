@@ -45,8 +45,6 @@
 ### TokenRequest
 - Request to generate Token
 
-###
-
 ## mapper
 ### ProductRowMapper
 - [x] Converts the DB data to Kotlin class object
@@ -75,6 +73,11 @@
 
 ### AuthService
 
+
+## enums
+### UserRoles
+- [x] Admin
+- [x] User
 
 ## Schema
 ### Products
