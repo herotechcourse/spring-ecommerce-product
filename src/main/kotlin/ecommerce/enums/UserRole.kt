@@ -1,6 +1,6 @@
 package ecommerce.enums
 
-enum class UserRole(val value: String) {
-    USER("user"),
-    ADMIN("admin"),
+enum class UserRole {
+    USER,
+    ADMIN,
 }
