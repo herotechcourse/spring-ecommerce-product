@@ -3,6 +3,8 @@ package ecommerce.controller
 import ecommerce.auth.AuthService
 import ecommerce.model.TokenRequest
 import ecommerce.model.TokenResponse
+import jakarta.validation.Valid
+import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.PostMapping
@@ -15,13 +17,13 @@ class TokenLoginController(
     private val authService: AuthService,
     ) {
     @PostMapping("/register")
-    fun registerMember(@RequestBody request: TokenRequest): ResponseEntity<TokenResponse> {
+    fun registerMember(@Valid @RequestBody request: TokenRequest): ResponseEntity<TokenResponse> {
         val tokenResponse = authService.register(request)
-        return ResponseEntity.ok(tokenResponse)
+        return ResponseEntity.status(HttpStatus.CREATED).body(tokenResponse)
     }
 
     @PostMapping("/login")
-    fun loginMember(@RequestBody request: TokenRequest): ResponseEntity<TokenResponse> {
+    fun loginMember(@Valid @RequestBody request: TokenRequest): ResponseEntity<TokenResponse> {
         val tokenResponse = authService.login(request)
         return ResponseEntity.ok(tokenResponse)
     }
