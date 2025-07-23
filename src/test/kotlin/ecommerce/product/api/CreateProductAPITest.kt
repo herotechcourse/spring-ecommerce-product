@@ -1,8 +1,8 @@
 package ecommerce.product.api
 
 import ecommerce.TextFixture
-import ecommerce.TextFixture.AMERICANO
 import ecommerce.TextFixture.AssertTemplate.assertProductEquals
+import ecommerce.TextFixture.ValidRequest.AMERICANO
 import ecommerce.product.data.ProductResponse
 import io.restassured.RestAssured
 import io.restassured.http.ContentType
@@ -36,7 +36,7 @@ class CreateProductAPITest {
         val response =
             RestAssured
                 .given().log().all()
-                .body(TextFixture.Dummy.SUPER_LONG_URL)
+                .body(TextFixture.InvalidDummy.SUPER_LONG_URL)
                 .contentType(ContentType.JSON)
                 .`when`().post("/api/products")
                 .then().log().all().extract()
@@ -49,7 +49,7 @@ class CreateProductAPITest {
         val response =
             RestAssured
                 .given().log().all()
-                .body(TextFixture.Dummy.NO_NAME)
+                .body(TextFixture.InvalidDummy.NO_NAME)
                 .contentType(ContentType.JSON)
                 .`when`().post("/api/products")
                 .then().log().all().extract()
@@ -62,7 +62,7 @@ class CreateProductAPITest {
         val response =
             RestAssured
                 .given().log().all()
-                .body(TextFixture.Dummy.NO_PRICE)
+                .body(TextFixture.InvalidDummy.NO_PRICE)
                 .contentType(ContentType.JSON)
                 .`when`().post("/api/products")
                 .then().log().all().extract()
@@ -75,7 +75,7 @@ class CreateProductAPITest {
         val response =
             RestAssured
                 .given().log().all()
-                .body(TextFixture.Dummy.NO_URL)
+                .body(TextFixture.InvalidDummy.NO_URL)
                 .contentType(ContentType.JSON)
                 .`when`().post("/api/products")
                 .then().log().all().extract()

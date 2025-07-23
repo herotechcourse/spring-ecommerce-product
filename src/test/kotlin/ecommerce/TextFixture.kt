@@ -1,7 +1,7 @@
 package ecommerce
 
-import ecommerce.product.DummyRequest
 import ecommerce.product.data.ConstantsProduct.Validation.IMAGE_URL_MAX_LENGTH
+import ecommerce.product.data.DummyRequest
 import ecommerce.product.data.ProductRequest
 import ecommerce.product.data.ProductResponse
 import io.restassured.RestAssured
@@ -11,35 +11,25 @@ import org.springframework.http.HttpStatus
 import java.math.BigDecimal
 
 object TextFixture {
-    fun createProduct(request: ProductRequest) {
-        val response =
-            RestAssured
-                .given().log().all()
-                .body(request)
-                .contentType(ContentType.JSON)
-                .`when`().post("/api/products")
-                .then().log().all().extract()
+    object ValidRequest {
+        val FLAT_WHITE =
+            ProductRequest(
+                name = "Flat white L",
+                price = BigDecimal("6.50"),
+                imageUrl =
+                    "https://st.kakaocdn.net/product/gift/product/20231010111814_9a667f9eccc943648797925498bdd8a3.jpg",
+            )
 
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value())
+        val AMERICANO =
+            ProductRequest(
+                name = "Iced Americano T",
+                price = BigDecimal("4.50"),
+                imageUrl =
+                    "https://st.kakaocdn.net/product/gift/product/20231010111814_9a667f9eccc943648797925498bdd8a3.jpg",
+            )
     }
 
-    val FLAT_WHITE =
-        ProductRequest(
-            name = "Flat white L",
-            price = BigDecimal("6.50"),
-            imageUrl =
-                "https://st.kakaocdn.net/product/gift/product/20231010111814_9a667f9eccc943648797925498bdd8a3.jpg",
-        )
-
-    val AMERICANO =
-        ProductRequest(
-            name = "Iced Americano T",
-            price = BigDecimal("4.50"),
-            imageUrl =
-                "https://st.kakaocdn.net/product/gift/product/20231010111814_9a667f9eccc943648797925498bdd8a3.jpg",
-        )
-
-    object Dummy {
+    object InvalidDummy {
         private fun superLongUrl(urlLimit: Int): String = "o".repeat(urlLimit + 1)
 
         val NO_NAME =
@@ -81,5 +71,17 @@ object TextFixture {
             assertThat(actual.price).isEqualTo(expected.price.toPlainString())
             assertThat(actual.imageUrl).isEqualTo(expected.imageUrl)
         }
+    }
+
+    fun createTestProduct(request: ProductRequest) {
+        val response =
+            RestAssured
+                .given().log().all()
+                .body(request)
+                .contentType(ContentType.JSON)
+                .`when`().post("/api/products")
+                .then().log().all().extract()
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value())
     }
 }

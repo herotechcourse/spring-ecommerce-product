@@ -1,9 +1,9 @@
 package ecommerce.product.api
 
-import ecommerce.TextFixture.AMERICANO
 import ecommerce.TextFixture.AssertTemplate.assertProductEquals
-import ecommerce.TextFixture.FLAT_WHITE
-import ecommerce.TextFixture.createProduct
+import ecommerce.TextFixture.ValidRequest.AMERICANO
+import ecommerce.TextFixture.ValidRequest.FLAT_WHITE
+import ecommerce.TextFixture.createTestProduct
 import ecommerce.product.data.ProductResponse
 import io.restassured.RestAssured
 import io.restassured.common.mapper.TypeRef
@@ -19,7 +19,7 @@ import org.springframework.test.annotation.DirtiesContext
 class GetProductAPITest {
     @Test
     fun `getProducts() should be able to read a product and return 'ok 200' response`() {
-        createProduct(AMERICANO)
+        createTestProduct(AMERICANO)
 
         val response =
             RestAssured
@@ -36,8 +36,8 @@ class GetProductAPITest {
 
     @Test
     fun `getProducts() should be able to read products, and return 'ok 200' response`() {
-        createProduct(AMERICANO)
-        createProduct(FLAT_WHITE)
+        createTestProduct(AMERICANO)
+        createTestProduct(FLAT_WHITE)
 
         val response =
             RestAssured
