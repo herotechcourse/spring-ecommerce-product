@@ -3,6 +3,7 @@ package ecommerce.service
 import ecommerce.configuration.JwtTokenProvider
 import ecommerce.dto.RegistrationRequest
 import ecommerce.dto.TokenResponse
+import ecommerce.exception.EmailOrPasswordIncorrectException
 import ecommerce.exception.MemberEmailAlreadyExistsException
 import ecommerce.repository.MemberRepository
 import org.springframework.stereotype.Service
@@ -27,8 +28,12 @@ class AuthenticationService(
     }
 
     fun logIn(request: RegistrationRequest): TokenResponse {
-        val member = memberRepository.findByEmail(request.email) ?: throw RuntimeException("No member found with email: ${request.email}")
-        if (member.password != request.password) throw RuntimeException("Invalid password for email: ${request.email}")
+        val member = memberRepository.findByEmail(request.email)
+        if (member == null || member.password != request.password) {
+            throw EmailOrPasswordIncorrectException(
+                "Invalid password for email",
+            )
+        }
         val token = tokenService.createToken(request.email)
         return TokenResponse(token)
     }

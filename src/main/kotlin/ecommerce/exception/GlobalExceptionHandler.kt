@@ -76,4 +76,14 @@ class GlobalExceptionHandler {
             )
         return ResponseEntity(errorMessage, HttpStatus.CONFLICT)
     }
+
+    @ExceptionHandler(EmailOrPasswordIncorrectException::class)
+    fun handleUpdateException(ex: EmailOrPasswordIncorrectException): ResponseEntity<ErrorMessageModel> {
+        val errorMessage =
+            ErrorMessageModel(
+                HttpStatus.FORBIDDEN.value(),
+                ex.message,
+            )
+        return ResponseEntity(errorMessage, HttpStatus.FORBIDDEN)
+    }
 }
