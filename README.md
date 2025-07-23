@@ -25,13 +25,17 @@
 
 ## Repository
 ### ProductRepository
-- Handle communication with db
 - `findAll()`: List<ProductDTO>
 - `findById(id: Long)`: ProductDTO?
 - `create(product: ProductDTO)`: Long
 - `update(id: Long, product: ProductDTO)`
 - `deleteById(id: Long)`
 - `existsByName(name: String)`: Boolean
+
+### UserRepository
+- `create`: Long
+- `findByEmailAndPassword`: UserDTO?
+- `existsByEmail`: Boolean
 
 ## DTO
 ### ProductDTO
