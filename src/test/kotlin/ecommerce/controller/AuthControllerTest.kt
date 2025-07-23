@@ -31,18 +31,19 @@ class AuthControllerTest {
                 .`when`().post("/auth/signup")
                 .then().log().all().extract()
         assertThat(response.statusCode()).isEqualTo(HttpStatus.SC_CREATED)
+        assertThat(response.header("Authorization")).isNotEmpty
     }
 
     @Test
     fun signUp() {
         val user = UserDTO(
             name = "test",
-            email = "temp@temp.com",
+            email = "temp2@temp.com",
             password = "test-456",
         )
         authService.signUp(user)
         val tokenRequest = TokenRequest(
-            email = "temp@temp.com",
+            email = "temp2@temp.com",
             password = "test-456",
         )
         val response =
@@ -54,5 +55,6 @@ class AuthControllerTest {
                 .then().log().all().extract()
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.SC_OK)
+        assertThat(response.header("Authorization")).isNotEmpty
     }
 }
