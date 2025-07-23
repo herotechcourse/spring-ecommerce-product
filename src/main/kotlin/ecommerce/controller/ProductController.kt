@@ -4,9 +4,7 @@ import ecommerce.repository.ProductRepository
 import ecommerce.model.Product
 import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.annotation.DeleteMapping
-import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
@@ -17,17 +15,6 @@ import java.net.URI
 
 @RestController
 class ProductController(private val productRepository: ProductRepository) {
-    @ExceptionHandler(MethodArgumentNotValidException::class)
-    fun handleConstraintViolations(e: MethodArgumentNotValidException): ResponseEntity<String> {
-        val errors = e.bindingResult.fieldErrors.joinToString("; ") { "${it.field}: ${it.defaultMessage}" }
-        return ResponseEntity.badRequest().body(errors)
-    }
-
-    @ExceptionHandler(IllegalArgumentException::class)
-    fun handleSameProductNameException(e: IllegalArgumentException): ResponseEntity<String> {
-        return ResponseEntity.badRequest().body(e.message)
-    }
-
     @PostMapping("/products")
     fun create(
         @RequestBody @Valid product: Product,
