@@ -17,4 +17,12 @@ class MemberRepository(private val db: JdbcClient) {
             .params(member.email, member.password)
             .update(keyHolder) > 0
     }
+
+    fun existsByEmail(email: String): Boolean {
+        return db
+            .sql("SELECT COUNT(*) FROM members WHERE email =?")
+            .param(email)
+            .query(Int::class.java)
+            .single() > 0
+    }
 }
