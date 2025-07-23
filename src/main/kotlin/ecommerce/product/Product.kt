@@ -11,14 +11,15 @@ class Product(
     init {
         require(name.isNotBlank()) { "Name cannot be blank" }
         require(name.length <= 255) { "Name must be at most 255 characters" }
-        require(price > BigDecimal.ZERO) { "Price must be positive" }
+        require( price > BigDecimal.ZERO) { "Price must be positive" }
     }
 
-    fun updateWith(partial: Product): Product {
+    fun updateWith(dto: ProductDTO): Product {
         return Product(
-            name = partial.name ?: this.name,
-            price = partial.price ?: this.price,
-            imageUrl = partial.imageUrl ?: this.imageUrl
+            id = this.id,
+            name = dto.name ?: this.name,
+            price = dto.price ?: this.price,
+            imageUrl = dto.imageUrl ?: this.imageUrl
         )
     }
 
