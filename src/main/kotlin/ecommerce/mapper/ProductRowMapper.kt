@@ -1,6 +1,6 @@
 package ecommerce.mapper
 
-import ecommerce.dto.ProductDTO
+import ecommerce.dto.products.ProductDTO
 import org.springframework.jdbc.core.RowMapper
 import org.springframework.stereotype.Component
 import java.sql.ResultSet

@@ -1,7 +1,7 @@
 package ecommerce.advice
 
 import com.fasterxml.jackson.databind.exc.MismatchedInputException
-import ecommerce.dto.ErrorResponse
+import ecommerce.dto.error.ErrorResponse
 import ecommerce.exception.DuplicateProductNameException
 import ecommerce.exception.EntityNotFoundException
 import ecommerce.exception.UnauthorisedUserException

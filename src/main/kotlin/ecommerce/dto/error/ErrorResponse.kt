@@ -1,4 +1,4 @@
-package ecommerce.dto
+package ecommerce.dto.error
 
 import java.time.Instant
 

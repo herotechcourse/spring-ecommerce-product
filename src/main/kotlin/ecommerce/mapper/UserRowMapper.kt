@@ -1,6 +1,6 @@
 package ecommerce.mapper
 
-import ecommerce.dto.UserDTO
+import ecommerce.dto.user.UserDTO
 import ecommerce.enums.UserRole
 import org.springframework.jdbc.core.RowMapper
 import org.springframework.stereotype.Component

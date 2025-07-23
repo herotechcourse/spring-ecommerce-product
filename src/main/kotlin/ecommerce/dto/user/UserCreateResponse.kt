@@ -1,4 +1,4 @@
-package ecommerce.dto
+package ecommerce.dto.user
 
 import java.net.URI
 

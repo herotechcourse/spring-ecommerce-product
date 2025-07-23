@@ -1,7 +1,7 @@
 package ecommerce.service
 
-import ecommerce.dto.ProductDTO
-import ecommerce.dto.ProductPatchDTO
+import ecommerce.dto.products.ProductDTO
+import ecommerce.dto.products.ProductPatchDTO
 import ecommerce.exception.DuplicateProductNameException
 import ecommerce.exception.EntityNotFoundException
 import ecommerce.repository.ProductRepository

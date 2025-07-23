@@ -1,7 +1,7 @@
-package ecommerce.controller
+package ecommerce.controller.admin
 
-import ecommerce.dto.ProductDTO
-import ecommerce.dto.ProductPatchDTO
+import ecommerce.dto.products.ProductDTO
+import ecommerce.dto.products.ProductPatchDTO
 import ecommerce.service.ProductService
 import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity

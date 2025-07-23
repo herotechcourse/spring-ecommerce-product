@@ -1,6 +1,6 @@
 package ecommerce.repository
 
-import ecommerce.dto.UserDTO
+import ecommerce.dto.user.UserDTO
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired

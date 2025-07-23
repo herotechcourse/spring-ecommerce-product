@@ -1,7 +1,7 @@
-package ecommerce.controller
+package ecommerce.controller.guest
 
-import ecommerce.dto.TokenRequest
-import ecommerce.dto.UserDTO
+import ecommerce.dto.auth.TokenRequest
+import ecommerce.dto.user.UserDTO
 import ecommerce.service.AuthService
 import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity

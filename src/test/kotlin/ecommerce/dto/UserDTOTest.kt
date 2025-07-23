@@ -1,5 +1,6 @@
 package ecommerce.dto
 
+import ecommerce.dto.user.UserDTO
 import ecommerce.enums.UserRole
 import jakarta.validation.Validation
 import jakarta.validation.Validator

@@ -1,4 +1,4 @@
-package ecommerce.dto
+package ecommerce.dto.user
 
 import ecommerce.enums.UserRole
 import jakarta.validation.constraints.Email

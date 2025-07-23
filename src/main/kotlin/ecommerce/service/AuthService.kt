@@ -1,9 +1,9 @@
 package ecommerce.service
 
-import ecommerce.dto.AuthTokenPayload
-import ecommerce.dto.TokenRequest
-import ecommerce.dto.UserCreateResponse
-import ecommerce.dto.UserDTO
+import ecommerce.dto.auth.AuthTokenPayload
+import ecommerce.dto.auth.TokenRequest
+import ecommerce.dto.user.UserCreateResponse
+import ecommerce.dto.user.UserDTO
 import ecommerce.exception.EntityNotFoundException
 import ecommerce.exception.UserAlreadyExistsException
 import ecommerce.infrastructure.JwtTokenProvider

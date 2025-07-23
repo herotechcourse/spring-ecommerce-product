@@ -1,7 +1,7 @@
 package ecommerce.controller
 
-import ecommerce.dto.ProductDTO
-import ecommerce.dto.ProductPatchDTO
+import ecommerce.dto.products.ProductDTO
+import ecommerce.dto.products.ProductPatchDTO
 import ecommerce.repository.ProductRepository
 import io.restassured.RestAssured
 import io.restassured.http.ContentType

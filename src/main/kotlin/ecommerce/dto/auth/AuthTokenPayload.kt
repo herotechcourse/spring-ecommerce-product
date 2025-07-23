@@ -1,4 +1,4 @@
-package ecommerce.dto
+package ecommerce.dto.auth
 
 import ecommerce.enums.UserRole
 

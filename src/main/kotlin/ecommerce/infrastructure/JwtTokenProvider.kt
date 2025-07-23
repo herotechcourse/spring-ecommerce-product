@@ -1,6 +1,6 @@
 package ecommerce.infrastructure
 
-import ecommerce.dto.AuthTokenPayload
+import ecommerce.dto.auth.AuthTokenPayload
 import ecommerce.enums.UserRole
 import io.jsonwebtoken.JwtException
 import io.jsonwebtoken.Jwts

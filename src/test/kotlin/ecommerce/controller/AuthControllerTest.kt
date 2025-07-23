@@ -1,7 +1,7 @@
 package ecommerce.controller
 
-import ecommerce.dto.TokenRequest
-import ecommerce.dto.UserDTO
+import ecommerce.dto.auth.TokenRequest
+import ecommerce.dto.user.UserDTO
 import ecommerce.enums.UserRole
 import ecommerce.service.AuthService
 import io.restassured.RestAssured

@@ -1,7 +1,7 @@
 package ecommerce.service
 
-import ecommerce.dto.TokenRequest
-import ecommerce.dto.UserDTO
+import ecommerce.dto.auth.TokenRequest
+import ecommerce.dto.user.UserDTO
 import ecommerce.exception.EntityNotFoundException
 import ecommerce.exception.UserAlreadyExistsException
 import ecommerce.repository.UserRepository

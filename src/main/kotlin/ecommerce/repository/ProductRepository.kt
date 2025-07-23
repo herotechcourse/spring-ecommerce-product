@@ -1,6 +1,6 @@
 package ecommerce.repository
 
-import ecommerce.dto.ProductDTO
+import ecommerce.dto.products.ProductDTO
 import ecommerce.mapper.ProductRowMapper
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert

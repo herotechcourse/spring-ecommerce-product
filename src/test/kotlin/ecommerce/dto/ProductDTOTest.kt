@@ -1,5 +1,6 @@
 package ecommerce.dto
 
+import ecommerce.dto.products.ProductDTO
 import jakarta.validation.Validation
 import jakarta.validation.Validator
 import org.assertj.core.api.Assertions.assertThat
