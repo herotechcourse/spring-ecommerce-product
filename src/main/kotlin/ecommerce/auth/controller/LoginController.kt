@@ -1,8 +1,6 @@
-package ecommerce.auth.api
+package ecommerce.auth.controller
 
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-class MemberAPI {
-
-}
+class LoginController

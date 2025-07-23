@@ -1,4 +1,4 @@
-package ecommerce.product.api
+package ecommerce.product.controller
 
 import ecommerce.product.data.ProductResponse
 import ecommerce.product.helper.TestFixture.ValidRequest.AMERICANO
@@ -14,7 +14,7 @@ import org.springframework.test.annotation.DirtiesContext
 
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
-class UpdateDeleteProductAPITest {
+class UpdateDeleteProductControllerTest {
     @Test
     fun `updateProduct() should be able to update product, and return 'ok 200' response`() {
         postTestProduct(AMERICANO)

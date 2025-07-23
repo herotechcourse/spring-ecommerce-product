@@ -1,4 +1,4 @@
-package ecommerce.auth.api
+package ecommerce.auth.controller
 
 import ecommerce.auth.data.TokenResponse
 import ecommerce.auth.helper.RequestExecutor
@@ -7,7 +7,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.springframework.http.HttpStatus
 
-class MemberAPITest {
+class MemberControllerTest {
     @Test
     fun `should register admin and return expected token`() {
         val executor = RequestExecutor(PostMembersRegister.VALID_ADMIN)

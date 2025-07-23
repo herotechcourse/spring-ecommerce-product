@@ -1,4 +1,4 @@
-package ecommerce.product.api
+package ecommerce.product.controller
 
 import ecommerce.product.data.ProductResponse
 import ecommerce.product.helper.TestFixture
@@ -14,7 +14,7 @@ import org.springframework.test.annotation.DirtiesContext
 
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
-class CreateProductAPITest {
+class CreateProductControllerTest {
     @Test
     fun `createProduct() should be able return 'created 201' response`() {
         val response =
