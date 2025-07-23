@@ -1,6 +1,6 @@
 package ecommerce.auth.data
 
-data class TokenRequest(
+class TokenRequest(
 //    @field:Size()
 //    @field:Pattern()
     val email: String,

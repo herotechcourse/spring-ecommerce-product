@@ -1,5 +1,5 @@
 package ecommerce.auth.data
 
-data class TokenResponse(
+class TokenResponse(
     val accessToken: String,
 )

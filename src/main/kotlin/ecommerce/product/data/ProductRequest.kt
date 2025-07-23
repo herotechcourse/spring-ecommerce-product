@@ -18,7 +18,7 @@ import jakarta.validation.constraints.Pattern
 import jakarta.validation.constraints.Size
 import java.math.BigDecimal
 
-data class ProductRequest(
+class ProductRequest(
     @field:Size(max = NAME_MAX_LENGTH, message = NAME_MUST_LENGTH)
     @field:Pattern(
         regexp = NAME_ALLOWED_PATTERN,

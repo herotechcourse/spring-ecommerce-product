@@ -2,7 +2,7 @@ package ecommerce.product.data
 
 import java.math.BigDecimal
 
-data class Product(
+class Product(
     val id: Long,
     val name: String,
     val price: BigDecimal,
