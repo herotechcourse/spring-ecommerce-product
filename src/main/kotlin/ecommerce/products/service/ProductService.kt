@@ -1,9 +1,9 @@
-package ecommerce.service
+package ecommerce.products.service
 
-import ecommerce.exception.ProductValidationException
-import ecommerce.model.Product
-import ecommerce.model.ProductPatchDTO
-import ecommerce.store.ProductStore
+import ecommerce.products.exception.ProductValidationException
+import ecommerce.products.model.Product
+import ecommerce.products.model.ProductPatchDTO
+import ecommerce.products.store.ProductStore
 import org.springframework.stereotype.Service
 
 @Service

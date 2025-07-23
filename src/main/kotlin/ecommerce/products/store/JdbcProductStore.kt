@@ -1,7 +1,7 @@
-package ecommerce.store
+package ecommerce.products.store
 
-import ecommerce.model.Product
-import ecommerce.model.ProductPatchDTO
+import ecommerce.products.model.Product
+import ecommerce.products.model.ProductPatchDTO
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.jdbc.core.RowMapper
 import org.springframework.jdbc.support.GeneratedKeyHolder

@@ -1,4 +1,4 @@
-package ecommerce.model
+package ecommerce.products.model
 
 data class ProductDTO(
     val id: Long,

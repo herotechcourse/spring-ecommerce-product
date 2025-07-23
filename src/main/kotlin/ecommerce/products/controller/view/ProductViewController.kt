@@ -1,7 +1,7 @@
-package ecommerce.controller.view
+package ecommerce.products.controller.view
 
-import ecommerce.model.ProductDTO
-import ecommerce.service.ProductService
+import ecommerce.products.model.ProductDTO
+import ecommerce.products.service.ProductService
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping

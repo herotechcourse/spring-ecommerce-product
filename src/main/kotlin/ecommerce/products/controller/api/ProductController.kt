@@ -1,9 +1,9 @@
-package ecommerce.controller.api
+package ecommerce.products.controller.api
 
-import ecommerce.model.Product
-import ecommerce.model.ProductDTO
-import ecommerce.model.ProductPatchDTO
-import ecommerce.service.ProductService
+import ecommerce.products.model.Product
+import ecommerce.products.model.ProductDTO
+import ecommerce.products.model.ProductPatchDTO
+import ecommerce.products.service.ProductService
 import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -19,7 +19,6 @@ import java.net.URI
 @RestController
 @RequestMapping("/api")
 class ProductController(private val productService: ProductService) {
-
     @PostMapping("/products")
     fun createProduct(
         @Valid @RequestBody product: Product,
