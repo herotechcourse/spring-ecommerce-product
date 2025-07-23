@@ -1,5 +1,6 @@
 package ecommerce.controller
 
+import ecommerce.controller.ProductController.Companion.PRODUCT_PATH
 import ecommerce.model.Product
 import ecommerce.repository.ProductRepository
 import org.springframework.http.ResponseEntity
@@ -10,12 +11,14 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import java.net.URI
 
+@RequestMapping(PRODUCT_PATH)
 @RestController
 class ProductController(private val productRepository: ProductRepository) {
-    @GetMapping(PRODUCT_PATH)
+    @GetMapping()
     fun getProducts(): List<Product> = productRepository.findAll()
 
     @GetMapping(PRODUCT_PATH_ID)
@@ -23,7 +26,7 @@ class ProductController(private val productRepository: ProductRepository) {
         @PathVariable id: Long,
     ): Product = productRepository.findById(id)!!
 
-    @PostMapping(PRODUCT_PATH)
+    @PostMapping()
     fun createProduct(
         @RequestBody product: Product,
     ): ResponseEntity<Product> {
@@ -53,7 +56,7 @@ class ProductController(private val productRepository: ProductRepository) {
     //Q.what to return after deletion?
 
 
-    @DeleteMapping(PRODUCT_PATH)
+    @DeleteMapping()
     fun deleteAllProducts(): ResponseEntity<Unit> {
         productRepository.deleteAll()
         return ResponseEntity.noContent().build()
@@ -62,6 +65,6 @@ class ProductController(private val productRepository: ProductRepository) {
 
     companion object {
         const val PRODUCT_PATH = "/api/products"
-        const val PRODUCT_PATH_ID = "$PRODUCT_PATH/{id}"
+        const val PRODUCT_PATH_ID = "/{id}"
     }
 }
