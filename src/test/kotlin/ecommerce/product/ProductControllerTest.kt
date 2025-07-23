@@ -16,12 +16,15 @@ import ecommerce.ProductMock.createProduct
 class ProductControllerTest {
     @Test
     fun `create() should be able return 'created 201' response`() {
+        val requestBody = mapOf(
+            "name" to "Test Product",
+            "price" to 9.99,
+            "imageUrl" to "https://example.com/product.png"
+        )
         val response =
             RestAssured
                 .given().log().all()
-                .body({
-
-                })
+                .body(requestBody)
                 .contentType(ContentType.JSON)
                 .`when`().post("/api/products")
                 .then().log().all().extract()
