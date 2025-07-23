@@ -33,7 +33,7 @@ class AdminProductControllerTest {
     private lateinit var authService: AuthService
 
     @BeforeEach
-    fun init()  {
+    fun init() {
         val sql = "select * from users where role = 'ADMIN'"
         val result = jdbcTemplate.query(sql, userRowMapper).first()
         token =
