@@ -68,7 +68,6 @@ class ProductRepository(private val jdbcTemplate: JdbcTemplate) {
         } catch (ex: DataAccessException) {
             throw RuntimeException("Failed to update product with id $id", ex)
         }
-//        return jdbcTemplate.update(sql, product.name, product.price, product.imageUrl, id).takeIf { it == 1 }
     }
 
     fun deleteById(id: Long): Int? {
@@ -80,6 +79,5 @@ class ProductRepository(private val jdbcTemplate: JdbcTemplate) {
         } catch (ex: DataAccessException) {
             throw RuntimeException("Failed to update product with id $id", ex)
         }
-//        return jdbcTemplate.update(sql, id).takeIf { it == 1 }
     }
 }
