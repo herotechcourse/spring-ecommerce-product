@@ -1,5 +1,7 @@
 package ecommerce
 
+import ecommerce.product.domain.Product
+import ecommerce.product.repository.ProductRepository
 import io.restassured.RestAssured
 import io.restassured.http.ContentType
 import org.assertj.core.api.Assertions.assertThat
@@ -73,7 +75,7 @@ class ProductControllerTest {
                     price = 2.50,
                     imageUrl =
                         "https://www.cokesolutions.com/content/dam/cokesolutions/us/images/Products/" +
-                            "Fanta-Orange-PET.jpg",
+                                "Fanta-Orange-PET.jpg",
                 ),
                 Product(
                     id = 3,
@@ -81,7 +83,7 @@ class ProductControllerTest {
                     price = 4.39,
                     imageUrl =
                         "https://www.tchibo.de/kaffeeakademie/media/pages/global-images/" +
-                            "fb95bb5370-1729609446/adobestock_219364830-1440x700-crop-42-46.jpg",
+                                "fb95bb5370-1729609446/adobestock_219364830-1440x700-crop-42-46.jpg",
                 ),
                 Product(
                     id = 4,
@@ -106,7 +108,7 @@ class ProductControllerTest {
                         price = 5.60,
                         imageUrl =
                             "https://www.cokesolutions.com/content/dam/cokesolutions/us/images/" +
-                                "Products/Fanta-Orange-PET.jpg",
+                                    "Products/Fanta-Orange-PET.jpg",
                     ),
                 )
                 .`when`()

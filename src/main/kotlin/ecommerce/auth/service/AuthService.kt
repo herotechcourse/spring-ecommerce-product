@@ -1,6 +1,12 @@
-package ecommerce
+package ecommerce.auth.service
 
-import jakarta.validation.ValidationException
+import ecommerce.auth.security.JwtTokenProvider
+import ecommerce.auth.exception.AuthorizationException
+import ecommerce.member.domain.Member
+import ecommerce.member.repository.MemberRepository
+import ecommerce.member.dto.MemberResponse
+import ecommerce.member.dto.TokenRequest
+import ecommerce.member.dto.TokenResponse
 import org.springframework.stereotype.Service
 
 @Service

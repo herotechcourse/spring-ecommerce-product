@@ -1,5 +1,6 @@
-package ecommerce
+package ecommerce.product.repository
 
+import ecommerce.product.domain.Product
 import jakarta.validation.ValidationException
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.jdbc.core.RowMapper

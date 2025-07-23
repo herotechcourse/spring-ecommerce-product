@@ -1,5 +1,7 @@
-package ecommerce
+package ecommerce.product.controller
 
+import ecommerce.product.domain.Product
+import ecommerce.product.repository.ProductRepository
 import jakarta.validation.Valid
 import jakarta.validation.ValidationException
 import org.springframework.http.HttpStatus

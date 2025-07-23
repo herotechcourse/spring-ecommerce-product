@@ -1,6 +1,4 @@
-package ecommerce
-
-
+package ecommerce.auth.extractor
 
 import jakarta.servlet.http.HttpServletRequest
 

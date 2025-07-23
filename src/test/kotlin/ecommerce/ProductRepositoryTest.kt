@@ -1,5 +1,7 @@
 package ecommerce
 
+import ecommerce.product.domain.Product
+import ecommerce.product.repository.ProductRepository
 import jakarta.validation.ValidationException
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.assertThrows
@@ -46,7 +48,7 @@ class ProductRepositoryTest {
                     price = 2.50,
                     imageUrl =
                         "https://www.cokesolutions.com/content/dam/cokesolutions/us/images/Products" +
-                            "/Fanta-Orange-PET.jpg",
+                                "/Fanta-Orange-PET.jpg",
                 ),
                 Product(
                     id = null,
@@ -54,7 +56,7 @@ class ProductRepositoryTest {
                     price = 4.39,
                     imageUrl =
                         "https://www.tchibo.de/kaffeeakademie/media/pages/global-images/fb95bb5370-1729609446/" +
-                            "adobestock_219364830-1440x700-crop-42-46.jpg",
+                                "adobestock_219364830-1440x700-crop-42-46.jpg",
                 ),
             )
 
@@ -88,7 +90,7 @@ class ProductRepositoryTest {
                     price = 2.50,
                     imageUrl =
                         "https://www.cokesolutions.com/content/dam/cokesolutions/us/images/Products" +
-                            "/Fanta-Orange-PET.jpg",
+                                "/Fanta-Orange-PET.jpg",
                 ),
                 Product(
                     id = 3,
@@ -96,7 +98,7 @@ class ProductRepositoryTest {
                     price = 4.39,
                     imageUrl =
                         "https://www.tchibo.de/kaffeeakademie/media/pages/global-images/fb95bb5370-1729609446/" +
-                            "adobestock_219364830-1440x700-crop-42-46.jpg",
+                                "adobestock_219364830-1440x700-crop-42-46.jpg",
                 ),
             )
         assertThat(products).isEqualTo(expectedProducts)

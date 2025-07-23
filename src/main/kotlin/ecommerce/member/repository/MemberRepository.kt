@@ -1,5 +1,6 @@
-package ecommerce
+package ecommerce.member.repository
 
+import ecommerce.member.domain.Member
 import jakarta.validation.ValidationException
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert

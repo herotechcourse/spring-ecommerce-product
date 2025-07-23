@@ -1,4 +1,4 @@
-package ecommerce
+package ecommerce.auth.security
 
 import io.jsonwebtoken.JwtException
 import io.jsonwebtoken.Jwts
@@ -8,7 +8,6 @@ import org.springframework.stereotype.Component
 import java.nio.charset.StandardCharsets
 import java.util.Date
 import javax.crypto.SecretKey
-
 
 @Component
 class JwtTokenProvider(

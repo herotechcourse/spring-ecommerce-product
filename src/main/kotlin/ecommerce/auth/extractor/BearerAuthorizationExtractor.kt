@@ -1,5 +1,6 @@
-package ecommerce
+package ecommerce.auth.extractor
 
+import ecommerce.auth.exception.AuthorizationException
 import jakarta.servlet.http.HttpServletRequest
 
 class BearerAuthorizationExtractor : AuthorizationExtractor<String> {

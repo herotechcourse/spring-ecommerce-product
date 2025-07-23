@@ -1,4 +1,4 @@
-package ecommerce
+package ecommerce.product.domain
 
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.Pattern
