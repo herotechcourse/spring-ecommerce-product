@@ -29,7 +29,7 @@ object TestFixture {
     }
 
     object InvalidRequest {
-        val EXCEED_NAME_AMERICANO =
+        val INVALID_NAME_EXCEED =
             ProductRequest(
                 name = "Aaaaaaaamericano",
                 price = BigDecimal("4.50"),
@@ -44,24 +44,29 @@ object TestFixture {
                 imageUrl = "https://example.com/image.jpg",
             )
 
-        val TOO_SMALL_PRICE =
+        val INVALID_PRICE_TOO_SMALL =
             ProductRequest(
                 name = "Ice Latte",
                 price = BigDecimal("0.01"),
                 imageUrl = "https://example.com/image.jpg",
             )
 
-        val INVALID_IMAGE_URL =
+        val INVALID_IMAGE_URL_CHARACTERS =
             ProductRequest(
                 name = "Cafe Mocha",
                 price = BigDecimal("5.00"),
                 imageUrl = "ftp://invalid-url.com/image.jpg",
             )
+
+        val INVALID_IMAGE_URL_EXCEED =
+            ProductRequest(
+                name = "Cafe Mocha",
+                price = BigDecimal("5.00"),
+                imageUrl = superLongUrl(),
+            )
     }
 
     object InvalidDummy {
-        private fun superLongUrl(urlLimit: Int): String = "o".repeat(urlLimit + 1)
-
         val NO_NAME =
             DummyRequest(
                 price = BigDecimal("6.50"),
@@ -86,7 +91,7 @@ object TestFixture {
             DummyRequest(
                 name = "Flat white",
                 price = BigDecimal("6.50"),
-                imageUrl = superLongUrl(IMAGE_URL_MAX_LENGTH),
+                imageUrl = superLongUrl(),
             )
     }
 
@@ -101,4 +106,6 @@ object TestFixture {
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value())
     }
+
+    private fun superLongUrl(): String = "https://" + "o".repeat(IMAGE_URL_MAX_LENGTH - "https://".length + 1)
 }
