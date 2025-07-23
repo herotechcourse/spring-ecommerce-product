@@ -6,3 +6,11 @@ CREATE TABLE IF NOT EXISTS products (
     img      VARCHAR(120) NOT NULL,
     quantity INTEGER      NOT NULL
     );
+
+CREATE TABLE IF NOT EXISTS members (
+    userId   BIGINT       PRIMARY KEY    AUTO_INCREMENT,
+    userName VARCHAR      NOT NULL,
+    email    VARCHAR      NOT NULL UNIQUE,
+    passwordHash VARCHAR(120) NOT NULL,
+    role VARCHAR      NOT NULL
+);
