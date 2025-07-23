@@ -83,4 +83,12 @@ class CreateProductAPITest {
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value())
     }
+
+    @Test
+    fun `createProduct() should return 400 Bad Request when found duplicate product name`() {
+        postTestProduct(AMERICANO)
+        val response = postTestProduct(AMERICANO)
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value())
+    }
 }
