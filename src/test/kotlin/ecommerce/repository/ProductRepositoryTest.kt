@@ -42,4 +42,12 @@ class ProductRepositoryTest {
 
         assertThat(result).isNull()
     }
+
+    @Test
+    fun `deleteById should return null when product does not exists`() {
+        val original = Product(1, "Espresso", BigDecimal.valueOf(3.00), "url1")
+        repository.insert(1, original)
+        val result = repository.deleteById(999)
+        assertThat(result).isNull()
+    }
 }
