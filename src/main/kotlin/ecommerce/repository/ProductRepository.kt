@@ -1,10 +1,12 @@
 package ecommerce.repository
 
-import ecommerce.model.Product
+import ecommerce.domain.Product
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.jdbc.core.RowMapper
+import org.springframework.jdbc.support.GeneratedKeyHolder
 import org.springframework.stereotype.Repository
 import java.sql.ResultSet
+import java.sql.Statement
 
 @Repository
 class ProductRepository(private val jdbcTemplate: JdbcTemplate) {
@@ -29,6 +31,11 @@ class ProductRepository(private val jdbcTemplate: JdbcTemplate) {
         return jdbcTemplate.query(sql, productRowMapper, id).firstOrNull()
     }
 
+    fun findByName(name: String): Product? {
+        val sql = "select * from products where name = ?"
+        return jdbcTemplate.query(sql, productRowMapper, name).toList().firstOrNull()
+    }
+
     fun findAllProducts(): List<Product> {
         val sql = "select id, name, price, img, quantity from products"
         return jdbcTemplate.query(sql, productRowMapper)
@@ -36,7 +43,18 @@ class ProductRepository(private val jdbcTemplate: JdbcTemplate) {
 
     fun create(product: Product) {
         val sql = "insert into products (name, price, img, quantity) values (?, ?, ?, ?)"
-        jdbcTemplate.update(sql, product.name, product.price, product.img, product.quantity)
+        val keyHolder = GeneratedKeyHolder()
+
+        jdbcTemplate.update({ connection ->
+            val ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)
+            ps.setString(1, product.name)
+            ps.setDouble(2, product.price)
+            ps.setString(3, product.img)
+            ps.setInt(4, product.quantity)
+            ps
+        }, keyHolder)
+
+        product.id = keyHolder.key?.toLong() ?: throw IllegalStateException("Failed to retrieve generated ID for product.")
     }
 
     fun update(

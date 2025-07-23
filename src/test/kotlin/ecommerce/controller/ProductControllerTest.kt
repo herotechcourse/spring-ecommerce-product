@@ -1,7 +1,7 @@
 package ecommerce.controller
 
-import ecommerce.dto.ProductResponse
-import ecommerce.model.Product
+import ecommerce.domain.Product
+import ecommerce.dto.product.ProductResponse
 import io.restassured.RestAssured
 import io.restassured.http.ContentType
 import org.assertj.core.api.Assertions.assertThat
@@ -15,14 +15,14 @@ import org.springframework.test.annotation.DirtiesContext
 class ProductControllerTest {
     @Test
     fun createProduct() {
-            RestAssured
-                .given().log().all()
-                .body(Product(id = 100, name = "test", price = 20.0, img = "img1", 2))
-                .contentType(ContentType.JSON)
-                .`when`().post("/products")
-                .then().log().all()
-                .assertThat().statusCode(HttpStatus.CREATED.value())
-                .extract()
+        RestAssured
+            .given().log().all()
+            .body(Product(id = 100, name = "test", price = 20.0, img = "img1", 2))
+            .contentType(ContentType.JSON)
+            .`when`().post("/products")
+            .then().log().all()
+            .assertThat().statusCode(HttpStatus.CREATED.value())
+            .extract()
     }
 
     @Test
@@ -66,10 +66,10 @@ class ProductControllerTest {
     fun delete() {
         createProduct()
 
-            RestAssured
-                .given().log().all()
-                .`when`().delete("/products/100")
-                .then().log().all().assertThat().statusCode(HttpStatus.NO_CONTENT.value())
-                .extract()
+        RestAssured
+            .given().log().all()
+            .`when`().delete("/products/100")
+            .then().log().all().assertThat().statusCode(HttpStatus.NO_CONTENT.value())
+            .extract()
     }
 }
