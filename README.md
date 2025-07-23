@@ -132,8 +132,8 @@ Using the token received after login, implement functionality that allows the us
     - [ ] DELETE `/api/wishes/{productId}` removes product by ID
     - [ ] Requires valid JWT token in `Authorization: Bearer <token>` header
 
-- [ ] Add `CART_ITEMS` table in `schema.sql`
-    - [ ] Links `member_id` to `MEMBERS` and `product_id` to `PRODUCTS`
+- [x] Add `CART_ITEMS` table in `schema.sql`
+    - [x] Links `member_id` to `MEMBERS` and `product_id` to `PRODUCTS`
 
 - [ ] Create `CartItem` data class
    - [ ] Contains `id`, `memberId`, `productId`
