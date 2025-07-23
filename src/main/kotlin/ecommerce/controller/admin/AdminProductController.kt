@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/api/admin/products")
 class AdminProductController(private val adminProductService: AdminProductService) {
-    @GetMapping
+    @GetMapping("")
     fun getProducts(): ResponseEntity<List<ProductDTO>> {
         return ResponseEntity.ok().body(adminProductService.getAllProducts())
     }
