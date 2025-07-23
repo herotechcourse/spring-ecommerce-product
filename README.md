@@ -76,4 +76,8 @@
 ## Schema
 ### Products
 - id, name, description, price, image_url, quantity
-- [x] id is `UNIQUE`
+- [x] name is `UNIQUE`
+
+### Users
+- id, email, password, name, role
+- [x] email is unique
