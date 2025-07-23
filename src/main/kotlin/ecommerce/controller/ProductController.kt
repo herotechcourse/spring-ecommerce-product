@@ -53,15 +53,12 @@ class ProductController(private val productRepository: ProductRepository) {
         productRepository.delete(id)
         return ResponseEntity.noContent().build()
     }
-    //Q.what to return after deletion?
-
 
     @DeleteMapping()
     fun deleteAllProducts(): ResponseEntity<Unit> {
         productRepository.deleteAll()
         return ResponseEntity.noContent().build()
     }
-    //Q.what to return after deletion?
 
     companion object {
         const val PRODUCT_PATH = "/api/products"
