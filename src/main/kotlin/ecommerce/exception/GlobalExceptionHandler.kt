@@ -66,4 +66,14 @@ class GlobalExceptionHandler {
             )
         return ResponseEntity(errorMessage, HttpStatus.CONFLICT)
     }
+
+    @ExceptionHandler(MemberEmailAlreadyExistsException::class)
+    fun handleUpdateException(ex: MemberEmailAlreadyExistsException): ResponseEntity<ErrorMessageModel> {
+        val errorMessage =
+            ErrorMessageModel(
+                HttpStatus.CONFLICT.value(),
+                ex.message,
+            )
+        return ResponseEntity(errorMessage, HttpStatus.CONFLICT)
+    }
 }
