@@ -1,6 +1,6 @@
 package ecommerce.repository
 
-import ecommerce.dto.RegistrationRequest
+import ecommerce.model.Member
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
@@ -27,7 +27,7 @@ class MemberRepositoryTest {
 
     @Test
     fun save() {
-        val user = RegistrationRequest("test@example.com", "test123")
+        val user = Member(null, "test@example.com", "test123")
         val saved = memberRepository.save(user)
         val count =
             db.sql("SELECT COUNT(*) FROM members")
@@ -40,7 +40,7 @@ class MemberRepositoryTest {
 
     @Test
     fun findByEmail() {
-        val user = RegistrationRequest("test@example.com", "test123")
+        val user = Member(null, "test@example.com", "test123")
         val saved = memberRepository.save(user)
         val count =
             db.sql("SELECT COUNT(*) FROM members")

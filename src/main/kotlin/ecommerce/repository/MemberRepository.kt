@@ -1,6 +1,5 @@
 package ecommerce.repository
 
-import ecommerce.dto.RegistrationRequest
 import ecommerce.model.Member
 import org.springframework.jdbc.core.RowMapper
 import org.springframework.jdbc.core.simple.JdbcClient
@@ -20,7 +19,7 @@ class MemberRepository(private val db: JdbcClient) {
             )
         }
 
-    fun save(member: RegistrationRequest): Boolean {
+    fun save(member: Member): Boolean {
         val keyHolder: KeyHolder = GeneratedKeyHolder()
 
         val sql = "INSERT INTO members (email, password) VALUES (?,?)"
