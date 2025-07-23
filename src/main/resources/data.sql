@@ -6,5 +6,5 @@ INSERT INTO products (name, description, price, image_url, quantity) VALUES
 ('USB-CHub', '6-in-1 USB-C hub for Mac and Windows', 45.00, 'https://example.com/images/usb_c_hub.jpg', 40);
 
 INSERT INTO users (email, password, name, role) VALUES
-('alice@example.com', 'password1','User', 'user'),
-('bob@example.com', 'password2', 'Admin', 'admin');
+('alice@example.com', 'password1','USER', 'USER'),
+('bob@example.com', 'password2', 'ADMIN', 'ADMIN');
