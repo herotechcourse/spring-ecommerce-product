@@ -31,6 +31,9 @@ class ProductService(private val productRepository: ProductRepository) {
         id: Long,
         product: ProductDTO,
     ) {
+        if (isDuplicateProductName(id, product.name)) {
+            throw DuplicateProductNameException(product.name)
+        }
         if (productRepository.update(id, product) == 0) {
             throw EntityNotFoundException("Product with id: $id not found")
         }
@@ -43,6 +46,10 @@ class ProductService(private val productRepository: ProductRepository) {
         val existing =
             productRepository.findById(id)
                 ?: throw EntityNotFoundException("Product with id: $id not found")
+
+        if (patch.name != null && isDuplicateProductName(id, patch.name)) {
+            throw DuplicateProductNameException(patch.name)
+        }
 
         val updatedProduct =
             existing.copy(
@@ -60,5 +67,13 @@ class ProductService(private val productRepository: ProductRepository) {
         if (productRepository.deleteById(id) == 0) {
             throw EntityNotFoundException("Product with id: $id not found")
         }
+    }
+
+    private fun isDuplicateProductName(
+        id: Long,
+        name: String,
+    ): Boolean {
+        val oldProduct = productRepository.findByName(name)
+        return oldProduct != null && oldProduct.id != id
     }
 }

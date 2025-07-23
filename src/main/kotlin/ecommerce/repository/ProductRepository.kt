@@ -22,6 +22,12 @@ class ProductRepository(
         return res.firstOrNull()
     }
 
+    fun findByName(name: String): ProductDTO? {
+        val sql = "select * from products where name = ?"
+        val res = jdbcTemplate.query(sql, productRowMapper, name)
+        return res.firstOrNull()
+    }
+
     fun existsByName(name: String): Boolean {
         val sql = "select count(*) from products where name = ?"
         return jdbcTemplate.queryForObject(sql, Long::class.java, name)!! > 0

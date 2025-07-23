@@ -78,6 +78,22 @@ class ProductServiceTest {
     }
 
     @Test
+    fun `throws error if duplicate name updateProduct`() {
+        createProduct("uniqueName")
+
+        val id = createProduct("someName")
+        val product = productService.getProductById(id)
+        val newProduct =
+            product.copy(
+                name = "uniqueName",
+            )
+
+        assertThrows<DuplicateProductNameException> {
+            productService.updateProduct(id, newProduct)
+        }
+    }
+
+    @Test
     fun patchProduct() {
         val id = createProduct("patchProduct")
         productService.patchProduct(id, ProductPatchDTO(name = "Patched"))
@@ -92,6 +108,18 @@ class ProductServiceTest {
                 -1,
                 ProductPatchDTO(name = "Something"),
             )
+        }
+    }
+
+    @Test
+    fun `throws error if duplicate name patchProduct`() {
+        createProduct("uniqueName2")
+
+        val id = createProduct("patchName")
+        val patch = ProductPatchDTO(name = "uniqueName2")
+
+        assertThrows<DuplicateProductNameException> {
+            productService.patchProduct(id, patch)
         }
     }
 
