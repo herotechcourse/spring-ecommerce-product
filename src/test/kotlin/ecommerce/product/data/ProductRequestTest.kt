@@ -26,4 +26,12 @@ class ProductRequestTest {
 
         assertThat(violations).isEmpty()
     }
+
+    @Test
+    fun `invalid name should fail validation`() {
+        val request = EXCEED_NAME_AMERICANO
+        val violations = validator.validate(request)
+
+        violations.shouldContainViolation(field = "name", NAME_MUST_LENGTH)
+    }
 }
