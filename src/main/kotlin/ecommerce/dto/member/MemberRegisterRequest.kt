@@ -12,7 +12,7 @@ data class MemberRegisterRequest(
     val email: String,
     @field:NotBlank(message = "Password cannot be blank.")
     @field:Size(min = 8, message = "Password must be at least 8 characters long.")
-    val passwordHash: String,
-    @field:NotBlank(message = "Role cannot be blank.")
-    val role: String,
+    val password: String,
+//    @field:NotBlank(message = "Role cannot be blank.")
+//    val role: String,
 )

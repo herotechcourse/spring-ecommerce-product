@@ -1,5 +1,7 @@
 package ecommerce.advice
 
+import ecommerce.exception.AuthenticationException
+import ecommerce.exception.DuplicateEmailException
 import ecommerce.exception.InvalidInputException
 import ecommerce.exception.ResourceNotFoundException
 import jakarta.servlet.http.HttpServletRequest
@@ -97,5 +99,23 @@ class GlobalExceptionHandler {
         System.err.println("An unhandled exception occurred for request ${request.requestURI}: ${ex.message}")
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
             .body("An unexpected error occurred. Please try again later.")
+    }
+
+    @ExceptionHandler(AuthenticationException::class)
+    fun handleAuthenticationException(
+        ex: AuthenticationException,
+        request: HttpServletRequest,
+    ): ResponseEntity<String> {
+        println("Authentication failed for request ${request.requestURI}: ${ex.message}")
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ex.message)
+    }
+
+    @ExceptionHandler(DuplicateEmailException::class)
+    fun handleDuplicateEmailException(
+        ex: DuplicateEmailException,
+        request: HttpServletRequest,
+    ): ResponseEntity<String> {
+        println("Registration failed due to duplicate email for request ${request.requestURI}: ${ex.message}")
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.message)
     }
 }
