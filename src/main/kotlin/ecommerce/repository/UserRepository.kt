@@ -1,6 +1,6 @@
 package ecommerce.repository
 
-import ecommerce.dto.user.UserDTO
+import ecommerce.dto.user.MemberUserDTO
 import ecommerce.mapper.UserRowMapper
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert
@@ -11,7 +11,7 @@ class UserRepository(
     private val jdbcTemplate: JdbcTemplate,
     private val userRowMapper: UserRowMapper,
 ) {
-    fun create(user: UserDTO): Long {
+    fun create(user: MemberUserDTO): Long {
         val insert =
             SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("users")
@@ -30,7 +30,7 @@ class UserRepository(
     fun findByEmailAndPassword(
         email: String,
         password: String,
-    ): UserDTO? {
+    ): MemberUserDTO? {
         val sql = "select * from users where email = ? and password = ?"
         val res = jdbcTemplate.query(sql, userRowMapper, email, password)
         return res.firstOrNull()

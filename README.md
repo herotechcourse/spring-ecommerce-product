@@ -16,8 +16,8 @@
 
 ### Member
 #### AuthController
-- [x] `POST /api/auth/signUp` creates user and returns JWT token
-- [x] `POST /api/auth/signIn` checks and returns JWT token
+- [x] `POST /api/member/auth/signUp` creates user and returns JWT token
+- [x] `POST /api/member/auth/signIn` checks and returns JWT token
 #### CartController
 - `GET ` getCartProducts
 - `POST ` addCartProduct

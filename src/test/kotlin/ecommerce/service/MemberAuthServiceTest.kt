@@ -1,7 +1,8 @@
 package ecommerce.service
 
-import ecommerce.dto.auth.TokenRequest
-import ecommerce.dto.user.UserDTO
+import ecommerce.dto.auth.LoginRequest
+import ecommerce.dto.user.MemberUserDTO
+import ecommerce.dto.user.UserRequestDTO
 import ecommerce.exception.EntityNotFoundException
 import ecommerce.exception.UserAlreadyExistsException
 import ecommerce.repository.UserRepository
@@ -12,9 +13,9 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
-class AuthServiceTest {
+class MemberAuthServiceTest {
     @Autowired
-    private lateinit var authService: AuthService
+    private lateinit var memberAuthService: MemberAuthService
 
     @Autowired
     private lateinit var userRepository: UserRepository
@@ -22,69 +23,75 @@ class AuthServiceTest {
     @Test
     fun `throws error if already exists signUp`() {
         val userDTO =
-            UserDTO(
+            UserRequestDTO(
                 name = "test",
                 password = "test123",
                 email = "signUpError@test.com",
             )
-        userRepository.create(userDTO)
-        assertThrows<UserAlreadyExistsException> { authService.signUp(userDTO) }
+        val member =
+            MemberUserDTO(
+                userDTO.email,
+                userDTO.password,
+                userDTO.name,
+            )
+        userRepository.create(member)
+        assertThrows<UserAlreadyExistsException> { memberAuthService.signUp(userDTO) }
     }
 
     @Test
     fun signUp() {
         val userDTO =
-            UserDTO(
+            UserRequestDTO(
                 name = "test",
                 password = "test123",
                 email = "signUp@test.com",
             )
-        val result = authService.signUp(userDTO)
+        val result = memberAuthService.signUp(userDTO)
         assertThat(result.token).isNotEmpty
         assertThat(result.uri).isNotNull
     }
 
     @Test
     fun `No user found at signIn with email`() {
-        val tokenRequest =
-            TokenRequest(
+        val loginRequest =
+            LoginRequest(
                 password = "test123",
                 email = "signInError@test.com",
             )
-        assertThrows<EntityNotFoundException> { authService.logIn(tokenRequest) }
+        assertThrows<EntityNotFoundException> { memberAuthService.logIn(loginRequest) }
     }
 
     @Test
     fun `No user found at signIn with wrong password`() {
         val userDTO =
-            UserDTO(
+            MemberUserDTO(
                 name = "test",
                 password = "test123",
                 email = "signInErrorPassword@test.com",
             )
         userRepository.create(userDTO)
-        val tokenRequest =
-            TokenRequest(
+        val loginRequest =
+            LoginRequest(
                 email = userDTO.email,
                 password = "test123456",
             )
-        assertThrows<EntityNotFoundException> { authService.logIn(tokenRequest) }
+        assertThrows<EntityNotFoundException> { memberAuthService.logIn(loginRequest) }
     }
 
     @Test
     fun signIn() {
         val userDTO =
-            UserDTO(
+            MemberUserDTO(
                 name = "test",
                 password = "test123",
                 email = "signInError@test.com",
             )
         userRepository.create(userDTO)
-        val tokenRequest =
-            TokenRequest(
+        val loginRequest =
+            LoginRequest(
                 userDTO.email,
                 userDTO.password,
             )
-        assertThat(authService.logIn(tokenRequest)).isNotEmpty
+        assertThat(memberAuthService.logIn(loginRequest)).isNotEmpty
     }
 }

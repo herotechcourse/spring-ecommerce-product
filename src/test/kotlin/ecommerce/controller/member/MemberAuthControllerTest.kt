@@ -1,9 +1,8 @@
 package ecommerce.controller.member
 
-import ecommerce.dto.auth.TokenRequest
-import ecommerce.dto.user.UserDTO
-import ecommerce.enums.UserRole
-import ecommerce.service.AuthService
+import ecommerce.dto.auth.LoginRequest
+import ecommerce.dto.user.UserRequestDTO
+import ecommerce.service.MemberAuthService
 import io.restassured.RestAssured
 import io.restassured.http.ContentType
 import org.assertj.core.api.Assertions
@@ -15,12 +14,12 @@ import org.springframework.http.HttpStatus
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 class MemberAuthControllerTest {
     @Autowired
-    private lateinit var authService: AuthService
+    private lateinit var memberAuthService: MemberAuthService
 
     @Test
     fun `signIn User`() {
         val user =
-            UserDTO(
+            UserRequestDTO(
                 name = "test",
                 email = "temp@temp.com",
                 password = "test-456",
@@ -30,27 +29,7 @@ class MemberAuthControllerTest {
                 .given().log().all()
                 .body(user)
                 .contentType(ContentType.JSON)
-                .`when`().post("api/auth/signup")
-                .then().log().all().extract()
-        Assertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value())
-        Assertions.assertThat(response.header("Authorization")).isNotNull
-    }
-
-    @Test
-    fun `signIn Admin`() {
-        val user =
-            UserDTO(
-                name = "test",
-                email = "admin@temp.com",
-                password = "test-456",
-                role = UserRole.ADMIN,
-            )
-        val response =
-            RestAssured
-                .given().log().all()
-                .body(user)
-                .contentType(ContentType.JSON)
-                .`when`().post("api/auth/signup")
+                .`when`().post("api/member/auth/signUp")
                 .then().log().all().extract()
         Assertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value())
         Assertions.assertThat(response.header("Authorization")).isNotNull
@@ -59,23 +38,23 @@ class MemberAuthControllerTest {
     @Test
     fun signUp() {
         val user =
-            UserDTO(
+            UserRequestDTO(
                 name = "test",
                 email = "temp2@temp.com",
                 password = "test-456",
             )
-        authService.signUp(user)
-        val tokenRequest =
-            TokenRequest(
+        memberAuthService.signUp(user)
+        val loginRequest =
+            LoginRequest(
                 email = "temp2@temp.com",
                 password = "test-456",
             )
         val response =
             RestAssured
                 .given().log().all()
-                .body(tokenRequest)
+                .body(loginRequest)
                 .contentType(ContentType.JSON)
-                .`when`().post("api/auth/signIn")
+                .`when`().post("api/member/auth/signIn")
                 .then().log().all().extract()
 
         Assertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())

@@ -1,8 +1,8 @@
 package ecommerce.controller.member
 
-import ecommerce.dto.auth.TokenRequest
-import ecommerce.dto.user.UserDTO
-import ecommerce.service.AuthService
+import ecommerce.dto.auth.LoginRequest
+import ecommerce.dto.user.UserRequestDTO
+import ecommerce.service.MemberAuthService
 import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping
@@ -13,25 +13,23 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/api/member/auth")
 class MemberAuthController(
-    val authService: AuthService,
+    val memberAuthService: MemberAuthService,
 ) {
     @PostMapping("/signUp")
     fun signUp(
-        @RequestBody @Valid userDTO: UserDTO,
+        @RequestBody @Valid userDTO: UserRequestDTO,
     ): ResponseEntity<Void> {
-        val userCreateResponse = authService.signUp(userDTO)
-        return ResponseEntity.created(
-            userCreateResponse.uri,
-        )
+        val userCreateResponse = memberAuthService.signUp(userDTO)
+        return ResponseEntity.created(userCreateResponse.uri)
             .header("Authorization", userCreateResponse.token)
             .build()
     }
 
     @PostMapping("/signIn")
     fun signIn(
-        @RequestBody @Valid tokenRequest: TokenRequest,
+        @RequestBody @Valid loginRequest: LoginRequest,
     ): ResponseEntity<Void> {
-        val token = authService.logIn(tokenRequest)
+        val token = memberAuthService.logIn(loginRequest)
         return ResponseEntity.ok().header("Authorization", token).build()
     }
 }

@@ -8,3 +8,7 @@ INSERT INTO products (name, description, price, image_url, quantity) VALUES
 INSERT INTO users (email, password, name, role) VALUES
 ('alice@example.com', 'password1','USER', 'USER'),
 ('bob@example.com', 'password2', 'ADMIN', 'ADMIN');
+
+INSERT INTO cart (user_id) VALUES
+(1),
+(2);

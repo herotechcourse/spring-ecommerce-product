@@ -1,35 +1,45 @@
 package ecommerce.service
 
 import ecommerce.dto.auth.AuthTokenPayload
-import ecommerce.dto.auth.TokenRequest
+import ecommerce.dto.auth.LoginRequest
+import ecommerce.dto.user.MemberUserDTO
 import ecommerce.dto.user.UserCreateResponse
-import ecommerce.dto.user.UserDTO
+import ecommerce.dto.user.UserRequestDTO
 import ecommerce.exception.EntityNotFoundException
 import ecommerce.exception.UserAlreadyExistsException
 import ecommerce.infrastructure.JwtTokenProvider
+import ecommerce.repository.CartRepository
 import ecommerce.repository.UserRepository
 import org.springframework.stereotype.Service
 import java.net.URI
 
 @Service
-class AuthService(
+class MemberAuthService(
     private val userRepository: UserRepository,
+    private val cartRepository: CartRepository,
     private val jwtTokenProvider: JwtTokenProvider,
 ) {
-    fun signUp(user: UserDTO): UserCreateResponse {
+    fun signUp(user: UserRequestDTO): UserCreateResponse {
         if (userRepository.existsByEmail(user.email)) {
             throw UserAlreadyExistsException(user.email)
         }
-        val id = userRepository.create(user)
-        val authTokenPayload = jwtTokenProvider.createToken(AuthTokenPayload(user.email, user.role))
+        val member =
+            MemberUserDTO(
+                user.email,
+                user.password,
+                user.name,
+            )
+        val id = userRepository.create(member)
+        cartRepository.createCartForUser(id)
+        val authTokenPayload = jwtTokenProvider.createToken(AuthTokenPayload(member.email, member.role))
         return UserCreateResponse(URI.create("/users/$id"), "Bearer $authTokenPayload")
     }
 
-    fun logIn(tokenRequest: TokenRequest): String {
+    fun logIn(loginRequest: LoginRequest): String {
         val user =
             userRepository.findByEmailAndPassword(
-                tokenRequest.email, tokenRequest.password,
-            ) ?: throw EntityNotFoundException("User with email ${tokenRequest.email} not found")
+                loginRequest.email, loginRequest.password,
+            ) ?: throw EntityNotFoundException("User with email ${loginRequest.email} not found")
 
         val token =
             jwtTokenProvider.createToken(

@@ -1,11 +1,10 @@
 package ecommerce.dto.user
 
-import ecommerce.enums.UserRole
 import jakarta.validation.constraints.Email
 import jakarta.validation.constraints.NotBlank
 import org.hibernate.validator.constraints.Length
 
-data class UserDTO(
+data class UserRequestDTO(
     @field:NotBlank(message = "Email cannot be blank")
     @field:Email(message = "Should be a valid email address")
     val email: String,
@@ -13,5 +12,4 @@ data class UserDTO(
     val password: String,
     @field:NotBlank(message = "Name cannot be blank")
     val name: String,
-    val role: UserRole = UserRole.USER,
 )

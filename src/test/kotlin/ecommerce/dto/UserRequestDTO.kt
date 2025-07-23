@@ -1,6 +1,6 @@
 package ecommerce.dto
 
-import ecommerce.dto.user.UserDTO
+import ecommerce.dto.user.UserRequestDTO
 import ecommerce.enums.UserRole
 import jakarta.validation.Validation
 import jakarta.validation.Validator
@@ -13,7 +13,7 @@ import org.junit.jupiter.params.provider.ValueSource
 import org.springframework.boot.test.context.SpringBootTest
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
-class UserDTOTest {
+class UserRequestDTO {
     private lateinit var validator: Validator
 
     @BeforeEach
@@ -24,11 +24,10 @@ class UserDTOTest {
     @Test
     fun `should pass validation for valid user`() {
         val dto =
-            UserDTO(
+            UserRequestDTO(
                 email = "user@example.com",
                 password = "securePass",
                 name = "John Doe",
-                role = UserRole.ADMIN,
             )
 
         val violations = validator.validate(dto)
@@ -39,11 +38,10 @@ class UserDTOTest {
     @ValueSource(strings = ["", "   "])
     fun `should fail validation when name is blank`(name: String) {
         val dto =
-            UserDTO(
+            UserRequestDTO(
                 email = "user@example.com",
                 password = "securePass",
                 name = name,
-                role = UserRole.USER,
             )
 
         val violations = validator.validate(dto)
@@ -54,11 +52,10 @@ class UserDTOTest {
     @ValueSource(strings = ["   ", "user@", "user.com", "user@.com"])
     fun `should fail validation when email is invalid`(email: String) {
         val dto =
-            UserDTO(
+            UserRequestDTO(
                 email = email,
                 password = "securePass",
                 name = "John Doe",
-                role = UserRole.USER,
             )
 
         val violations = validator.validate(dto)
@@ -70,11 +67,10 @@ class UserDTOTest {
     @ValueSource(strings = ["", "123", "abc12"])
     fun `should fail validation when password is too short`(password: String) {
         val dto =
-            UserDTO(
+            UserRequestDTO(
                 email = "user@example.com",
                 password = password,
                 name = "John Doe",
-                role = UserRole.USER,
             )
 
         val violations = validator.validate(dto)
@@ -85,11 +81,10 @@ class UserDTOTest {
     @EnumSource(UserRole::class)
     fun `should pass validation with all valid roles`(role: UserRole) {
         val dto =
-            UserDTO(
+            UserRequestDTO(
                 email = "user@example.com",
                 password = "securePass",
                 name = "John Doe",
-                role = role,
             )
 
         val violations = validator.validate(dto)
