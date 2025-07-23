@@ -1,3 +1,3 @@
-package ecommerce.model
+package ecommerce.domain
 
 data class Product(var id: Long, var name: String, var price: Double, var img: String, var quantity: Int)
