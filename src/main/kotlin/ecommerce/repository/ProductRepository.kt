@@ -22,12 +22,12 @@ class ProductRepository(private val jdbc: JdbcTemplate) {
         }
 
     fun findAll(): List<Product> {
-        val sql = "SELECT * FROM TBL_PRODUCTS"
+        val sql = "SELECT * FROM products"
         return jdbc.query(sql, productRowMapper)
     }
 
     fun findById(id: Long): Product? {
-        val sql = "SELECT * from TBL_PRODUCTS where ID = $id"
+        val sql = "SELECT * from products where ID = $id"
         return try {
             jdbc.queryForObject(sql, productRowMapper)
         } catch (_: org.springframework.dao.EmptyResultDataAccessException) {
@@ -36,7 +36,7 @@ class ProductRepository(private val jdbc: JdbcTemplate) {
     }
 
     fun save(product: Product): Product {
-        val sql = "insert into TBL_PRODUCTS (name, price, imageUrl) values (?, ?, ?)"
+        val sql = "insert into products (name, price, imageUrl) values (?, ?, ?)"
 
         val keyHolder: KeyHolder = GeneratedKeyHolder()
         jdbc.update({
@@ -54,18 +54,19 @@ class ProductRepository(private val jdbc: JdbcTemplate) {
         id: Long,
         product: Product,
     ): Product {
-        val sql = "UPDATE TBL_PRODUCTS SET name = ?, price = ?, imageUrl = ? WHERE id = ?"
+        val sql = "UPDATE products SET name = ?, price = ?, imageUrl = ? WHERE id = ?"
         jdbc.update(sql, product.name, product.price, product.imageUrl, id)
         return product.copy(id = id)
     }
 
     fun delete(id: Long) {
-        val sql = "DELETE FROM TBL_PRODUCTS WHERE ID = ?"
+        val sql = "DELETE FROM products WHERE ID = ?"
         jdbc.update(sql, id)
     }
 
+// TODO: how to make it less dangerous? (1. add confirmation param: 'confirmDeletion' 2.@PreAuthrozie("hasRole('ADMIN')" 3.Soft delete: sql = "UPDATE products SET deleted = true, deleted_at = NOW()")
     fun deleteAll() {
-        val sql = "DELETE FROM TBL_PRODUCTS"
+        val sql = "DELETE FROM products"
         jdbc.update(sql)
     }
 
@@ -79,7 +80,7 @@ class ProductRepository(private val jdbc: JdbcTemplate) {
         val updatedPrice = product.price ?: existing.price
         val updatedImageUrl = product.imageUrl ?: existing.imageUrl
 
-        val sql = "UPDATE TBL_PRODUCTS SET name = ?, price = ?, imageUrl = ? WHERE id = ?"
+        val sql = "UPDATE products SET name = ?, price = ?, imageUrl = ? WHERE id = ?"
         jdbc.update(sql, updatedName, updatedPrice, updatedImageUrl, id)
 
         return Product(id, updatedName, updatedPrice, updatedImageUrl)
