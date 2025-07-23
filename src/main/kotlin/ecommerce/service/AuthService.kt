@@ -31,9 +31,10 @@ class AuthService(
                 tokenRequest.email, tokenRequest.password,
             ) ?: throw EntityNotFoundException("User with email ${tokenRequest.email} not found")
 
-        val token = jwtTokenProvider.createToken(
-            AuthTokenPayload(user.email, user.role),
-        )
+        val token =
+            jwtTokenProvider.createToken(
+                AuthTokenPayload(user.email, user.role),
+            )
         return "Bearer $token"
     }
 
