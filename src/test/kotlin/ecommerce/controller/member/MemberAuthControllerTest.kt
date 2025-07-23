@@ -1,4 +1,4 @@
-package ecommerce.controller.guest
+package ecommerce.controller.member
 
 import ecommerce.dto.auth.TokenRequest
 import ecommerce.dto.user.UserDTO
@@ -13,7 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.HttpStatus
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
-class AuthControllerTest {
+class MemberAuthControllerTest {
     @Autowired
     private lateinit var authService: AuthService
 
