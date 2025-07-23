@@ -1,7 +1,7 @@
 # spring-ecommerce-product
 
 ## Product
--[x] Create a simple CRUD HTTP API
+- [x] Create a simple CRUD HTTP API
 - [x] Create a Product
 - [x] Retrieve a Product
 - [x] Retrieve a list of Products
@@ -40,3 +40,21 @@
   - [x] API controllers throw exceptions for GlobalExceptionHandler to catch
   - [x] View controllers use try-catch blocks, Model attributes, and RedirectAttributes for HTML error display
 
+## User Management / Authentication
+- [ ] 1.User registration:
+  - [ ] API Endpoint: POST /api/members/register
+  - [ ] Request Body: Email & Password
+  - [ ] Response 201 Created with Token
+  - [ ] Validation: email format, password complexity, email uniqueness (business logic, checked in the service layer)
+  - [ ] Password hashing with BCrypt
+  - [ ] JWT Generation - issue an access token after a successful registration
+- [ ] 2.User Signin:
+  - [ ] API Endpoint: POST /api/members/signin
+  - [ ] Request Body: Email & Password
+  - [ ] Response 200 OK with Token
+  - [ ] Validation email and password (same as register)
+  - [ ] Authentication - verify credentials against stored hash
+  - [ ] JWT Generation - issue an access token after a successful signin
+- [ ] 3.Authentication / Authorization
+  - [ ] Unauthorized for missing or invalid token
+  - [ ] Forbidden for incorrect login
