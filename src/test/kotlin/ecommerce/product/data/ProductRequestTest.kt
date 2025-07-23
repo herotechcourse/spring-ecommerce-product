@@ -1,11 +1,14 @@
 package ecommerce.product.data
 
+import ecommerce.CustomAssertExtension.shouldContainViolation
+import ecommerce.TestFixture.InvalidRequest.EXCEED_NAME_AMERICANO
+import ecommerce.TestFixture.ValidRequest.AMERICANO
+import ecommerce.view.ValidationMessages.Invalid.NAME_MUST_LENGTH
 import jakarta.validation.Validation
 import jakarta.validation.Validator
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import java.math.BigDecimal
 
 class ProductRequestTest {
     private lateinit var validator: Validator
@@ -18,13 +21,7 @@ class ProductRequestTest {
 
     @Test
     fun `valid ProductRequest should pass validation`() {
-        val request =
-            ProductRequest(
-                name = "Coffee",
-                price = BigDecimal("10.50"),
-                imageUrl = "https://example.com/image.jpg",
-            )
-
+        val request = AMERICANO
         val violations = validator.validate(request)
 
         assertThat(violations).isEmpty()

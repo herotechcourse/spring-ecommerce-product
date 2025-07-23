@@ -1,8 +1,8 @@
 package ecommerce.product.api
 
-import ecommerce.TextFixture
-import ecommerce.TextFixture.AssertTemplate.assertProductEquals
-import ecommerce.TextFixture.ValidRequest.AMERICANO
+import ecommerce.CustomAssertExtension.shouldEquals
+import ecommerce.TestFixture
+import ecommerce.TestFixture.ValidRequest.AMERICANO
 import ecommerce.product.data.ProductResponse
 import io.restassured.RestAssured
 import io.restassured.http.ContentType
@@ -28,7 +28,7 @@ class CreateProductAPITest {
         val product =
             response.body().`as`(ProductResponse::class.java)
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value())
-        assertProductEquals(product, AMERICANO, 1)
+        product.shouldEquals(AMERICANO, 1)
     }
 
     @Test
@@ -36,7 +36,7 @@ class CreateProductAPITest {
         val response =
             RestAssured
                 .given().log().all()
-                .body(TextFixture.InvalidDummy.SUPER_LONG_URL)
+                .body(TestFixture.InvalidDummy.SUPER_LONG_URL)
                 .contentType(ContentType.JSON)
                 .`when`().post("/api/products")
                 .then().log().all().extract()
@@ -49,7 +49,7 @@ class CreateProductAPITest {
         val response =
             RestAssured
                 .given().log().all()
-                .body(TextFixture.InvalidDummy.NO_NAME)
+                .body(TestFixture.InvalidDummy.NO_NAME)
                 .contentType(ContentType.JSON)
                 .`when`().post("/api/products")
                 .then().log().all().extract()
@@ -62,7 +62,7 @@ class CreateProductAPITest {
         val response =
             RestAssured
                 .given().log().all()
-                .body(TextFixture.InvalidDummy.NO_PRICE)
+                .body(TestFixture.InvalidDummy.NO_PRICE)
                 .contentType(ContentType.JSON)
                 .`when`().post("/api/products")
                 .then().log().all().extract()
@@ -75,7 +75,7 @@ class CreateProductAPITest {
         val response =
             RestAssured
                 .given().log().all()
-                .body(TextFixture.InvalidDummy.NO_URL)
+                .body(TestFixture.InvalidDummy.NO_URL)
                 .contentType(ContentType.JSON)
                 .`when`().post("/api/products")
                 .then().log().all().extract()

@@ -1,9 +1,9 @@
 package ecommerce.product.api
 
-import ecommerce.TextFixture.AssertTemplate.assertProductEquals
-import ecommerce.TextFixture.ValidRequest.AMERICANO
-import ecommerce.TextFixture.ValidRequest.FLAT_WHITE
-import ecommerce.TextFixture.createTestProduct
+import ecommerce.CustomAssertExtension.shouldEquals
+import ecommerce.TestFixture.ValidRequest.AMERICANO
+import ecommerce.TestFixture.ValidRequest.FLAT_WHITE
+import ecommerce.TestFixture.createTestProduct
 import ecommerce.product.data.ProductResponse
 import io.restassured.RestAssured
 import io.restassured.common.mapper.TypeRef
@@ -29,9 +29,11 @@ class GetProductAPITest {
                 .then().log().all().extract()
 
         val products = response.body().`as`(object : TypeRef<List<ProductResponse>>() {})
+
         assertThat(products).isNotEmpty()
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
-        assertProductEquals(products[0], AMERICANO, 1)
+
+        products[0].shouldEquals(AMERICANO, 1)
     }
 
     @Test
@@ -50,8 +52,9 @@ class GetProductAPITest {
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
         assertThat(response.jsonPath().getList("", ProductResponse::class.java)).hasSize(2)
-        assertProductEquals(products[0], AMERICANO, 1)
-        assertProductEquals(products[1], FLAT_WHITE, 2)
+
+        products[0].shouldEquals(AMERICANO, 1)
+        products[1].shouldEquals(FLAT_WHITE, 2)
     }
 
     @Test

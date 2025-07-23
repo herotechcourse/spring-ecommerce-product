@@ -1,9 +1,9 @@
 package ecommerce.product.api
 
-import ecommerce.TextFixture.AssertTemplate.assertProductEquals
-import ecommerce.TextFixture.ValidRequest.AMERICANO
-import ecommerce.TextFixture.ValidRequest.FLAT_WHITE
-import ecommerce.TextFixture.createTestProduct
+import ecommerce.CustomAssertExtension.shouldEquals
+import ecommerce.TestFixture.ValidRequest.AMERICANO
+import ecommerce.TestFixture.ValidRequest.FLAT_WHITE
+import ecommerce.TestFixture.createTestProduct
 import ecommerce.product.data.ProductResponse
 import io.restassured.RestAssured
 import io.restassured.http.ContentType
@@ -30,7 +30,7 @@ class UpdateDeleteProductAPITest {
 
         val product = response.body().`as`(ProductResponse::class.java)
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
-        assertProductEquals(product, FLAT_WHITE, 1)
+        product.shouldEquals(FLAT_WHITE, 1)
     }
 
     @Test
