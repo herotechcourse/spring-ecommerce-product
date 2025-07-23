@@ -1,39 +1,55 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-    <link
-            rel="stylesheet"
-            href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css"
-    >
-</head>
-<body>
-<div class="container">
-    <h1 th:text="products"></h1>
-    <a th:href="@{'/admin/products/add-product'}"><button type="submit">Add Product</button></a>
-    <table>
-        <tr>
-            <th>ID</th>
-            <th>Name</th>
-            <th>Price</th>
-            <th>Image</th>
-            <th>Quantity</th>
-            <th>Actions</th>
-        </tr>
-        <tr th:each="product : ${products}">
-            <td th:text="${product.id}"></td>
-            <td th:text="${product.name}"></td>
-            <td th:text="${product.price}"></td>
-            <td><img th:src="${product.img}" alt="${product.name}"></td>
-            <td th:text="${product.quantity}"></td>
-            <td>
-                <a th:href="@{'/admin/products/edit-product/' + ${product.id}}"><button type="submit">Edit</button></a>
 
-                <form th:action="@{/admin/products/delete-product/{id}(id=${product.id})}" th:method="delete"><button type="submit">Delete</button></form>
-            </td>
-        </tr>
-    </table>
-</div>
-</body>
+    <head>
+        <meta charset="UTF-8">
+        <title>Products</title>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/water.css">
+    </head>
+    <body>
+        <div class="container">
+            <h1>Product Management</h1>
+            <button onclick="showAddProductForm()">Add Product</button>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Price</th>
+                        <th>Image</th>
+                        <th>Quantity</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="ProductTable">
+
+                <tr th:each="product : ${products}">
+                    <td th:text="${product.id}"></td>
+                    <td th:text="${product.name}"></td>
+                    <td th:text="${product.price}"></td>
+                    <td><img th:src="${product.img}" th:alt="${product.name}" width="50"></td>
+                    <td th:text="${product.quantity}"></td>
+                    <td>
+                        <button th:attr="onclick=|editProduct(${product.id}, '${product.name}', ${product.price}, '${product.img}', ${product.quantity})|">Edit</button>
+                        <button th:attr="onclick=|deleteProduct(${product.id})|">Delete</button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+            <div id="formSection" style="display:none">
+                <h2 id="formTitle">Add/Edit Product</h2>
+                <form onsubmit="submitForm(event)">
+                    <input type="hidden" id="productId">
+                    <label for="productName"></label><input type="text" id="productName" placeholder="Name" required>
+                    <label for="productPrice"></label><input type="number" id="productPrice" placeholder="Price" required>
+                    <label for="productImg"></label><input type="text" id="productImg" placeholder="Image URL" required>
+                    <label for="productQuantity"></label><input type="number" id="productQuantity" placeholder="Quantity" required>
+                    <button type="submit">Save</button>
+                    <button type="button" onclick="cancelForm()">Cancel</button>
+                </form>
+            </div>
+        </div>
+        <script src="/js/product.js"></script>
+    </body>
 </html>
