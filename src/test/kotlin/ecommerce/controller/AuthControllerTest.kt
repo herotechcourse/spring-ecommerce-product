@@ -6,10 +6,10 @@ import ecommerce.service.AuthService
 import io.restassured.RestAssured
 import io.restassured.http.ContentType
 import org.apache.http.HttpStatus
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
-import org.assertj.core.api.Assertions.assertThat
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 class AuthControllerTest {
@@ -18,11 +18,12 @@ class AuthControllerTest {
 
     @Test
     fun signIn() {
-        val user = UserDTO(
-            name = "test",
-            email = "temp@temp.com",
-            password = "test-456",
-        )
+        val user =
+            UserDTO(
+                name = "test",
+                email = "temp@temp.com",
+                password = "test-456",
+            )
         val response =
             RestAssured
                 .given().log().all()
@@ -36,16 +37,18 @@ class AuthControllerTest {
 
     @Test
     fun signUp() {
-        val user = UserDTO(
-            name = "test",
-            email = "temp2@temp.com",
-            password = "test-456",
-        )
+        val user =
+            UserDTO(
+                name = "test",
+                email = "temp2@temp.com",
+                password = "test-456",
+            )
         authService.signUp(user)
-        val tokenRequest = TokenRequest(
-            email = "temp2@temp.com",
-            password = "test-456",
-        )
+        val tokenRequest =
+            TokenRequest(
+                email = "temp2@temp.com",
+                password = "test-456",
+            )
         val response =
             RestAssured
                 .given().log().all()
