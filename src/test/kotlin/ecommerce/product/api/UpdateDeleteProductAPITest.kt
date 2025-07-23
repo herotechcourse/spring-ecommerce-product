@@ -1,10 +1,10 @@
 package ecommerce.product.api
 
-import ecommerce.CustomAssertExtension.shouldEquals
-import ecommerce.TestFixture.ValidRequest.AMERICANO
-import ecommerce.TestFixture.ValidRequest.FLAT_WHITE
-import ecommerce.TestFixture.postTestProduct
 import ecommerce.product.data.ProductResponse
+import ecommerce.product.helper.CustomAssertExtension.shouldEquals
+import ecommerce.product.helper.TestFixture.ValidRequest.AMERICANO
+import ecommerce.product.helper.TestFixture.ValidRequest.FLAT_WHITE
+import ecommerce.product.helper.TestFixture.postTestProduct
 import io.restassured.RestAssured
 import io.restassured.http.ContentType
 import org.assertj.core.api.Assertions.assertThat
