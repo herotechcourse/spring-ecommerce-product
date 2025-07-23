@@ -36,12 +36,12 @@
 
 #### step 2-2
 
-- [ ] user registration
-  - [ ] handle `POST /api/members/register` requests
+- [x] user registration
+  - [x] handle `POST /api/members/register` requests
     - [x] receive `email` and `password` in JSON body
     - [x] hash password
     - [x] create user in database
-    - [ ] return token when successful registration (`200`)
+    - [x] return token when successful registration (`200`)
 
 - [ ] user login
   - [ ] handle `POST /api/members/login` requests
@@ -59,7 +59,12 @@
   - [ ] set token expiration time?
 
 - [ ] Error handling
-  - `400 Bad Request` if required fields missing or invalid 
-  - `401 Unauthorized` if authorization header missing or invalid 
-  - `403 Forbidden` if failed login
+  - [ ] `400 Bad Request` if required fields missing or invalid 
+  - [ ] `401 Unauthorized` if authorization header missing or invalid 
+  - [ ] `403 Forbidden` if failed login
 
+
+
+## notes
+
+- generate key via `openssl rand -base64 32`
