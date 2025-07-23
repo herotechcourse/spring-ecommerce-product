@@ -12,7 +12,7 @@ import org.junit.jupiter.params.provider.ValueSource
 import org.springframework.boot.test.context.SpringBootTest
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
-class CreateUserDTOTest {
+class UserDTOTest {
     private lateinit var validator: Validator
 
     @BeforeEach
