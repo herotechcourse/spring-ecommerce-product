@@ -1,20 +1,28 @@
 # spring-ecommerce-product
 
 ## Controller
-### AdminProductController
-- [x] `Get` all products
-- [x] `Get` product by ID
-- [x] `POST` Create a Product
-- [x] `PUT` update the whole product by ID
-- [x] `PATCH` update one or more attributes of Product by ID
-- [x] `DELETE` delete the product by ID
+### Admin
+#### AdminProductController
+- [x] `GET /api/admin/products` all products
+- [x] `GET /api/admin/products/:id` product by ID
+- [x] `POST /api/admin/products` Create a Product
+- [x] `PUT /api/admin/products/:id` update the whole product by ID
+- [x] `PATCH /api/admin/products/:id` update one or more attributes of Product by ID
+- [x] `DELETE /api/admin/products/:id` delete the product by ID
 
-### AuthController
-- [x] `signup` creates user and returns JWT token
-- [x] `login` checks and returns JWT token
+## Guest
+#### AuthController
+- [x] `POST /api/auth/signUp` creates user and returns JWT token
+- [x] `POST /api/auth/signIn` checks and returns JWT token
 
-### GuestProductController
-- [x] `Get` all products
+#### GuestProductController
+- [x] `GET /api/products` all products
+
+## Member
+## CartController
+- `GET ` getCartProducts
+- `POST ` addCartProduct
+- `DELETE ` removeCartProduct
 
 ## Config
 ### LoginAdminInterceptor
@@ -31,7 +39,9 @@
 ### AuthService
 - [x] `signUp`: String `[AuthToken]`
 - [x] `login`: String `[AuthToken]`
-- [] `logout`: Void
+- [ ] `logout`: Void
+
+### CartService
 
 ## Repository
 ### ProductRepository
@@ -46,6 +56,8 @@
 - `create`: Long
 - `findByEmailAndPassword`: UserDTO?
 - `existsByEmail`: Boolean
+
+### CartRepository
 
 ## DTO
 ### ProductDTO
@@ -108,3 +120,12 @@
 ### Users
 - id, email, password, name, role
 - [x] email is unique
+
+### Cart
+- id
+- user_id (FK)
+
+### CartProducts
+- id, quantity
+- cart_id (FK)
+- product_id (FK)

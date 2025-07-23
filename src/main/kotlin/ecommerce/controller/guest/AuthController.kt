@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController
 class AuthController(
     val authService: AuthService,
 ) {
-    @PostMapping("/signup")
+    @PostMapping("/signUp")
     fun signUp(
         @RequestBody @Valid userDTO: UserDTO,
     ): ResponseEntity<Void> {
