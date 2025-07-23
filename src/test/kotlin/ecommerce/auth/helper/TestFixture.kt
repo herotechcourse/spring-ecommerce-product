@@ -1,7 +1,7 @@
-package ecommerce.member.helper
+package ecommerce.auth.helper
 
-import ecommerce.member.data.TokenRequest
-import ecommerce.member.data.TokenResponse
+import ecommerce.auth.data.TokenRequest
+import ecommerce.auth.data.TokenResponse
 
 object TestFixture {
     object PostMembersRegister {

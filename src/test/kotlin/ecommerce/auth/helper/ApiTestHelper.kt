@@ -1,4 +1,4 @@
-package ecommerce.member.helper
+package ecommerce.auth.helper
 
 data class ApiTestHelper<Req, Res>(
     val httpRequestLine: RequestLine,

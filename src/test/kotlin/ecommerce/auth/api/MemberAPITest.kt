@@ -1,9 +1,9 @@
-package ecommerce.member.api
+package ecommerce.auth.api
 
-import ecommerce.member.data.TokenResponse
-import ecommerce.member.helper.RequestExecutor
-import ecommerce.member.helper.TestFixture.PostMembersRegister
-import ecommerce.member.helper.CustomAssertExtension.shouldEquals
+import ecommerce.auth.data.TokenResponse
+import ecommerce.auth.helper.RequestExecutor
+import ecommerce.auth.helper.TestFixture.PostMembersRegister
+import ecommerce.auth.helper.CustomAssertExtension.shouldEquals
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.springframework.http.HttpStatus

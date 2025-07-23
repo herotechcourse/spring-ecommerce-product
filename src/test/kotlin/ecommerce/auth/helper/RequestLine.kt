@@ -1,4 +1,4 @@
-package ecommerce.member.helper
+package ecommerce.auth.helper
 
 class RequestLine(line: String) {
     val method: String

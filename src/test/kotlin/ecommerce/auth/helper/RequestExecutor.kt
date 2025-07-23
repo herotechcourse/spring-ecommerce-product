@@ -1,4 +1,4 @@
-package ecommerce.member.helper
+package ecommerce.auth.helper
 
 import io.restassured.RestAssured
 import io.restassured.http.ContentType

@@ -1,6 +1,6 @@
-package ecommerce.member.helper
+package ecommerce.auth.helper
 
-import ecommerce.member.data.TokenResponse
+import ecommerce.auth.data.TokenResponse
 import org.assertj.core.api.Assertions.assertThat
 
 object CustomAssertExtension {
