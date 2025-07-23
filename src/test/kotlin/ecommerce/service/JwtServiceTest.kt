@@ -13,8 +13,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
 @AutoConfigureMockMvc
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class RegisterUserApiTest {
-
+class JwtServiceTest {
     @Autowired
     lateinit var mockMvc: MockMvc
 
@@ -23,19 +22,21 @@ class RegisterUserApiTest {
 
     @Test
     fun `registering a new user should return 200 and JWT token`() {
-        val requestBody = """
+        val requestBody =
+            """
             {
               "email": "testuser@example.com",
               "password": "testpass123"
             }
-        """.trimIndent()
+            """.trimIndent()
 
-        val result = mockMvc.perform(
-            post("/api/members/register")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(requestBody)
-        ).andExpect(status().isOk)
-            .andReturn()
+        val result =
+            mockMvc.perform(
+                post("/api/members/register")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(requestBody),
+            ).andExpect(status().isOk)
+                .andReturn()
 
         val response = result.response
         val responseBody = response.contentAsString
@@ -47,19 +48,21 @@ class RegisterUserApiTest {
 
     @Test
     fun `registering with empty email should return 400`() {
-        val requestBody = """
-        {
-          "email": "",
-          "password": "validpass123"
-        }
-    """.trimIndent()
+        val requestBody =
+            """
+            {
+              "email": "",
+              "password": "validpass123"
+            }
+            """.trimIndent()
 
-        val result = mockMvc.perform(
-            post("/api/members/register")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(requestBody)
-        ).andExpect(status().isBadRequest)
-            .andReturn()
+        val result =
+            mockMvc.perform(
+                post("/api/members/register")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(requestBody),
+            ).andExpect(status().isBadRequest)
+                .andReturn()
 
         val response = result.response
 
@@ -69,19 +72,21 @@ class RegisterUserApiTest {
 
     @Test
     fun `registering with too short password should return 400`() {
-        val requestBody = """
-        {
-          "email": "user@example.com",
-          "password": "123"
-        }
-    """.trimIndent()
+        val requestBody =
+            """
+            {
+              "email": "user@example.com",
+              "password": "123"
+            }
+            """.trimIndent()
 
-        val result = mockMvc.perform(
-            post("/api/members/register")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(requestBody)
-        ).andExpect(status().isBadRequest)
-            .andReturn()
+        val result =
+            mockMvc.perform(
+                post("/api/members/register")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(requestBody),
+            ).andExpect(status().isBadRequest)
+                .andReturn()
 
         val response = result.response
 
@@ -91,30 +96,31 @@ class RegisterUserApiTest {
 
     @Test
     fun `registering with existing email should return 400`() {
-        val requestBody = """
-        {
-          "email": "duplicate@example.com",
-          "password": "validpass123"
-        }
-    """.trimIndent()
+        val requestBody =
+            """
+            {
+              "email": "duplicate@example.com",
+              "password": "validpass123"
+            }
+            """.trimIndent()
 
         mockMvc.perform(
             post("/api/members/register")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(requestBody)
+                .content(requestBody),
         ).andExpect(status().isOk)
 
-        val result = mockMvc.perform(
-            post("/api/members/register")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(requestBody)
-        ).andExpect(status().isBadRequest)
-            .andReturn()
+        val result =
+            mockMvc.perform(
+                post("/api/members/register")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(requestBody),
+            ).andExpect(status().isBadRequest)
+                .andReturn()
 
         val response = result.response
 
         assertThat(response.status).isEqualTo(400)
         assertThat(response.contentAsString).contains("Email already in use")
     }
-
 }

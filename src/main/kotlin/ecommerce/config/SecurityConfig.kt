@@ -11,8 +11,7 @@ import org.springframework.security.web.SecurityFilterChain
 @EnableWebSecurity
 @Profile("!test-security")
 class SecurityConfig {
-
-    //TODO: remove at the end as only for testing purposes with manual request creation
+    // TODO: remove at the end as only for testing purposes with manual request creation
     @Bean
     fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
         http

@@ -11,9 +11,8 @@ import java.util.Date
 @Service
 class JwtService(
     @Value("\${jwt.secret}")
-    secret: String
-)  {
-
+    secret: String,
+) {
     private val secretKey: Key = Keys.hmacShaKeyFor(Base64.getDecoder().decode(secret))
     private val expirationMillis: Long = 1000 * 60 * 60 * 24
 
