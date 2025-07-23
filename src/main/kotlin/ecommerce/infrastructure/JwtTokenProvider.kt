@@ -42,8 +42,8 @@ class JwtTokenProvider(
                 .payload
 
         val email = claims.get("email", String::class.java)
-        val role = claims.get("role", UserRole::class.java)
-        return AuthTokenPayload(email, role)
+        val roleString = claims.get("role", String()::class.java)
+        return AuthTokenPayload(email, UserRole.valueOf(roleString))
     }
 
     fun validateToken(token: String): Boolean {

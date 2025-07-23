@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.exc.MismatchedInputException
 import ecommerce.dto.ErrorResponse
 import ecommerce.exception.DuplicateProductNameException
 import ecommerce.exception.EntityNotFoundException
+import ecommerce.exception.UnauthorisedUserException
 import ecommerce.exception.UserAlreadyExistsException
 import jakarta.servlet.http.HttpServletRequest
 import org.springframework.http.HttpStatus
@@ -59,10 +60,18 @@ class GlobalExceptionHandler {
 
     @ExceptionHandler(UserAlreadyExistsException::class)
     fun handleUserAlreadyExistsException(
-        ex: MethodArgumentNotValidException,
+        ex: UserAlreadyExistsException,
         request: HttpServletRequest,
     ): ResponseEntity<ErrorResponse> {
-        return errorResponse(HttpStatus.CONFLICT, ex.message, request)
+        return errorResponse(HttpStatus.CONFLICT, ex.message ?: "Already exists", request)
+    }
+
+    @ExceptionHandler(UnauthorisedUserException::class)
+    fun handleUnauthorisedUserException(
+        ex: UnauthorisedUserException,
+        request: HttpServletRequest,
+    ): ResponseEntity<ErrorResponse> {
+        return errorResponse(HttpStatus.UNAUTHORIZED, ex.message ?: "UNAUTHORIZED", request)
     }
 
     private fun errorResponse(
