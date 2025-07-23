@@ -58,7 +58,13 @@
 ### TokenResponse
 ### TokenRequest
 
-## mapper
+## Infrastructure
+### JwtTokenProvider
+- [x] `createToken`: String
+- [x] `getPayload`: AuthTokenPayload
+- [x] `validateToken`: Boolean
+
+## Mapper
 ### ProductRowMapper
 - [x] Converts the DB data to Kotlin class object
 
