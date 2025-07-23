@@ -83,12 +83,12 @@ so that users can access member-only functionality in the future.
 - [x] To receive an access token, the client must send email and password.
 - [x] If the credentials match a registered user, issue a token.
   - [x] JWT token
-- [ ] Return 401 Unauthorized if the Authorization header is missing or the token is invalid.
-- [ ] Return 403 Forbidden for incorrect login attempts or denied actions (e.g., password reset or change with invalid input).
+- [x] Return 401 Unauthorized if the Authorization header is missing or the token is invalid.
+- [x] Return 403 Forbidden for incorrect login attempts or denied actions (e.g., password reset or change with invalid input).
 - [ ] Let user use token to retrieve information.
-- [ ] Implement the API to send and receive HTTP messages as shown below:
+- [x] Implement the API to send and receive HTTP messages as shown below:
 1. **Register**
-- [ ] Request
+- [x] Request
 ```http
 POST /api/members/register HTTP/1.1
 Content-Type: application/json
@@ -99,7 +99,7 @@ host: localhost:8080
 "password": "password"
 }
 ```
-- [ ] Response
+- [x] Response
 ```http
 HTTP/1.1 201
 Content-Type: application/json
@@ -110,7 +110,7 @@ Content-Type: application/json
 ```
 
 2. **Login**
-- [ ] Request
+- [x] Request
 ```http
 POST /api/members/login HTTP/1.1
 Content-Type: application/json
@@ -121,7 +121,7 @@ host: localhost:8080
 "password": "password"
 }
 ```
-- [ ] Response
+- [x] Response
 ```http
 HTTP/1.1 200
 Content-Type: application/json
@@ -189,7 +189,13 @@ class GlobalExceptionHandler {
 - TODO read about difference btw RestController and Controller
 - TODO why do we combine Controller and ControllerView
 - read and learn SQL commands in H2 console
-- 
+- package ecommerce.controller.TokenLoginController: What is the best thing to return here? Shall I return the Location header inside created? Shall a redirection happen to the products page?
+```
+  fun registerMember(@Valid @RequestBody request: TokenRequest): ResponseEntity<TokenResponse> {
+        val tokenResponse = authService.register(request)
+        return ResponseEntity.status(HttpStatus.CREATED).body(tokenResponse)
+    }
+  ```
 
 
 

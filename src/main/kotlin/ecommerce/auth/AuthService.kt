@@ -1,5 +1,7 @@
 package ecommerce.auth
 
+import ecommerce.exception.NotFoundException
+import ecommerce.exception.UnauthorizedException
 import ecommerce.infrastructure.JwtTokenProvider
 import ecommerce.model.Member
 import ecommerce.model.TokenRequest
@@ -33,13 +35,13 @@ class AuthService(
 
     fun login(request: TokenRequest): TokenResponse {
         if (!memberRepository.existsByEmail(request.email)) {
-            // TODO customize exception
-            throw IllegalArgumentException("No account with email exists")
+            // TODO customize exception -> return 404
+            throw NotFoundException("No account with email exists")
         }
         val member = Member(email = request.email, password = request.password)
-        if (memberRepository.findMember(member)) {
-            // TODO customize -> return 403 Forbidden
-            throw IllegalArgumentException("Incorrect Password")
+        if (memberRepository.findMember(member) == null) {
+            // TODO customize -> return 401
+            throw UnauthorizedException("Incorrect Password")
         }
         return createToken(request)
     }
