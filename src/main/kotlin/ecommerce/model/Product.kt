@@ -11,7 +11,7 @@ data class Product(
 
     @field:NotNull(message = "Product name is required")
     @field:NotBlank(message = "Product name is required")
-    @field:Size(min=1, max=15, message = "Name must have at least 15 characters")
+    @field:Size(min=1, max=15, message = "Name must have at maximum 15 characters")
     @field:Pattern(regexp = "^[a-zA-Z0-9()\\[\\]+\\-&/_ ]+$", message = "Invalid characters")
     var name: String,
 

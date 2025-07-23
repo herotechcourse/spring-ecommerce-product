@@ -15,4 +15,10 @@ class GlobalExceptionHandler {
         }
         return ResponseEntity.badRequest().body(mapOf("errors" to errors))
     }
+
+    @ExceptionHandler(ProductValidationException::class)
+    fun handleProductValidationException(ex: ProductValidationException): ResponseEntity<Map<String, Any>> {
+        val errors = mapOf("name" to (ex.message ?: "Invalid product name"))
+        return ResponseEntity.badRequest().body(mapOf("errors" to errors))
+    }
 }

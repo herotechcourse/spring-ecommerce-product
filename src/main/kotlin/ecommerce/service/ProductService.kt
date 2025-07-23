@@ -1,5 +1,6 @@
 package ecommerce.service
 
+import ecommerce.exception.ProductValidationException
 import ecommerce.model.Product
 import ecommerce.model.ProductPatchDTO
 import ecommerce.store.ProductStore
@@ -11,7 +12,14 @@ class ProductService(private val productStore: ProductStore) {
 
     fun findById(id: Long): Product? = productStore.findProductById(id)
 
-    fun insert(product: Product): Product = productStore.insertProduct(product)
+    fun insert(product: Product): Product {
+        val allProducts = findAll()
+        val nameAlreadyExists = allProducts.any { it.name == product.name }
+        if (nameAlreadyExists) {
+            throw ProductValidationException("Product with name '${product.name}' already exists.")
+        }
+        return productStore.insertProduct(product)
+    }
 
     fun update(
         id: Long,
