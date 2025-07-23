@@ -21,7 +21,7 @@ class ProductController(private val productRepository: ProductRepository) {
     @GetMapping(PRODUCT_PATH_ID)
     fun getProductById(
         @PathVariable id: Long,
-    ): ResponseEntity<Product> = ResponseEntity.ok(productRepository.findById(id))
+    ): Product = productRepository.findById(id)!!
 
     @PostMapping(PRODUCT_PATH)
     fun createProduct(
@@ -35,13 +35,13 @@ class ProductController(private val productRepository: ProductRepository) {
     fun updateProductById(
         @RequestBody product: Product,
         @PathVariable id: Long,
-    ): ResponseEntity<Product> = ResponseEntity.ok(productRepository.update(id, product))
+    ): Product = productRepository.update(id, product)
 
     @PatchMapping(PRODUCT_PATH_ID)
     fun patchProductById(
         @RequestBody product: Product,
         @PathVariable id: Long,
-    ): ResponseEntity<Product> = ResponseEntity.ok(productRepository.patch(id, product))
+    ): Product = productRepository.patch(id, product)
 
     @DeleteMapping(PRODUCT_PATH_ID)
     fun deleteProductById(
@@ -50,12 +50,15 @@ class ProductController(private val productRepository: ProductRepository) {
         productRepository.delete(id)
         return ResponseEntity.noContent().build()
     }
+    //Q.what to return after deletion?
+
 
     @DeleteMapping(PRODUCT_PATH)
-    fun deleteAllProducts(): ResponseEntity<String> {
+    fun deleteAllProducts(): ResponseEntity<Unit> {
         productRepository.deleteAll()
         return ResponseEntity.noContent().build()
     }
+    //Q.what to return after deletion?
 
     companion object {
         const val PRODUCT_PATH = "/api/products"
