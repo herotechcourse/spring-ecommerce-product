@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.exc.MismatchedInputException
 import ecommerce.dto.ErrorResponse
 import ecommerce.exception.DuplicateProductNameException
 import ecommerce.exception.EntityNotFoundException
+import ecommerce.exception.UserAlreadyExistsException
 import jakarta.servlet.http.HttpServletRequest
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -54,6 +55,14 @@ class GlobalExceptionHandler {
     ): ResponseEntity<ErrorResponse> {
         val errors = ex.bindingResult.fieldErrors.associate { it.field to (it.defaultMessage ?: "Invalid value") }
         return errorResponse(HttpStatus.BAD_REQUEST, errors, request)
+    }
+
+    @ExceptionHandler(UserAlreadyExistsException::class)
+    fun handleUserAlreadyExistsException(
+        ex: MethodArgumentNotValidException,
+        request: HttpServletRequest,
+    ): ResponseEntity<ErrorResponse> {
+        return errorResponse(HttpStatus.CONFLICT, ex.message, request)
     }
 
     private fun errorResponse(
