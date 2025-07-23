@@ -73,7 +73,7 @@ class ProductRepository(private val jdbc: JdbcTemplate) {
         id: Long,
         patchProduct: ProductPatchRequest,
     ): Product {
-        val existing = findById(id) ?: throw NotFoundException("Product with Id[$id] Not found.")
+        val existing = findById(id)
         val updatedName = patchProduct.name ?: existing.name
         val updatedPrice = patchProduct.price ?: existing.price
         val updatedImageUrl = patchProduct.imageUrl ?: existing.imageUrl
