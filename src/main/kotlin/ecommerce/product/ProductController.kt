@@ -37,11 +37,11 @@ class ProductController(private val repository: ProductRepository) {
 
     @PatchMapping("/{id}")
     fun patchUpdate(
-        @RequestBody partialProduct: Product,
+        @RequestBody dto: ProductDTO,
         @PathVariable id: Long,
     ): ResponseEntity<Product> {
         val existingProduct = repository[id] ?: return ResponseEntity.notFound().build()
-        val updatedProduct = existingProduct.updateWith(partialProduct)
+        val updatedProduct = existingProduct.updateWith(dto)
         repository.updateById(id, updatedProduct)
 
         return ResponseEntity.ok().body(updatedProduct)
