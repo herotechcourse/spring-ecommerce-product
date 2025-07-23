@@ -1,15 +1,23 @@
 package ecommerce.advice
 
 import ecommerce.exception.NotFoundException
+import ecommerce.exception.ErrorResponse
+import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
+import org.springframework.web.bind.annotation.ResponseStatus
 
 @ControllerAdvice
 class GlobalControllerAdvice {
-    @ExceptionHandler
-    fun handleNotFoundException(e: NotFoundException): ResponseEntity<String> {
-        println("NotFoundException occurred: ${e.message}")
-        return ResponseEntity.notFound().build()
+    
+    @ExceptionHandler(NotFoundException::class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    fun handleNotFoundException(e: NotFoundException): ResponseEntity<ErrorResponse> {
+        val errorResponse = ErrorResponse(
+            error = "NOT_FOUND",
+            message = e.message ?: "Resource not found"
+        )
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse)
     }
 }
