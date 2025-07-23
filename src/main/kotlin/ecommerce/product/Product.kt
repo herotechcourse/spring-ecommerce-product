@@ -4,16 +4,16 @@ import java.math.BigDecimal
 
 class Product(
     var id: Long? = null,
-
-//    @field:NotBlank(message = "Name cannot be blank")
-//    @field:Size(max = 15, message = "Name must be at most 255 characters")
-    var name: String?,
-
-//    @field:NotNull(message = "Price is required")
-//    @field:Positive(message = "Price must be greater than zero")
-    var price: BigDecimal?,
+    var name: String,
+    var price: BigDecimal,
     var imageUrl: String?
 ) {
+    init {
+        require(name.isNotBlank()) { "Name cannot be blank" }
+        require(name.length <= 255) { "Name must be at most 255 characters" }
+        require(price > BigDecimal.ZERO) { "Price must be positive" }
+    }
+
     fun updateWith(partial: Product): Product {
         return Product(
             name = partial.name ?: this.name,
