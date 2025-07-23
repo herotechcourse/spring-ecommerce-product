@@ -1,7 +1,12 @@
 package ecommerce.controller
 
+import ecommerce.dto.ProductRequest
+import ecommerce.exception.ErrorResponse
+import ecommerce.exception.FieldError
+import ecommerce.mapper.toEntity
 import ecommerce.model.Product
 import ecommerce.repository.ProductRepository
+import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
@@ -19,31 +24,77 @@ class ProductRestController(
     fun getById(
         @PathVariable id: Long,
     ): ResponseEntity<Product> {
-        val product = productRepository.findById(id) ?: return ResponseEntity.notFound().build()
+        val product =
+            productRepository.findById(id)
+                ?: return ResponseEntity.notFound().build()
         return ResponseEntity.ok(product)
     }
 
     @PostMapping
     fun create(
-        @RequestBody product: Product,
-    ): ResponseEntity<Product> {
+        @RequestBody @Valid request: ProductRequest,
+    ): ResponseEntity<out Any> {
+        val existing = productRepository.getAll().any { it.name == request.name }
+        if (productRepository.existsByName(request.name)) {
+            val error =
+                ErrorResponse(
+                    message = "Validation failed",
+                    errors = listOf(FieldError("name", "Product name must be unique")),
+                )
+            return ResponseEntity.badRequest().body(error)
+        }
+
+        val product = request.toEntity()
         productRepository.createProduct(product)
+
         val saved = productRepository.getAll().last()
         return ResponseEntity.ok(saved)
     }
 
-    @PutMapping
+    @PutMapping("/{id}")
     fun update(
-        @RequestBody product: Product,
-    ): ResponseEntity<Product> {
-        productRepository.updateProduct(product)
-        return ResponseEntity.ok(product)
+        @PathVariable id: Long,
+        @RequestBody @Valid request: ProductRequest,
+    ): ResponseEntity<out Any?> {
+        val existingProduct =
+            productRepository.findById(id)
+                ?: return ResponseEntity.notFound().build()
+
+        val isDuplicateName =
+            productRepository.getAll()
+                .any { it.name == request.name && it.id != id }
+
+        if (isDuplicateName) {
+            val error =
+                ErrorResponse(
+                    message = "Validation failed",
+                    errors =
+                        listOf(
+                            FieldError("name", "Product name must be unique"),
+                        ),
+                )
+            return ResponseEntity.badRequest().body(error)
+        }
+
+        val updatedProduct =
+            Product(
+                id = id,
+                name = request.name,
+                price = request.price,
+                imageUrl = request.imageUrl,
+            )
+        productRepository.updateProduct(updatedProduct)
+        return ResponseEntity.ok(updatedProduct)
     }
 
     @DeleteMapping("/{id}")
     fun delete(
         @PathVariable id: Long,
     ): ResponseEntity<Unit> {
+        val existingProduct =
+            productRepository.findById(id)
+                ?: return ResponseEntity.notFound().build()
+
         productRepository.deleteProduct(id)
         return ResponseEntity.ok().build()
     }
