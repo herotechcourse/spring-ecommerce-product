@@ -25,4 +25,11 @@ class AuthenticationService(
         val token = tokenService.createToken(request.email)
         return TokenResponse(token)
     }
+
+    fun logIn(request: RegistrationRequest): TokenResponse {
+        val member = memberRepository.findByEmail(request.email) ?: throw RuntimeException("No member found with email: ${request.email}")
+        if (member.password != request.password) throw RuntimeException("Invalid password for email: ${request.email}")
+        val token = tokenService.createToken(request.email)
+        return TokenResponse(token)
+    }
 }

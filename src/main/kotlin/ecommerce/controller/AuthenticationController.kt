@@ -31,4 +31,12 @@ class AuthenticationController(private val authenticationService: Authentication
         val token = authenticationService.registerMember(request)
         return ResponseEntity.ok(token)
     }
+
+    @PostMapping("/login")
+    fun login(
+        @RequestBody request: RegistrationRequest,
+    ): ResponseEntity<TokenResponse> {
+        val token = authenticationService.logIn(request)
+        return ResponseEntity.ok(token)
+    }
 }
