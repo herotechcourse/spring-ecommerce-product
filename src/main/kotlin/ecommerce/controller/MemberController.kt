@@ -1,5 +1,7 @@
 package ecommerce.controller
 
+import ecommerce.dto.LoginRequest
+import ecommerce.dto.LoginResponse
 import ecommerce.dto.RegisterRequest
 import ecommerce.dto.RegisterResponse
 import ecommerce.entity.User
@@ -39,5 +41,19 @@ class MemberController(
         val token = jwtService.generateToken(request.email)
         val response = RegisterResponse(token)
         return ResponseEntity.ok(response)
+    }
+
+    @PostMapping("/login")
+    fun login(
+        @Valid @RequestBody request: LoginRequest
+    ): ResponseEntity<LoginResponse> {
+        val user = userService.getByEmail(request.email)
+            ?: return ResponseEntity.status(403).build()
+
+        val passwordMatches = userService.checkPassword(user, request.password)
+        if (!passwordMatches) return ResponseEntity.status(403).build()
+
+        val token = jwtService.generateToken(user.email)
+        return ResponseEntity.ok(LoginResponse(token))
     }
 }
