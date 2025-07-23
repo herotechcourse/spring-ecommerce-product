@@ -28,7 +28,12 @@ class ProductControllerTest {
 
     @Test
     fun getProduct() {
-        val product = Product(name = "Speaker", price = 99.99)
+        val product =
+            Product(
+                name = "Speaker",
+                price = 99.99,
+                imageUrl = "https://images.unsplash.com/photo-1494905998402-395d579af36f?w=400&h=400&fit=crop",
+            )
         val id =
             RestAssured.given()
                 .contentType(ContentType.JSON)
@@ -72,7 +77,12 @@ class ProductControllerTest {
 
     @Test
     fun updateProduct() {
-        val created = Product(name = "Mouse", price = 25.0)
+        val created =
+            Product(
+                name = "Mouse",
+                price = 25.0,
+                imageUrl = "https://images.unsplash.com/photo-1494905998402-395d579af36f?w=400&h=400&fit=crop",
+            )
         val id =
             RestAssured.given()
                 .contentType(ContentType.JSON)
@@ -80,7 +90,12 @@ class ProductControllerTest {
                 .post("/api/products")
                 .then().extract().jsonPath().getLong("id")
 
-        val updated = Product(name = "Gaming Mouse", price = 45.0)
+        val updated =
+            Product(
+                name = "Gaming Mouse",
+                price = 45.0,
+                imageUrl = "https://images.unsplash.com/photo-1494905998402-395d579af36f?w=400&h=400&fit=crop",
+            )
 
         val response =
             RestAssured.given().log().all()
@@ -96,7 +111,12 @@ class ProductControllerTest {
 
     @Test
     fun patchProduct() {
-        val created = Product(name = "Tablet", price = 299.0)
+        val created =
+            Product(
+                name = "Tablet",
+                price = 299.0,
+                imageUrl = "https://images.unsplash.com/photo-1494905998402-395d579af36f?w=400&h=400&fit=crop",
+            )
         val id =
             RestAssured.given()
                 .contentType(ContentType.JSON)
@@ -119,7 +139,12 @@ class ProductControllerTest {
 
     @Test
     fun deleteProduct() {
-        val created = Product(name = "Keyboard", price = 59.99)
+        val created =
+            Product(
+                name = "Keyboard",
+                price = 59.99,
+                imageUrl = "https://images.unsplash.com/photo-1494905998402-395d579af36f?w=400&h=400&fit=crop",
+            )
         val id =
             RestAssured.given()
                 .contentType(ContentType.JSON)

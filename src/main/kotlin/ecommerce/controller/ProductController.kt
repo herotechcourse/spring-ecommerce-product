@@ -2,6 +2,7 @@ package ecommerce.controller
 
 import ecommerce.controller.ProductController.Companion.PRODUCT_PATH
 import ecommerce.model.Product
+import ecommerce.model.ProductPatchRequest
 import ecommerce.repository.ProductRepository
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -42,9 +43,9 @@ class ProductController(private val productRepository: ProductRepository) {
 
     @PatchMapping(PRODUCT_PATH_ID)
     fun patchProductById(
-        @RequestBody product: Product,
+        @RequestBody patchRequest: ProductPatchRequest,
         @PathVariable id: Long,
-    ): Product = productRepository.patch(id, product)
+    ): Product = productRepository.patch(id, patchRequest)
 
     @DeleteMapping(PRODUCT_PATH_ID)
     fun deleteProductById(
