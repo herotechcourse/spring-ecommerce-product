@@ -1,4 +1,4 @@
-package ecommerce.controller.guest
+package ecommerce.controller.member
 
 import ecommerce.dto.auth.TokenRequest
 import ecommerce.dto.user.UserDTO

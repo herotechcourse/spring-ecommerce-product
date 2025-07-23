@@ -10,16 +10,15 @@
 - [x] `PATCH /api/admin/products/:id` update one or more attributes of Product by ID
 - [x] `DELETE /api/admin/products/:id` delete the product by ID
 
-## Guest
-#### AuthController
-- [x] `POST /api/auth/signUp` creates user and returns JWT token
-- [x] `POST /api/auth/signIn` checks and returns JWT token
-
+### Guest
 #### GuestProductController
 - [x] `GET /api/products` all products
 
-## Member
-## CartController
+### Member
+#### AuthController
+- [x] `POST /api/auth/signUp` creates user and returns JWT token
+- [x] `POST /api/auth/signIn` checks and returns JWT token
+#### CartController
 - `GET ` getCartProducts
 - `POST ` addCartProduct
 - `DELETE ` removeCartProduct
@@ -58,6 +57,7 @@
 - `existsByEmail`: Boolean
 
 ### CartRepository
+- `createCartForUser`
 
 ## DTO
 ### ProductDTO
