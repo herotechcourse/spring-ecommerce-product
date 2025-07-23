@@ -3,6 +3,7 @@ package ecommerce.controller
 import ecommerce.dto.RegistrationRequest
 import ecommerce.dto.TokenResponse
 import ecommerce.service.AuthenticationService
+import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -26,7 +27,7 @@ class AuthenticationController(private val authenticationService: Authentication
      */
     @PostMapping("/register")
     fun registerMember(
-        @RequestBody request: RegistrationRequest,
+        @Valid @RequestBody request: RegistrationRequest,
     ): ResponseEntity<TokenResponse> {
         val token = authenticationService.registerMember(request)
         return ResponseEntity.ok(token)
