@@ -95,3 +95,9 @@ updateProductForm.html
   - [x] Name should be unique
 - [x] Price should be a positive number
 - [x] Image URL must start with `http:// or https://`.
+
+## Features 2.2
+
+- [ ] User account 
+  - [ ] Registration with email and password
+  - [ ] Assign access token using JWT
