@@ -8,5 +8,6 @@ object ConstantsProduct {
         const val IMAGE_URL_MAX_LENGTH = 255
         const val PRICE_MIN = "0.10"
         const val PRICE_DECIMAL_SCALE = 2
+        const val IMAGE_URL_PATTERN = "^(http|https)://.*$"
     }
 }

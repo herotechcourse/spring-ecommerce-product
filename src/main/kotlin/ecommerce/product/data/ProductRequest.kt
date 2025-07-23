@@ -1,10 +1,12 @@
 package ecommerce.product.data
 
 import ecommerce.product.data.ConstantsProduct.Validation.IMAGE_URL_MAX_LENGTH
+import ecommerce.product.data.ConstantsProduct.Validation.IMAGE_URL_PATTERN
 import ecommerce.product.data.ConstantsProduct.Validation.NAME_ALLOWED_PATTERN
 import ecommerce.product.data.ConstantsProduct.Validation.NAME_MAX_LENGTH
 import ecommerce.product.data.ConstantsProduct.Validation.PRICE_DECIMAL_SCALE
 import ecommerce.product.data.ConstantsProduct.Validation.PRICE_MIN
+import ecommerce.view.ValidationMessages.Invalid.IMAGE_URL_MUST_PATTERN
 import ecommerce.view.ValidationMessages.Invalid.NAME_MUST_PATTERN
 import ecommerce.view.ValidationMessages.Invalid.PRICE_MUST_GREATER
 import ecommerce.view.ValidationMessages.Invalid.PRICE_MUST_SCALE
@@ -25,6 +27,10 @@ data class ProductRequest(
     @field:Digits(integer = 10, fraction = PRICE_DECIMAL_SCALE, message = PRICE_MUST_SCALE)
     val price: BigDecimal,
     @field:Size(max = IMAGE_URL_MAX_LENGTH)
+    @field:Pattern(
+        regexp = IMAGE_URL_PATTERN,
+        message = IMAGE_URL_MUST_PATTERN,
+    )
     val imageUrl: String,
 )
 
