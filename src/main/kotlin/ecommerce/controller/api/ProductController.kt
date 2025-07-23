@@ -47,7 +47,7 @@ class ProductController(private val productService: ProductService) {
     @PatchMapping("/products/{id}")
     fun updateProduct(
         @PathVariable id: Long,
-        @RequestBody newProduct: ProductPatchDTO,
+        @Valid @RequestBody newProduct: ProductPatchDTO,
     ): ResponseEntity<Void> {
         val updated = productService.update(id, newProduct)
         if (updated) {
