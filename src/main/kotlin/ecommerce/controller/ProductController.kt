@@ -1,6 +1,5 @@
 package ecommerce.controller
 
-import ecommerce.controller.ProductController.Companion.PRODUCT_PATH
 import ecommerce.model.Product
 import ecommerce.model.ProductPatchRequest
 import ecommerce.repository.ProductRepository
