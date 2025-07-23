@@ -232,27 +232,6 @@
             imageUrl: productForm.imageUrl.value
         };
 
-        // Client-side validation
-        let hasErrors = false;
-        if (product.name.length > 15) {
-            nameError.textContent = 'Product name must be 15 characters or less';
-            hasErrors = true;
-        }
-        if (!/^[a-zA-Z0-9 ()\[\]+&/_-]+$/.test(product.name)) {
-            nameError.textContent = 'Product name can only contain letters, numbers, spaces, and allowed special characters: (), [], +, -, &, /, _';
-            hasErrors = true;
-        }
-        if (isNaN(product.price) || product.price <= 0) {
-            priceError.textContent = 'Price must be greater than 0';
-            hasErrors = true;
-        }
-        if (!product.imageUrl.match(/^https?:\/\/.*/)) {
-            imageUrlError.textContent = 'Image URL must start with http:// or https://';
-            hasErrors = true;
-        }
-
-        if (hasErrors) return;
-
         fetch(url, {
             method: method,
             headers: {'Content-Type': 'application/json'},
