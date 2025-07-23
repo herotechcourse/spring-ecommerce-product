@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css"
+    >
+</head>
+<body>
+<div class="container">
+    <h1 th:text="products"></h1>
+    <a th:href="@{'/admin/products/add-product'}"><button type="submit">Add Product</button></a>
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Price</th>
+            <th>Image</th>
+            <th>Quantity</th>
+            <th>Actions</th>
+        </tr>
+        <tr th:each="product : ${products}">
+            <td th:text="${product.id}"></td>
+            <td th:text="${product.name}"></td>
+            <td th:text="${product.price}"></td>
+            <td><img th:src="${product.img}" alt="${product.name}"></td>
+            <td th:text="${product.quantity}"></td>
+            <td>
+                <a th:href="@{'/admin/products/edit-product/' + ${product.id}}"><button type="submit">Edit</button></a>
+
+                <form th:action="@{/admin/products/delete-product/{id}(id=${product.id})}" th:method="delete"><button type="submit">Delete</button></form>
+            </td>
+        </tr>
+    </table>
+</div>
+</body>
+</html>
