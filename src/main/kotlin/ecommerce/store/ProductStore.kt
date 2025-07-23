@@ -1,8 +1,8 @@
 package ecommerce.store
 
 import ecommerce.product.data.Product
+import ecommerce.product.data.ProductMapper
 import ecommerce.product.data.ProductRequest
-import ecommerce.product.data.toEntity
 import ecommerce.sql.ConstantsSQL
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.jdbc.core.RowMapper
@@ -31,7 +31,7 @@ class ProductStore(private val jdbcTemplate: JdbcTemplate) {
 
     fun create(request: ProductRequest): Product {
         val id = createAndReturnId(request)
-        return request.toEntity(id)
+        return ProductMapper.toEntity(request, id)
     }
 
     fun update(
@@ -40,7 +40,7 @@ class ProductStore(private val jdbcTemplate: JdbcTemplate) {
     ): Product? {
         if (!existsById(id)) return null
         val sql = ConstantsSQL.UPDATE_BY_ID.trimIndent()
-        val entity = request.toEntity(id)
+        val entity = ProductMapper.toEntity(request, id)
         val result = jdbcTemplate.update(sql, entity.name, entity.price, entity.imageUrl, entity.id) == 1
         return if (result) entity else null
     }
