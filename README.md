@@ -51,6 +51,9 @@
 ### ProductRowMapper
 - [x] Converts the DB data to Kotlin class object
 
+### UserRowMapper
+- [x] Converts the DB data to Kotlin class object
+
 ## repository
 ### ProductRepository
 - Handle communication with db
