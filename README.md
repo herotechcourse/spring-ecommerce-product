@@ -43,20 +43,20 @@
     - [x] create user in database
     - [x] return token when successful registration (`200`)
 
+- [x] JWT token generation
+  - [x] use hmac sha to sign token with secret key
+  - [x] include these claims:
+    - [x] user ID
+    - [x] email
+    - [x] role
+  - [x] set token expiration time
+
 - [ ] user login
   - [ ] handle `POST /api/members/login` requests
     - [ ] receive `email` and `password` in JSON body
     - [ ] verify credentials against stored users
     - [ ] return token when successful login
     - [ ] return `403` when failed login
-
-- [ ] JWT token generation
-  - [ ] use hmac sha to sign token with secret key
-  - [ ] include these claims:
-    - [ ] user ID
-    - [ ] email
-    - [ ] role
-  - [ ] set token expiration time?
 
 - [ ] Error handling
   - [ ] `400 Bad Request` if required fields missing or invalid 
