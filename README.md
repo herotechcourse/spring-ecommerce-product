@@ -2,6 +2,25 @@
 
 ## Functional Requirements
 
+### Step 2.1
+
+When a product is created or updated, the client may send invalid data.
+In such cases, your application must respond with enough information for the client to understand **what is wrong and why**.
+
+**Validation Rules:**
+- **Product Name** 
+  - Must be no more than **15 characters**, including spaces. 
+  - Allowed special characters: `( )`, `[ ]`, `+`, `-`, `&`, `/`, `_`
+    - All other special characters are not allowed.
+  - The name must be **unique** across all products.
+- **Product Price** 
+  - Must be greater than 0.
+- **Product Image URL** 
+  - Must start with `http://` or `https://`.
+
+
+### Step 1
+
 Implement a simple HTTP API that allows users to retrieve, add, update, and delete products.
 
 - HTTP requests and responses must be in JSON format.
