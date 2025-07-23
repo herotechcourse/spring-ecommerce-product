@@ -26,6 +26,7 @@ class ProductRepository(private val jdbc: JdbcTemplate) {
         return jdbc.query(sql, productRowMapper)
     }
 
+    // TODO: put ID to the return value's last paraam
     fun findById(id: Long): Product? {
         val sql = "SELECT * from products where ID = $id"
         return try {
@@ -37,7 +38,6 @@ class ProductRepository(private val jdbc: JdbcTemplate) {
 
     fun save(product: Product): Product {
         val sql = "insert into products (name, price, imageUrl) values (?, ?, ?)"
-
         val keyHolder: KeyHolder = GeneratedKeyHolder()
         jdbc.update({
             it.prepareStatement(sql, arrayOf("id")).apply {
@@ -46,7 +46,6 @@ class ProductRepository(private val jdbc: JdbcTemplate) {
                 setString(3, product.imageUrl)
             }
         }, keyHolder)
-
         return product.copy(id = keyHolder.key!!.toLong())
     }
 
