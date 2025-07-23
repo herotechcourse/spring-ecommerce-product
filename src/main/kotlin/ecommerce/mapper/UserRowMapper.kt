@@ -15,7 +15,7 @@ class UserRowMapper : RowMapper<UserDTO> {
         return UserDTO(
             email = rs.getString("email"),
             name = rs.getString("name"),
-            role = UserRole.fromValue(rs.getString("role")),
+            role = UserRole.valueOf(rs.getString("role")),
             password = rs.getString("password"),
         )
     }

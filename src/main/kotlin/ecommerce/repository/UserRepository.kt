@@ -31,7 +31,7 @@ class UserRepository(
         email: String,
         password: String,
     ): UserDTO? {
-        val sql = "select email, name, role from users where email = ? and password = ?"
+        val sql = "select * from users where email = ? and password = ?"
         val res = jdbcTemplate.query(sql, userRowMapper, email, password)
         return res.firstOrNull()
     }

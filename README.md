@@ -2,13 +2,16 @@
 
 ## Controller
 ### ProductController
-- RestController
 - [x] `Get` all products
 - [x] `Get` product by Id
 - [x] `POST` Create a Product
 - [x] `PUT` update the whole product by ID
 - [x] `PATCH` update one or more attributes of Product by ID
 - [x] `DELETE` delete the product by ID
+
+### AuthController
+- [x] `signup` creates user and returns JWT token
+- [x] `login` checks and returns JWT token
 
 ## Service
 ### ProductService

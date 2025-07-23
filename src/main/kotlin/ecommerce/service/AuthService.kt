@@ -22,7 +22,7 @@ class AuthService(
         }
         val id = userRepository.create(user)
         val authTokenPayload = jwtTokenProvider.createToken(AuthTokenPayload(user.email, user.role))
-        return UserCreateResponse(URI.create("/users/$id"), authTokenPayload)
+        return UserCreateResponse(URI.create("/users/$id"), "Bearer $authTokenPayload")
     }
 
     fun logIn(tokenRequest: TokenRequest): String {
@@ -31,9 +31,10 @@ class AuthService(
                 tokenRequest.email, tokenRequest.password,
             ) ?: throw EntityNotFoundException("User with email ${tokenRequest.email} not found")
 
-        return jwtTokenProvider.createToken(
+        val token = jwtTokenProvider.createToken(
             AuthTokenPayload(user.email, user.role),
         )
+        return "Bearer $token"
     }
 
     fun logOut(token: String): String {
