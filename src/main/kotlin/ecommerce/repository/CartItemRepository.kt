@@ -2,6 +2,7 @@ package ecommerce.repository
 
 import ecommerce.dto.CartItemResponse
 import ecommerce.model.CartItem
+import org.springframework.dao.EmptyResultDataAccessException
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.jdbc.core.RowMapper
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert
@@ -96,13 +97,15 @@ class CartItemRepository(private val jdbcTemplate: JdbcTemplate) {
         cartId: Long,
         productId: Long,
     ): CartItem? {
-        return jdbcTemplate.queryForObject(
-            """
-            SELECT * FROM cart_items WHERE cart_id =? AND product_id =?
-            """,
-            cartItemRowMapper,
-            cartId,
-            productId,
-        )
+        return try {
+            jdbcTemplate.queryForObject(
+                "SELECT * FROM cart_items WHERE cart_id = ? AND product_id = ?",
+                cartItemRowMapper,
+                cartId,
+                productId,
+            )
+        } catch (e: EmptyResultDataAccessException) {
+            null
+        }
     }
 }
