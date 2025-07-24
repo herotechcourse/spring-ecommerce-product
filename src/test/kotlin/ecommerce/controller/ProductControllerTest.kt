@@ -17,7 +17,7 @@ class ProductControllerTest {
         val response =
             RestAssured
                 .given().log().all()
-                .body(Product(id = 100, name = "test", price = 20.0, img = "img1", 2))
+                .body(Product(id = 100, name = "test", price = 20.0, img = "http://img1", 2))
                 .contentType(ContentType.JSON)
                 .`when`().post("/products")
                 .then().log().all().extract()
@@ -27,8 +27,6 @@ class ProductControllerTest {
 
     @Test
     fun getProducts() {
-        createProduct()
-
         val response =
             RestAssured
                 .given().log().all()
@@ -37,7 +35,7 @@ class ProductControllerTest {
                 .then().log().all().extract()
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
-        assertThat(response.jsonPath().getList<Product>("")).hasSize(1)
+        assertThat(response.jsonPath().getList<Product>("")).hasSize(3)
     }
 
     @Test
@@ -47,7 +45,7 @@ class ProductControllerTest {
         val response =
             RestAssured
                 .given().log().all()
-                .body(Product(id = 100, name = "test", price = 30.0, img = "img1", quantity = 2))
+                .body(Product(id = 100, name = "test", price = 30.0, img = "http://img1", quantity = 2))
                 .contentType(ContentType.JSON)
                 .`when`().put("/products/100")
                 .then().log().all().extract()
@@ -57,12 +55,23 @@ class ProductControllerTest {
 
     @Test
     fun delete() {
-        createProduct()
+        val initialProductName =
+            """
+            {
+            "name" : "ProductName",
+            "price": 10.0,
+            "img": "http://valid_image_url.com",
+            "quantity": 10
+            }
+            """.trimIndent()
+
+        RestAssured.given().contentType(ContentType.JSON).body(initialProductName).post("/products").then()
+            .statusCode(201)
 
         val response =
             RestAssured
                 .given().log().all()
-                .`when`().delete("/products/100")
+                .`when`().delete("/products/1")
                 .then().log().all().extract()
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value())

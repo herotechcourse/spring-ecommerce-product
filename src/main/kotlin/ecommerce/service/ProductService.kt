@@ -1,5 +1,7 @@
 package ecommerce.service
 
+import ecommerce.exception.DuplicateProductNameException
+import ecommerce.exception.ProductNotFoundException
 import ecommerce.model.Product
 import ecommerce.repository.ProductRepository
 import org.springframework.stereotype.Service
@@ -8,10 +10,15 @@ import org.springframework.stereotype.Service
 class ProductService(private val productRepository: ProductRepository) {
     fun getAllProducts(): List<Product> = productRepository.findAllProducts()
 
-    fun getProductById(id: Long): Product? = productRepository.findById(id)
+    fun getProductById(id: Long): Product =
+        productRepository.findById(id) ?: throw ProductNotFoundException("Product with ID $id not found")
 
-    fun createProduct(newProduct: Product) {
+    fun createProduct(newProduct: Product): Product? {
+        if (productRepository.existsByName(newProduct.name)) {
+            throw DuplicateProductNameException("Product name ${newProduct.name} already exists.")
+        }
         productRepository.create(newProduct)
+        return productRepository.findByName(newProduct.name)
     }
 
     fun updateProduct(
@@ -21,5 +28,8 @@ class ProductService(private val productRepository: ProductRepository) {
         productRepository.update(id, updatedProduct)
     }
 
-    fun deleteProduct(id: Long) = productRepository.delete(id)
+    fun deleteProduct(id: Long) {
+        productRepository.findById(id) ?: throw ProductNotFoundException("Product with ID $id not found")
+        productRepository.delete(id)
+    }
 }

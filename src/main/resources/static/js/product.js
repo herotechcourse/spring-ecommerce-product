@@ -21,6 +21,7 @@ function editProduct(id, name, price, img, quantity) {
 }
 
 function cancelForm() {
+    clearErrors()
     document.getElementById('formSection').style.display='none';
 }
 
@@ -42,10 +43,57 @@ function submitForm(event) {
         method: method,
         headers: {'Content-Type': 'application/json' },
         body: JSON.stringify(product)
-    }).then(() => {
+    })
+    .then(response => {
+        if(!response.ok){
+            return response.json().then(errors => {
+                if (response.status === 400) {
+                    displayErrors(errors.errors);
+                } else if (response.status === 409 || response.status === 404) {
+                    displayGlobalError(errors.error)
+                }
+                    throw new Error("Request failed");
+                });
+            }
+        return response;
+    })
+    .then (() => {
         cancelForm();
-        location.reload()
-    });
+        location.reload();
+    })
+    .catch(error => console.error(error));
+}
+
+function displayErrors(errors) {
+    clearErrors();
+    for (const field in errors) {
+        const input = document.getElementById(`product${capitalize(field)}`);
+        if (input) {
+            const errorDiv = document.createElement("div");
+            errorDiv.className = "error";
+            errorDiv.style.color = "red";
+            errorDiv.textContent = errors[field];
+            input.parentNode.insertBefore(errorDiv, input.nextSibling);
+        }
+    }
+}
+
+function clearErrors() {
+    document.querySelectorAll(".error").forEach(e => e.remove());
+}
+
+function displayGlobalError(message) {
+    const formSection = document.getElementById('formSection');
+    const errorDiv = document.createElement("div");
+    errorDiv.className = "error";
+    errorDiv.style.color = "red";
+    errorDiv.style.marginBottom = "10px";
+    errorDiv.textContent = message;
+    formSection.insertBefore(errorDiv, formSection.firstChild);
+}
+
+function capitalize(str) {
+    return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
 function deleteProduct(id) {

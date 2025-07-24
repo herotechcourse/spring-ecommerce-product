@@ -8,10 +8,15 @@
 - [x] Update a Product
 - [x] Delete a product
 - [x] Tests for CRUD operations
+- [x] Validation
+  - Name (no more than 15 characters, special characters, all unique)
+  - Price (must be greater than 0)
+  - Image Url (must start with http:// or https://)
 
 ## Admin
 - [ ] Login for Admin
 - [x] Admin can view, add, update, and delete products
+- [x] handle exception during add, delete and update of products
 - [x] Template for Product Page
 - [x] Add Button for Edit a Product
 - [x] Add Button for Delete a Product

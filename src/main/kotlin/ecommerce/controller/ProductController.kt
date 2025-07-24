@@ -6,6 +6,7 @@ import ecommerce.dto.UpdateProductRequest
 import ecommerce.service.ProductService
 import ecommerce.utils.toModel
 import ecommerce.utils.toResponse
+import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
@@ -20,18 +21,18 @@ import java.net.URI
 class ProductController(private val productService: ProductService) {
     @PostMapping("/products")
     fun createProduct(
-        @RequestBody newProduct: CreateProductRequest,
-    ): ResponseEntity<Void> {
+        @Valid @RequestBody newProduct: CreateProductRequest,
+    ): ResponseEntity<ProductResponse> {
         val product = newProduct.toModel()
-        productService.createProduct(product)
-        return ResponseEntity.created(URI.create("/products/${product.id}")).build()
+        val createdProduct = productService.createProduct(product)
+        return ResponseEntity.created(URI.create("/products/${createdProduct?.id}")).build()
     }
 
     @GetMapping("/products/{id}")
     fun getProductById(
         @PathVariable("id") id: Long,
     ): ResponseEntity<ProductResponse> {
-        val product = productService.getProductById(id) ?: return ResponseEntity.notFound().build()
+        val product = productService.getProductById(id)
         return ResponseEntity.ok(product.toResponse())
     }
 
@@ -44,7 +45,7 @@ class ProductController(private val productService: ProductService) {
     @PutMapping("/products/{id}")
     fun updateProduct(
         @PathVariable("id") id: Long,
-        @RequestBody request: UpdateProductRequest,
+        @Valid @RequestBody request: UpdateProductRequest,
     ): ResponseEntity<ProductResponse> {
         val updatedProduct = request.toModel(id)
         productService.updateProduct(id, updatedProduct)
