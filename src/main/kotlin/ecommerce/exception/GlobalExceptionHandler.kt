@@ -58,7 +58,7 @@ class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(ProductAlreadyInDBException::class)
-    fun handleUpdateException(ex: ProductAlreadyInDBException): ResponseEntity<ErrorMessageModel> {
+    fun handleProductAlreadyInDBException(ex: ProductAlreadyInDBException): ResponseEntity<ErrorMessageModel> {
         val errorMessage =
             ErrorMessageModel(
                 HttpStatus.CONFLICT.value(),
@@ -95,5 +95,25 @@ class GlobalExceptionHandler {
                 ex.message,
             )
         return ResponseEntity(errorMessage, HttpStatus.UNAUTHORIZED)
+    }
+
+    @ExceptionHandler(ElementNotFoundException::class)
+    fun handleElementNotFoundException(ex: ElementNotFoundException): ResponseEntity<ErrorMessageModel> {
+        val errorMessage =
+            ErrorMessageModel(
+                HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                ex.message,
+            )
+        return ResponseEntity(errorMessage, HttpStatus.INTERNAL_SERVER_ERROR)
+    }
+
+    @ExceptionHandler(IllegalArgumentException::class)
+    fun handleIllegalArgumentException(ex: IllegalArgumentException): ResponseEntity<ErrorMessageModel> {
+        val errorMessage =
+            ErrorMessageModel(
+                HttpStatus.BAD_REQUEST.value(),
+                ex.message,
+            )
+        return ResponseEntity(errorMessage, HttpStatus.BAD_REQUEST)
     }
 }
