@@ -135,8 +135,8 @@ Using the token received after login, implement functionality that allows the us
 - [x] Add `CART_ITEMS` table in `schema.sql`
     - [x] Links `member_id` to `MEMBERS` and `product_id` to `PRODUCTS`
 
-- [ ] Create `CartItem` data class
-   - [ ] Contains `id`, `memberId`, `productId`
+- [x] Create `CartItem` data class
+   - [x] Contains `id`, `memberId`, `productId`
 
 - [ ] Create `CartRequest` data class
   - [ ] Contains `productId` with validation
