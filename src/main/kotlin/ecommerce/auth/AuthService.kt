@@ -4,6 +4,7 @@ import ecommerce.exception.NotFoundException
 import ecommerce.exception.UnauthorizedException
 import ecommerce.infrastructure.JwtTokenProvider
 import ecommerce.model.Member
+import ecommerce.model.MemberResponse
 import ecommerce.model.TokenRequest
 import ecommerce.model.TokenResponse
 import ecommerce.repository.MemberRepository
@@ -14,19 +15,27 @@ class AuthService(
     private val jwtTokenProvider: JwtTokenProvider,
     private val memberRepository: MemberRepository,
 ) {
-//
-//    fun findMember(principal: String): MemberResponse {
-//        return MemberResponse(1L, principal, 10)
-//    }
-//
-//    fun findMemberByToken(token: String): MemberResponse {
-//        val payload = jwtTokenProvider.getPayload(token)
-//        return findMember(payload)
-//    }
+
+    fun findMember(payload: String): MemberResponse {
+        val member = memberRepository.findByEmail(payload)
+        if (member == null) {
+            throw NotFoundException("Member not found")
+            // or is it better to return 500?
+        }
+        // TODO check other options for retrieval of member id when it is null
+        return MemberResponse(member.id, member.email, member.role)
+    }
+
+    fun findMemberByToken(token: String): MemberResponse {
+        if (!jwtTokenProvider.validateToken(token)) {
+            throw UnauthorizedException("Invalid token")
+        }
+        val payload = jwtTokenProvider.getPayload(token)
+        return findMember(payload)
+    }
 
     fun register(request: TokenRequest): TokenResponse {
         if (memberRepository.existsByEmail(request.email)) {
-            // TODO customize exception
             throw IllegalArgumentException("Account with email already exists")
         }
         memberRepository.registerMember(Member(email = request.email, password = request.password))
@@ -35,12 +44,10 @@ class AuthService(
 
     fun login(request: TokenRequest): TokenResponse {
         if (!memberRepository.existsByEmail(request.email)) {
-            // TODO customize exception -> return 404
             throw NotFoundException("No account with email exists")
         }
         val member = Member(email = request.email, password = request.password)
         if (memberRepository.findMember(member) == null) {
-            // TODO customize -> return 401
             throw UnauthorizedException("Incorrect Password")
         }
         return createToken(request)
