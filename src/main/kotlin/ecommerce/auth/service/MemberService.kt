@@ -9,4 +9,6 @@ class MemberService(private val memberStore: MemberStore) {
     fun create(member: Member): Member = memberStore.createMember(member)
 
     fun findAll(): List<Member> = memberStore.findAllMembers()
+
+    fun findMember(email: String) = memberStore.findMemberByEmail(email)
 }

@@ -6,4 +6,6 @@ interface MemberStore {
     fun createMember(member: Member): Member
 
     fun findAllMembers(): List<Member>
+
+    fun findMemberByEmail(email: String): Member
 }

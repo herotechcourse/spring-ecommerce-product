@@ -32,4 +32,10 @@ class JdbcMemberStore(private val db: JdbcTemplate) : MemberStore {
     override fun findAllMembers(): List<Member> {
         return db.query("SELECT * FROM member", userRowMapper)
     }
+
+    override fun findMemberByEmail(email: String): Member {
+        val sql = "SELECT * FROM member WHERE email = ?"
+        val results = db.query(sql, userRowMapper, email)
+        return results.first()
+    }
 }
