@@ -1,6 +1,7 @@
 package ecommerce.repository
 
 import ecommerce.product.Product
+import ecommerce.store.ProductStore
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -14,17 +15,17 @@ class ProductRepositoryTest {
 
     @Autowired
     lateinit var jdbcTemplate: JdbcTemplate
-    private lateinit var repository: ProductRepository
+    private lateinit var repository: ProductStore
 
     @BeforeEach
     fun setUp() {
-        repository = ProductRepository(jdbcTemplate)
+        repository = ProductStore(jdbcTemplate)
     }
 
     @Test
     fun `updateById should return 1 when product exists and is updated`() {
         val original = Product(1, "Espresso", BigDecimal.valueOf(3.00), "url1")
-        repository.insert(1, original)
+        repository.insert( original)
 
         val updated = Product(1, "Cappuccino", BigDecimal.valueOf(4.50), "url2")
         val result = repository.updateById(1, updated)
@@ -46,7 +47,7 @@ class ProductRepositoryTest {
     @Test
     fun `deleteById should return null when product does not exists`() {
         val original = Product(1, "Espresso", BigDecimal.valueOf(3.00), "url1")
-        repository.insert(1, original)
+        repository.insert( original)
         val result = repository.deleteById(999)
         assertThat(result).isNull()
     }
