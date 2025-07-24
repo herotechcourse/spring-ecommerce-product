@@ -33,4 +33,12 @@ class CartItemRepositoryTest {
         val count = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM cart_items", Int::class.java)
         assert(count == 0)
     }
+
+    @Test
+    fun getCartItemsByCartId() {
+        cartItemRepository.addProductToCart(1, 1, 3)
+        val cartItems = cartItemRepository.getCartItemsByCartId(1)
+        assert(cartItems.size == 1)
+//        assert(cartItems[0].productId == 1L)
+    }
 }
