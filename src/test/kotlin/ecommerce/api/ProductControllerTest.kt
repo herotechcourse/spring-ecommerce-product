@@ -155,7 +155,7 @@ class ProductControllerTest {
     }
 
     @Test
-    fun `create() - should return 400 when email is not valid`() {
+    fun `create() - should return 400 when image URL is not valid`() {
         val response =
             RestAssured
                 .given().log().all()

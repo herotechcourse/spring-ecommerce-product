@@ -1,34 +1,5 @@
 # spring-ecommerce-product
 
-## Functional Requirements
-
-### Step 2.1
-
-When a product is created or updated, the client may send invalid data.
-In such cases, your application must respond with enough information for the client to understand **what is wrong and why**.
-
-**Validation Rules:**
-- **Product Name** 
-  - Must be no more than **15 characters**, including spaces. 
-  - Allowed special characters: `( )`, `[ ]`, `+`, `-`, `&`, `/`, `_`
-    - All other special characters are not allowed.
-  - The name must be **unique** across all products.
-- **Product Price** 
-  - Must be greater than 0.
-- **Product Image URL** 
-  - Must start with `http://` or `https://`.
-
-
-### Step 1
-
-Implement a simple HTTP API that allows users to retrieve, add, update, and delete products.
-
-- HTTP requests and responses must be in JSON format.
-- Since no separate database is used at this point, store data in memory using an appropriate Kotlin Collection
-  Framework.
-
-Implement the API to send and receive HTTP messages as shown in the example.
-
 ## Features List
 
 ### Model
@@ -42,9 +13,24 @@ Product
 - [x] has property `price: Double`
 - [x] has property `imageUrl: String`
 
+### DTO (Data Transfer Object)
+
+ProductForm
+
+- [x] is a data class, as a DTO to validate form from request
+- [x] has property `name: String`
+  - [x] validate 'NotBlank'
+  - [x] validate 'Pattern' for regex
+  - [x] validate 'Size'
+- [x] has property `price: Double`
+  - [x] validate 'Positive'
+- [x] has property `imageUrl: String`
+  - [x] validate 'NotBlank'
+  - [x] validate 'Pattern' for regex
+
 ### DAO (Data Access Object)
 
-ProductRepository
+interface ProductDAO
 
 - [x] `findAll()` - query to database to get all products
 - [x] `findById()` - query for an object to database
@@ -52,6 +38,17 @@ ProductRepository
 - [x] `update()` - query to database to update a product
 - [x] `delete()` - query to database to delete a product
 
+JdbcProductDAO : ProductDAO
+
+- [x] `existsByName()` - query to database to get count of product with the name
+
+### Service
+
+ProductService
+
+- [x] is a service layer between `ProductController` and `JdbcProductDAO`
+- [x] `insert()` takes 'ProductForm' which is validated with `jakarta` from controller, and validate the product name
+  exists by name or not from DAO, then insert the product if it is valid
 
 ### Controller
 
@@ -108,3 +105,33 @@ updateProductForm.html
     - [x] define the product schema
     - [x] add some sample data
     - [x] configure the database setting with `application.properties`
+
+## Functional Requirements
+
+### Step 2.1
+
+When a product is created or updated, the client may send invalid data.
+In such cases, your application must respond with enough information for the client to understand **what is wrong and
+why**.
+
+**Validation Rules:**
+
+- **Product Name**
+    - Must be no more than **15 characters**, including spaces.
+    - Allowed special characters: `( )`, `[ ]`, `+`, `-`, `&`, `/`, `_`
+        - All other special characters are not allowed.
+    - The name must be **unique** across all products.
+- **Product Price**
+    - Must be greater than 0.
+- **Product Image URL**
+    - Must start with `http://` or `https://`.
+
+### Step 1
+
+Implement a simple HTTP API that allows users to retrieve, add, update, and delete products.
+
+- HTTP requests and responses must be in JSON format.
+- Since no separate database is used at this point, store data in memory using an appropriate Kotlin Collection
+  Framework.
+
+Implement the API to send and receive HTTP messages as shown in the example.
