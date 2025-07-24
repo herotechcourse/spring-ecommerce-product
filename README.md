@@ -20,8 +20,8 @@
 - [x] `POST /api/member/auth/signIn` checks and returns JWT token
 #### CartController
 - `GET ` getCartProducts
-- `POST ` addCartProduct
-- `DELETE ` removeCartProduct
+- `POST ` incrementCartProduct
+- `DELETE ` decrementCartProduct
 
 ## Config
 ### LoginAdminInterceptor
