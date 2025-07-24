@@ -1,10 +1,10 @@
 package ecommerce.api
 
-import ecommerce.model.Product
-import ecommerce.model.ProductPatchDTO
-import ecommerce.service.ProductService
-import ecommerce.store.JdbcProductStore
-import ecommerce.store.ProductStore
+import ecommerce.products.model.Product
+import ecommerce.products.model.ProductPatchDTO
+import ecommerce.products.service.ProductService
+import ecommerce.products.store.JdbcProductStore
+import ecommerce.products.store.ProductStore
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test

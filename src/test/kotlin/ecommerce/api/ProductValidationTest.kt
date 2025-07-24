@@ -12,7 +12,6 @@ import org.springframework.boot.test.web.server.LocalServerPort
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class ProductValidationTest {
-
     @LocalServerPort
     var port: Int = 0
 
