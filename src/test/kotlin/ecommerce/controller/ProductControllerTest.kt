@@ -25,7 +25,7 @@ class ProductControllerTest {
 
     @BeforeEach
     fun setUp() {
-        jdbcTemplate.execute("DROP TABLE products IF EXISTS")
+        jdbcTemplate.execute("DROP TABLE PRODUCTS IF EXISTS")
 
         jdbcTemplate.execute(createQuery())
 

@@ -21,6 +21,9 @@ class ProductRepositoryTest {
     fun setUp() {
         productRepository = ProductRepository(jdbcTemplate)
 
+        jdbcTemplate.execute("DROP TABLE CART_ITEMS IF EXISTS")
+        jdbcTemplate.execute("DROP TABLE CART IF EXISTS")
+        jdbcTemplate.execute("DROP TABLE CART_ITEMS IF EXISTS")
         jdbcTemplate.execute("DROP TABLE products IF EXISTS")
 
         jdbcTemplate.execute(createQuery())

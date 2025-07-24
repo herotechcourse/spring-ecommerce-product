@@ -19,9 +19,18 @@ class MemberRepositoryTest {
     @BeforeEach
     fun setUp() {
         memberRepository = MemberRepository(db)
+        db.sql("DROP TABLE CART_ITEMS IF EXISTS").update()
+        db.sql("DROP TABLE CART IF EXISTS").update()
+        db.sql("DROP TABLE CART_ITEMS IF EXISTS").update()
         db.sql("DROP TABLE MEMBERS IF EXISTS").update()
         val sql =
-            "CREATE TABLE members (id INT AUTO_INCREMENT PRIMARY KEY, email VARCHAR(255) UNIQUE, password VARCHAR(255))"
+            """
+                        CREATE TABLE members (
+                        id INT AUTO_INCREMENT PRIMARY KEY, 
+            email VARCHAR(255) UNIQUE,
+            password VARCHAR(255), 
+            ROLE VARCHAR(100) NOT NULL DEFAULT 'USER')
+            """.trimIndent()
         db.sql(sql).update()
     }
 
