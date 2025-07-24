@@ -3,6 +3,7 @@ package ecommerce.controller.member
 import ecommerce.dto.auth.LoginRequest
 import ecommerce.dto.products.ProductDTO
 import ecommerce.enums.UserRole
+import ecommerce.exception.UserCredentialException
 import ecommerce.mapper.UserRowMapper
 import ecommerce.repository.ProductRepository
 import ecommerce.service.MemberAuthService
@@ -10,6 +11,7 @@ import io.restassured.RestAssured
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.HttpStatus
@@ -110,21 +112,13 @@ class CartControllerTest {
     fun `Admin tries to check cart`() {
         val sql = "select * from users where role = '${UserRole.ADMIN}'"
         val result = jdbcTemplate.query(sql, userRowMapper).first()
-        val adminToken =
+        assertThrows<UserCredentialException> {
             memberAuthService.logIn(
                 LoginRequest(
                     result.email,
                     result.password,
                 ),
             )
-
-        val response =
-            RestAssured
-                .given().log().all()
-                .header("Authorization", adminToken)
-                .`when`().delete("/api/member/cart/-1")
-                .then().log().all().extract()
-
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value())
+        }
     }
 }

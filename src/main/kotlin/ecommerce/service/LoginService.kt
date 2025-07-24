@@ -2,6 +2,7 @@ package ecommerce.service
 
 import ecommerce.dto.auth.AuthTokenPayload
 import ecommerce.dto.auth.LoginRequest
+import ecommerce.enums.UserRole
 import ecommerce.exception.UserCredentialException
 import ecommerce.infrastructure.JwtTokenProvider
 import ecommerce.repository.UserRepository
@@ -12,11 +13,18 @@ class LoginService(
     private val userRepository: UserRepository,
     private val jwtTokenProvider: JwtTokenProvider,
 ) {
-    fun signIn(loginRequest: LoginRequest): String {
+    fun signIn(
+        loginRequest: LoginRequest,
+        expectedRole: UserRole = UserRole.USER,
+    ): String {
         val user =
             userRepository.findByEmailAndPassword(
                 loginRequest.email, loginRequest.password,
             ) ?: throw UserCredentialException()
+
+        if (user.role != expectedRole) {
+            throw UserCredentialException("Incorrect role for this endpoint")
+        }
 
         val token =
             jwtTokenProvider.createToken(

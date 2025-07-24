@@ -1,3 +1,3 @@
 package ecommerce.exception
 
-class UserCredentialException() : RuntimeException("Not valid Credential")
+class UserCredentialException(message: String? = null) : RuntimeException(message ?: "Not valid Credential")

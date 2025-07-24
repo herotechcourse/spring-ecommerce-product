@@ -47,7 +47,7 @@
 - [x] `addProductToCart`: Long
 - [x] `removeProductFromCart`: Void
 ### LoginService
-- [x] `signIn`: String `[AuthToken]`
+- [x] `signIn()`: String `[AuthToken]`
 ### MemberAuthService
 - [x] `signUp(user: UserRequestDTO)`: UserCreateResponse
 - [x] `fun logIn(loginRequest: LoginRequest)`: String
@@ -137,12 +137,12 @@
 - uri: URI
 - token: String
 
-#### MemberUserDTO
+#### UserDTO
 - id: Long? = null
 - email: String
 - password: String
 - name: String
-- role: UserRole = UserRole.USER
+- role: UserRole
 ## Infrastructure
 ### JwtTokenProvider
 - [x] `createToken`: String
