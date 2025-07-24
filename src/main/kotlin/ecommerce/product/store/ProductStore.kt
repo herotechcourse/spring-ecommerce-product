@@ -1,4 +1,4 @@
-package ecommerce.store
+package ecommerce.product.store
 
 import ecommerce.product.data.Product
 import ecommerce.product.data.ProductMapper
@@ -29,27 +29,40 @@ class ProductStore(private val jdbcTemplate: JdbcTemplate) {
         return jdbcTemplate.query(sql, rowMapper)
     }
 
-    fun create(request: ProductRequest): Product {
-        val id = createAndReturnId(request)
-        return ProductMapper.toEntity(request, id)
+    fun findById(id: Long): Product? {
+        val sql = ConstantsSQL.SELECT_BY_ID
+        val result = jdbcTemplate.query(sql, arrayOf(id), rowMapper)
+
+        return when (result.size) {
+            0 -> null
+            1 -> result.first()
+            else -> {
+                throw IllegalStateException(
+                    "Data integrity violation: found ${result.size} products with same id $id. " +
+                        "This should never happen with a proper primary key constraint.",
+                )
+            }
+        }
     }
 
-    fun update(
+    fun putById(
         id: Long,
         request: ProductRequest,
-    ): Product? {
-        if (!existsById(id)) return null
+    ): Product {
+        require(existsById(id)) { "Product with id $id not found" }
+
         val sql = ConstantsSQL.UPDATE_BY_ID.trimIndent()
-        val entity = ProductMapper.toEntity(request, id)
-        val result = jdbcTemplate.update(sql, entity.name, entity.price, entity.imageUrl, entity.id) == 1
-        return if (result) entity else null
+        val entity = ProductMapper.toEntity(request, id)!!
+        jdbcTemplate.update(sql, entity.name, entity.price, entity.imageUrl, entity.id)
+
+        return entity
     }
 
-    fun deleteById(id: Long): Boolean {
-        if (!existsById(id)) return false
-        val sql = ConstantsSQL.DELETE_BY_ID.trimIndent()
+    fun deleteById(id: Long) {
+        require(existsById(id)) { "Product with id $id not found" }
 
-        return jdbcTemplate.update(sql, id) == 1
+        val sql = ConstantsSQL.DELETE_BY_ID.trimIndent()
+        jdbcTemplate.update(sql, id)
     }
 
     fun existsById(id: Long): Boolean {
@@ -58,7 +71,14 @@ class ProductStore(private val jdbcTemplate: JdbcTemplate) {
         return found != null && found > 0
     }
 
-    private fun createAndReturnId(request: ProductRequest): Long {
+    fun existsByName(name: String): Boolean {
+        val sql = ConstantsSQL.COUNT_BY_NAME
+        val found = jdbcTemplate.queryForObject(sql, Int::class.java, name)
+        return found != null && found > 0
+    }
+
+    fun insertWithKeyholder(request: ProductRequest): Long {
+        require(!existsByName(request.name)) { "Product with name ${request.name} already exists" }
         val sql = ConstantsSQL.INSERT.trimIndent()
         val keyHolder = GeneratedKeyHolder()
 
@@ -66,8 +86,12 @@ class ProductStore(private val jdbcTemplate: JdbcTemplate) {
             createPreparedStatement(connection, sql, request)
         }, keyHolder)
 
-        return keyHolder.key?.toLong()
-            ?: throw IllegalStateException("Failed to retrieve generated ID")
+        val id = keyHolder.key?.toLong()
+        require(id != null) {
+            "Failed to retrieve generated ID after inserting product '${request.name}'. " +
+                "Database key generation failed."
+        }
+        return id
     }
 
     private fun createPreparedStatement(
