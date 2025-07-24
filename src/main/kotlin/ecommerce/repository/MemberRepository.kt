@@ -22,7 +22,7 @@ class MemberRepository(private val jdbcTemplate: JdbcTemplate) {
         }
 
     fun findByUserId(userId: Long): Member? {
-        val sql = "select * from members where userId = ?"
+        val sql = "select * from members where user_id = ?"
         return jdbcTemplate.query(sql, memberRowMapper, userId).firstOrNull()
     }
 
@@ -32,7 +32,7 @@ class MemberRepository(private val jdbcTemplate: JdbcTemplate) {
     }
 
     fun create(member: Member) {
-        val sql = "insert into members (userName, email, passwordHash, role) values (?, ?, ?, ?)"
+        val sql = "insert into members (user_name, email, password_hash, role) values (?, ?, ?, ?)"
         val keyHolder = GeneratedKeyHolder()
 
         jdbcTemplate.update({ connection ->
@@ -52,12 +52,12 @@ class MemberRepository(private val jdbcTemplate: JdbcTemplate) {
         userId: Long,
         member: Member,
     ) {
-        val sql = "update members set userName = ?, set email = ? where userId = ?"
+        val sql = "update members set user_name = ?, set email = ? where user_id = ?"
         jdbcTemplate.update(sql, member.userName, member.email, userId)
     }
 
     fun delete(userId: Long) {
-        val sql = "delete from members where userId = ?"
+        val sql = "delete from members where user_id = ?"
         jdbcTemplate.update(sql, userId)
     }
 }
