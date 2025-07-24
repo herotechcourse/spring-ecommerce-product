@@ -1,10 +1,10 @@
 package ecommerce.model
 
 data class Product(
-    var id: Long? = null,
-    var name: String,
-    var price: Double,
-    var imageUrl: String,
+    val id: Long? = null,
+    val name: String,
+    val price: Double,
+    val imageUrl: String,
 ) {
     init {
         require(price > 0) { "Product price must be positive, got: $price" }
