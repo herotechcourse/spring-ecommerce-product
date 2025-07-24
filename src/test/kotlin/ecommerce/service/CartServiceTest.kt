@@ -46,7 +46,7 @@ class CartServiceTest {
         memberAuthService.signUp(member)
         val productID = productService.create(product)
         val user =
-            userRepository.findByEmailAndPassword(member.email, member.password)
+            userRepository.findByEmail(member.email)
 
         cartService.addProductToCart(user?.id, productID)
 
@@ -73,7 +73,7 @@ class CartServiceTest {
         memberAuthService.signUp(member)
         val productID = productService.create(product)
         val user =
-            userRepository.findByEmailAndPassword(member.email, member.password)
+            userRepository.findByEmail(member.email)
 
         cartService.addProductToCart(user?.id, productID)
 
@@ -91,7 +91,7 @@ class CartServiceTest {
 
         memberAuthService.signUp(member)
         val user =
-            userRepository.findByEmailAndPassword(member.email, member.password)
+            userRepository.findByEmail(member.email)
 
         assertThrows<EntityNotFoundException> { cartService.addProductToCart(user?.id, -1) }
     }
@@ -115,7 +115,7 @@ class CartServiceTest {
         memberAuthService.signUp(member)
         val productID = productService.create(product)
         val user =
-            userRepository.findByEmailAndPassword(member.email, member.password)
+            userRepository.findByEmail(member.email)
 
         cartService.addProductToCart(user?.id, productID)
         cartService.addProductToCart(user?.id, productID)
@@ -156,7 +156,7 @@ class CartServiceTest {
         memberAuthService.signUp(member)
         val productID = productService.create(product)
         val user =
-            userRepository.findByEmailAndPassword(member.email, member.password)
+            userRepository.findByEmail(member.email)
 
         cartService.addProductToCart(user?.id, productID)
         cartService.removeProductFromCart(user?.id, productID)
@@ -185,7 +185,7 @@ class CartServiceTest {
         memberAuthService.signUp(member)
         val productID = productService.create(product)
         val user =
-            userRepository.findByEmailAndPassword(member.email, member.password)
+            userRepository.findByEmail(member.email)
 
         assertThrows<EntityNotFoundException> { cartService.removeProductFromCart(user?.id, productID) }
     }
@@ -210,7 +210,7 @@ class CartServiceTest {
         memberAuthService.signUp(member)
         val productID = productService.create(product)
         val user =
-            userRepository.findByEmailAndPassword(member.email, member.password)
+            userRepository.findByEmail(member.email)
 
         cartService.addProductToCart(user?.id, productID)
         cartService.addProductToCart(user?.id, productID)

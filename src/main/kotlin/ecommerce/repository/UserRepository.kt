@@ -36,6 +36,12 @@ class UserRepository(
         return res.firstOrNull()
     }
 
+    fun findByEmail(email: String): MemberUserDTO? {
+        val sql = "select * from users where email = ?"
+        val res = jdbcTemplate.query(sql, userRowMapper, email)
+        return res.firstOrNull()
+    }
+
     fun existsByEmail(email: String): Boolean {
         val sql = "select count(*) from users where email = ?"
         return jdbcTemplate.queryForObject(sql, Int::class.java, email)!! > 0
