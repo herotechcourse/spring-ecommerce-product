@@ -1,7 +1,7 @@
 package ecommerce.service
 
 import ecommerce.dto.cart.CartDTO
-import ecommerce.dto.cartProduct.CartProductDTO
+import ecommerce.dto.cartProduct.CartProductResponseDTO
 import ecommerce.exception.EntityNotFoundException
 import ecommerce.repository.CartProductRepository
 import ecommerce.repository.CartRepository
@@ -14,7 +14,7 @@ class CartService(
     private val cartProductRepository: CartProductRepository,
     private val productRepository: ProductRepository,
 ) {
-    fun getCartProducts(userID: Long?): List<CartProductDTO> {
+    fun getCartProducts(userID: Long?): List<CartProductResponseDTO> {
         val cart = getUserCart(userID)
         return cartProductRepository.getCartProducts(cart.id)
     }

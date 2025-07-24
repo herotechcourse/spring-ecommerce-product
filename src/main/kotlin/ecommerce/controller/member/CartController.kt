@@ -1,7 +1,7 @@
 package ecommerce.controller.member
 
 import ecommerce.annotations.LoginMember
-import ecommerce.dto.cartProduct.CartProductDTO
+import ecommerce.dto.cartProduct.CartProductResponseDTO
 import ecommerce.dto.user.MemberUserDTO
 import ecommerce.service.CartService
 import org.springframework.http.ResponseEntity
@@ -21,7 +21,7 @@ class CartController(
     @GetMapping("")
     fun getCartItems(
         @LoginMember user: MemberUserDTO,
-    ): ResponseEntity<List<CartProductDTO>> {
+    ): ResponseEntity<List<CartProductResponseDTO>> {
         val products = cartService.getCartProducts(user.id)
         return ResponseEntity.ok(products)
     }
