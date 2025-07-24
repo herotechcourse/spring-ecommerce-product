@@ -1,4 +1,4 @@
-package ecommerce.config
+package ecommerce.config.argumentResolver
 
 import ecommerce.annotations.LoginMember
 import ecommerce.dto.user.MemberUserDTO

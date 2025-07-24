@@ -1,5 +1,8 @@
 package ecommerce.config
 
+import ecommerce.config.argumentResolver.LoginAdminArgumentResolver
+import ecommerce.config.argumentResolver.LoginMemberArgumentResolver
+import ecommerce.config.interceptor.AuthInterceptor
 import ecommerce.repository.UserRepository
 import org.springframework.context.annotation.Configuration
 import org.springframework.web.method.support.HandlerMethodArgumentResolver
@@ -18,7 +21,12 @@ class WebConfig(
     }
 
     override fun addArgumentResolvers(resolvers: MutableList<HandlerMethodArgumentResolver?>) {
-        resolvers.add(LoginMemberArgumentResolver(userRepository))
+        val additionalResolvers =
+            listOf(
+                LoginMemberArgumentResolver(userRepository),
+                LoginAdminArgumentResolver(userRepository),
+            )
+        resolvers.addAll(additionalResolvers)
         super.addArgumentResolvers(resolvers)
     }
 }

@@ -1,4 +1,4 @@
-package ecommerce.config
+package ecommerce.config.interceptor
 
 import ecommerce.exception.UnauthorisedUserException
 import ecommerce.infrastructure.JwtTokenProvider
