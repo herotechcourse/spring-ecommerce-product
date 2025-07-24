@@ -9,6 +9,6 @@ class Member(
     val role: String = "USER",
 ) {
     fun toDto(): MemberDto {
-        return MemberDto(id!!, email, password, role)
+        return MemberDto(id!!, email)
     }
 }
