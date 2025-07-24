@@ -19,5 +19,7 @@ VALUES ('Espresso', 2.50, 'https://upload.wikimedia.org/wikipedia/commons/4/45/A
         'https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dGlyYW1pc3V8ZW58MHx8MHx8fDA%3D');
 
 INSERT INTO MEMBERS (EMAIL, PASSWORD, ROLE)
-VALUES ('admin@test.com', '$2a$12$hash_password', 'ADMIN'),
-       ('user@test.com', '$2a$12$hash_password', 'USER');
+VALUES ('admin@test.com', '$2a$12$hash_password', 'ADMIN');
+
+INSERT INTO CARTS (MEMBER_ID)
+VALUES (1);
