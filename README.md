@@ -134,11 +134,14 @@ Authorization: Bearer <token>
 
 - [ ] Return appropriate HTTP status codes:
 
-- 201 Created on successful registration
+   - 201 Created on successful registration
 
-- 200 OK on successful login
+   - 200 OK on successful login
 
-- 403 Forbidden for invalid credentials
+   - 403 Forbidden for invalid credentials
 
-- 401 Unauthorized for missing or invalid token
+   - 401 Unauthorized for missing or invalid token
+
+- [ ] Extend `JWTProvider` with a `getSubject(token: String)` method to extract member ID from token
+- [ ] Implement `findByToken(token: String)` in `MemberService` to return the authenticated member  
 
