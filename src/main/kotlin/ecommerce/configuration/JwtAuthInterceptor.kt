@@ -3,10 +3,12 @@ package ecommerce.configuration
 import ecommerce.exception.UnauthorizedException
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
+import org.springframework.stereotype.Component
 import org.springframework.web.servlet.HandlerInterceptor
 
+@Component
 class JwtAuthInterceptor(
-    val jwtTokenProvider: JwtTokenProvider,
+    private val jwtTokenProvider: JwtTokenProvider,
 ) : HandlerInterceptor {
     override fun preHandle(
         request: HttpServletRequest,
@@ -17,7 +19,7 @@ class JwtAuthInterceptor(
         if (accessToken == null) throw UnauthorizedException("Invalid Token")
         if (!jwtTokenProvider.validateToken(accessToken)) throw UnauthorizedException("Invalid Token")
 
-        val email = jwtTokenProvider.getEmailFromToken(accessToken)
+        val email = jwtTokenProvider.getEmailFromToken(accessToken) ?: throw UnauthorizedException("Invalid Token")
         request.setAttribute("email", email)
         return true
     }
