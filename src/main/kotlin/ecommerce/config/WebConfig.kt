@@ -10,9 +10,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 @Configuration
 class WebConfig(
     private val loginMemberArgumentResolver: LoginMemberArgumentResolver,
-    private val checkLoginInterceptor: CheckLoginInterceptor
+    private val checkLoginInterceptor: CheckLoginInterceptor,
 ) : WebMvcConfigurer {
-
     override fun addArgumentResolvers(resolvers: MutableList<HandlerMethodArgumentResolver>) {
         resolvers.add(loginMemberArgumentResolver)
     }

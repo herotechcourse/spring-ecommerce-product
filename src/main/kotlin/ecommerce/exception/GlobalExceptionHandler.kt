@@ -10,10 +10,8 @@ import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
 
-
 @ControllerAdvice
 class GlobalExceptionHandler {
-
     @ExceptionHandler(AuthorizationException::class)
     fun handleAuthorizationException(e: AuthorizationException): ResponseEntity<Map<String, String>> {
         return ResponseEntity(mapOf("error" to "Unauthorized: ${e.message}"), HttpStatus.UNAUTHORIZED)

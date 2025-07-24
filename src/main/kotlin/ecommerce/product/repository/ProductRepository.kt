@@ -72,7 +72,7 @@ class ProductRepository(private val jdbcTemplate: JdbcTemplate) {
                 id = rs.getLong("id"),
                 name = rs.getString("name"),
                 price = rs.getDouble("price"),
-                imageUrl = rs.getString("image_url")
+                imageUrl = rs.getString("image_url"),
             )
         }, id).firstOrNull()
     }

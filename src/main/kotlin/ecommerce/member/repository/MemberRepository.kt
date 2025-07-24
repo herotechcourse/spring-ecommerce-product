@@ -53,7 +53,7 @@ class MemberRepository(
                 id = rs.getLong("id"),
                 email = rs.getString("email"),
                 password = rs.getString("password"),
-                role = rs.getString("role")
+                role = rs.getString("role"),
             )
         }, id).firstOrNull()
     }

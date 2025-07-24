@@ -11,14 +11,19 @@ import org.springframework.web.servlet.HandlerInterceptor
 @Component
 class CheckLoginInterceptor(
     private val authService: AuthService,
-    private val authorizationExtractor: AuthorizationExtractor<String>
+    private val authorizationExtractor: AuthorizationExtractor<String>,
 ) : HandlerInterceptor {
-    override fun preHandle(request: HttpServletRequest, response: HttpServletResponse, handler: Any): Boolean {
-        val token = try {
-            authorizationExtractor.extract(request)
-        } catch (e: AuthorizationException) {
-            throw AuthorizationException("Failed to extract token: ${e.message}")
-        }
+    override fun preHandle(
+        request: HttpServletRequest,
+        response: HttpServletResponse,
+        handler: Any,
+    ): Boolean {
+        val token =
+            try {
+                authorizationExtractor.extract(request)
+            } catch (e: AuthorizationException) {
+                throw AuthorizationException("Failed to extract token: ${e.message}")
+            }
         authService.findMemberByToken(token)
         return true
     }

@@ -14,9 +14,8 @@ import org.springframework.web.method.support.ModelAndViewContainer
 @Component
 class LoginMemberArgumentResolver(
     private val authService: AuthService,
-    private val memberRepository: MemberRepository
+    private val memberRepository: MemberRepository,
 ) : HandlerMethodArgumentResolver {
-
     override fun supportsParameter(parameter: MethodParameter): Boolean {
         return parameter.hasParameterAnnotation(LoginMember::class.java)
     }
@@ -25,17 +24,20 @@ class LoginMemberArgumentResolver(
         parameter: MethodParameter,
         mavContainer: ModelAndViewContainer?,
         webRequest: NativeWebRequest,
-        binderFactory: WebDataBinderFactory?
+        binderFactory: WebDataBinderFactory?,
     ): Any {
-        val token = webRequest.getHeader("Authorization")?.removePrefix("Bearer ")
-            ?: throw AuthorizationException("Missing Authorization header")
-        val memberResponse = try {
-            authService.findMemberByToken(token)
-        } catch (e: AuthorizationException) {
-            throw AuthorizationException("Failed to authenticate token: ${e.message}")
-        }
-        val member = memberRepository.findById(memberResponse.id)
-            ?: throw AuthorizationException("Member not found with id: ${memberResponse.id}")
+        val token =
+            webRequest.getHeader("Authorization")?.removePrefix("Bearer ")
+                ?: throw AuthorizationException("Missing Authorization header")
+        val memberResponse =
+            try {
+                authService.findMemberByToken(token)
+            } catch (e: AuthorizationException) {
+                throw AuthorizationException("Failed to authenticate token: ${e.message}")
+            }
+        val member =
+            memberRepository.findById(memberResponse.id)
+                ?: throw AuthorizationException("Member not found with id: ${memberResponse.id}")
         if (member.email.isNullOrEmpty()) {
             throw AuthorizationException("Member email cannot be null or empty for id: ${memberResponse.id}")
         }

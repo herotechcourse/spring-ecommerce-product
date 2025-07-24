@@ -8,8 +8,9 @@ import org.springframework.stereotype.Component
 @Component
 class BearerAuthorizationExtractor : AuthorizationExtractor<String> {
     override fun extract(request: HttpServletRequest): String {
-        val authHeader = request.getHeader(AuthorizationExtractor.AUTHORIZATION)
-            ?: throw AuthorizationException("Missing Authorization header")
+        val authHeader =
+            request.getHeader(AuthorizationExtractor.AUTHORIZATION)
+                ?: throw AuthorizationException("Missing Authorization header")
         if (!authHeader.startsWith("Bearer ")) {
             throw AuthorizationException("Authorization header must start with 'Bearer '")
         }

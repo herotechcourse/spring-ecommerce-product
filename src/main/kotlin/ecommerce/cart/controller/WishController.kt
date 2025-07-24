@@ -9,20 +9,23 @@ import ecommerce.member.domain.Member
 import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.*
-
+import org.springframework.web.bind.annotation.DeleteMapping
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/api/wishes")
 class WishController(
-    private val cartService: CartService
+    private val cartService: CartService,
 ) {
-
-
     @PostMapping
     fun addToCart(
         @Valid @RequestBody request: CartRequest,
-        @LoginMember member: Member
+        @LoginMember member: Member,
     ): ResponseEntity<CartResponse> {
         if (member.id == null) throw AuthorizationException("Member ID cannot be null")
         val response = cartService.addToCart(member, request)
@@ -31,7 +34,7 @@ class WishController(
 
     @GetMapping
     fun getCartItems(
-        @LoginMember member: Member
+        @LoginMember member: Member,
     ): ResponseEntity<List<CartResponse>> {
         if (member.id == null) throw AuthorizationException("Member ID cannot be null")
         val cartItems = cartService.getCartItems(member)
@@ -41,7 +44,7 @@ class WishController(
     @DeleteMapping("/{productId}")
     fun removeFromCart(
         @PathVariable productId: Long,
-        @LoginMember member: Member
+        @LoginMember member: Member,
     ): ResponseEntity<Unit> {
         if (member.id == null) throw AuthorizationException("Member ID cannot be null")
         cartService.removeFromCart(member, productId)
