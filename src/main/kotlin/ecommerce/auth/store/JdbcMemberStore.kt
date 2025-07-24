@@ -28,4 +28,8 @@ class JdbcMemberStore(private val db: JdbcTemplate) : MemberStore {
         }, keyHolder)
         return member.copy(id = keyHolder.key?.toLong() ?: throw IllegalStateException("No ID returned"))
     }
+
+    override fun findAllMembers(): List<Member> {
+        return db.query("SELECT * FROM member", userRowMapper)
+    }
 }
