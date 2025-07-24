@@ -41,7 +41,7 @@ class CartRepository(
         jdbcTemplate.update(sql, memberId, productId)
     }
 
-    private fun existsByMemberIdAndProductId(memberId: Long, productId: Long): Boolean {
+    fun existsByMemberIdAndProductId(memberId: Long, productId: Long): Boolean {
         val sql = "SELECT COUNT(*) FROM CART_ITEMS WHERE member_id = ? AND product_id = ?"
         val count = jdbcTemplate.queryForObject(sql, Int::class.java, memberId, productId) ?: 0
         return count > 0

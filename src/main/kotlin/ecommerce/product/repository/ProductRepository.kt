@@ -64,4 +64,16 @@ class ProductRepository(private val jdbcTemplate: JdbcTemplate) {
     fun delete(id: Long): Int {
         return jdbcTemplate.update("DELETE FROM products WHERE id = ?", id)
     }
+
+    fun findById(id: Long): Product? {
+        val sql = "SELECT * FROM PRODUCTS WHERE id = ?"
+        return jdbcTemplate.query(sql, { rs, _ ->
+            Product(
+                id = rs.getLong("id"),
+                name = rs.getString("name"),
+                price = rs.getDouble("price"),
+                imageUrl = rs.getString("image_url")
+            )
+        }, id).firstOrNull()
+    }
 }
