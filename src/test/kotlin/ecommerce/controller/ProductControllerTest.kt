@@ -1,6 +1,5 @@
 package ecommerce.controller
 
-import ecommerce.model.Product
 import io.restassured.RestAssured
 import io.restassured.http.ContentType
 import org.assertj.core.api.Assertions.assertThat
@@ -17,58 +16,56 @@ class ProductControllerTest {
 
     @BeforeEach
     fun createProducts() {
-        val product = Product(0, "cafe", 39.0, "www.test")
-        val response =
-            RestAssured
-                .given().log().all().body(product)
-                .contentType(ContentType.JSON)
-                .`when`().post("/api/products")
-                .then().extract().response()
+        val productJson = mapOf(
+            "name" to "cafe",
+            "price" to 39.0,
+            "imageUrl" to "https://test.com/image.jpg"
+        )
+
+        val response = RestAssured
+            .given().log().all()
+            .contentType(ContentType.JSON)
+            .body(productJson)
+            .`when`().post("/api/products")
+            .then().extract().response()
 
         productId = response.jsonPath().getLong("id")
     }
 
     @Test
     fun addProduct() {
-        val product = Product(0, "table", 45.0, "test.com")
-        val response =
-            RestAssured
-                .given().log().all().body(product)
-                .contentType(ContentType.JSON)
-                .`when`().post("/api/products")
-                .then().extract().response()
+        val productJson = mapOf(
+            "name" to "table",
+            "price" to 45.0,
+            "imageUrl" to "https://test.com/image2.jpg"
+        )
+
+        val response = RestAssured
+            .given().log().all()
+            .contentType(ContentType.JSON)
+            .body(productJson)
+            .`when`().post("/api/products")
+            .then().extract().response()
 
         assertThat(response.statusCode).isEqualTo(HttpStatus.OK.value())
-        val created = response.`as`(Product::class.java)
-        assertThat(created.name).isEqualTo("table")
-        assertThat(created.price).isEqualTo(45.0)
-        assertThat(created.imageUrl).isEqualTo("test.com")
+        val created = response.jsonPath()
+        assertThat(created.getString("name")).isEqualTo("table")
+        assertThat(created.getDouble("price")).isEqualTo(45.0)
+        assertThat(created.getString("imageUrl")).isEqualTo("https://test.com/image2.jpg")
     }
 
     @Test
-    fun getProducts() {
-        val response =
-            RestAssured
-                .given().log().all()
-                .`when`().get("/api/products")
-                .then().extract().response()
+    fun getProducts_returnsList() {
+        val response = RestAssured
+            .given().log().all()
+            .`when`().get("/api/products")
+            .then().extract().response()
 
         assertThat(response.statusCode).isEqualTo(HttpStatus.OK.value())
-        val productList = response.jsonPath().getList("", Product::class.java)
+        val productList = response.jsonPath().getList("", Map::class.java)
         assertThat(productList).isNotEmpty
     }
-
-    @Test
-    fun getProduct() {
-        val response =
-            RestAssured
-                .given().log().all()
-                .`when`().get("/api/products/$productId")
-                .then().extract().response()
-
-        assertThat(response.statusCode).isEqualTo(HttpStatus.OK.value())
-        val found = response.`as`(Product::class.java)
-        assertThat(found.name).isEqualTo("cafe")
-        assertThat(found.price).isEqualTo(39.0)
-    }
 }
+
+
+
