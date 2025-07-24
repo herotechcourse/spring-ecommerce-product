@@ -1,9 +1,8 @@
-package ecommerce.api
+package ecommerce.api.product
 
 import io.restassured.RestAssured
 import io.restassured.http.ContentType
-import org.hamcrest.Matchers.equalTo
-import org.hamcrest.Matchers.greaterThanOrEqualTo
+import org.hamcrest.Matchers
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
@@ -48,7 +47,7 @@ class ProductControllerTest {
             .get("/api/products")
             .then()
             .statusCode(200)
-            .body("size()", greaterThanOrEqualTo(0))
+            .body("size()", Matchers.greaterThanOrEqualTo(0))
     }
 
     @Test
@@ -60,7 +59,7 @@ class ProductControllerTest {
             .get("/api/products/$id")
             .then()
             .statusCode(200)
-            .body("name", equalTo("Test"))
+            .body("name", Matchers.equalTo("Test"))
     }
 
     @Test

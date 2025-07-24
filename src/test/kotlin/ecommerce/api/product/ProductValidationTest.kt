@@ -1,8 +1,8 @@
-package ecommerce.api
+package ecommerce.api.product
 
 import io.restassured.RestAssured
 import io.restassured.http.ContentType
-import org.hamcrest.Matchers.equalTo
+import org.hamcrest.Matchers
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
@@ -38,7 +38,7 @@ class ProductValidationTest {
             .post("/api/products")
             .then()
             .statusCode(400)
-            .body("errors.name", equalTo("Invalid characters"))
+            .body("errors.name", Matchers.equalTo("Invalid characters"))
     }
 
     @Test
@@ -59,7 +59,7 @@ class ProductValidationTest {
             .post("/api/products")
             .then()
             .statusCode(400)
-            .body("errors.name", equalTo("Name must have at maximum 15 characters"))
+            .body("errors.name", Matchers.equalTo("Name must have at maximum 15 characters"))
     }
 
     @Test
@@ -80,7 +80,7 @@ class ProductValidationTest {
             .post("/api/products")
             .then()
             .statusCode(400)
-            .body("errors.name", equalTo("Product name is required"))
+            .body("errors.name", Matchers.equalTo("Product name is required"))
     }
 
     @Test
@@ -101,7 +101,7 @@ class ProductValidationTest {
             .post("/api/products")
             .then()
             .statusCode(400)
-            .body("errors.price", equalTo("Product price must be positive"))
+            .body("errors.price", Matchers.equalTo("Product price must be positive"))
     }
 
     @Test
@@ -122,6 +122,6 @@ class ProductValidationTest {
             .post("/api/products")
             .then()
             .statusCode(400)
-            .body("errors.imageUrl", equalTo("URL must start with http:// or https://"))
+            .body("errors.imageUrl", Matchers.equalTo("URL must start with http:// or https://"))
     }
 }

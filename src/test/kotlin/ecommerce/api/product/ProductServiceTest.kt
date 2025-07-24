@@ -1,11 +1,11 @@
-package ecommerce.api
+package ecommerce.api.product
 
 import ecommerce.products.model.Product
 import ecommerce.products.model.ProductPatchDTO
 import ecommerce.products.service.ProductService
 import ecommerce.products.store.JdbcProductStore
 import ecommerce.products.store.ProductStore
-import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -51,13 +51,13 @@ class ProductServiceTest {
     @Test
     fun findAll() {
         val products = productService.findAll()
-        assertThat(products).hasSize(5)
+        Assertions.assertThat(products).hasSize(5)
     }
 
     @Test
     fun findById() {
         val product = productService.findById(1)
-        assertThat(product?.name).isEqualTo("Iron Man")
+        Assertions.assertThat(product?.name).isEqualTo("Iron Man")
     }
 
     @Test
@@ -66,20 +66,21 @@ class ProductServiceTest {
         productService.insert(product)
         val allProducts = productService.findAll()
         val lastProduct = allProducts.last()
-        assertThat(lastProduct.name).isEqualTo(product.name)
+        Assertions.assertThat(lastProduct.name).isEqualTo(product.name)
     }
 
     @Test
     fun update() {
         val id = 1L
-        val newProduct = ProductPatchDTO(name = "Iron body", price = 99.0, imageUrl = "https://alexnsan.comics/imageurl/123")
+        val newProduct =
+            ProductPatchDTO(name = "Iron body", price = 99.0, imageUrl = "https://alexnsan.comics/imageurl/123")
 
         productService.update(id, newProduct)
 
         val target = productService.findById(id)
 
-        assertThat(target?.id).isEqualTo(id)
-        assertThat(target?.name).isEqualTo(newProduct.name)
+        Assertions.assertThat(target?.id).isEqualTo(id)
+        Assertions.assertThat(target?.name).isEqualTo(newProduct.name)
     }
 
     @Test
@@ -87,7 +88,7 @@ class ProductServiceTest {
         val id = 1L
         val result = productService.delete(id)
 
-        assertThat(result).isTrue
-        assertThat(productService.findById(id)).isNull()
+        Assertions.assertThat(result).isTrue
+        Assertions.assertThat(productService.findById(id)).isNull()
     }
 }
