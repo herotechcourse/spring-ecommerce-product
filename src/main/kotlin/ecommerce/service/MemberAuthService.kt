@@ -31,7 +31,7 @@ class MemberAuthService(
             )
         val id = userRepository.create(member)
         cartRepository.createCartForUser(id)
-        val authTokenPayload = jwtTokenProvider.createToken(AuthTokenPayload(member.email, member.role))
+        val authTokenPayload = jwtTokenProvider.createToken(AuthTokenPayload(member.email))
         return UserCreateResponse(URI.create("/users/$id"), "Bearer $authTokenPayload")
     }
 
@@ -43,7 +43,7 @@ class MemberAuthService(
 
         val token =
             jwtTokenProvider.createToken(
-                AuthTokenPayload(user.email, user.role),
+                AuthTokenPayload(user.email),
             )
         return "Bearer $token"
     }

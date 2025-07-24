@@ -1,7 +1,6 @@
 package ecommerce.infrastructure
 
 import ecommerce.dto.auth.AuthTokenPayload
-import ecommerce.enums.UserRole
 import io.jsonwebtoken.JwtException
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.security.Keys
@@ -26,7 +25,6 @@ class JwtTokenProvider(
         val expirationDate = Date(now.time + validityInMilliseconds)
         return Jwts.builder()
             .claim("email", authTokenPayload.email)
-            .claim("role", authTokenPayload.role.name)
             .issuedAt(now)
             .expiration(expirationDate)
             .signWith(secretKey, Jwts.SIG.HS256)
@@ -43,7 +41,7 @@ class JwtTokenProvider(
 
         val email = claims.get("email", String::class.java)
         val roleString = claims.get("role", String()::class.java)
-        return AuthTokenPayload(email, UserRole.valueOf(roleString))
+        return AuthTokenPayload(email)
     }
 
     fun validateToken(token: String): Boolean {
