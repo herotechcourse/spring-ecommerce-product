@@ -202,3 +202,27 @@
 ### CartStatistics
 - id, created_at, action
 - user_id, product_id (FK)
+
+
+## Tests
+### Controller
+#### Admin
+-[x] AdminCartStatisticsControllerTest
+-[x] AdminProductControllerTest
+#### Guest
+-[x] GuestProductControllerTest
+#### Member
+-[x] CartControllerTest
+-[x] MemberAuthControllerTest
+### DTO
+-[x] ProductDTOTest
+-[x] UserRequestDTOTest
+### Repository
+-[x] CartRepositoryTest
+-[x] CartStatisticsRepositoryTest
+-[x] ProductRepositoryTest
+-[x] UserRepositoryTest
+### Service
+-[x] CartServiceTest
+-[x] MemberAuthServiceTest
+-[x] ProductServiceTest
