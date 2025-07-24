@@ -18,7 +18,7 @@ create table MEMBERS
 
 create table CARTS
 (
-    id        INT AUTO_INCREMENT,
+    cart_id        INT AUTO_INCREMENT,
     user_id   INT UNIQUE,
     PRIMARY KEY (id),
     FOREIGN KEY (user_id) REFERENCES MEMBERS(id)

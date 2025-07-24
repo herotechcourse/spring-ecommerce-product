@@ -1,6 +1,6 @@
 package ecommerce.controller
 
-import ecommerce.auth.AuthService
+import ecommerce.service.AuthService
 import ecommerce.exception.UnauthorizedException
 import ecommerce.infrastructure.AuthorizationExtractor
 import ecommerce.dto.MemberResponse
@@ -10,13 +10,13 @@ import jakarta.servlet.http.HttpServletRequest
 import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
-import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RestController
 
-@Controller
+@RestController
 @RequestMapping("/api/members")
 class TokenLoginController(private val authService: AuthService) {
     private val authorizationExtractor: AuthorizationExtractor = AuthorizationExtractor()

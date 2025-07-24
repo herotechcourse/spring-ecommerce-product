@@ -1,4 +1,4 @@
-package ecommerce.auth
+package ecommerce.service
 
 import ecommerce.exception.NotFoundException
 import ecommerce.exception.UnauthorizedException
