@@ -7,16 +7,24 @@ import org.junit.jupiter.api.Test
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.HttpStatus
 import org.springframework.test.annotation.DirtiesContext
+import ecommerce.ProductMock.FLAT_WHITE
+import ecommerce.ProductMock.AMERICANO
+import ecommerce.ProductMock.createProduct
 
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 class ProductControllerTest {
     @Test
     fun `create() should be able return 'created 201' response`() {
+        val requestBody = mapOf(
+            "name" to "Test Product",
+            "price" to 9.99,
+            "imageUrl" to "https://example.com/product.png"
+        )
         val response =
             RestAssured
                 .given().log().all()
-                .body(AMERICANO)
+                .body(requestBody)
                 .contentType(ContentType.JSON)
                 .`when`().post("/api/products")
                 .then().log().all().extract()
@@ -76,7 +84,7 @@ class ProductControllerTest {
                 .given().log().all()
                 .body(FLAT_WHITE)
                 .contentType(ContentType.JSON)
-                .`when`().put("/api/products/1")
+                .`when`().patch("/api/products/1")
                 .then().log().all().extract()
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
@@ -89,7 +97,7 @@ class ProductControllerTest {
                 .given().log().all()
                 .body(FLAT_WHITE)
                 .contentType(ContentType.JSON)
-                .`when`().put("/api/products/1")
+                .`when`().patch("/api/products/1")
                 .then().log().all().extract()
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value())
@@ -130,35 +138,5 @@ class ProductControllerTest {
                 .then().log().all().extract()
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value())
-    }
-
-    companion object {
-        fun createProduct(product: Product) {
-            val response =
-                RestAssured
-                    .given().log().all()
-                    .body(product)
-                    .contentType(ContentType.JSON)
-                    .`when`().post("/api/products")
-                    .then().log().all().extract()
-
-            assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value())
-        }
-
-        val FLAT_WHITE =
-            Product(
-                name = "Flat white L",
-                price = 6.50,
-                imageUrl =
-                    "https://st.kakaocdn.net/product/gift/product/20231010111814_9a667f9eccc943648797925498bdd8a3.jpg",
-            )
-
-        val AMERICANO =
-            Product(
-                name = "Iced Americano",
-                price = 4.50,
-                imageUrl =
-                    "https://st.kakaocdn.net/product/gift/product/20231010111814_9a667f9eccc943648797925498bdd8a3.jpg",
-            )
     }
 }

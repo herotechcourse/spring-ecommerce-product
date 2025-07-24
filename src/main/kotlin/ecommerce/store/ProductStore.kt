@@ -1,6 +1,7 @@
 package ecommerce.store
 
 import ecommerce.product.Product
+import org.springframework.dao.DataAccessException
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.jdbc.core.RowMapper
 import org.springframework.stereotype.Repository
@@ -13,7 +14,7 @@ class ProductStore(val jdbcTemplate: JdbcTemplate) : BaseProductStore {
             Product(
                 rs.getLong("id"),
                 rs.getString("name"),
-                rs.getDouble("price"),
+                rs.getBigDecimal("price"),
                 rs.getString("image_url"),
             )
         }
@@ -61,7 +62,12 @@ class ProductStore(val jdbcTemplate: JdbcTemplate) : BaseProductStore {
             WHERE id = ?
             """.trimIndent()
 
-        return jdbcTemplate.update(sql, product.name, product.price, product.imageUrl, id).takeIf { it == 1 }
+        return try {
+            jdbcTemplate.update(sql, product.name, product.price, product.imageUrl, id)
+                .takeIf { it == 1 }
+        } catch (ex: DataAccessException) {
+            throw RuntimeException("Failed to update product with id $id", ex)
+        }
     }
 
     override fun findByName(name: String): Product? {
@@ -72,6 +78,11 @@ class ProductStore(val jdbcTemplate: JdbcTemplate) : BaseProductStore {
     override fun deleteById(id: Long): Int? {
         if (isEmptyOrNull()) return null
         val sql = "DELETE FROM products WHERE id = ?"
-        return jdbcTemplate.update(sql, id).takeIf { it == 1 }
+
+        return try {
+            jdbcTemplate.update(sql, id).takeIf { it == 1 }
+        } catch (ex: DataAccessException) {
+            throw RuntimeException("Failed to update product with id $id", ex)
+        }
     }
 }

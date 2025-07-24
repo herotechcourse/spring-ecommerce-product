@@ -8,22 +8,36 @@
     form, .products { margin-bottom: 1em; }
     label, input { display: block; margin: 4px 0; }
     button { margin-right: 5px; }
+    .forms-wrapper { display: flex; gap: 20px }
+    form { display: none }
+    form.active { display: block }
   </style>
   <script src="./js/ProductManager.js" defer onload="productManager()"></script>
 </head>
-<body>
 
+<body>
 <h1>Product Manager</h1>
 
-<form id="product-form">
-  <input type="hidden" id="product-id" />
-  <label>Name: <input type="text" id="product-name" required></label>
-  <label>Price: <input type="number" id="product-price" required></label>
-  <label>Image URL: <input type="text" id="product-image" required></label>
-  <button type="submit">Create / Update</button>
-</form>
+<div class="forms-wrapper">
+  <form id="product-form" class="active">
+    <input type="hidden" name="product-id"/>
+    <label>Name: <input type="text" name="product-name" placeholder="Product name" required></label>
+    <label>Price: <input type="number" step="0.01" name="product-price" placeholder="Product price" required></label>
+    <label>Image URL: <input type="text" name="product-image" placeholder="Product image URL" required></label>
+    <button type="submit">Create</button>
+  </form>
+
+  <form id="update-product-form">
+    <input type="hidden" name="product-id"/>
+    <label>Name: <input type="text" name="product-name" placeholder="Update name here"></label>
+    <label>Price: <input type="number" step="0.01" name="product-price" placeholder="Update price here"></label>
+    <label>Image URL: <input type="text" name="product-image" placeholder="Update image here"></label>
+    <button type="submit">Update</button><button type="button" class="cancel-edit-button">Cancel</button>
+  </form>
+</div>
 
 <h2>Products</h2>
 <div class="products" id="product-list"></div>
 </body>
+
 </html>
