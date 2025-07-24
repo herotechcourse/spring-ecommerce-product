@@ -1,5 +1,6 @@
 package ecommerce.configuration
 
+import io.jsonwebtoken.JwtException
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.security.Keys
 import org.springframework.beans.factory.annotation.Value
@@ -30,5 +31,34 @@ class JwtTokenProvider {
             .expiration(validity)
             .signWith(secretKey)
             .compact()
+    }
+
+    fun validateToken(token: String): Boolean {
+        return try {
+            val claims =
+                Jwts.parser()
+                    .verifyWith(secretKey)
+                    .build().parseSignedClaims(token)
+            !claims.payload.expiration.before(Date())
+        } catch (e: JwtException) {
+            false
+        } catch (e: IllegalArgumentException) {
+            false
+        }
+    }
+
+    fun getEmailFromToken(token: String): String? {
+        try {
+            val claims =
+                Jwts.parser()
+                    .verifyWith(secretKey)
+                    .build().parseSignedClaims(token).payload
+
+            return claims.subject
+        } catch (e: JwtException) {
+            return null
+        } catch (e: IllegalArgumentException) {
+            return null
+        }
     }
 }
