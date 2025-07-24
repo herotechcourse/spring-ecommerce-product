@@ -33,12 +33,6 @@ HTTP API that allows users to retrieve, add, update, and delete products.
 -[x] Reconsider the placement and responsibility of `AssertTemplate` → Delete
   Decide whether assertion logic should be part of the fixture or separated.
 
-### Test Design
-
--[ ] Keep test data inline in `ProductControllerTest`, rather than extracting into helper methods
-  No need to refactor if current structure is clear and simple.
-
-
 ---
 ## Step 2
 ### ProductRequest Name
