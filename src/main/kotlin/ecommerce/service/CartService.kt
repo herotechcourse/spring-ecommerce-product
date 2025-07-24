@@ -41,4 +41,15 @@ class CartService(
         val cart = cartRepository.findCartByMemberId(memberId) ?: throw ElementNotFoundException("Cart Not Found")
         return cartItemRepository.getCartItemsByCartId(cart.id)
     }
+
+    fun deleteProductFromCart(
+        memberId: Long,
+        productId: Long,
+    ): Boolean {
+        val cart = cartRepository.findCartByMemberId(memberId) ?: throw ElementNotFoundException("Cart Not Found")
+        return cartItemRepository.deleteCartItemsByCartIdAndProductId(
+            cart.id,
+            productId,
+        )
+    }
 }
