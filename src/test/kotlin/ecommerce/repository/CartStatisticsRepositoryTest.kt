@@ -54,4 +54,9 @@ class CartStatisticsRepositoryTest {
     fun getTopAddedProducts() {
         assertThat(cartStatisticsRepository.getTopAddedProducts()).isNotEmpty
     }
+
+    @Test
+    fun membersAddedProduct() {
+        assertThat(cartStatisticsRepository.getMembersWhoAddedToCart()).isNotEmpty
+    }
 }

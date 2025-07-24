@@ -1,7 +1,9 @@
 package ecommerce.repository
 
+import ecommerce.dto.cartStatistics.MembersWhoAddedToCartDTO
 import ecommerce.dto.cartStatistics.TopAddedProductsDTO
 import ecommerce.enums.CartAction
+import ecommerce.mapper.MembersWhoAddedToCartMapper
 import ecommerce.mapper.TopAddedProductsMapper
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert
@@ -11,6 +13,7 @@ import org.springframework.stereotype.Repository
 class CartStatisticsRepository(
     private val jdbcTemplate: JdbcTemplate,
     private val topAddedProductsMapper: TopAddedProductsMapper,
+    private val membersWhoAddedToCartMapper: MembersWhoAddedToCartMapper,
 ) {
     fun create(
         userID: Long?,
@@ -50,7 +53,7 @@ class CartStatisticsRepository(
         return jdbcTemplate.query(sql, topAddedProductsMapper, CartAction.ADD.name, limit)
     }
 
-    fun membersAddedProduct(): List<TopAddedProductsDTO> {
+    fun getMembersWhoAddedToCart(days: Int = 7): List<MembersWhoAddedToCartDTO> {
         val sql =
             """
             select
@@ -59,10 +62,10 @@ class CartStatisticsRepository(
                 u.email as email
             from cart_statistics c
             join users u on c.user_id = u.id
-            where c.created_at >= dateadd('day', -7, current_timestamp)
+            where c.created_at >= dateadd('day', -?, current_timestamp)
             group by u.id, u.name, u.email
             order by max(c.created_at) desc
             """.trimIndent()
-        return jdbcTemplate.query(sql, topAddedProductsMapper)
+        return jdbcTemplate.query(sql, membersWhoAddedToCartMapper, days)
     }
 }
