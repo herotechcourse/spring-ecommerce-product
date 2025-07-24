@@ -20,7 +20,7 @@ class MemberRepositoryTest {
     fun setUp() {
         memberRepository = MemberRepository(db)
         db.sql("DROP TABLE CART_ITEMS IF EXISTS").update()
-        db.sql("DROP TABLE CART IF EXISTS").update()
+        db.sql("DROP TABLE CARTS IF EXISTS").update()
         db.sql("DROP TABLE CART_ITEMS IF EXISTS").update()
         db.sql("DROP TABLE MEMBERS IF EXISTS").update()
         val sql =

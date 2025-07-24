@@ -22,7 +22,7 @@ class ProductRepositoryTest {
         productRepository = ProductRepository(jdbcTemplate)
 
         jdbcTemplate.execute("DROP TABLE CART_ITEMS IF EXISTS")
-        jdbcTemplate.execute("DROP TABLE CART IF EXISTS")
+        jdbcTemplate.execute("DROP TABLE CARTS IF EXISTS")
         jdbcTemplate.execute("DROP TABLE CART_ITEMS IF EXISTS")
         jdbcTemplate.execute("DROP TABLE products IF EXISTS")
 

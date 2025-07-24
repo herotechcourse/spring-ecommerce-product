@@ -26,7 +26,7 @@ class CartRepositoryTest {
         val memberId = 1L
         val cartId = cartRepository.createCart(memberId)
         assertTrue(cartId > 0)
-        val count = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM cart WHERE member_id = $memberId", Int::class.java)
+        val count = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM carts WHERE member_id = $memberId", Int::class.java)
         assertEquals(1, count)
     }
 

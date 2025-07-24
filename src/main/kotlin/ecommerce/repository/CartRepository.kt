@@ -23,7 +23,7 @@ class CartRepository(
         // Implement the logic to create a new cart for a member
         val insert =
             SimpleJdbcInsert(jdbcTemplate)
-                .withTableName("cart")
+                .withTableName("carts")
                 .usingGeneratedKeyColumns("id")
         val parameters = mapOf("member_id" to memberId)
         // Return the generated cart ID
@@ -32,7 +32,7 @@ class CartRepository(
 
     fun findCartByMemberId(memberId: Long): Cart? {
         // Implement the logic to find the cart ID for a given member
-        val sql = "SELECT * FROM cart WHERE member_id = ?"
+        val sql = "SELECT * FROM carts WHERE member_id = ?"
         return try {
             jdbcTemplate.queryForObject(sql, cartRowMapper, memberId)
         } catch (e: EmptyResultDataAccessException) {
