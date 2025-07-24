@@ -2,7 +2,6 @@ package ecommerce.controller
 
 import ecommerce.dto.ProductRequest
 import ecommerce.dto.ProductResponse
-import ecommerce.repository.ProductRepository
 import ecommerce.service.ProductService
 import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
@@ -19,7 +18,6 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/api/products")
 class ProductController(
-    private val productRepository: ProductRepository,
     private val productService: ProductService,
 ) {
     @PostMapping
