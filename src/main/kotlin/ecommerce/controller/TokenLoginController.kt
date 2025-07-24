@@ -1,6 +1,7 @@
 package ecommerce.controller
 
 import ecommerce.auth.AuthService
+import ecommerce.exception.UnauthorizedException
 import ecommerce.infrastructure.AuthorizationExtractor
 import ecommerce.model.MemberResponse
 import ecommerce.model.TokenRequest
@@ -42,6 +43,9 @@ class TokenLoginController(private val authService: AuthService) {
     @GetMapping("me/token")
     fun findMyInfo(request: HttpServletRequest): ResponseEntity<MemberResponse> {
         val token = authorizationExtractor.extract(request)
+        if (token.isEmpty()) {
+            throw UnauthorizedException()
+        }
         val member = authService.findMemberByToken(token)
         return ResponseEntity.ok().body(member)
     }

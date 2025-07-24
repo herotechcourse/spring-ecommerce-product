@@ -1,15 +1,10 @@
 package ecommerce.infrastructure
 
-import ecommerce.exception.UnauthorizedException
 import jakarta.servlet.http.HttpServletRequest
-
 
 class AuthorizationExtractor {
     fun extract(request: HttpServletRequest): String {
         val headers = request.getHeaders(HEADER)
-        if (!headers.hasMoreElements()) {
-            throw UnauthorizedException()
-        }
         while (headers.hasMoreElements()) {
             val value = headers.nextElement()
             if (value.lowercase().startsWith(BEARER_TYPE.lowercase())) {
