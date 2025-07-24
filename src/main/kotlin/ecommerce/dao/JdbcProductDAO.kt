@@ -67,4 +67,15 @@ class JdbcProductDAO(private val db: JdbcTemplate) : ProductDAO {
         val value = db.update("DELETE FROM product WHERE id = ?", id)
         return value
     }
+
+    fun existsByName(productName: String): Boolean {
+        val sql = "SELECT COUNT(*) FROM product WHERE name = ?"
+        try {
+            val count = db.queryForObject(sql, Long::class.java, productName)
+            return count != null && count > 0
+        } catch (exception: Exception) {
+            println("existsByName(): " + exception.message)
+            return false
+        }
+    }
 }

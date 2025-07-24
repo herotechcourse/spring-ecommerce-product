@@ -53,8 +53,8 @@ class JdbcProductDAOTest {
     @Test
     fun insert() {
         val product = Product(name = "Iron body", price = 99.0, imageUrl = "https://alexnsan.comics/imageurl/123")
-        jdbcProductDao.insert(product)
-        val target = jdbcProductDao.findById(6)
+        val id = jdbcProductDao.insert(product)
+        val target = jdbcProductDao.findById(id)
         Assertions.assertThat(target?.name).isEqualTo(product.name)
     }
 
@@ -78,5 +78,19 @@ class JdbcProductDAOTest {
         val result = jdbcProductDao.delete(id)
 
         Assertions.assertThat(result).isEqualTo(1)
+    }
+
+    @Test
+    fun `existsByName() - return true if a product with same name exists`() {
+        val target = jdbcProductDao.existsByName("Iron Man")
+
+        Assertions.assertThat(target).isTrue()
+    }
+
+    @Test
+    fun `existsByName() - return false if a product with same name does not exist`() {
+        val target = jdbcProductDao.existsByName("Iron Body")
+
+        Assertions.assertThat(target).isFalse()
     }
 }
