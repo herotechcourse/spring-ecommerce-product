@@ -1,6 +1,7 @@
 package ecommerce.repository
 
 import ecommerce.dto.CartItemResponse
+import ecommerce.model.CartItem
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.jdbc.core.RowMapper
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert
@@ -8,7 +9,7 @@ import org.springframework.stereotype.Repository
 
 @Repository
 class CartItemRepository(private val jdbcTemplate: JdbcTemplate) {
-    private val cartItemRowMapper =
+    private val cartItemRowMapperResponse =
         RowMapper<CartItemResponse> { rs, _ ->
             CartItemResponse(
                 rs.getLong("product_id"),
@@ -16,6 +17,16 @@ class CartItemRepository(private val jdbcTemplate: JdbcTemplate) {
                 rs.getInt("quantity"),
                 rs.getDouble("price"),
                 rs.getString("image_url"),
+            )
+        }
+
+    private val cartItemRowMapper =
+        RowMapper<CartItem> { rs, _ ->
+            CartItem(
+                rs.getLong("id"),
+                rs.getLong("cart_id"),
+                rs.getLong("product_id"),
+                rs.getInt("quantity"),
             )
         }
 
@@ -56,7 +67,7 @@ class CartItemRepository(private val jdbcTemplate: JdbcTemplate) {
             WHERE cart.cart_id = ?
             """.trimIndent()
 
-        return jdbcTemplate.query(sql, cartItemRowMapper, cartId)
+        return jdbcTemplate.query(sql, cartItemRowMapperResponse, cartId)
     }
 
     fun deleteCartItemsByCartIdAndProductId(
@@ -79,5 +90,19 @@ class CartItemRepository(private val jdbcTemplate: JdbcTemplate) {
             cartId,
             productId,
         ) > 0
+    }
+
+    fun findByCartIdAndProductId(
+        cartId: Long,
+        productId: Long,
+    ): CartItem? {
+        return jdbcTemplate.queryForObject(
+            """
+            SELECT * FROM cart_items WHERE cart_id =? AND product_id =?
+            """,
+            cartItemRowMapper,
+            cartId,
+            productId,
+        )
     }
 }
