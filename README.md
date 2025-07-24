@@ -145,6 +145,9 @@ Implement a functionality that allows users to add or remove items from a cart. 
 - [ ] Users can add products to their cart
 - [ ] Users can remove products from their cart
 
+- [x] Create a Cart
+- [x] Add Cart table to the database
+- [x] Map Cart to Products -> many-to-many database table
 - [ ] Create Repository for cart
 - [ ] Create Controller for cart
 
