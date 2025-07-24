@@ -1,6 +1,6 @@
 package ecommerce.controller
 
-import ecommerce.dto.CartRequest
+import ecommerce.dto.CartItemRequest
 import ecommerce.model.Member
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController
 class CartController {
     @PostMapping
     fun addToCart(
-        @RequestBody request: CartRequest,
+        @RequestBody request: CartItemRequest,
         member: Member,
     ) {
         // Add product to cart for this member
