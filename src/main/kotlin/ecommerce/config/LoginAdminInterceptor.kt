@@ -24,6 +24,8 @@ class LoginAdminInterceptor(
         val payload = jwtTokenProvider.getPayload(token)
         if (payload.role == UserRole.USER) throw UnauthorisedUserException("Admin role required")
 
+//        request.setAttribute("user", payload)
+
         return true
     }
 }

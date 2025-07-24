@@ -10,5 +10,4 @@ INSERT INTO users (email, password, name, role) VALUES
 ('bob@example.com', 'password2', 'ADMIN', 'ADMIN');
 
 INSERT INTO cart (user_id) VALUES
-(1),
-(2);
+(1);

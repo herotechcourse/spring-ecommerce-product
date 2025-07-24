@@ -25,9 +25,9 @@ class MemberAuthService(
         }
         val member =
             MemberUserDTO(
-                user.email,
-                user.password,
-                user.name,
+                email = user.email,
+                password = user.password,
+                name = user.name,
             )
         val id = userRepository.create(member)
         cartRepository.createCartForUser(id)

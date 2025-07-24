@@ -3,6 +3,7 @@ package ecommerce.repository
 import ecommerce.dto.cartProduct.CartProductDTO
 import ecommerce.mapper.CartProductMapper
 import org.springframework.jdbc.core.JdbcTemplate
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert
 import org.springframework.stereotype.Repository
 
 @Repository
@@ -36,15 +37,25 @@ class CartProductRepository(
         cartID: Long,
         productID: Long,
     ): Int {
-        val sql = "delete from cart_products (product_id, user_id) values ?, ?, ?"
+        val sql = "DELETE FROM cart_products WHERE product_id = ? AND cart_id = ?"
         return jdbcTemplate.update(sql, productID, cartID)
     }
 
     fun addProduct(
         cartID: Long,
         productID: Long,
-    ): Int {
-        val sql = "insert into cart_products (quantity, product_id, user_id) values ?, ?, ?"
-        return jdbcTemplate.update(sql, 1, productID, cartID)
+    ): Long {
+        val insert =
+            SimpleJdbcInsert(jdbcTemplate)
+                .withTableName("cart_products")
+                .usingGeneratedKeyColumns("id")
+
+        val parameters =
+            mapOf(
+                "quantity" to 1,
+                "product_id" to productID,
+                "cart_id" to cartID,
+            )
+        return insert.executeAndReturnKey(parameters).toLong()
     }
 }

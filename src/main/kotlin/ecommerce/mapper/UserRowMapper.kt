@@ -13,6 +13,7 @@ class UserRowMapper : RowMapper<MemberUserDTO> {
         rowNum: Int,
     ): MemberUserDTO {
         return MemberUserDTO(
+            id = rs.getLong("id"),
             email = rs.getString("email"),
             name = rs.getString("name"),
             role = UserRole.valueOf(rs.getString("role")),

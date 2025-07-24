@@ -30,9 +30,9 @@ class MemberAuthServiceTest {
             )
         val member =
             MemberUserDTO(
-                userDTO.email,
-                userDTO.password,
-                userDTO.name,
+                email = userDTO.email,
+                password = userDTO.password,
+                name = userDTO.name,
             )
         userRepository.create(member)
         assertThrows<UserAlreadyExistsException> { memberAuthService.signUp(userDTO) }

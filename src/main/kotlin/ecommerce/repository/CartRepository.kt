@@ -15,7 +15,7 @@ class CartRepository(
         jdbcTemplate.update(sql, userId)
     }
 
-    fun findMembersCart(userId: Long): CartDTO? {
+    fun findMembersCart(userId: Long?): CartDTO? {
         val sql = "select * from cart where user_id = ?"
         val res = jdbcTemplate.query(sql, cartRowMapper, userId)
         return res.firstOrNull()
