@@ -1,5 +1,6 @@
 package ecommerce.service
 
+import ecommerce.dto.CartUpdateResult
 import ecommerce.repository.CartItemRepository
 import ecommerce.repository.CartRepository
 import org.springframework.stereotype.Service
@@ -13,22 +14,24 @@ class CartService(
         userId: Long,
         productId: Long,
         quantity: Int,
-    ) {
-        val cart = cartRepository.findCartByMemberId(userId)
-        if (cart == null) {
-            cartRepository.createCart(userId)
-        }
-        cartItemRepository.addProductToCart(productId, cart!!.id, quantity)
-        val existingItem = cartItemRepository.findByCartIdAndProductId(cart.id, productId)
+    ): CartUpdateResult {
+        cartRepository.findCartByMemberId(userId) ?: cartRepository.createCart(userId)
+        val newCart = cartRepository.findCartByMemberId(userId)
+        val existingItem = cartItemRepository.findByCartIdAndProductId(newCart!!.id, productId)
 
         when (existingItem) {
-            null -> cartItemRepository.addProductToCart(productId, cart.id, quantity)
-            else ->
+            null -> {
+                cartItemRepository.addProductToCart(productId, newCart.id, quantity)
+                return CartUpdateResult.PRODUCT_ADDED
+            }
+            else -> {
                 cartItemRepository.updateQuantityByCartIdAndProductId(
-                    cart.id,
+                    newCart.id,
                     productId,
                     existingItem.quantity + quantity,
                 )
+                return CartUpdateResult.PRODUCT_QUANTITY_UPDATED
+            }
         }
     }
 }
