@@ -156,5 +156,5 @@ Using the token received after login, implement functionality that allows the us
 - [x] Create `LoginMember` annotation and `LoginMemberArgumentResolver`
   - [x] Injects authenticated `Member` into controller methods
 
-- [ ] Create `CheckLoginInterceptor`
-  - [ ] Protects `/api/wishes/**` routes with token validation
+- [x] Create `CheckLoginInterceptor`
+  - [x] Protects `/api/wishes/**` routes with token validation
