@@ -33,7 +33,7 @@ class ProductRestController(
     @PostMapping
     fun create(
         @RequestBody @Valid request: ProductRequest,
-    ): ResponseEntity<out Any> {
+    ): ResponseEntity<Any> {
         val existing = productRepository.getAll().any { it.name == request.name }
         if (productRepository.existsByName(request.name)) {
             val error =
@@ -55,34 +55,26 @@ class ProductRestController(
     fun update(
         @PathVariable id: Long,
         @RequestBody @Valid request: ProductRequest,
-    ): ResponseEntity<out Any?> {
-        val existingProduct =
-            productRepository.findById(id)
-                ?: return ResponseEntity.notFound().build()
+    ): ResponseEntity<Any> {
+        val existingProduct = productRepository.findById(id)
+            ?: return ResponseEntity.notFound().build()
 
-        val isDuplicateName =
-            productRepository.getAll()
-                .any { it.name == request.name && it.id != id }
-
-        if (isDuplicateName) {
-            val error =
-                ErrorResponse(
-                    message = "Validation failed",
-                    errors =
-                        listOf(
-                            FieldError("name", "Product name must be unique"),
-                        ),
+        if (productRepository.existsByNameExcludingId(request.name, id)) {
+            val error = ErrorResponse(
+                message = "Validation failed",
+                errors = listOf(
+                    FieldError("name", "Product name must be unique")
                 )
+            )
             return ResponseEntity.badRequest().body(error)
         }
 
-        val updatedProduct =
-            Product(
-                id = id,
-                name = request.name,
-                price = request.price,
-                imageUrl = request.imageUrl,
-            )
+        val updatedProduct = existingProduct.copy(
+            name = request.name,
+            price = request.price,
+            imageUrl = request.imageUrl
+        )
+
         productRepository.updateProduct(updatedProduct)
         return ResponseEntity.ok(updatedProduct)
     }
