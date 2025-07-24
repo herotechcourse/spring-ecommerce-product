@@ -58,32 +58,32 @@
     - [x] return token when successful login
     - [x] return `403` when failed login
 
-- [ ] error handling
+- [x] error handling
   - [x] `400 Bad Request` if required fields missing or invalid 
-  - [ ] `401 Unauthorized` if authorization header missing or invalid 
+  - [x] `401 Unauthorized` if authorization header missing or invalid 
   - [x] `403 Forbidden` if failed login
 
 #### step 2-3
 
 - [x] set up authenticated access
   - [x] implement interceptor
-- [ ] test authentication
+- [x] test authentication
 
-- [ ] add `CartItem` entity/model (contains productId, quantity, userId)
-- [ ] add `CartRepository` and according table in database 
-- [ ] add `CartService` with logic to
-  - [ ] add item `POST /api/cart`
-    - [ ] if item already in cart, increase its quantity by 1
-  - [ ] retrieve item(s) `GET /api/cart`
-  - [ ] remove item `DELETE /api/cart/{productID}`
-  - [ ] change quantity of item `PATCH /api/cart/{productId}`
-    - [ ] if quantity is 0, remove item
+- [x] add `CartItem` entity/model (contains productId, quantity, userId)
+- [x] add `CartRepository` and according table in database 
+- [x] add `CartService` with logic to
+  - [x] add item `POST /api/cart`
+    - [x] if item already in cart, increase its quantity by 1
+  - [x] retrieve item(s) `GET /api/cart`
+  - [x] remove item `DELETE /api/cart/{productID}`
+  - [x] change quantity of item `PATCH /api/cart/{productId}`
+    - [x] if quantity is 0, remove item
 
-- [ ] security and error handling
-  - [ ] require a valid Authorization: Bearer <token> header for cart endpoints 
-  - [ ] token is missing or invalid: `401 Unauthorized`
-  - [ ] payload is invalid: `400 Bad Request`
-  - [ ] item to update/delete is not in cart: `404 Not Found`
+- [x] security and error handling
+  - [x] require a valid Authorization: Bearer <token> header for cart endpoints 
+  - [x] token is missing or invalid: `401 Unauthorized`
+  - [x] payload is invalid: `400 Bad Request`
+  - [x] item to update/delete is not in cart: `404 Not Found`
 
 ## notes
 

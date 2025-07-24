@@ -2,7 +2,10 @@ package ecommerce.controller
 
 import ecommerce.dto.ProductRequest
 import ecommerce.entity.Product
+import ecommerce.entity.User
 import ecommerce.repository.ProductRepository
+import ecommerce.repository.UserRepository
+import ecommerce.service.JwtService
 import io.restassured.RestAssured
 import io.restassured.http.ContentType
 import org.assertj.core.api.Assertions
@@ -13,9 +16,12 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.web.server.LocalServerPort
 import org.springframework.http.HttpStatus
 import org.springframework.jdbc.core.JdbcTemplate
+import org.springframework.test.annotation.DirtiesContext
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 class CRUDTest {
+
     private lateinit var productRepository: ProductRepository
 
     @LocalServerPort
@@ -24,6 +30,14 @@ class CRUDTest {
     @Autowired
     private lateinit var jdbcTemplate: JdbcTemplate
 
+    @Autowired
+    private lateinit var userRepository: UserRepository
+
+    @Autowired
+    private lateinit var jwtService: JwtService
+
+    private lateinit var token: String
+
     @BeforeEach
     fun setUp() {
         productRepository = ProductRepository(jdbcTemplate)
@@ -31,7 +45,7 @@ class CRUDTest {
         jdbcTemplate.execute("DROP TABLE products IF EXISTS")
         jdbcTemplate.execute(
             "CREATE TABLE IF NOT EXISTS products(" +
-                "id BIGINT AUTO_INCREMENT, name VARCHAR(255) NOT NULL, price DOUBLE NOT NULL, image_url VARCHAR(512) NOT NULL)",
+                    "id BIGINT AUTO_INCREMENT, name VARCHAR(255) NOT NULL, price DOUBLE NOT NULL, image_url VARCHAR(512) NOT NULL)",
         )
 
         val products =
@@ -65,6 +79,11 @@ class CRUDTest {
             ps.setDouble(2, product.price)
             ps.setString(3, product.imageUrl)
         }
+
+        val user = User(email = "user@mail.com", password = "p123456")
+        user.id = userRepository.create(user)
+
+        token = jwtService.generateToken(user.email)
     }
 
     @Test
@@ -80,6 +99,7 @@ class CRUDTest {
             RestAssured
                 .given().log().all()
                 .port(port)
+                .header("Authorization", "Bearer $token")
                 .body(request)
                 .contentType(ContentType.JSON)
                 .`when`().post("/api/products")
@@ -94,6 +114,7 @@ class CRUDTest {
             RestAssured
                 .given().log().all()
                 .port(port)
+                .header("Authorization", "Bearer $token")
                 .contentType(ContentType.JSON)
                 .`when`().get("/api/products")
                 .then().log().all().extract()
@@ -108,13 +129,13 @@ class CRUDTest {
             RestAssured
                 .given().log().all()
                 .port(port)
+                .header("Authorization", "Bearer $token")
                 .body(
                     ProductRequest(
                         name = "lemon ice",
                         price = 3.60,
                         imageUrl =
-                            "https://www.carnation.co.uk/sites/default/files/2020" +
-                                "-05/Final%20Lemon%20Curd%20Ice%20Cream%20mobile.jpg",
+                            "https://www.carnation.co.uk/sites/default/files/2020-05/Final%20Lemon%20Curd%20Ice%20Cream%20mobile.jpg",
                     ),
                 )
                 .contentType(ContentType.JSON)
@@ -130,6 +151,7 @@ class CRUDTest {
             RestAssured
                 .given().log().all()
                 .port(port)
+                .header("Authorization", "Bearer $token")
                 .body(
                     ProductRequest(
                         name = "vanilla ice",
@@ -152,6 +174,7 @@ class CRUDTest {
             RestAssured
                 .given().log().all()
                 .port(port)
+                .header("Authorization", "Bearer $token")
                 .`when`().delete("/api/products/1")
                 .then().log().all().extract()
 
@@ -164,6 +187,7 @@ class CRUDTest {
             RestAssured
                 .given().log().all()
                 .port(port)
+                .header("Authorization", "Bearer $token")
                 .`when`().delete("/api/products/4")
                 .then().log().all().extract()
 
