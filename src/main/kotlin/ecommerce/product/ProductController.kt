@@ -11,13 +11,12 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import java.net.URI
-import java.util.concurrent.atomic.AtomicLong
 
 @RequestMapping("/api/products")
 @RestController
 class ProductController(private val repository: ProductStore, private val productService: ProductService) {
 
-    @PostMapping("")
+    @PostMapping
     fun create(
         @RequestBody product: Product,
     ): ResponseEntity<Product> {
@@ -32,7 +31,7 @@ class ProductController(private val repository: ProductStore, private val produc
         return ResponseEntity.created(URI.create("/products/" + savedProduct.id)).body(savedProduct)
     }
 
-    @GetMapping("")
+    @GetMapping
     fun read(): ResponseEntity<List<Product>> {
         if (repository.isEmptyOrNull()) return ResponseEntity.noContent().build()
         return ResponseEntity.ok(repository.findAll())
