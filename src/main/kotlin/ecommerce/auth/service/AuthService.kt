@@ -17,9 +17,9 @@ class AuthService(
     fun createToken(tokenRequest: TokenRequest): TokenResponse {
         val member =
             memberRepository.findByEmail(tokenRequest.email)
-                ?: throw AuthorizationException()
+                ?: throw AuthorizationException("Member not found with email: ${tokenRequest.email}")
         if (member.password != tokenRequest.password) {
-            throw AuthorizationException()
+            throw AuthorizationException("Invalid password for email: ${tokenRequest.email}")
         }
         val accessToken = jwtTokenProvider.createToken(member.email)
         return TokenResponse(accessToken)
@@ -34,12 +34,12 @@ class AuthService(
 
     fun findMemberByToken(token: String): MemberResponse {
         if (!jwtTokenProvider.validateToken(token)) {
-            throw AuthorizationException()
+            throw AuthorizationException("Invalid or expired JWT token")
         }
         val email = jwtTokenProvider.getPayload(token)
         val member =
             memberRepository.findByEmail(email)
-                ?: throw AuthorizationException()
+                ?: throw AuthorizationException("Member not found with email: $email")
         return MemberResponse(member.id!!, member.email)
     }
 }

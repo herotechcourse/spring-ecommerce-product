@@ -8,13 +8,17 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 
 @Configuration
-class WebConfig(private val loginMemberArgumentResolver: LoginMemberArgumentResolver) : WebMvcConfigurer {
+class WebConfig(
+    private val loginMemberArgumentResolver: LoginMemberArgumentResolver,
+    private val checkLoginInterceptor: CheckLoginInterceptor
+) : WebMvcConfigurer {
+
     override fun addArgumentResolvers(resolvers: MutableList<HandlerMethodArgumentResolver>) {
         resolvers.add(loginMemberArgumentResolver)
     }
 
     override fun addInterceptors(registry: InterceptorRegistry) {
-        registry.addInterceptor(CheckLoginInterceptor())
+        registry.addInterceptor(checkLoginInterceptor)
             .addPathPatterns("/api/wishes/**")
     }
 }
