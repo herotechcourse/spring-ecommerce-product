@@ -2,9 +2,11 @@ package ecommerce.service
 
 import ecommerce.dto.cart.CartDTO
 import ecommerce.dto.cartProduct.CartProductResponseDTO
+import ecommerce.enums.CartAction
 import ecommerce.exception.EntityNotFoundException
 import ecommerce.repository.CartProductRepository
 import ecommerce.repository.CartRepository
+import ecommerce.repository.CartStatisticsRepository
 import ecommerce.repository.ProductRepository
 import org.springframework.stereotype.Service
 
@@ -13,6 +15,7 @@ class CartService(
     private val cartRepository: CartRepository,
     private val cartProductRepository: CartProductRepository,
     private val productRepository: ProductRepository,
+    private val cartStatisticsRepository: CartStatisticsRepository,
 ) {
     fun getCartProducts(userID: Long?): List<CartProductResponseDTO> {
         val cart = getUserCart(userID)
@@ -35,6 +38,7 @@ class CartService(
             id = cartProduct.id
             cartProductRepository.updateProductQuantity(cartProduct.id, cartProduct.quantity + 1)
         }
+        cartStatisticsRepository.create(userID, productID, CartAction.ADD)
         return id
     }
 
@@ -55,6 +59,7 @@ class CartService(
             } else {
                 cartProductRepository.updateProductQuantity(cartProduct.id, cartProduct.quantity - 1)
             }
+        cartStatisticsRepository.create(userID, productID, CartAction.DELETE)
     }
 
     private fun getUserCart(userID: Long?): CartDTO {

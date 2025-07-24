@@ -19,7 +19,7 @@ class WebConfig(
         registry.addInterceptor(authInterceptor)
             .addPathPatterns("/api/member/cart/**")
         registry.addInterceptor(adminInterceptor)
-            .addPathPatterns("/api/admin/products/**")
+            .addPathPatterns("/api/admin/products/**", "/api/admin/cart_statistics/**")
         super.addInterceptors(registry)
     }
 
