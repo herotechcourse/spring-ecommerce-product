@@ -24,4 +24,8 @@ class CartItemRepository(private val jdbcTemplate: JdbcTemplate) {
             )
         return insert.executeAndReturnKey(productMap).toLong()
     }
+
+    fun deleteProductFromCart(cartItemId: Long): Boolean {
+        return jdbcTemplate.update("DELETE FROM cart_items WHERE id =?", cartItemId) > 0
+    }
 }
