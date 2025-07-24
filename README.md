@@ -83,21 +83,31 @@ updateProductForm.html
 ### etc.
 
 - [x] connect to an H2 in-memory database
-  - [x] define the product schema
-  - [x] add some sample data
-  - [x] configure the database setting with `application.properties`
+    - [x] define the product schema
+    - [x] add some sample data
+    - [x] configure the database setting with `application.properties`
 
 ## Features 2.1
 
 - [x] Product name Validation
-  - [x] Apart from alphanumerics character, it can contain  `( ), [ ], +, -, &, /, _`
-  - [x] I should contain less than 15 characters
-  - [x] Name should be unique
+    - [x] Apart from alphanumerics character, it can contain  `( ), [ ], +, -, &, /, _`
+    - [x] I should contain less than 15 characters
+    - [x] Name should be unique
 - [x] Price should be a positive number
 - [x] Image URL must start with `http:// or https://`.
 
 ## Features 2.2
 
-- [ ] User account 
-  - [ ] Registration with email and password
-  - [ ] Assign access token using JWT
+- [x] User account
+    - [x] Registration with email and password
+    - [x] Assign access token using JWT
+
+## Features 2.3
+
+- [ ] Cart
+    - [ ] Create Cart
+    - [ ] Connect Cart to corresponding User
+    - [ ] Users can retrieve the list of products in their cart.
+    - [ ] Users can add products to their cart.
+    - [ ] Users can remove products from their cart.
+
