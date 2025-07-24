@@ -2,10 +2,12 @@ package ecommerce.controller
 
 import ecommerce.annotation.LoginMember
 import ecommerce.dto.CartItemRequest
+import ecommerce.dto.CartItemResponse
 import ecommerce.dto.CartUpdateResult
-import ecommerce.model.Member
+import ecommerce.dto.MemberDto
 import ecommerce.service.CartService
 import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
@@ -19,9 +21,17 @@ class CartController(
     @PostMapping
     fun addToCart(
         @RequestBody request: CartItemRequest,
-        @LoginMember member: Member,
+        @LoginMember member: MemberDto,
     ): ResponseEntity<CartUpdateResult> {
-        val addToCartResult = cartService.addProductToCart(1L, request.productId, request.quantity)
+        val addToCartResult = cartService.addProductToCart(member.id, request.productId, request.quantity)
         return ResponseEntity.ok(addToCartResult)
+    }
+
+    @GetMapping
+    fun getCartItems(
+        @LoginMember member: MemberDto,
+    ): ResponseEntity<List<CartItemResponse>> {
+        val cartItems = cartService.getCartItems(member.id)
+        return ResponseEntity.ok(cartItems)
     }
 }

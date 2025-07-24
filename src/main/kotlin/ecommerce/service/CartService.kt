@@ -1,6 +1,8 @@
 package ecommerce.service
 
+import ecommerce.dto.CartItemResponse
 import ecommerce.dto.CartUpdateResult
+import ecommerce.exception.ElementNotFoundException
 import ecommerce.repository.CartItemRepository
 import ecommerce.repository.CartRepository
 import org.springframework.stereotype.Service
@@ -33,5 +35,10 @@ class CartService(
                 return CartUpdateResult.PRODUCT_QUANTITY_UPDATED
             }
         }
+    }
+
+    fun getCartItems(memberId: Long): List<CartItemResponse> {
+        val cart = cartRepository.findCartByMemberId(memberId) ?: throw ElementNotFoundException("Cart Not Found")
+        return cartItemRepository.getCartItemsByCartId(cart.id)
     }
 }
