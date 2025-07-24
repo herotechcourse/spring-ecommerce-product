@@ -2,7 +2,7 @@ package ecommerce.controller.admin
 
 import ecommerce.dto.auth.LoginRequest
 import ecommerce.mapper.UserRowMapper
-import ecommerce.service.MemberAuthService
+import ecommerce.service.AdminAuthService
 import io.restassured.RestAssured
 import io.restassured.http.ContentType
 import org.assertj.core.api.Assertions.assertThat
@@ -24,14 +24,14 @@ class AdminCartStatisticsControllerTest {
     private lateinit var userRowMapper: UserRowMapper
 
     @Autowired
-    private lateinit var memberAuthService: MemberAuthService
+    private lateinit var adminAuthService: AdminAuthService
 
     @BeforeEach
     fun init() {
         val sql = "select * from users where role = 'ADMIN'"
         val result = jdbcTemplate.query(sql, userRowMapper).first()
         token =
-            memberAuthService.logIn(
+            adminAuthService.signIn(
                 LoginRequest(
                     result.email, result.password,
                 ),

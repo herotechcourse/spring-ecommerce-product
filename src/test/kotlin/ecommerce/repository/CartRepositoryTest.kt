@@ -1,6 +1,6 @@
 package ecommerce.repository
 
-import ecommerce.dto.user.MemberUserDTO
+import ecommerce.dto.user.UserDTO
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -17,7 +17,7 @@ class CartRepositoryTest {
     @Test
     fun findMembersCart() {
         val userRequestDTO =
-            MemberUserDTO(
+            UserDTO(
                 email = "findMembersCart@test.com",
                 password = "test123",
                 name = "test",

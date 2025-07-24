@@ -2,8 +2,8 @@ package ecommerce.service
 
 import ecommerce.dto.auth.AuthTokenPayload
 import ecommerce.dto.auth.LoginRequest
-import ecommerce.dto.user.MemberUserDTO
 import ecommerce.dto.user.UserCreateResponse
+import ecommerce.dto.user.UserDTO
 import ecommerce.dto.user.UserRequestDTO
 import ecommerce.exception.UserAlreadyExistsException
 import ecommerce.infrastructure.JwtTokenProvider
@@ -24,7 +24,7 @@ class MemberAuthService(
             throw UserAlreadyExistsException(user.email)
         }
         val member =
-            MemberUserDTO(
+            UserDTO(
                 email = user.email,
                 password = user.password,
                 name = user.name,

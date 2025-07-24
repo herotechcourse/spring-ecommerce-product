@@ -1,7 +1,7 @@
 package ecommerce.service
 
 import ecommerce.dto.auth.LoginRequest
-import ecommerce.dto.user.MemberUserDTO
+import ecommerce.dto.user.UserDTO
 import ecommerce.dto.user.UserRequestDTO
 import ecommerce.exception.UserAlreadyExistsException
 import ecommerce.exception.UserCredentialException
@@ -29,7 +29,7 @@ class MemberAuthServiceTest {
                 email = "signUpError@test.com",
             )
         val member =
-            MemberUserDTO(
+            UserDTO(
                 email = userDTO.email,
                 password = userDTO.password,
                 name = userDTO.name,
@@ -64,7 +64,7 @@ class MemberAuthServiceTest {
     @Test
     fun `No user found at signIn with wrong password`() {
         val userDTO =
-            MemberUserDTO(
+            UserDTO(
                 name = "test",
                 password = "test123",
                 email = "signInErrorPassword@test.com",
@@ -81,7 +81,7 @@ class MemberAuthServiceTest {
     @Test
     fun signIn() {
         val userDTO =
-            MemberUserDTO(
+            UserDTO(
                 name = "test",
                 password = "test123",
                 email = "signInError@test.com",

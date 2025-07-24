@@ -1,7 +1,7 @@
 package ecommerce.config.argumentResolver
 
 import ecommerce.annotations.LoginMember
-import ecommerce.dto.user.MemberUserDTO
+import ecommerce.dto.user.UserDTO
 import ecommerce.enums.UserRole
 import ecommerce.exception.UnauthorisedUserException
 import ecommerce.repository.UserRepository
@@ -24,7 +24,7 @@ class LoginMemberArgumentResolver(
         mavContainer: ModelAndViewContainer?,
         webRequest: NativeWebRequest,
         binderFactory: WebDataBinderFactory?,
-    ): MemberUserDTO {
+    ): UserDTO {
         val request = (webRequest as ServletWebRequest).request
         val email = request.getAttribute("email") as String
 

@@ -1,18 +1,18 @@
 package ecommerce.mapper
 
-import ecommerce.dto.user.MemberUserDTO
+import ecommerce.dto.user.UserDTO
 import ecommerce.enums.UserRole
 import org.springframework.jdbc.core.RowMapper
 import org.springframework.stereotype.Component
 import java.sql.ResultSet
 
 @Component
-class UserRowMapper : RowMapper<MemberUserDTO> {
+class UserRowMapper : RowMapper<UserDTO> {
     override fun mapRow(
         rs: ResultSet,
         rowNum: Int,
-    ): MemberUserDTO {
-        return MemberUserDTO(
+    ): UserDTO {
+        return UserDTO(
             id = rs.getLong("id"),
             email = rs.getString("email"),
             name = rs.getString("name"),

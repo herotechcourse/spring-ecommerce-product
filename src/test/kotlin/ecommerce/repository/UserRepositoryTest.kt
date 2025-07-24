@@ -1,6 +1,6 @@
 package ecommerce.repository
 
-import ecommerce.dto.user.MemberUserDTO
+import ecommerce.dto.user.UserDTO
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -13,7 +13,7 @@ class UserRepositoryTest {
 
     @Test fun existsByEmail() {
         val user =
-            MemberUserDTO(
+            UserDTO(
                 name = "test",
                 password = "test123",
                 email = "existsByEmail@test.com",
@@ -31,7 +31,7 @@ class UserRepositoryTest {
     @Test
     fun create() {
         val user =
-            MemberUserDTO(
+            UserDTO(
                 name = "test",
                 password = "test123",
                 email = "create@test.com",
@@ -44,7 +44,7 @@ class UserRepositoryTest {
     @Test
     fun findByEmailAndPassword() {
         val userDTO =
-            MemberUserDTO(
+            UserDTO(
                 name = "test",
                 password = "test123",
                 email = "findByEmailAndPassword@test.com",
@@ -58,7 +58,7 @@ class UserRepositoryTest {
     @Test
     fun `returns null for findByEmailAndPassword`() {
         val userDTO =
-            MemberUserDTO(
+            UserDTO(
                 name = "test",
                 password = "test123",
                 email = "findByEmailAndPasswordFalse@test.com",

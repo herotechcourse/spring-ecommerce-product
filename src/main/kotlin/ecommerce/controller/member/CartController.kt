@@ -2,7 +2,7 @@ package ecommerce.controller.member
 
 import ecommerce.annotations.LoginMember
 import ecommerce.dto.cartProduct.CartProductResponseDTO
-import ecommerce.dto.user.MemberUserDTO
+import ecommerce.dto.user.UserDTO
 import ecommerce.service.CartService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -20,7 +20,7 @@ class CartController(
 ) {
     @GetMapping("")
     fun getCartItems(
-        @LoginMember user: MemberUserDTO,
+        @LoginMember user: UserDTO,
     ): ResponseEntity<List<CartProductResponseDTO>> {
         val products = cartService.getCartProducts(user.id)
         return ResponseEntity.ok(products)
@@ -28,7 +28,7 @@ class CartController(
 
     @PostMapping("/{id}")
     fun addProduct(
-        @LoginMember user: MemberUserDTO,
+        @LoginMember user: UserDTO,
         @PathVariable("id") productID: Long,
     ): ResponseEntity<String> {
         val id = cartService.addProductToCart(user.id, productID)
@@ -37,7 +37,7 @@ class CartController(
 
     @DeleteMapping("/{id}")
     fun removeProduct(
-        @LoginMember user: MemberUserDTO,
+        @LoginMember user: UserDTO,
         @PathVariable("id") productID: Long,
     ): ResponseEntity<String> {
         cartService.removeProductFromCart(user.id, productID)
