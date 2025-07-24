@@ -16,6 +16,11 @@ class CartItemRepositoryTest {
     @BeforeEach
     fun setUp() {
         cartItemRepository = CartItemRepository(jdbcTemplate)
+        jdbcTemplate.execute("DELETE FROM cart_items")
+        jdbcTemplate.execute("DELETE FROM carts")
+        jdbcTemplate.execute("DELETE FROM products")
+
+        jdbcTemplate.execute("INSERT INTO products (id, name, price, image_url) VALUES (1, 'Test Product', 9.99, 'url')")
         jdbcTemplate.execute("INSERT INTO carts (id, member_id) VALUES (1, 1)")
     }
 
@@ -28,8 +33,8 @@ class CartItemRepositoryTest {
 
     @Test
     fun deleteProductFromCart() {
-        cartItemRepository.addProductToCart(1, 1, 3)
-        cartItemRepository.deleteProductFromCart(1)
+        val id = cartItemRepository.addProductToCart(1, 1, 3)
+        cartItemRepository.deleteProductFromCart(id)
         val count = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM cart_items", Int::class.java)
         assert(count == 0)
     }
@@ -54,7 +59,13 @@ class CartItemRepositoryTest {
     fun updateQuantityByCartIdAndProductId() {
         cartItemRepository.addProductToCart(1, 1, 3)
         cartItemRepository.updateQuantityByCartIdAndProductId(1, 1, 5)
-        val quantity = jdbcTemplate.queryForObject("SELECT quantity FROM cart_items WHERE id = 1", Int::class.java)
+        val quantity =
+            jdbcTemplate.queryForObject(
+                "SELECT quantity FROM cart_items WHERE cart_id = ? AND product_id = ?",
+                Int::class.java,
+                1,
+                1,
+            )
         assert(quantity == 5)
     }
 }

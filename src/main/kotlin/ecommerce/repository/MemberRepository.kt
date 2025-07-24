@@ -4,7 +4,6 @@ import ecommerce.model.Member
 import org.springframework.jdbc.core.RowMapper
 import org.springframework.jdbc.core.simple.JdbcClient
 import org.springframework.jdbc.support.GeneratedKeyHolder
-import org.springframework.jdbc.support.KeyHolder
 import org.springframework.stereotype.Repository
 import java.sql.ResultSet
 
@@ -19,14 +18,15 @@ class MemberRepository(private val db: JdbcClient) {
             )
         }
 
-    fun save(member: Member): Boolean {
-        val keyHolder: KeyHolder = GeneratedKeyHolder()
-
+    fun save(member: Member): Long? {
+        val keyHolder = GeneratedKeyHolder()
         val sql = "INSERT INTO members (email, password) VALUES (?,?)"
-        return db
-            .sql(sql)
+
+        db.sql(sql)
             .params(member.email, member.password)
-            .update(keyHolder) > 0
+            .update(keyHolder)
+
+        return keyHolder.key?.toLong()
     }
 
     fun existsByEmail(email: String): Boolean {

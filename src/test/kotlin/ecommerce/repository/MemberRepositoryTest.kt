@@ -2,7 +2,6 @@ package ecommerce.repository
 
 import ecommerce.model.Member
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -37,24 +36,23 @@ class MemberRepositoryTest {
     @Test
     fun save() {
         val user = Member(null, "test@example.com", "test123")
-        val saved = memberRepository.save(user)
+        val id = memberRepository.save(user)
         val count =
             db.sql("SELECT COUNT(*) FROM members")
                 .query(Int::class.java)
                 .single()
 
-        assertTrue(saved)
+        assertThat(id).isEqualTo(1)
         assertThat(count).isEqualTo(1)
     }
 
     @Test
     fun findByEmail() {
         val user = Member(null, "test@example.com", "test123")
-        val saved = memberRepository.save(user)
-        val count =
-            db.sql("SELECT COUNT(*) FROM members")
-                .query(Int::class.java)
-                .single()
+        memberRepository.save(user)
+        db.sql("SELECT COUNT(*) FROM members")
+            .query(Int::class.java)
+            .single()
 
         val member = memberRepository.findByEmail("test@example.com")
         assertThat(member?.email).isEqualTo("test@example.com")
