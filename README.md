@@ -85,6 +85,35 @@
   - [x] payload is invalid: `400 Bad Request`
   - [x] item to update/delete is not in cart: `404 Not Found`
 
+#### step 2-4
+
+- [ ] admin statistics
+  - [ ] retrieve most added products via `GET /admin/stats/top-products`
+    - [ ] returns top 5 products most frequently added to carts in the last 30 days 
+    - [ ] if counts are equal, sort by most recently added 
+    - [ ] response includes:
+      - [ ] product name
+      - [ ] number of times added
+      - [ ] most recent added time
+  - [ ]  retrieve recently active members via `GET /admin/stats/recent-members`
+    - [ ] returns members who added items to their cart in the last 7 days 
+      - [ ] no duplicate members even if multiple items were added 
+      - [ ] response includes:
+        - [ ] member ID 
+        - [ ] name
+        - [ ] email
+
+- [ ] restrict admin access to /admin/** endpoints 
+  - [ ] only allow users with ADMIN role
+  - [ ] implement HandlerInterceptor to:
+    - [ ] extract and validate JWT token 
+    - [ ] check user role (from token or DB?)
+    - [ ] respond with 401 Unauthorized if access is denied
+
 ## notes
 
 - generate key via `openssl rand -base64 32`
+
+## future work
+
+- replace `jdbcTemplate` with `jdbcClient`
