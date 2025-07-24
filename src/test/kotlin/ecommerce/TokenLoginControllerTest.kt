@@ -99,4 +99,63 @@ class TokenLoginControllerTest {
             .post("/api/members/login").then().log().all().extract()
         assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value())
     }
+
+    @Test
+    fun `test request with valid token`(){
+        val loginRequest = TokenRequest(email = "sam@email.com", password = "abcdefghijkl")
+        val loginResponse = RestAssured.given().log().all()
+            .body(loginRequest).contentType(ContentType.JSON)
+            .`when`()
+            .post("/api/members/login")
+            .then().log().all()
+            .extract()
+
+        assertThat(loginResponse.statusCode()).isEqualTo(HttpStatus.OK.value())
+
+        val token = loginResponse.body().jsonPath().getString("token")
+        val tokenResponse = RestAssured.given().log().all()
+            .header("Authorization", "Bearer $token")
+            .`when`()
+            .get("/api/members/me/token")
+            .then().log().all()
+            .extract()
+
+        assertThat(tokenResponse.statusCode()).isEqualTo(HttpStatus.OK.value())
+    }
+
+    @Test
+    fun `test request with invalid token`(){
+        val token = "ndwndwoljdwpfkwkdsq.DNlwfk3wld'wamclwfjkepojfo3jf"
+        val tokenResponse = RestAssured.given().log().all()
+            .header("Authorization", "Bearer $token")
+            .`when`()
+            .get("/api/members/me/token")
+            .then().log().all()
+            .extract()
+
+        assertThat(tokenResponse.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value())
+    }
+
+    @Test
+    fun `test request without 'Authorization' header`(){
+        val loginRequest = TokenRequest(email = "sam@email.com", password = "abcdefghijkl")
+        val loginResponse = RestAssured.given().log().all()
+            .body(loginRequest).contentType(ContentType.JSON)
+            .`when`()
+            .post("/api/members/login")
+            .then().log().all()
+            .extract()
+
+        assertThat(loginResponse.statusCode()).isEqualTo(HttpStatus.OK.value())
+
+        val token = loginResponse.body().jsonPath().getString("token")
+        val tokenResponse = RestAssured.given().log().all()
+            .header("Location", "Bearer $token")
+            .`when`()
+            .get("/api/members/me/token")
+            .then().log().all()
+            .extract()
+
+        assertThat(tokenResponse.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value())
+    }
 }
