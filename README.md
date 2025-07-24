@@ -91,3 +91,54 @@ In such cases, the API must respond with a clear and structured error message to
 - [x] Use `@Valid` in controller methods to trigger validation automatically
 - [x] Add a global exception handler using `@RestControllerAdvice` to return readable error messages when validation fails
 - [x] Ensure that the name is checked for uniqueness before creating/updating products
+
+## Functional Requirements Step 2-2 – Authentication & Authorization
+
+Implement token-based authentication using JSON Web Tokens (JWT).
+Users can register and log in with their email and password. Upon success, the server issues a token that will be used for future authenticated requests.
+
+### Login and Registration Flow
+
+- A new user can register by sending their email and password to the /api/members/register endpoint.
+
+- An existing user can log in using the /api/members/login endpoint.
+
+- If authentication is successful, the server responds with a JWT token.
+
+- The token is included in the Authorization header of future requests in the format:
+Authorization: Bearer <token>
+
+## Features Step 2-2
+
+- [ ] Create Member entity class to represent user accounts
+
+- [ ] Implement MemberRequest and TokenResponse DTOs for request/response handling
+
+- [ ] Add MemberRepository to manage member data
+
+- [ ] Use BCryptPasswordEncoder to hash user passwords before saving
+
+- [ ] Implement MemberService with:
+
+- [ ] register() method to create a new user and issue a JWT
+
+- [ ] login() method to authenticate credentials and issue a JWT
+
+- [ ] Create JWTProvider utility to generate and validate tokens
+
+- [ ] Implement MemberController with:
+
+- [ ] POST /api/members/register endpoint
+
+- [ ] POST /api/members/login endpoint
+
+- [ ] Return appropriate HTTP status codes:
+
+- 201 Created on successful registration
+
+- 200 OK on successful login
+
+- 403 Forbidden for invalid credentials
+
+- 401 Unauthorized for missing or invalid token
+
