@@ -19,12 +19,13 @@
 - [x] `POST /api/member/auth/signUp` creates user and returns JWT token
 - [x] `POST /api/member/auth/signIn` checks and returns JWT token
 #### CartController
-- `GET ` getCartProducts
-- `POST ` incrementCartProduct
-- `DELETE ` decrementCartProduct
+- `GET /api/member/cart` getCartProducts
+- `POST /api/member/cart/:id` incrementCartProduct
+- `DELETE /api/member/cart/:id` decrementCartProduct
 
 ## Config
-### LoginAdminInterceptor
+### AuthInterceptor
+### LoginMemberArgumentResolver
 ### WebConfig
 
 ## Service
@@ -38,9 +39,11 @@
 ### AuthService
 - [x] `signUp`: String `[AuthToken]`
 - [x] `login`: String `[AuthToken]`
-- [ ] `logout`: Void
 
 ### CartService
+- [x] `getCartProducts`: List<CartProductResponseDTO>
+- [x] `addProductToCart`: Long
+- [x] `removeProductFromCart`: Void
 
 ## Repository
 ### ProductRepository
@@ -58,28 +61,67 @@
 
 ### CartRepository
 - `createCartForUser`
+- `findMembersCart`
+
+### CartProductRepository
+- `getCartProducts`
+- `findCartProduct`
+- `updateProductQuantity`
+- `removeProduct`
+- `addProduct`
 
 ## DTO
-### ProductDTO
+### Auth
+#### AuthTokenPayload
+- email: String
+#### LoginRequest
+- email: String
+- password: String
+### Cart
+#### CartDTO
+- id: Long
+- userId: Long
+### CartProduct
+#### CartProductDTO
+- id: Long
+- cartId: Long
+- productID: Long
+- quantity: Int
+### Error
+#### ErrorResponse
+- timestamp: Instant = Instant.now()
+- status: Int
+- error: String
+- message: Any
+- path: String? = null
+### Products
+#### ProductDTO
 - Validation for product modal
 - [x] `name`: Not blank, Maximum of 15, Minimum of 1, starts with http or https
 - [x] `description`: Not blank, Minimum of 3
 - [x] `price`: is Positive
 - [x] `imageUrl` Not Blank, Follows pattern
 - [x] `quantity` Cannot be negative (0 included)
-### UserDTO
+#### ProductPatchDTO
+- Same as `ProductDTO` but allowed null
+### User
+#### UserRequestDTO
 - Validation for user Modal
 - [x] `email`: Not blank and should be email
 - [x] `password`: Not blank and min length of 6
 - [x] `name`: Not blank
 - [x] `role`: should be admin or user `[Default = user]`
-### AuthTokenPayload
-### UserCreateResponse
-### ProductPatchDTO
-### ErrorResponse
-### TokenResponse
-### TokenRequest
 
+#### UserCreateResponse
+- uri: URI
+- token: String
+
+#### MemberUserDTO
+- id: Long? = null
+- email: String
+- password: String
+- name: String
+- role: UserRole = UserRole.USER
 ## Infrastructure
 ### JwtTokenProvider
 - [x] `createToken`: String
@@ -87,11 +129,11 @@
 - [x] `validateToken`: Boolean
 
 ## Mapper
+### CartProductMapper
+### CartProductResponseMapper
+### CartRowMapper
 ### ProductRowMapper
-- [x] Converts the DB data to Kotlin class object
-
 ### UserRowMapper
-- [x] Converts the DB data to Kotlin class object
 
 ## Advice
 ### GlobalExceptionHandler
