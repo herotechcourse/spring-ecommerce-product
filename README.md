@@ -171,3 +171,7 @@
 - id, quantity
 - cart_id (FK)
 - product_id (FK)
+
+### CartStatistics
+- id, created_at, action
+- user_id, product_id (FK)

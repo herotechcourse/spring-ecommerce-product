@@ -29,3 +29,13 @@ CREATE TABLE IF NOT EXISTS cart_products (
     FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE,
     FOREIGN KEY (cart_id) REFERENCES cart(id) ON DELETE CASCADE
 );
+
+CREATE TABLE IF NOT EXISTS cart_statistics (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    action VARCHAR NOT NULL,
+    user_id BIGINT NOT NULL,
+    product_id BIGINT NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users(id),
+    FOREIGN KEY (product_id) REFERENCES products(id)
+);
