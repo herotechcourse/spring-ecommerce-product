@@ -192,10 +192,10 @@ This step implements cart-related features for authenticated users, allowing eac
 
 ## Features
 
-- [ ] **Create and assign cart to user (if not exists)**
-  When a user adds a product to their cart for the first time, a new cart is created and linked to that user.
+- [x] **Create and assign cart to user after user registration**.
+  When a user adds a product to their cart, if cart not exists, a new cart is created and linked to that user.
 
-- [ ] **Add product to cart**
+- [x] **Add product to cart**
   `POST /api/wishes`
   Adds a product to the authenticated user's cart.
   Requires JWT token via `Authorization: Bearer <token>`.
@@ -203,22 +203,22 @@ This step implements cart-related features for authenticated users, allowing eac
 
   ```json
   {
-    "productId": 1
+    "productId": 1,
+    "quantity": 3
   }
   ```
 
-- [ ] **Get products in user's cart**
+- [x] **Get products in user's cart**
   `GET /api/wishes`
   Retrieves all products currently in the authenticated user's cart.
 
-- [ ] **Remove product from cart**
+- [x] **Remove product from cart**
   `DELETE /api/wishes/{productId}`
   Removes the specified product from the authenticated user's cart.
+- [x] **Update product quantity from cart**
+  Update the specified product quantity from the authenticated user's cart. If the wished quantity is 0, then delete the product
 
 ###  Authentication & Member Injection
 
-All endpoints require the user to be authenticated.
-A custom `@LoginMember` argument resolver is used to inject the authenticated `Member` into controller methods, based on the JWT token.
-
-
+The application defines a custom WebMvcConfigurer to integrate a `HandlerInterceptor` that validates JWT tokens and injects the authenticated user's email into the request. It also registers a custom `HandlerMethodArgumentResolver` (`LoginMemberArgumentResolver`) to automatically resolve `@LoginMember` annotated parameters in controller methods, enabling clean and secure access to authenticated user data.
 
