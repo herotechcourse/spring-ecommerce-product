@@ -119,18 +119,18 @@ Using the token received after login, implement functionality that allows the us
 
 ### Feature List
 
-- [ ] Users can retrieve the list of products in their cart.
-    - [ ] GET `/api/wishes` returns list of products in JSON format
-    - [ ] Requires valid JWT token in `Authorization: Bearer <token>` header
+- [x] Users can retrieve the list of products in their cart.
+    - [x] GET `/api/wishes` returns list of products in JSON format
+    - [x] Requires valid JWT token in `Authorization: Bearer <token>` header
 
-- [ ] Users can add products to their cart.
-    - [ ] POST `/api/wishes` accepts product ID in JSON body
-    - [ ] Requires valid JWT token in `Authorization: Bearer <token>` header
-    - [ ] Validates product existence and prevents duplicates
+- [x] Users can add products to their cart.
+    - [x] POST `/api/wishes` accepts product ID in JSON body
+    - [x] Requires valid JWT token in `Authorization: Bearer <token>` header
+    - [x] Validates product existence and prevents duplicates
 
-- [ ] Users can remove products from their cart.
-    - [ ] DELETE `/api/wishes/{productId}` removes product by ID
-    - [ ] Requires valid JWT token in `Authorization: Bearer <token>` header
+- [x] Users can remove products from their cart.
+    - [x] DELETE `/api/wishes/{productId}` removes product by ID
+    - [x] Requires valid JWT token in `Authorization: Bearer <token>` header
 
 - [x] Add `CART_ITEMS` table in `schema.sql`
     - [x] Links `member_id` to `MEMBERS` and `product_id` to `PRODUCTS`
@@ -150,8 +150,8 @@ Using the token received after login, implement functionality that allows the us
 - [x] Create `CartService` class
   - [x] Handles business logic for cart operations
 
-- [ ] Create `WishController` class
-    - [ ] Implements `/api/wishes` endpoints with `@LoginMember` for authentication
+- [x] Create `WishController` class
+    - [x] Implements `/api/wishes` endpoints with `@LoginMember` for authentication
 
 - [x] Create `LoginMember` annotation and `LoginMemberArgumentResolver`
   - [x] Injects authenticated `Member` into controller methods
