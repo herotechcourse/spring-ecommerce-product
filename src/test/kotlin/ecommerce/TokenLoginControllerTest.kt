@@ -1,6 +1,6 @@
 package ecommerce
 
-import ecommerce.model.TokenRequest
+import ecommerce.dto.TokenRequest
 import ecommerce.repository.ProductRepository
 import io.restassured.RestAssured
 import io.restassured.http.ContentType

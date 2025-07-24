@@ -4,9 +4,9 @@ import ecommerce.exception.NotFoundException
 import ecommerce.exception.UnauthorizedException
 import ecommerce.infrastructure.JwtTokenProvider
 import ecommerce.model.Member
-import ecommerce.model.MemberResponse
-import ecommerce.model.TokenRequest
-import ecommerce.model.TokenResponse
+import ecommerce.dto.MemberResponse
+import ecommerce.dto.TokenRequest
+import ecommerce.dto.TokenResponse
 import ecommerce.repository.MemberRepository
 import org.springframework.stereotype.Service
 

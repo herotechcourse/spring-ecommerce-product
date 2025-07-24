@@ -3,9 +3,9 @@ package ecommerce.controller
 import ecommerce.auth.AuthService
 import ecommerce.exception.UnauthorizedException
 import ecommerce.infrastructure.AuthorizationExtractor
-import ecommerce.model.MemberResponse
-import ecommerce.model.TokenRequest
-import ecommerce.model.TokenResponse
+import ecommerce.dto.MemberResponse
+import ecommerce.dto.TokenRequest
+import ecommerce.dto.TokenResponse
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.validation.Valid
 import org.springframework.http.HttpStatus

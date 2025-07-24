@@ -1,4 +1,4 @@
-package ecommerce.model
+package ecommerce.dto
 
 class MemberResponse(
     val id: Long? = null,

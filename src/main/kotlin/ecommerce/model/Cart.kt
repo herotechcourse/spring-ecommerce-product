@@ -1,7 +1,9 @@
 package ecommerce.model
 
-class Cart(
-    val id: Long? = null,
+data class Cart(
+    val cartId: Long? = null,
     val userId: Long,
-    val products: MutableList<Product> = mutableListOf(),
+    val products: List<CartItem>,
 )
+
+
