@@ -44,10 +44,9 @@ class ProductController(private val repository: ProductStore, private val produc
         @RequestBody dto: ProductDTO,
         @PathVariable id: Long,
     ): ResponseEntity<Product> {
-        val existingProduct = repository[id] ?: return ResponseEntity.notFound().build()
-        productService.validateName(dto.name)
-        productService.validatePrice(dto.price)
-        productService.validateUrl(newProduct.imageUrl)
+        dto.validate().name
+        dto.validate().price
+        dto.validate().imageUrl
 
         val existingProduct = repository[id] ?: return ResponseEntity.notFound().build()
         val updatedProduct = existingProduct.updateWith(dto)

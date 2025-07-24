@@ -6,10 +6,11 @@ data class ProductDTO(
     val name: String?,
     val price: BigDecimal?,
     val imageUrl: String?
-)
-
-fun ProductDTO.toProduct(): Product {
-    requireNotNull(name) { "Name is required" }
-    requireNotNull(price) { "Price is required" }
-    return Product(name = name, price = price, imageUrl = imageUrl)
+) {
+    fun validate(): ProductDTO {
+        require(!name.isNullOrBlank()) { "Name must not be blank." }
+        require(price != null && price > BigDecimal.ZERO) { "Price must be greater than 0." }
+        require(!imageUrl.isNullOrBlank() && imageUrl.startsWith("http")) { "Invalid image URL." }
+        return this
+    }
 }
