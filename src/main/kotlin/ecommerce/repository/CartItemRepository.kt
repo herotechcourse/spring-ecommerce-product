@@ -58,4 +58,26 @@ class CartItemRepository(private val jdbcTemplate: JdbcTemplate) {
 
         return jdbcTemplate.query(sql, cartItemRowMapper, cartId)
     }
+
+    fun deleteCartItemsByCartIdAndProductId(
+        cartId: Long,
+        productId: Long,
+    ): Boolean {
+        return jdbcTemplate.update("DELETE FROM cart_items WHERE cart_id =? AND product_id =?", cartId, productId) > 0
+    }
+
+    fun updateQuantityByCartIdAndProductId(
+        cartId: Long,
+        productId: Long,
+        newQuantity: Int,
+    ): Boolean {
+        return jdbcTemplate.update(
+            """
+            UPDATE cart_items SET quantity =? WHERE cart_id =? AND product_id =?
+            """.trimIndent(),
+            newQuantity,
+            cartId,
+            productId,
+        ) > 0
+    }
 }

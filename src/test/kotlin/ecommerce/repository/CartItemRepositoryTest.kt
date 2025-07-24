@@ -39,6 +39,22 @@ class CartItemRepositoryTest {
         cartItemRepository.addProductToCart(1, 1, 3)
         val cartItems = cartItemRepository.getCartItemsByCartId(1)
         assert(cartItems.size == 1)
-//        assert(cartItems[0].productId == 1L)
+        assert(cartItems[0].productId == 1L)
+    }
+
+    @Test
+    fun deleteCartItemsByCartIdAndProductId() {
+        cartItemRepository.addProductToCart(1, 1, 3)
+        cartItemRepository.deleteCartItemsByCartIdAndProductId(1, 1)
+        val count = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM cart_items", Int::class.java)
+        assert(count == 0)
+    }
+
+    @Test
+    fun updateQuantityByCartIdAndProductId() {
+        cartItemRepository.addProductToCart(1, 1, 3)
+        cartItemRepository.updateQuantityByCartIdAndProductId(1, 1, 5)
+        val quantity = jdbcTemplate.queryForObject("SELECT quantity FROM cart_items WHERE id = 1", Int::class.java)
+        assert(quantity == 5)
     }
 }
