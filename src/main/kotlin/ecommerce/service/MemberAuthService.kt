@@ -5,8 +5,8 @@ import ecommerce.dto.auth.LoginRequest
 import ecommerce.dto.user.MemberUserDTO
 import ecommerce.dto.user.UserCreateResponse
 import ecommerce.dto.user.UserRequestDTO
-import ecommerce.exception.EntityNotFoundException
 import ecommerce.exception.UserAlreadyExistsException
+import ecommerce.exception.UserCredentialException
 import ecommerce.infrastructure.JwtTokenProvider
 import ecommerce.repository.CartRepository
 import ecommerce.repository.UserRepository
@@ -39,7 +39,7 @@ class MemberAuthService(
         val user =
             userRepository.findByEmailAndPassword(
                 loginRequest.email, loginRequest.password,
-            ) ?: throw EntityNotFoundException("User with email ${loginRequest.email} not found")
+            ) ?: throw UserCredentialException()
 
         val token =
             jwtTokenProvider.createToken(

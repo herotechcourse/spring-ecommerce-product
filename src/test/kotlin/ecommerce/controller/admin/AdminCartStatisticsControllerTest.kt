@@ -1,10 +1,7 @@
 package ecommerce.controller.admin
 
 import ecommerce.dto.auth.LoginRequest
-import ecommerce.dto.products.ProductDTO
-import ecommerce.dto.products.ProductPatchDTO
 import ecommerce.mapper.UserRowMapper
-import ecommerce.repository.ProductRepository
 import ecommerce.service.MemberAuthService
 import io.restassured.RestAssured
 import io.restassured.http.ContentType

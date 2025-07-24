@@ -6,6 +6,7 @@ import ecommerce.exception.DuplicateProductNameException
 import ecommerce.exception.EntityNotFoundException
 import ecommerce.exception.UnauthorisedUserException
 import ecommerce.exception.UserAlreadyExistsException
+import ecommerce.exception.UserCredentialException
 import jakarta.servlet.http.HttpServletRequest
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -69,6 +70,14 @@ class GlobalExceptionHandler {
     @ExceptionHandler(UnauthorisedUserException::class)
     fun handleUnauthorisedUserException(
         ex: UnauthorisedUserException,
+        request: HttpServletRequest,
+    ): ResponseEntity<ErrorResponse> {
+        return errorResponse(HttpStatus.UNAUTHORIZED, ex.message ?: "UNAUTHORIZED", request)
+    }
+
+    @ExceptionHandler(UserCredentialException::class)
+    fun handleUserCredentialException(
+        ex: UserCredentialException,
         request: HttpServletRequest,
     ): ResponseEntity<ErrorResponse> {
         return errorResponse(HttpStatus.UNAUTHORIZED, ex.message ?: "UNAUTHORIZED", request)

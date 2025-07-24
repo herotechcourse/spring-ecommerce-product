@@ -3,8 +3,8 @@ package ecommerce.service
 import ecommerce.dto.auth.LoginRequest
 import ecommerce.dto.user.MemberUserDTO
 import ecommerce.dto.user.UserRequestDTO
-import ecommerce.exception.EntityNotFoundException
 import ecommerce.exception.UserAlreadyExistsException
+import ecommerce.exception.UserCredentialException
 import ecommerce.repository.UserRepository
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -58,7 +58,7 @@ class MemberAuthServiceTest {
                 password = "test123",
                 email = "signInError@test.com",
             )
-        assertThrows<EntityNotFoundException> { memberAuthService.logIn(loginRequest) }
+        assertThrows<UserCredentialException> { memberAuthService.logIn(loginRequest) }
     }
 
     @Test
@@ -75,7 +75,7 @@ class MemberAuthServiceTest {
                 email = userDTO.email,
                 password = "test123456",
             )
-        assertThrows<EntityNotFoundException> { memberAuthService.logIn(loginRequest) }
+        assertThrows<UserCredentialException> { memberAuthService.logIn(loginRequest) }
     }
 
     @Test
