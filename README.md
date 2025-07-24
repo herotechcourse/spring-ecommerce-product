@@ -138,11 +138,11 @@ Using the token received after login, implement functionality that allows the us
 - [x] Create `CartItem` data class
    - [x] Contains `id`, `memberId`, `productId`
 
-- [ ] Create `CartRequest` data class
-  - [ ] Contains `productId` with validation
+- [x] Create `CartRequest` data class
+  - [x] Contains `productId` with validation
 
-- [ ] Create `CartResponse` data class
-  - [ ] Contains `id` and `Product` object
+- [x] Create `CartResponse` data class
+  - [x] Contains `id` and `Product` object
 
 - [ ] Create `CartRepository` class
   - [ ] Uses `JdbcTemplate` to manage `CART_ITEMS` table
