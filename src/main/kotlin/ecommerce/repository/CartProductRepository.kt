@@ -10,6 +10,11 @@ class CartProductRepository(
     private val jdbcTemplate: JdbcTemplate,
     private val cartProductMapper: CartProductMapper,
 ) {
+    fun getCartProducts(cartID: Long): List<CartProductDTO> {
+        val sql = "select * from cart_products where cart_id = ?"
+        return jdbcTemplate.query(sql, cartProductMapper, cartID)
+    }
+
     fun findCartProduct(
         cartID: Long,
         productID: Long,
