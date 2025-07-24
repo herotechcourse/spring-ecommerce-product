@@ -1,7 +1,7 @@
 package ecommerce.configuration
 
 import ecommerce.annotation.LoginMember
-import ecommerce.model.Member
+import ecommerce.dto.MemberDto
 import ecommerce.repository.MemberRepository
 import jakarta.servlet.http.HttpServletRequest
 import org.springframework.core.MethodParameter
@@ -25,10 +25,10 @@ class LoginMemberArgumentResolver(
         mavContainer: ModelAndViewContainer?,
         webRequest: NativeWebRequest,
         binderFactory: WebDataBinderFactory?,
-    ): Member {
+    ): MemberDto {
         val request = webRequest.getNativeRequest(HttpServletRequest::class.java) ?: throw AuthenticationException("No HttpServletRequest")
         val email = request.getAttribute("email") as? String ?: throw AuthenticationException("No authenticated member found 1")
         val member = memberRepository.findByEmail(email) ?: throw AuthenticationException("No authenticated member found 2")
-        return member
+        return member.toDto()
     }
 }
