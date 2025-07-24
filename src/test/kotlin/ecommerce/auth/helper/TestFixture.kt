@@ -1,6 +1,6 @@
 package ecommerce.auth.helper
 
-import ecommerce.auth.data.TokenRequest
+import ecommerce.auth.data.MemberRequest
 import ecommerce.auth.data.TokenResponse
 
 object TestFixture {
@@ -19,7 +19,7 @@ object TestFixture {
 
     private object TokenRequest {
         val VALID_ADMIN_REGISTER =
-            TokenRequest(
+            MemberRequest(
                 email = "admin@email.com",
                 password = "password",
             )
