@@ -63,7 +63,7 @@ class CartServiceTest {
             )
         val product =
             ProductDTO(
-                name = "addProduct",
+                name = "12addProduct",
                 price = 100.0,
                 quantity = 10,
                 description = "test",
@@ -200,7 +200,7 @@ class CartServiceTest {
             )
         val product =
             ProductDTO(
-                name = "removeProduct",
+                name = "11removeProduct",
                 price = 100.0,
                 quantity = 10,
                 description = "test",
