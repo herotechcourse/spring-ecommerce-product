@@ -16,21 +16,20 @@ import java.util.concurrent.atomic.AtomicLong
 @RequestMapping("/api/products")
 @RestController
 class ProductController(private val repository: ProductStore, private val productService: ProductService) {
-    private val index = AtomicLong(1)
 
     @PostMapping("")
     fun create(
         @RequestBody product: Product,
     ): ResponseEntity<Product> {
-        val id = index.getAndIncrement()
-        val newProduct = Product.toEntity(product, id)
+        val newProduct = Product.toEntity(product)
+
         productService.validateName(newProduct.name)
         productService.validatePrice(newProduct.price)
         productService.validateUrl(newProduct.imageUrl)
 
-        repository.insert(id, newProduct)
+        val savedProduct = repository.insert(newProduct)
 
-        return ResponseEntity.created(URI.create("/products/" + newProduct.id)).body(product)
+        return ResponseEntity.created(URI.create("/products/" + savedProduct.id)).body(savedProduct)
     }
 
     @GetMapping("")

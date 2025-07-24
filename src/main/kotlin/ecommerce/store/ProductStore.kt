@@ -6,9 +6,12 @@ import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.jdbc.core.RowMapper
 import org.springframework.stereotype.Repository
 import java.sql.ResultSet
+import java.util.concurrent.atomic.AtomicLong
 
 @Repository
 class ProductStore(val jdbcTemplate: JdbcTemplate) : BaseProductStore {
+    private val index = AtomicLong(1)
+
     private val rowMapper =
         RowMapper<Product> { rs: ResultSet, _ ->
             Product(
@@ -39,16 +42,17 @@ class ProductStore(val jdbcTemplate: JdbcTemplate) : BaseProductStore {
     }
 
     override fun insert(
-        id: Long,
         product: Product,
-    ): Int? {
+    ): Product {
+        val id = index.getAndIncrement()
         val sql =
             """
             INSERT INTO products (id, name, price, image_url)
             VALUES (?, ?, ?, ?)
             """.trimIndent()
 
-        return jdbcTemplate.update(sql, id, product.name, product.price, product.imageUrl)
+        jdbcTemplate.update(sql, id, product.name, product.price, product.imageUrl)
+        return product.copy(id = id)
     }
 
     override fun updateById(

@@ -2,7 +2,7 @@ package ecommerce.product
 
 import java.math.BigDecimal
 
-class Product(
+data class Product(
     var id: Long? = null,
     var name: String,
     var price: BigDecimal,
@@ -39,9 +39,8 @@ class Product(
     companion object {
         fun toEntity(
             product: Product,
-            id: Long,
         ): Product {
-            return Product(id, product.name, product.price, product.imageUrl)
+            return Product(product.id, product.name, product.price, product.imageUrl)
         }
     }
 }
