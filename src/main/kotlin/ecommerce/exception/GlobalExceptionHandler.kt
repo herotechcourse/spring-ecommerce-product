@@ -68,7 +68,7 @@ class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(MemberEmailAlreadyExistsException::class)
-    fun handleUpdateException(ex: MemberEmailAlreadyExistsException): ResponseEntity<ErrorMessageModel> {
+    fun handleEmailAlreadyExistsException(ex: MemberEmailAlreadyExistsException): ResponseEntity<ErrorMessageModel> {
         val errorMessage =
             ErrorMessageModel(
                 HttpStatus.CONFLICT.value(),
@@ -78,12 +78,22 @@ class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(EmailOrPasswordIncorrectException::class)
-    fun handleUpdateException(ex: EmailOrPasswordIncorrectException): ResponseEntity<ErrorMessageModel> {
+    fun handleEmailOrPasswordIncorrectException(ex: EmailOrPasswordIncorrectException): ResponseEntity<ErrorMessageModel> {
         val errorMessage =
             ErrorMessageModel(
                 HttpStatus.FORBIDDEN.value(),
                 ex.message,
             )
         return ResponseEntity(errorMessage, HttpStatus.FORBIDDEN)
+    }
+
+    @ExceptionHandler(UnauthorizedException::class)
+    fun handleUnauthorizedException(ex: UnauthorizedException): ResponseEntity<ErrorMessageModel> {
+        val errorMessage =
+            ErrorMessageModel(
+                HttpStatus.UNAUTHORIZED.value(),
+                ex.message,
+            )
+        return ResponseEntity(errorMessage, HttpStatus.UNAUTHORIZED)
     }
 }
