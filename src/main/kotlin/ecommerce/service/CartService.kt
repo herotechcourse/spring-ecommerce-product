@@ -52,4 +52,20 @@ class CartService(
             productId,
         )
     }
+
+    fun updateCartItemQuantity(
+        memberId: Long,
+        productId: Long,
+        quantity: Int,
+    ): Boolean {
+        val cart = cartRepository.findCartByMemberId(memberId) ?: throw ElementNotFoundException("Cart Not Found")
+        cartItemRepository.findByCartIdAndProductId(cart.id, productId)
+            ?: throw ElementNotFoundException("Product Not Found in Cart")
+
+        return if (quantity == 0) {
+            cartItemRepository.deleteCartItemsByCartIdAndProductId(cart.id, productId)
+        } else {
+            cartItemRepository.updateQuantityByCartIdAndProductId(cart.id, productId, quantity)
+        }
+    }
 }
