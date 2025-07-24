@@ -17,16 +17,16 @@ class CartProductRepository(
     fun getCartProducts(cartID: Long): List<CartProductResponseDTO> {
         val sql =
             """
-            SELECT 
+            select 
                 p.id as product_id,
                 p.name,
                 p.description,
                 p.price,
                 p.image_url,
                 cp.quantity
-            FROM cart_products cp
-            JOIN products p ON cp.product_id = p.id
-            WHERE cp.cart_id = ?
+            from cart_products cp
+            join products p ON cp.product_id = p.id
+            where cp.cart_id = ?
             """.trimIndent()
         return jdbcTemplate.query(sql, cartProductResponseMapper, cartID)
     }
