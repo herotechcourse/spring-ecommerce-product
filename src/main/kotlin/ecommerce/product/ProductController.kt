@@ -49,9 +49,6 @@ class ProductController(private val repository: ProductStore, private val produc
         productService.validatePrice(dto.price)
         productService.validateUrl(newProduct.imageUrl)
 
-        existingProduct.update(dto)
-        repository.updateById(id, existingProduct)
-        return ResponseEntity.ok().body(existingProduct)
         val existingProduct = repository[id] ?: return ResponseEntity.notFound().build()
         val updatedProduct = existingProduct.updateWith(dto)
         repository.updateById(id, updatedProduct)
