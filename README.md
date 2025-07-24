@@ -131,6 +131,22 @@ Content-Type: application/json
 }
 ```
 
+## Step 2.3 - Cart
+Implement a functionality that allows users to add or remove items from a cart. Authentication happens with a token.
+
+## Feature list - Step 2-3
+### Authentication
+- [ ] Users use the token received after login
+  - [ ] Use `Authorization: Bearer <token>` header
+- [ ] Throw 401 if the token is invalid
+
+### Cart
+- [ ] Users can retrieve the list of products in their cart
+- [ ] Users can add products to their cart
+- [ ] Users can remove products from their cart
+
+- [ ] Create Repository for cart
+- [ ] Create Controller for cart
 
 ## Learnings
 ### JDBC & DAO
@@ -182,6 +198,12 @@ class GlobalExceptionHandler {
 - Spring throws:
   - javax.validation.ConstraintViolationException when a constraint is violated on method parameters.
   - org.springframework.web.bind.MethodArgumentNotValidException when validation of request bodies fails.
+
+### MvcConfigurer
+- What is better, using `WebMvcConfigurer` or writing a controller directly? Why do you think so?
+  - It is a simple routing solution and if we use addViewController inside the MvcConfiguration we do not need a Controller class.
+    If we don't need to inject data and use a Model for it, then it is a simple approach. However, if we need
+    a model with products, we need to use a @Controller.
 
 
 ## Considerations
