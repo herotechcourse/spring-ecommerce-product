@@ -1,6 +1,5 @@
 package ecommerce.config
 
-import ecommerce.enums.UserRole
 import ecommerce.exception.UnauthorisedUserException
 import ecommerce.infrastructure.JwtTokenProvider
 import jakarta.servlet.http.HttpServletRequest
@@ -9,7 +8,7 @@ import org.springframework.stereotype.Component
 import org.springframework.web.servlet.HandlerInterceptor
 
 @Component
-class LoginAdminInterceptor(
+class AuthInterceptor(
     private val jwtTokenProvider: JwtTokenProvider,
 ) : HandlerInterceptor {
     override fun preHandle(
@@ -22,10 +21,7 @@ class LoginAdminInterceptor(
         if (!jwtTokenProvider.validateToken(token)) throw UnauthorisedUserException("Token not valid")
 
         val payload = jwtTokenProvider.getPayload(token)
-        if (payload.role == UserRole.USER) throw UnauthorisedUserException("Admin role required")
-
-//        request.setAttribute("user", payload)
-
+        request.setAttribute("email", payload.email)
         return true
     }
 }
