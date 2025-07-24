@@ -19,9 +19,9 @@
 - [x] `POST /api/member/auth/signUp` creates user and returns JWT token
 - [x] `POST /api/member/auth/signIn` checks and returns JWT token
 #### CartController
-- `GET /api/member/cart` getCartProducts
-- `POST /api/member/cart/:id` incrementCartProduct
-- `DELETE /api/member/cart/:id` decrementCartProduct
+- [x] `GET /api/member/cart` getCartProducts
+- [x] `POST /api/member/cart/:id` incrementCartProduct
+- [x] `DELETE /api/member/cart/:id` decrementCartProduct
 
 ## Config
 ### AuthInterceptor
@@ -44,6 +44,10 @@
 - [x] `getCartProducts`: List<CartProductResponseDTO>
 - [x] `addProductToCart`: Long
 - [x] `removeProductFromCart`: Void
+
+### AdminStatisticsService
+- [x] `getTopAddedProducts(limit: Int = 5)`: List<TopAddedProductsDTO> 
+- [x] `getMembersWhoAddedToCart(days: Int = 7)`: List<MembersWhoAddedToCartDTO>
 
 ## Repository
 ### ProductRepository
@@ -72,6 +76,8 @@
 
 ### CartStatisticsRepository
 - `create`
+- `getTopAddedProducts`
+- `getMembersWhoAddedToCart`
 
 ## DTO
 ### Auth
@@ -90,6 +96,15 @@
 - cartId: Long
 - productID: Long
 - quantity: Int
+### CartStatistics
+#### MembersWhoAddedToCartDTO
+- id: Long
+- name: String
+- email: String
+#### TopAddedProductsDTO
+- name: String
+- count: Int
+- createdAt: String
 ### Error
 #### ErrorResponse
 - timestamp: Instant = Instant.now()
@@ -135,7 +150,9 @@
 ### CartProductMapper
 ### CartProductResponseMapper
 ### CartRowMapper
+### MembersWhoAddedToCartMapper
 ### ProductRowMapper
+### TopAddedProductsMapper
 ### UserRowMapper
 
 ## Advice
