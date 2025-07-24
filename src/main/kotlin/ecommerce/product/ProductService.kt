@@ -2,6 +2,7 @@ package ecommerce.product
 
 import ecommerce.store.BaseProductStore
 import org.springframework.stereotype.Service
+import java.math.BigDecimal
 
 @Service
 class ProductService(private val productStore: BaseProductStore) {
@@ -19,8 +20,8 @@ class ProductService(private val productStore: BaseProductStore) {
         require(regex.matches(name)) {"Name input can contain only ( ), [ ], +, -, &, /, _, special characters, numbers and letters. "}
     }
 
-    fun validatePrice(price: Double) {
-        require( price > 0.0) {"Product price must be greater than 0."}
+    fun validatePrice(price: BigDecimal) {
+        require(price.compareTo(BigDecimal.ZERO) > 0) {"Product price must be greater than 0."}
     }
 
     fun validateUrl(imageUrl: String) {
