@@ -25,7 +25,7 @@ class CartProductRepository(
                 p.image_url,
                 cp.quantity
             from cart_products cp
-            join products p ON cp.product_id = p.id
+            join products p on cp.product_id = p.id
             where cp.cart_id = ?
             """.trimIndent()
         return jdbcTemplate.query(sql, cartProductResponseMapper, cartID)
