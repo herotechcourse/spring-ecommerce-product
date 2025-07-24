@@ -7,7 +7,7 @@ interface ProductDAO {
 
     fun findById(id: Long): Product?
 
-    fun insert(product: Product)
+    fun insert(product: Product): Long
 
     fun update(product: Product): Int
 

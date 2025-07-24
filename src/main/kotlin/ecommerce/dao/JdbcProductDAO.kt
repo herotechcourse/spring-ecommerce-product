@@ -3,6 +3,7 @@ package ecommerce.dao
 import ecommerce.model.Product
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.jdbc.core.RowMapper
+import org.springframework.jdbc.support.GeneratedKeyHolder
 import org.springframework.stereotype.Repository
 import java.sql.ResultSet
 
@@ -31,18 +32,23 @@ class JdbcProductDAO(private val db: JdbcTemplate) : ProductDAO {
                 id,
             )
         } catch (exception: Exception) {
-            println(exception.message)
+            println("findById(): " + exception.message)
             return null
         }
     }
 
-    override fun insert(product: Product) {
-        db.update(
-            "INSERT INTO product (name, price, imageUrl) VALUES (?, ?, ?);",
-            product.name,
-            product.price,
-            product.imageUrl,
-        )
+    override fun insert(product: Product): Long {
+        val sql = "INSERT INTO product (name, price, imageUrl) VALUES (?, ?, ?)"
+        val keyHolder = GeneratedKeyHolder()
+
+        db.update({ connection ->
+            connection.prepareStatement(sql, arrayOf("id")).apply {
+                setString(1, product.name)
+                setDouble(2, product.price)
+                setString(3, product.imageUrl)
+            }
+        }, keyHolder)
+        return keyHolder.key?.toLong() ?: throw IllegalStateException("insert - Failed to retrieve ID")
     }
 
     override fun update(product: Product): Int {

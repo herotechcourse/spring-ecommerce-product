@@ -20,9 +20,16 @@ class ProductController(private val jdbcProductDao: JdbcProductDAO) {
     fun createProduct(
         @RequestBody product: Product,
     ): ResponseEntity<Product> {
-        jdbcProductDao.insert(product)
-        val uri = URI.create("/api/products/${product.id}")
-        return ResponseEntity.created(uri).body(product)
+        var id: Long
+        try {
+            id = jdbcProductDao.insert(product)
+        } catch (exception: Exception) {
+            println("createProduct(): " + exception.message)
+            return ResponseEntity.internalServerError().build()
+        }
+        val insertedProduct = jdbcProductDao.findById(id)
+        val uri = URI.create("/api/products/$id")
+        return ResponseEntity.created(uri).body(insertedProduct)
     }
 
     @GetMapping("/products")
