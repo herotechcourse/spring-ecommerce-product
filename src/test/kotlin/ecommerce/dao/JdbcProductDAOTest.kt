@@ -9,15 +9,15 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest
 import org.springframework.jdbc.core.JdbcTemplate
 
 @JdbcTest
-class ProductRepositoryTest {
-    private lateinit var productRepository: ProductRepository
+class JdbcProductDAOTest {
+    private lateinit var jdbcProductDao: JdbcProductDAO
 
     @Autowired
     private lateinit var jdbcTemplate: JdbcTemplate
 
     @BeforeEach
     fun setUp() {
-        productRepository = ProductRepository(jdbcTemplate)
+        jdbcProductDao = JdbcProductDAO(jdbcTemplate)
 
         jdbcTemplate.execute("DROP TABLE product CASCADE")
         jdbcTemplate.execute(
@@ -40,41 +40,42 @@ class ProductRepositoryTest {
 
     @Test
     fun findAll() {
-        val products = productRepository.findAll()
+        val products = jdbcProductDao.findAll()
         Assertions.assertThat(products).hasSize(5)
     }
 
     @Test
     fun findById() {
-        val product = productRepository.findById(1)
+        val product = jdbcProductDao.findById(1)
         Assertions.assertThat(product?.name).isEqualTo("Iron Man")
     }
 
     @Test
     fun insert() {
         val product = Product(name = "Iron body", price = 99.0, imageUrl = "https://alexnsan.comics/imageurl/123")
-        productRepository.insert(product)
-        val target = productRepository.findById(6)
+        jdbcProductDao.insert(product)
+        val target = jdbcProductDao.findById(6)
         Assertions.assertThat(target?.name).isEqualTo(product.name)
     }
 
     @Test
     fun update() {
-        val id = 1.toLong()
+        val id = 1L
         val newProduct = Product(name = "Iron body", price = 99.0, imageUrl = "https://alexnsan.comics/imageurl/123")
+        val product = Product.toEntity(newProduct, id)
 
-        val affectedRow = productRepository.update(id, newProduct)
-        val target = productRepository.findById(id)
+        val affectedRow = jdbcProductDao.update(product)
+        val target = jdbcProductDao.findById(id)
 
         Assertions.assertThat(affectedRow).isEqualTo(1)
-        Assertions.assertThat(target?.id).isEqualTo(id)
-        Assertions.assertThat(target?.name).isEqualTo(newProduct.name)
+        Assertions.assertThat(target?.id).isEqualTo(product.id)
+        Assertions.assertThat(target?.name).isEqualTo(product.name)
     }
 
     @Test
     fun delete() {
-        val id = 1.toLong()
-        val result = productRepository.delete(id)
+        val id = 1L
+        val result = jdbcProductDao.delete(id)
 
         Assertions.assertThat(result).isEqualTo(1)
     }

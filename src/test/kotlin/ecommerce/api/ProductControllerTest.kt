@@ -1,6 +1,6 @@
 package ecommerce.api
 
-import ecommerce.dao.ProductRepository
+import ecommerce.dao.JdbcProductDAO
 import ecommerce.model.Product
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
@@ -12,7 +12,7 @@ import org.springframework.jdbc.core.JdbcTemplate
 
 @JdbcTest
 class ProductControllerTest {
-    private lateinit var productRepository: ProductRepository
+    private lateinit var jdbcProductDao: JdbcProductDAO
 
     @Autowired
     private lateinit var jdbcTemplate: JdbcTemplate
@@ -20,7 +20,7 @@ class ProductControllerTest {
 
     @BeforeEach
     fun setUp() {
-        productRepository = ProductRepository(jdbcTemplate)
+        jdbcProductDao = JdbcProductDAO(jdbcTemplate)
 
         jdbcTemplate.execute("DROP TABLE product CASCADE")
         jdbcTemplate.execute(
@@ -40,7 +40,7 @@ class ProductControllerTest {
                     INSERT INTO product (name, price, imageUrl) VALUES ('Full Metal Alchemist', 1000, 'https://alexnsan.comics/imageurl/5');"""
         jdbcTemplate.batchUpdate(query)
 
-        controller = ProductController(productRepository)
+        controller = ProductController(jdbcProductDao)
     }
 
     @Test
@@ -77,14 +77,14 @@ class ProductControllerTest {
 
     @Test
     fun update() {
-        val product = Product(name = "new product", price = 1.6, imageUrl = "https://www.product.com/image/2")
+        val newProduct = Product(name = "new product", price = 1.6, imageUrl = "https://www.product.com/image/2")
         create()
-        val response = controller.updateProduct(1, product)
+        val response = controller.updateProduct(1, newProduct)
         assertThat(response.statusCode.value()).isEqualTo(HttpStatus.OK.value())
         val actual = response.body
-        assertThat(actual?.name).isEqualTo(product.name)
-        assertThat(actual?.price).isEqualTo(product.price)
-        assertThat(actual?.imageUrl).isEqualTo(product.imageUrl)
+        assertThat(actual?.name).isEqualTo(newProduct.name)
+        assertThat(actual?.price).isEqualTo(newProduct.price)
+        assertThat(actual?.imageUrl).isEqualTo(newProduct.imageUrl)
     }
 
     @Test

@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository
 import java.sql.ResultSet
 
 @Repository
-class ProductRepository(private val db: JdbcTemplate) {
+class JdbcProductDAO(private val db: JdbcTemplate) : ProductDAO {
     private val productRowMapper =
         RowMapper<Product> { rs: ResultSet, _ ->
             Product(
@@ -18,12 +18,12 @@ class ProductRepository(private val db: JdbcTemplate) {
             )
         }
 
-    fun findAll(): List<Product> {
+    override fun findAll(): List<Product> {
         val products = db.query("SELECT * FROM product;", productRowMapper)
         return products
     }
 
-    fun findById(id: Long): Product? {
+    override fun findById(id: Long): Product? {
         try {
             return db.queryForObject(
                 "SELECT id, name, price, imageUrl FROM product WHERE id = ?",
@@ -36,7 +36,7 @@ class ProductRepository(private val db: JdbcTemplate) {
         }
     }
 
-    fun insert(product: Product) {
+    override fun insert(product: Product) {
         db.update(
             "INSERT INTO product (name, price, imageUrl) VALUES (?, ?, ?);",
             product.name,
@@ -45,23 +45,19 @@ class ProductRepository(private val db: JdbcTemplate) {
         )
     }
 
-    fun update(
-        id: Long,
-        product: Product,
-    ): Int {
-        findById(id) ?: return 0
+    override fun update(product: Product): Int {
         val value =
             db.update(
                 "UPDATE product SET name = ?, price = ?, imageUrl = ? WHERE id = ?",
                 product.name,
                 product.price,
                 product.imageUrl,
-                id,
+                product.id,
             )
         return value
     }
 
-    fun delete(id: Long): Int {
+    override fun delete(id: Long): Int {
         val value = db.update("DELETE FROM product WHERE id = ?", id)
         return value
     }

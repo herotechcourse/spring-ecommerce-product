@@ -1,6 +1,6 @@
 package ecommerce.api
 
-import ecommerce.dao.ProductRepository
+import ecommerce.dao.JdbcProductDAO
 import ecommerce.model.Product
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -15,19 +15,19 @@ import java.net.URI
 
 @RestController
 @RequestMapping("/api")
-class ProductController(private val productRepository: ProductRepository) {
+class ProductController(private val jdbcProductDao: JdbcProductDAO) {
     @PostMapping("/products")
     fun createProduct(
         @RequestBody product: Product,
     ): ResponseEntity<Product> {
-        productRepository.insert(product)
+        jdbcProductDao.insert(product)
         val uri = URI.create("/api/products/${product.id}")
         return ResponseEntity.created(uri).body(product)
     }
 
     @GetMapping("/products")
     fun getProducts(): ResponseEntity<List<Product>> {
-        val products = productRepository.findAll()
+        val products = jdbcProductDao.findAll()
         return ResponseEntity.ok(products)
     }
 
@@ -35,7 +35,7 @@ class ProductController(private val productRepository: ProductRepository) {
     fun getProduct(
         @PathVariable id: Long,
     ): ResponseEntity<Product> {
-        val product = productRepository.findById(id) ?: return ResponseEntity.notFound().build()
+        val product = jdbcProductDao.findById(id) ?: return ResponseEntity.notFound().build()
         return ResponseEntity.ok(product)
     }
 
@@ -44,9 +44,10 @@ class ProductController(private val productRepository: ProductRepository) {
         @PathVariable id: Long,
         @RequestBody newProduct: Product,
     ): ResponseEntity<Product> {
-        val result = productRepository.update(id, newProduct)
+        val product = Product.toEntity(newProduct, id)
+        val result = jdbcProductDao.update(product)
         if (result == 1) {
-            val product = productRepository.findById(id) ?: return ResponseEntity.notFound().build()
+            val product = jdbcProductDao.findById(id) ?: return ResponseEntity.notFound().build()
             return ResponseEntity.ok(product)
         }
         return ResponseEntity.notFound().build()
@@ -56,8 +57,8 @@ class ProductController(private val productRepository: ProductRepository) {
     fun deleteProduct(
         @PathVariable id: Long,
     ): ResponseEntity<Void> {
-        productRepository.findById(id) ?: return ResponseEntity.notFound().build()
-        productRepository.delete(id)
+        jdbcProductDao.findById(id) ?: return ResponseEntity.notFound().build()
+        jdbcProductDao.delete(id)
         return ResponseEntity.noContent().build()
     }
 }
