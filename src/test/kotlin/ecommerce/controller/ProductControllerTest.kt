@@ -16,36 +16,40 @@ class ProductControllerTest {
 
     @BeforeEach
     fun createProducts() {
-        val productJson = mapOf(
-            "name" to "cafe",
-            "price" to 39.0,
-            "imageUrl" to "https://test.com/image.jpg"
-        )
+        val productJson =
+            mapOf(
+                "name" to "cafe",
+                "price" to 39.0,
+                "imageUrl" to "https://test.com/image.jpg",
+            )
 
-        val response = RestAssured
-            .given().log().all()
-            .contentType(ContentType.JSON)
-            .body(productJson)
-            .`when`().post("/api/products")
-            .then().extract().response()
+        val response =
+            RestAssured
+                .given().log().all()
+                .contentType(ContentType.JSON)
+                .body(productJson)
+                .`when`().post("/api/products")
+                .then().extract().response()
 
         productId = response.jsonPath().getLong("id")
     }
 
     @Test
     fun addProduct() {
-        val productJson = mapOf(
-            "name" to "table",
-            "price" to 45.0,
-            "imageUrl" to "https://test.com/image2.jpg"
-        )
+        val productJson =
+            mapOf(
+                "name" to "table",
+                "price" to 45.0,
+                "imageUrl" to "https://test.com/image2.jpg",
+            )
 
-        val response = RestAssured
-            .given().log().all()
-            .contentType(ContentType.JSON)
-            .body(productJson)
-            .`when`().post("/api/products")
-            .then().extract().response()
+        val response =
+            RestAssured
+                .given().log().all()
+                .contentType(ContentType.JSON)
+                .body(productJson)
+                .`when`().post("/api/products")
+                .then().extract().response()
 
         assertThat(response.statusCode).isEqualTo(HttpStatus.OK.value())
         val created = response.jsonPath()
@@ -56,16 +60,14 @@ class ProductControllerTest {
 
     @Test
     fun getProducts_returnsList() {
-        val response = RestAssured
-            .given().log().all()
-            .`when`().get("/api/products")
-            .then().extract().response()
+        val response =
+            RestAssured
+                .given().log().all()
+                .`when`().get("/api/products")
+                .then().extract().response()
 
         assertThat(response.statusCode).isEqualTo(HttpStatus.OK.value())
         val productList = response.jsonPath().getList("", Map::class.java)
         assertThat(productList).isNotEmpty
     }
 }
-
-
-

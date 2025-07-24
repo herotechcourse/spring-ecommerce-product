@@ -56,24 +56,28 @@ class ProductRestController(
         @PathVariable id: Long,
         @RequestBody @Valid request: ProductRequest,
     ): ResponseEntity<Any> {
-        val existingProduct = productRepository.findById(id)
-            ?: return ResponseEntity.notFound().build()
+        val existingProduct =
+            productRepository.findById(id)
+                ?: return ResponseEntity.notFound().build()
 
         if (productRepository.existsByNameExcludingId(request.name, id)) {
-            val error = ErrorResponse(
-                message = "Validation failed",
-                errors = listOf(
-                    FieldError("name", "Product name must be unique")
+            val error =
+                ErrorResponse(
+                    message = "Validation failed",
+                    errors =
+                        listOf(
+                            FieldError("name", "Product name must be unique"),
+                        ),
                 )
-            )
             return ResponseEntity.badRequest().body(error)
         }
 
-        val updatedProduct = existingProduct.copy(
-            name = request.name,
-            price = request.price,
-            imageUrl = request.imageUrl
-        )
+        val updatedProduct =
+            existingProduct.copy(
+                name = request.name,
+                price = request.price,
+                imageUrl = request.imageUrl,
+            )
 
         productRepository.updateProduct(updatedProduct)
         return ResponseEntity.ok(updatedProduct)
