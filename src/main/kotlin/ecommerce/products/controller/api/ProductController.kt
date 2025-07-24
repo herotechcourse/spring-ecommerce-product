@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController
 import java.net.URI
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/admin/api")
 class ProductController(private val productService: ProductService) {
     @PostMapping("/products")
     fun createProduct(

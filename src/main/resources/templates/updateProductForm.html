@@ -12,10 +12,10 @@
 <header class="container">
     <nav>
         <ul>
-            <li><strong><a href="/">Home</a></strong></li>
+            <li><strong><a href="/admin/">Home</a></strong></li>
         </ul>
         <ul>
-            <li><a href="/add/product">Add Product</a></li>
+            <li><a href="/admin/add/product">Add Product</a></li>
         </ul>
     </nav>
 </header>
@@ -66,7 +66,7 @@
         }
 
         try {
-            const response = await fetch(`/api/products/${id}`, {
+            const response = await fetch(`/admin/api/products/${id}`, {
                 method: "PATCH",
                 headers: {
                     "Content-Type": "application/json"
@@ -74,7 +74,7 @@
                 body: JSON.stringify(product)
             });
             if (response.ok) {
-                window.location.href = "/";
+                window.location.href = "/admin/";
             } else {
                 alert("Failed to update product. Status: " + response.status);
             }
