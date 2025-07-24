@@ -85,9 +85,9 @@ In such cases, the API must respond with a clear and structured error message to
 
 ## Features Step 2-1
 
-- [ ] Create a `ProductRequest` DTO class to receive and validate incoming product data
-- [ ] Annotate fields in the DTO using `jakarta.validation.constraints` (e.g., `@Size`, `@Pattern`, `@Min`)
-- [ ] Replace usage of the `Product` class in `@RequestBody` with `ProductRequest` in both `ProductRestController` and `ProductAdminController`
-- [ ] Use `@Valid` in controller methods to trigger validation automatically
-- [ ] Add a global exception handler using `@RestControllerAdvice` to return readable error messages when validation fails
-- [ ] Ensure that the name is checked for uniqueness before creating/updating products
+- [x] Create a `ProductRequest` DTO class to receive and validate incoming product data
+- [x] Annotate fields in the DTO using `jakarta.validation.constraints` (e.g., `@Size`, `@Pattern`, `@Min`)
+- [x] Replace usage of the `Product` class in `@RequestBody` with `ProductRequest` in both `ProductRestController` and `ProductAdminController`
+- [x] Use `@Valid` in controller methods to trigger validation automatically
+- [x] Add a global exception handler using `@RestControllerAdvice` to return readable error messages when validation fails
+- [x] Ensure that the name is checked for uniqueness before creating/updating products
