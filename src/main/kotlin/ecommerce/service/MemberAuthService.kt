@@ -47,9 +47,4 @@ class MemberAuthService(
             )
         return "Bearer $token"
     }
-
-    fun logOut(token: String): String {
-        // TODO implement TODO
-        return ""
-    }
 }
