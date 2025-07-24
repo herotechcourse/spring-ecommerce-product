@@ -22,17 +22,20 @@ class CartService(
     fun addProductToCart(
         userID: Long?,
         productID: Long,
-    ) {
+    ): Long {
+        var id: Long
         val cart = getUserCart(userID)
         checkValidProduct(productID)
 
         val cartProduct = cartProductRepository.findCartProduct(cart.id, productID)
 
         if (cartProduct == null) {
-            cartProductRepository.addProduct(cart.id, productID)
+            id = cartProductRepository.addProduct(cart.id, productID)
         } else {
+            id = cartProduct.id
             cartProductRepository.updateProductQuantity(cartProduct.id, cartProduct.quantity + 1)
         }
+        return id
     }
 
     fun removeProductFromCart(
