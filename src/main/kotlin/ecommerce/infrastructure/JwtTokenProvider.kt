@@ -40,7 +40,6 @@ class JwtTokenProvider(
                 .payload
 
         val email = claims.get("email", String::class.java)
-        val roleString = claims.get("role", String()::class.java)
         return AuthTokenPayload(email)
     }
 
