@@ -6,7 +6,6 @@ import ecommerce.dto.user.MemberUserDTO
 import ecommerce.dto.user.UserCreateResponse
 import ecommerce.dto.user.UserRequestDTO
 import ecommerce.exception.UserAlreadyExistsException
-import ecommerce.exception.UserCredentialException
 import ecommerce.infrastructure.JwtTokenProvider
 import ecommerce.repository.CartRepository
 import ecommerce.repository.UserRepository
@@ -18,6 +17,7 @@ class MemberAuthService(
     private val userRepository: UserRepository,
     private val cartRepository: CartRepository,
     private val jwtTokenProvider: JwtTokenProvider,
+    private val loginService: LoginService,
 ) {
     fun signUp(user: UserRequestDTO): UserCreateResponse {
         if (userRepository.existsByEmail(user.email)) {
@@ -36,15 +36,6 @@ class MemberAuthService(
     }
 
     fun logIn(loginRequest: LoginRequest): String {
-        val user =
-            userRepository.findByEmailAndPassword(
-                loginRequest.email, loginRequest.password,
-            ) ?: throw UserCredentialException()
-
-        val token =
-            jwtTokenProvider.createToken(
-                AuthTokenPayload(user.email),
-            )
-        return "Bearer $token"
+        return loginService.signIn(loginRequest)
     }
 }

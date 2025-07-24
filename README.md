@@ -9,6 +9,8 @@
 - [x] `PUT /api/admin/products/:id` update the whole product by ID
 - [x] `PATCH /api/admin/products/:id` update one or more attributes of Product by ID
 - [x] `DELETE /api/admin/products/:id` delete the product by ID
+#### AdminAuthController
+-[x] `POST /api/admin/auth/signIn`
 
 ### Guest
 #### GuestProductController
@@ -29,25 +31,26 @@
 ### WebConfig
 
 ## Service
-### ProductService
+### AdminAuthService
+- [x] `signIn(loginRequest: LoginRequest)`: String
+### AdminProductService
 - [x] `getAllProducts()`: List<ProductDTO>
 - [x] `getProductById(id: Long)`: ProductDTO
 - [x] `createProduct(product: ProductDTO):`  Void
 - [x] `updateProduct(id: Long, product: ProductDTO)`: Void
 - [x] `fun deleteProduct(id: Long)`: Void
-
-### AuthService
-- [x] `signUp`: String `[AuthToken]`
-- [x] `login`: String `[AuthToken]`
-
+### AdminStatisticsService
+- [x] `getTopAddedProducts(limit: Int = 5)`: List<TopAddedProductsDTO>
+- [x] `getMembersWhoAddedToCart(days: Int = 7)`: List<MembersWhoAddedToCartDTO>
 ### CartService
 - [x] `getCartProducts`: List<CartProductResponseDTO>
 - [x] `addProductToCart`: Long
 - [x] `removeProductFromCart`: Void
-
-### AdminStatisticsService
-- [x] `getTopAddedProducts(limit: Int = 5)`: List<TopAddedProductsDTO> 
-- [x] `getMembersWhoAddedToCart(days: Int = 7)`: List<MembersWhoAddedToCartDTO>
+### LoginService
+- [x] `signIn`: String `[AuthToken]`
+### MemberAuthService
+- [x] `signUp(user: UserRequestDTO)`: UserCreateResponse
+- [x] `fun logIn(loginRequest: LoginRequest)`: String
 
 ## Repository
 ### ProductRepository
