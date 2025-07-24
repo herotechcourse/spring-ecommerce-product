@@ -5,7 +5,6 @@ import ecommerce.dto.user.MemberUserDTO
 import ecommerce.enums.UserRole
 import ecommerce.exception.UnauthorisedUserException
 import ecommerce.repository.UserRepository
-import org.springframework.context.support.BeanDefinitionDsl
 import org.springframework.core.MethodParameter
 import org.springframework.web.bind.support.WebDataBinderFactory
 import org.springframework.web.context.request.NativeWebRequest
