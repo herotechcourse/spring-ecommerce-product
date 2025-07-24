@@ -1,8 +1,7 @@
 package ecommerce.service
 
-import ecommerce.ProductForm
 import ecommerce.dao.JdbcProductDAO
-import ecommerce.model.Product
+import ecommerce.dto.ProductForm
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -19,11 +18,6 @@ class ProductServiceTest {
     @Autowired
     private lateinit var jdbcProductDao: JdbcProductDAO
     private lateinit var productService: ProductService
-
-    fun create() {
-        val product = Product(name = "product1", price = 1.5, imageUrl = "https://www.product.com/image/1")
-        jdbcProductDao.insert(product)
-    }
 
     @BeforeEach
     fun setUp() {

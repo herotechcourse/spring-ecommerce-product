@@ -1,7 +1,7 @@
 package ecommerce.service
 
-import ecommerce.ProductForm
 import ecommerce.dao.JdbcProductDAO
+import ecommerce.dto.ProductForm
 import ecommerce.model.Product
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service

@@ -1,6 +1,6 @@
 package ecommerce.api
 
-import ecommerce.ProductForm
+import ecommerce.dto.ProductForm
 import ecommerce.model.Product
 import ecommerce.service.ProductService
 import jakarta.validation.Valid
