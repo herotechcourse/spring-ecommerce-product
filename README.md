@@ -85,7 +85,7 @@ so that users can access member-only functionality in the future.
   - [x] JWT token
 - [x] Return 401 Unauthorized if the Authorization header is missing or the token is invalid.
 - [x] Return 403 Forbidden for incorrect login attempts or denied actions (e.g., password reset or change with invalid input).
-- [ ] Let user use token to retrieve information.
+- [x] Let user use token to retrieve information.
 - [x] Implement the API to send and receive HTTP messages as shown below:
 1. **Register**
 - [x] Request
@@ -189,13 +189,25 @@ class GlobalExceptionHandler {
 - TODO read about difference btw RestController and Controller
 - TODO why do we combine Controller and ControllerView
 - read and learn SQL commands in H2 console
+- What do you return on incorrect password and email? Is 404 bad practice,
+since hackers could guess that the email already exists?
 - package ecommerce.controller.TokenLoginController: What is the best thing to return here? Shall I return the Location header inside created? Shall a redirection happen to the products page?
-```
+```kotlin
   fun registerMember(@Valid @RequestBody request: TokenRequest): ResponseEntity<TokenResponse> {
         val tokenResponse = authService.register(request)
         return ResponseEntity.status(HttpStatus.CREATED).body(tokenResponse)
     }
   ```
+- Is it okay to throw this kind of exception inside the extractor and not inside the Service?
+Shall all validation happen inside the Service?
+```kotlin
+fun extract(request: HttpServletRequest): String {
+    val headers = request.getHeaders(HEADER)
+    if (!headers.hasMoreElements()) {
+        throw UnauthorizedException()
+    }
+}
+```
 
 
 
