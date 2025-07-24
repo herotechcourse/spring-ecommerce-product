@@ -147,8 +147,8 @@ Using the token received after login, implement functionality that allows the us
 - [x] Create `CartRepository` class
   - [x] Uses `JdbcTemplate` to manage `CART_ITEMS` table
 
-- [ ] Create `CartService` class
-  - [ ] Handles business logic for cart operations
+- [x] Create `CartService` class
+  - [x] Handles business logic for cart operations
 
 - [ ] Create `WishController` class
     - [ ] Implements `/api/wishes` endpoints with `@LoginMember` for authentication
