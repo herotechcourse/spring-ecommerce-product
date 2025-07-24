@@ -4,6 +4,7 @@ import ecommerce.exception.AuthenticationException
 import ecommerce.exception.DuplicateEmailException
 import ecommerce.exception.InvalidInputException
 import ecommerce.exception.ResourceNotFoundException
+import ecommerce.exception.UnauthorizedException
 import jakarta.servlet.http.HttpServletRequest
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -117,5 +118,14 @@ class GlobalExceptionHandler {
     ): ResponseEntity<String> {
         println("Registration failed due to duplicate email for request ${request.requestURI}: ${ex.message}")
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.message)
+    }
+
+    @ExceptionHandler(UnauthorizedException::class)
+    fun handleUnauthorizedException(
+        ex: UnauthorizedException,
+        request: HttpServletRequest,
+    ): ResponseEntity<String> {
+        println("Unauthorized access attempt for request ${request.requestURI}: ${ex.message}")
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ex.message)
     }
 }

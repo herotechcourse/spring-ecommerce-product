@@ -64,4 +64,8 @@ class AuthService(
 
         return Pair(member, accessToken)
     }
+
+    fun getMemberById(userId: Long): Member? {
+        return memberRepository.findByUserId(userId)
+    }
 }
