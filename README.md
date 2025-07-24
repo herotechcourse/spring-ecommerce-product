@@ -70,6 +70,9 @@
 - `removeProduct`
 - `addProduct`
 
+### CartStatisticsRepository
+- `create`
+
 ## DTO
 ### Auth
 #### AuthTokenPayload
@@ -153,6 +156,10 @@
 ### UserRoles
 - [x] Admin
 - [x] User
+
+### CartActions
+- [x] ADD
+- [x] DELETE
 
 ## Schema
 ### Products
