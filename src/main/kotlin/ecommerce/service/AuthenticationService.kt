@@ -7,6 +7,7 @@ import ecommerce.dto.TokenResponse
 import ecommerce.exception.EmailOrPasswordIncorrectException
 import ecommerce.exception.MemberEmailAlreadyExistsException
 import ecommerce.model.Member
+import ecommerce.repository.CartRepository
 import ecommerce.repository.MemberRepository
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -16,6 +17,7 @@ class AuthenticationService(
     private val memberRepository: MemberRepository,
     private val tokenService: JwtTokenProvider,
     private val passwordEncoder: PasswordEncoder,
+    private val cartRepository: CartRepository,
 ) {
     @Transactional
     fun registerMember(request: RegistrationRequest): TokenResponse {
@@ -26,9 +28,11 @@ class AuthenticationService(
         val hashedPassword = passwordEncoder.encode(request.password)
         val member = Member(null, request.email, hashedPassword)
 
-        val saved = memberRepository.save(member)
+        val memberId =
+            memberRepository.save(member)
+                ?: throw RuntimeException("Failed to save member with email: ${request.email} to the database")
 
-        if (!saved) throw RuntimeException("Failed to save member with email: ${request.email} to the database")
+        cartRepository.createCart(memberId)
 
         val token = tokenService.createToken(request.email)
         return TokenResponse(token)
