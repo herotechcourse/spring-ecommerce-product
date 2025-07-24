@@ -47,7 +47,7 @@ class ProductRepository(private val jdbcTemplate: JdbcTemplate) {
         return keyHolder.key!!.toLong()
     }
 
-    fun update (
+    fun update(
         product: Product,
         productId: Long,
     ): Boolean {
@@ -72,6 +72,4 @@ class ProductRepository(private val jdbcTemplate: JdbcTemplate) {
         val count = jdbcTemplate.queryForObject(sql, Int::class.java, id) ?: 0
         return count > 0
     }
-
-
 }

@@ -1,7 +1,7 @@
 package ecommerce.controller
 
-import ecommerce.repository.ProductRepository
 import ecommerce.model.Product
+import ecommerce.repository.ProductRepository
 import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -37,10 +37,12 @@ class ProductController(private val productRepository: ProductRepository) {
         @RequestBody @Valid newProduct: Product,
         @PathVariable id: Long,
     ): ResponseEntity<Unit> {
-        if (!productRepository.existsById(id))
+        if (!productRepository.existsById(id)) {
             return create(newProduct)
-        if (!productRepository.update(newProduct, id))
+        }
+        if (!productRepository.update(newProduct, id)) {
             return ResponseEntity.notFound().build()
+        }
         return ResponseEntity.ok().build()
     }
 
@@ -48,8 +50,9 @@ class ProductController(private val productRepository: ProductRepository) {
     fun delete(
         @PathVariable id: Long,
     ): ResponseEntity<Unit> {
-        if (!productRepository.delete(id))
+        if (!productRepository.delete(id)) {
             return ResponseEntity.notFound().build()
+        }
         return ResponseEntity.noContent().build()
     }
 }

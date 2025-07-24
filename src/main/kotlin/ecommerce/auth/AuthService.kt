@@ -15,7 +15,6 @@ class AuthService(
     private val jwtTokenProvider: JwtTokenProvider,
     private val memberRepository: MemberRepository,
 ) {
-
     fun findMember(payload: String): MemberResponse {
         val member = memberRepository.findByEmail(payload)
         if (member == null) {

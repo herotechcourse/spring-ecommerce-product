@@ -48,13 +48,13 @@ class ProductControllerTest {
                 Product(
                     name = "iced latte",
                     price = 4.5,
-                    imageUrl = "https://cola.jpg"
-                )
+                    imageUrl = "https://cola.jpg",
+                ),
             )
                 .contentType(ContentType.JSON).`when`().post("/products").then().log().all().extract()
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value())
-        assertThat(response.headers().toString()).contains("/products/5" )
+        assertThat(response.headers().toString()).contains("/products/5")
     }
 
     @Test

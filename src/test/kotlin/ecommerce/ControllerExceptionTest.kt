@@ -20,8 +20,8 @@ class ControllerExceptionTest {
                     Product(
                         name = "colaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
                         price = 0.0,
-                        imageUrl = "abchttps://cola.jpg"
-                    )
+                        imageUrl = "abchttps://cola.jpg",
+                    ),
                 )
                 .contentType(ContentType.JSON)
                 .`when`().post("/products")

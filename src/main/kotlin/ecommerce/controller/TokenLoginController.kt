@@ -22,13 +22,17 @@ class TokenLoginController(private val authService: AuthService) {
     private val authorizationExtractor: AuthorizationExtractor = AuthorizationExtractor()
 
     @PostMapping("/register")
-    fun registerMember(@Valid @RequestBody request: TokenRequest): ResponseEntity<TokenResponse> {
+    fun registerMember(
+        @Valid @RequestBody request: TokenRequest,
+    ): ResponseEntity<TokenResponse> {
         val tokenResponse = authService.register(request)
         return ResponseEntity.status(HttpStatus.CREATED).body(tokenResponse)
     }
 
     @PostMapping("/login")
-    fun loginMember(@Valid @RequestBody request: TokenRequest): ResponseEntity<TokenResponse> {
+    fun loginMember(
+        @Valid @RequestBody request: TokenRequest,
+    ): ResponseEntity<TokenResponse> {
         val tokenResponse = authService.login(request)
         return ResponseEntity.ok(tokenResponse)
     }
@@ -49,5 +53,4 @@ class TokenLoginController(private val authService: AuthService) {
         val member = authService.findMemberByToken(token)
         return ResponseEntity.ok().body(member)
     }
-
 }

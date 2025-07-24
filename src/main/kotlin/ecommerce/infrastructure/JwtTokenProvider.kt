@@ -13,11 +13,9 @@ import javax.crypto.SecretKey
 class JwtTokenProvider(
     @Value("\${security.jwt.token.secret-key}")
     secret: String,
-
     @Value("\${security.jwt.token.expire-length}")
     private var validityInMilliseconds: Long = 0,
 ) {
-
     private val secretKey: SecretKey = Keys.hmacShaKeyFor(secret.toByteArray(StandardCharsets.UTF_8))
 
     fun createToken(payload: String): String {
@@ -33,20 +31,22 @@ class JwtTokenProvider(
     }
 
     fun getPayload(token: String): String {
-        val claims = Jwts.parser()
-            .verifyWith(secretKey)
-            .build()
-            .parseSignedClaims(token)
-            .payload
+        val claims =
+            Jwts.parser()
+                .verifyWith(secretKey)
+                .build()
+                .parseSignedClaims(token)
+                .payload
         return claims.subject
     }
 
     fun validateToken(token: String): Boolean {
         return try {
-            val claims = Jwts.parser()
-                .verifyWith(secretKey)
-                .build()
-                .parseSignedClaims(token)
+            val claims =
+                Jwts.parser()
+                    .verifyWith(secretKey)
+                    .build()
+                    .parseSignedClaims(token)
             !claims.payload.expiration.before(Date())
         } catch (e: JwtException) {
             false
