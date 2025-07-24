@@ -23,6 +23,7 @@ class AuthControllerTest {
 
     @BeforeEach
     fun setUp() {
+        jdbcTemplate.execute("DROP TABLE CART_ITEMS IF EXISTS")
         jdbcTemplate.execute("DROP TABLE MEMBERS IF EXISTS")
         jdbcTemplate.execute(
             """
