@@ -65,9 +65,9 @@
 
 #### step 2-3
 
-- [ ] set up authenticated access
-
-- [ ] set up `/api/products` to serve product list to client
+- [x] set up authenticated access
+  - [x] implement interceptor
+- [ ] test authentication
 
 - [ ] add `CartItem` entity/model (contains productId, quantity, userId)
 - [ ] add `CartRepository` and according table in database 
