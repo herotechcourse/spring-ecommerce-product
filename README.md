@@ -23,3 +23,18 @@
 - [x] Create product repository for database operation
 - [x] Create data schema and initialize and insert data to it
 - [x] Modify the controller to use the new product repository
+
+### Step 2.1
+- [] Implement comprehensive data validation for product operations
+  - [] Product name validation
+    - [] Maximum 15 characters including spaces
+    - [] Allow only these special characters: ( ), [ ], +, -, &, /, _
+    - [] Ensure unique names across all products
+  - [] Product price validation
+    - [] Must be greater than 0
+  - [] Product image URL validation
+    - [] Must start with 'http://' or 'https://'
+- [] Implement proper error handling
+  - [] Return appropriate HTTP status codes for validation failures
+  - [] Provide clear, specific error messages for each validation case
+  - [] Handle duplicate name conflicts with meaningful responses
