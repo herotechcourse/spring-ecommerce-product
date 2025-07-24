@@ -43,11 +43,11 @@
 - [x] `getTopAddedProducts(limit: Int = 5)`: List<TopAddedProductsDTO>
 - [x] `getMembersWhoAddedToCart(days: Int = 7)`: List<MembersWhoAddedToCartDTO>
 ### CartService
-- [x] `getCartProducts`: List<CartProductResponseDTO>
-- [x] `addProductToCart`: Long
-- [x] `removeProductFromCart`: Void
+- [x] `getCartProducts(userID: Long?, productID: Long)`: List<CartProductResponseDTO>
+- [x] `addProductToCart(userID: Long?, productID: Long)`: Long
+- [x] `removeProductFromCart(userID: Long?, productID: Long)`: Void
 ### LoginService
-- [x] `signIn()`: String `[AuthToken]`
+- [x] `fun signIn(loginRequest: LoginRequest, expectedRole: UserRole = UserRole.USER): String`: String
 ### MemberAuthService
 - [x] `signUp(user: UserRequestDTO)`: UserCreateResponse
 - [x] `fun logIn(loginRequest: LoginRequest)`: String
