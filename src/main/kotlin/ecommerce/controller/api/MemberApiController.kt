@@ -25,7 +25,7 @@ class MemberApiController(private val authService: AuthService) {
             authService.registerMember(
                 userName = request.userName,
                 email = request.email,
-                password = request.email,
+                password = request.password,
             )
 
         val authResponse =
@@ -47,7 +47,7 @@ class MemberApiController(private val authService: AuthService) {
         val (member, accessToken) =
             authService.loginMember(
                 email = request.email,
-                password = request.email,
+                password = request.password,
             )
         val authResponse =
             AuthResponse(

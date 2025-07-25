@@ -18,6 +18,7 @@ class WebConfig(
 
     override fun addInterceptors(registry: InterceptorRegistry) {
         registry.addInterceptor(authInterceptor)
-            .addPathPatterns("/api/cart/**")
+            .addPathPatterns("/api/**")
+            .excludePathPatterns("/api/members/register", "/api/members/login")
     }
 }

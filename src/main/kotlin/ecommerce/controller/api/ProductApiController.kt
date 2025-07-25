@@ -25,7 +25,7 @@ import java.net.URI
 class ProductApiController(private val productService: ProductService) {
     @PostMapping
     fun createProduct(
-        //@LoginMember member: Member,
+        @LoginMember member: Member,
         @Valid @RequestBody newProductRequest: CreateProductRequest,
     ): ResponseEntity<ProductResponse> {
         val product = newProductRequest.toDomain()
@@ -43,7 +43,7 @@ class ProductApiController(private val productService: ProductService) {
     }
 
     @GetMapping
-    fun getProducts(@LoginMember member: Member,): ResponseEntity<List<ProductResponse>> {
+    fun getProducts(@LoginMember member: Member): ResponseEntity<List<ProductResponse>> {
         val products = productService.getAllProducts().map { it.toResponse() }
         return ResponseEntity.ok().body(products)
     }

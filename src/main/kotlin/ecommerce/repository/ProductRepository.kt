@@ -41,7 +41,7 @@ class ProductRepository(private val jdbcTemplate: JdbcTemplate) {
         return jdbcTemplate.query(sql, productRowMapper)
     }
 
-    fun create(product: Product) {
+    fun create(product: Product): Product {
         val sql = "insert into products (name, price, img, quantity) values (?, ?, ?, ?)"
         val keyHolder = GeneratedKeyHolder()
 
@@ -55,6 +55,8 @@ class ProductRepository(private val jdbcTemplate: JdbcTemplate) {
         }, keyHolder)
 
         product.id = keyHolder.key?.toLong() ?: throw IllegalStateException("Failed to retrieve generated ID for product.")
+
+        return product
     }
 
     fun update(
