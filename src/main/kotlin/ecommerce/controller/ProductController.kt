@@ -1,11 +1,13 @@
 package ecommerce.controller
 
-import ecommerce.ProductStore
-import ecommerce.model.Product
+import ecommerce.dto.ProductRequest
+import ecommerce.repository.ProductStore
+import jakarta.validation.Valid
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
+import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -16,22 +18,25 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.ResponseBody
 import java.net.URI
 
+@Validated
 @Controller
 @RequestMapping("/products")
 class ProductController(
     @Qualifier("jdbcProductStore")
     private val productStore: ProductStore,
 ) {
-    @PostMapping("")
+    @PostMapping()
     @ResponseBody
     fun create(
-        @RequestBody product: Product,
+        @Valid
+        @RequestBody productRequest: ProductRequest,
     ): ResponseEntity<Void> {
+        val product = productRequest.toProduct()
         val id = productStore.save(product)
         return ResponseEntity.created(URI.create("/products/$id")).build()
     }
 
-    @GetMapping("")
+    @GetMapping()
     fun read(model: Model): String {
         model.addAttribute("products", productStore.findAll())
         return "products"
@@ -41,8 +46,9 @@ class ProductController(
     @ResponseBody
     fun update(
         @PathVariable("id") id: Long,
-        @RequestBody newProduct: Product,
+        @RequestBody @Valid productRequest: ProductRequest,
     ): ResponseEntity<Void> {
+        val newProduct = productRequest.toProduct()
         productStore.update(id, newProduct)
         return ResponseEntity.ok().build()
     }
