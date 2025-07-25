@@ -1,5 +1,6 @@
 package ecommerce.repository
 
+import ecommerce.dto.RecentActiveMemberResponse
 import ecommerce.entity.CartItemHistory
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.stereotype.Repository
@@ -34,4 +35,23 @@ class CartItemHistoryRepository(private val jdbc: JdbcTemplate) {
         return jdbc.queryForList(sql)
     }
 
+    fun findRecentlyActiveMembers(): List<RecentActiveMemberResponse> {
+        val sql = """
+        SELECT DISTINCT u.id AS member_id, u.email
+        FROM cart_item_history h
+        JOIN users u ON h.user_id = u.id
+        WHERE h.action = 'ADD'
+          AND h.created_at >= DATEADD('DAY', -7, CURRENT_TIMESTAMP)
+    """.trimIndent()
+
+        return jdbc.query(sql) { rs, _ ->
+            val email = rs.getString("email")
+            val name = email.substringBefore("@") // TODO: replace with actual name chosen by user at registration
+            RecentActiveMemberResponse(
+                memberId = rs.getLong("member_id"),
+                name = name,
+                email = rs.getString("email")
+            )
+        }
+    }
 }

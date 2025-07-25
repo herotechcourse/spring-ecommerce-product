@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
+import ecommerce.dto.RecentActiveMemberResponse
 
 @RestController
 @RequestMapping("/admin/stats")
@@ -16,6 +17,12 @@ class AdminStatsController(
     @GetMapping("/top-products")
     fun getTop5(): ResponseEntity<List<TopProductStat>> {
         val result = statisticsService.getTop5ProductsLast30Days()
+        return ResponseEntity.ok(result)
+    }
+
+    @GetMapping("/recent-members")
+    fun getRecentlyActiveMembers(): ResponseEntity<List<RecentActiveMemberResponse>> {
+        val result = statisticsService.getRecentlyActiveMembers()
         return ResponseEntity.ok(result)
     }
 }

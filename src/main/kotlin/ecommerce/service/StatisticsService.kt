@@ -1,5 +1,6 @@
 package ecommerce.service
 
+import ecommerce.dto.RecentActiveMemberResponse
 import ecommerce.dto.TopProductStat
 import ecommerce.repository.CartItemHistoryRepository
 import org.springframework.stereotype.Service
@@ -14,5 +15,9 @@ class StatisticsService(private val cartItemHistoryRepository: CartItemHistoryRe
                 latestAddedAt = it["latest_added_at"].toString()
             )
         }
+    }
+
+    fun getRecentlyActiveMembers(): List<RecentActiveMemberResponse> {
+        return cartItemHistoryRepository.findRecentlyActiveMembers()
     }
 }

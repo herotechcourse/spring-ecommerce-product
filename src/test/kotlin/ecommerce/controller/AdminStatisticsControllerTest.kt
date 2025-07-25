@@ -93,6 +93,43 @@ class AdminStatisticsControllerTest(
         assertThat(names).containsExactly("Product C", "Product F", "Product G", "Product E", "Product D")
     }
 
+    @Test
+    fun `admin sees recently active members who added to cart in last 7 days`() {
+        register("admin@mail.com", "123456", "ADMIN")
+        register("user1@mail.com", "654321", "USER")
+        register("user2@mail.com", "654321", "USER")
+        register("user3@mail.com", "654321", "USER") // inactive user
+
+        adminToken = login("admin@mail.com", "123456")
+        val user1Token = login("user1@mail.com", "654321")
+        val user2Token = login("user2@mail.com", "654321")
+        login("user3@mail.com", "654321") // inactive user
+
+        val productId = createProduct("Dummy Product", 9.99)
+
+        addToCart(user1Token, productId)
+        addToCart(user1Token, productId) // user 1 second add
+        addToCart(user2Token, productId)
+
+        val result = mockMvc.get("/admin/stats/recent-members") {
+            header("Authorization", "Bearer $adminToken")
+        }.andExpect {
+            status { isOk() }
+        }.andReturn()
+
+        val json = objectMapper.readTree(result.response.contentAsString)
+        val emails = json.map { it["email"].asText() }
+
+        assertThat(emails).containsExactlyInAnyOrder("user1@mail.com", "user2@mail.com")
+
+        val user1Count = emails.count { it == "user1@mail.com" }
+        assertThat(user1Count).isEqualTo(1) // user 1 only once listed although 2 adds
+
+        assertThat(json[0]["memberId"].asLong()).isNotNull()
+        assertThat(emails).doesNotContain("user3@mail.com") // ensure inactive user is excluded
+    }
+
+
     // helper functions
 
     private fun register(email: String, password: String, role: String) {
@@ -148,6 +185,19 @@ class AdminStatisticsControllerTest(
                     "quantity": 1
                 }
             """.trimIndent()
+        }.andExpect { status { isCreated() } }
+    }
+
+    private fun addToCart(token: String, productId: Long) {
+        mockMvc.post("/api/cart") {
+            header("Authorization", "Bearer $token")
+            contentType = MediaType.APPLICATION_JSON
+            content = """
+            {
+                "productId": $productId,
+                "quantity": 1
+            }
+        """.trimIndent()
         }.andExpect { status { isCreated() } }
     }
 }

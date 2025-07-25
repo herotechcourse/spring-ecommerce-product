@@ -87,7 +87,7 @@
 
 #### step 2-4
 
-- [ ] admin statistics
+- [x] admin statistics
   - [x] retrieve most added products via `GET /admin/stats/top-products`
     - [x] returns top 5 products most frequently added to carts in the last 30 days 
     - [x] if counts are equal, sort by most recently added 
@@ -95,13 +95,13 @@
       - [x] product name
       - [x] number of times added
       - [x] most recent added time
-  - [ ] retrieve recently active members via `GET /admin/stats/recent-members`
-    - [ ] returns members who added items to their cart in the last 7 days 
-      - [ ] no duplicate members even if multiple items were added 
-      - [ ] response includes:
-        - [ ] member ID 
-        - [ ] name
-        - [ ] email
+  - [x] retrieve recently active members via `GET /admin/stats/recent-members`
+    - [x] returns members who added items to their cart in the last 7 days 
+      - [x] no duplicate members even if multiple items were added 
+      - [x] response includes:
+        - [x] member ID 
+        - [x] name
+        - [x] email
 
 - [x] restrict admin access to /admin/** endpoints 
   - [x] only allow users with ADMIN role
@@ -121,11 +121,10 @@ If a user adds 5 units of a product in a single call and only one row is logged,
 
 This means the count reflects the number of times products were added, not the quantity added.
 
-
 ## notes
 
 - generate key via `openssl rand -base64 32`
 
 ## future work
-
+- add functionality that users can choose their own name (currently their prefix before @ in their mail is returned as name in the recent active users API)
 - replace `jdbcTemplate` with `jdbcClient`
