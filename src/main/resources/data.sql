@@ -9,3 +9,6 @@ INSERT INTO PRODUCTS (name, price, image_url) VALUES
     ('Reusable Coffee Cup', 9.99, 'https://images.unsplash.com/photo-1576788903709-5c3eda911324?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8UmV1c2FibGUlMjBDb2ZmZWUlMjBDdXB8ZW58MHx8MHx8fDA%3D'),
     ('Cold Brew Bottle', 4.20, 'https://images.unsplash.com/photo-1536638455623-a35d0fa09ab9?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8Q29sZCUyMEJyZXclMjBCb3R0bGV8ZW58MHx8MHx8fDA%3D'),
     ('Tiramisu', 4.50, 'https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dGlyYW1pc3V8ZW58MHx8MHx8fDA%3D');
+
+INSERT INTO members (name, email, password, role) VALUES
+('Admin', 'admin@example.com', 'password123', 'ADMIN');
