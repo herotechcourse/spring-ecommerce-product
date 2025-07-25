@@ -8,7 +8,6 @@ import ecommerce.dto.product.ProductResponse
 import ecommerce.dto.product.UpdateProductRequest
 import io.restassured.RestAssured
 import io.restassured.http.ContentType
-import io.restassured.response.Response
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -38,7 +37,7 @@ class ProductControllerTest {
         name: String,
         price: Double,
         img: String,
-        quantity: Int
+        quantity: Int,
     ): ProductResponse {
         return RestAssured
             .given().log().all()
@@ -100,16 +99,17 @@ class ProductControllerTest {
 
     @Test
     fun `it should retrieve a product by it's id with valid authentication`() {
-        val createdProduct = createProductHelper(name = "lotion", price = 20.0, img = "http://lotion.jpeg", quantity = 1,)
+        val createdProduct = createProductHelper(name = "lotion", price = 20.0, img = "http://lotion.jpeg", quantity = 1)
         val productId = createdProduct.id
 
-        val response = RestAssured
-            .given().log().all()
-            .header("Authorization", "Bearer $testAccessToken")
-            .`when`().get("/api/products/{id}", productId)
-            .then().log().all()
-            .assertThat().statusCode(HttpStatus.OK.value())
-            .extract()
+        val response =
+            RestAssured
+                .given().log().all()
+                .header("Authorization", "Bearer $testAccessToken")
+                .`when`().get("/api/products/{id}", productId)
+                .then().log().all()
+                .assertThat().statusCode(HttpStatus.OK.value())
+                .extract()
 
         val productResponse = response.`as`(ProductResponse::class.java)
         assertThat(productResponse.id).isEqualTo(productId)
@@ -118,8 +118,8 @@ class ProductControllerTest {
 
     @Test
     fun `it should return all the products with valid authentication`() {
-        val createdProduct1 = createProductHelper(name = "lotion", price = 20.0, img = "http://lotion.jpeg", quantity = 1,)
-        val createdProduct2 = createProductHelper(name = "lotion2", price = 20.0, img = "http://lotion2.jpeg", quantity = 2,)
+        val createdProduct1 = createProductHelper(name = "lotion", price = 20.0, img = "http://lotion.jpeg", quantity = 1)
+        val createdProduct2 = createProductHelper(name = "lotion2", price = 20.0, img = "http://lotion2.jpeg", quantity = 2)
 
         val response =
             RestAssured
@@ -138,15 +138,16 @@ class ProductControllerTest {
         val createdProduct = createProductHelper(name = "lotion", price = 10.0, img = "http://lotion.jpg", quantity = 5)
         val updateRequest = UpdateProductRequest(name = "lotion2", price = 15.0, img = "http://lotio2.jpg", quantity = 3)
 
-        val response = RestAssured
-            .given().log().all()
-            .header("Authorization", "Bearer $testAccessToken")
-            .contentType(ContentType.JSON)
-            .body(updateRequest)
-            .`when`().put("/api/products/{id}", createdProduct.id)
-            .then().log().all()
-            .assertThat().statusCode(HttpStatus.OK.value())
-            .extract()
+        val response =
+            RestAssured
+                .given().log().all()
+                .header("Authorization", "Bearer $testAccessToken")
+                .contentType(ContentType.JSON)
+                .body(updateRequest)
+                .`when`().put("/api/products/{id}", createdProduct.id)
+                .then().log().all()
+                .assertThat().statusCode(HttpStatus.OK.value())
+                .extract()
 
         val updatedProductResponse = response.`as`(ProductResponse::class.java)
 
@@ -159,15 +160,16 @@ class ProductControllerTest {
 
     @Test
     fun `it should delete a product by its id with valid authentication`() {
-        val createdProduct = createProductHelper(name = "lotion", price = 50.0, img = "http://lotion.jpg", quantity = 1,)
+        val createdProduct = createProductHelper(name = "lotion", price = 50.0, img = "http://lotion.jpg", quantity = 1)
 
-        val response = RestAssured
-            .given().log().all()
-            .header("Authorization", "Bearer $testAccessToken")
-            .`when`().delete("/api/products/{id}", createdProduct.id)
-            .then().log().all()
-            .assertThat().statusCode(HttpStatus.NO_CONTENT.value())
-            .extract()
+        val response =
+            RestAssured
+                .given().log().all()
+                .header("Authorization", "Bearer $testAccessToken")
+                .`when`().delete("/api/products/{id}", createdProduct.id)
+                .then().log().all()
+                .assertThat().statusCode(HttpStatus.NO_CONTENT.value())
+                .extract()
 
         RestAssured
             .given().log().all()

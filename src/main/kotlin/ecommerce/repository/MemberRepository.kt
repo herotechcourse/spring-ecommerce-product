@@ -21,7 +21,7 @@ class MemberRepository(private val jdbcTemplate: JdbcTemplate) {
             )
         }
 
-    fun findByUserId(userId: Long): Member? {
+    fun findByMemberId(userId: Long): Member? {
         val sql = "select * from members where user_id = ?"
         return jdbcTemplate.query(sql, memberRowMapper, userId).firstOrNull()
     }
@@ -31,7 +31,7 @@ class MemberRepository(private val jdbcTemplate: JdbcTemplate) {
         return jdbcTemplate.query(sql, memberRowMapper, email).firstOrNull()
     }
 
-    fun create(member: Member) {
+    fun create(member: Member): Member {
         val sql = "insert into members (user_name, email, password_hash, role) values (?, ?, ?, ?)"
         val keyHolder = GeneratedKeyHolder()
 
@@ -46,14 +46,15 @@ class MemberRepository(private val jdbcTemplate: JdbcTemplate) {
 
         member.userId =
             keyHolder.key?.toLong() ?: throw IllegalStateException("Failed to retrieve generated ID for member.")
+        return member
     }
 
     fun update(
         userId: Long,
         member: Member,
     ) {
-        val sql = "update members set user_name = ?, set email = ? where user_id = ?"
-        jdbcTemplate.update(sql, member.userName, member.email, userId)
+        val sql = "update members set user_name = ?, email = ?, password_hash = ?, role = ? where user_id = ?"
+        jdbcTemplate.update(sql, member.userName, member.email, member.passwordHash, member.role, userId)
     }
 
     fun delete(userId: Long) {
