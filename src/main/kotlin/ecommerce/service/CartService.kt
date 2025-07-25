@@ -1,6 +1,6 @@
 package ecommerce.service
 
-import ecommerce.dto.ActiveMemberResponse
+import ecommerce.dto.MemberStatsResponse
 import ecommerce.dto.ProductStatResponse
 import ecommerce.model.CartItem
 import ecommerce.repository.CartRepository
@@ -8,10 +8,12 @@ import org.springframework.stereotype.Service
 
 @Service
 class CartService(
-    private val cartRepository: CartRepository
+    private val cartRepository: CartRepository,
 ) {
-
-    fun addToCart(memberId: Long, productId: Long) {
+    fun addToCart(
+        memberId: Long,
+        productId: Long,
+    ) {
         cartRepository.addToCart(memberId, productId)
     }
 
@@ -19,7 +21,10 @@ class CartService(
         return cartRepository.getCartItems(memberId)
     }
 
-    fun removeFromCart(memberId: Long, productId: Long) {
+    fun removeFromCart(
+        memberId: Long,
+        productId: Long,
+    ) {
         cartRepository.removeFromCart(memberId, productId)
     }
 
@@ -27,7 +32,7 @@ class CartService(
         return cartRepository.getTop5MostAddedProducts()
     }
 
-    fun getRecentlyActiveMembers(): List<ActiveMemberResponse> {
+    fun getRecentlyActiveMembers(): List<MemberStatsResponse> {
         return cartRepository.getRecentlyActiveMembers()
     }
 }

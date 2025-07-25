@@ -1,6 +1,6 @@
 package ecommerce.dto
 
-data class ActiveMemberResponse(
+data class MemberStatsResponse(
     val id: Long,
     val name: String,
     val email: String,

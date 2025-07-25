@@ -20,7 +20,6 @@ import org.springframework.test.annotation.DirtiesContext
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class CartIntegrationTest {
-
     @LocalServerPort
     var port: Int = 0
 
@@ -55,12 +54,13 @@ class CartIntegrationTest {
         token = response.jsonPath().getString("token")
 
         // Create a product to add to cart
-        val productObj = Product(
-            id = 0,
-            name = "Test Product",
-            price = 10.0,
-            imageUrl = "https://example.com/image.jpg"
-        )
+        val productObj =
+            Product(
+                id = 0,
+                name = "Test Product",
+                price = 10.0,
+                imageUrl = "https://example.com/image.jpg",
+            )
         productRepository.createProduct(productObj)
         product = productRepository.getAll().first()
     }
@@ -79,14 +79,15 @@ class CartIntegrationTest {
             .statusCode(HttpStatus.OK.value())
 
         // Get cart
-        val cartItems = RestAssured.given()
-            .header("Authorization", "Bearer $token")
-            .get("/api/cart")
-            .then()
-            .statusCode(HttpStatus.OK.value())
-            .extract()
-            .jsonPath()
-            .getList("", Map::class.java)
+        val cartItems =
+            RestAssured.given()
+                .header("Authorization", "Bearer $token")
+                .get("/api/cart")
+                .then()
+                .statusCode(HttpStatus.OK.value())
+                .extract()
+                .jsonPath()
+                .getList("", Map::class.java)
 
         assertThat(cartItems).hasSize(1)
         assertThat(cartItems[0]["productId"]).isEqualTo(product.id.toInt())
@@ -101,14 +102,15 @@ class CartIntegrationTest {
             .statusCode(HttpStatus.NO_CONTENT.value())
 
         // Check cart is empty again
-        val updatedCartItems = RestAssured.given()
-            .header("Authorization", "Bearer $token")
-            .get("/api/cart")
-            .then()
-            .statusCode(HttpStatus.OK.value())
-            .extract()
-            .jsonPath()
-            .getList("", Map::class.java)
+        val updatedCartItems =
+            RestAssured.given()
+                .header("Authorization", "Bearer $token")
+                .get("/api/cart")
+                .then()
+                .statusCode(HttpStatus.OK.value())
+                .extract()
+                .jsonPath()
+                .getList("", Map::class.java)
 
         assertThat(updatedCartItems).isEmpty()
     }

@@ -8,20 +8,21 @@ import org.springframework.web.servlet.HandlerInterceptor
 
 @Component
 class AuthInterceptor(
-    private val memberService: MemberService
+    private val memberService: MemberService,
 ) : HandlerInterceptor {
     override fun preHandle(
         request: HttpServletRequest,
         response: HttpServletResponse,
-        handler: Any
+        handler: Any,
     ): Boolean {
         val token = request.getHeader("Authorization")?.removePrefix("Bearer ") ?: return unauthorized(response)
 
-        val member = try {
-            memberService.findByToken(token)
-        } catch (e: Exception) {
-            return unauthorized(response)
-        }
+        val member =
+            try {
+                memberService.findByToken(token)
+            } catch (e: Exception) {
+                return unauthorized(response)
+            }
 
         if (request.requestURI.startsWith("/admin") && member.role != "ADMIN") {
             return unauthorized(response)

@@ -1,8 +1,8 @@
 package ecommerce.auth.resolver
 
 import ecommerce.auth.annotation.LoginMember
-import ecommerce.service.MemberService
 import ecommerce.exception.UnauthorizedException
+import ecommerce.service.MemberService
 import org.springframework.core.MethodParameter
 import org.springframework.stereotype.Component
 import org.springframework.web.bind.support.WebDataBinderFactory
@@ -12,9 +12,8 @@ import org.springframework.web.method.support.ModelAndViewContainer
 
 @Component
 class LoginMemberArgumentResolver(
-    private val memberService: MemberService
+    private val memberService: MemberService,
 ) : HandlerMethodArgumentResolver {
-
     override fun supportsParameter(parameter: MethodParameter): Boolean {
         return parameter.hasParameterAnnotation(LoginMember::class.java)
     }
@@ -23,11 +22,12 @@ class LoginMemberArgumentResolver(
         parameter: MethodParameter,
         mavContainer: ModelAndViewContainer?,
         webRequest: NativeWebRequest,
-        binderFactory: WebDataBinderFactory?
+        binderFactory: WebDataBinderFactory?,
     ): Any {
-        val token = webRequest.getHeader("Authorization")
-            ?.removePrefix("Bearer ")
-            ?: throw UnauthorizedException("Missing token")
+        val token =
+            webRequest.getHeader("Authorization")
+                ?.removePrefix("Bearer ")
+                ?: throw UnauthorizedException("Missing token")
 
         return memberService.findByToken(token)
     }

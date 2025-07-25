@@ -12,7 +12,6 @@ import java.sql.Statement
 
 @Repository
 class MemberRepository(private val jdbcTemplate: JdbcTemplate) {
-
     private val memberRowMapper =
         RowMapper<Member> { rs: ResultSet, _ ->
             Member(
