@@ -72,4 +72,10 @@ class ProductRepository(private val jdbcTemplate: JdbcTemplate) {
         val count = jdbcTemplate.queryForObject(sql, Int::class.java, id) ?: 0
         return count > 0
     }
+
+    fun findById(id: Long): Product? {
+        val sql = "select * from products where id = ?"
+        val product = jdbcTemplate.queryForObject(sql, productRowMapper, id)
+        return product
+    }
 }
