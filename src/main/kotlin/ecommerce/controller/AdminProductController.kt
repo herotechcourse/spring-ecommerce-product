@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/api/admin/products")
-class ProductController(
+class AdminProductController(
     private val productService: ProductService,
 ) {
     @PostMapping
