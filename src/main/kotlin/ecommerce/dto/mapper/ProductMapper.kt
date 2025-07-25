@@ -1,4 +1,8 @@
-package ecommerce.product.data
+package ecommerce.dto.mapper
+
+import ecommerce.dto.ProductRequest
+import ecommerce.dto.ProductResponse
+import ecommerce.entity.Product
 
 object ProductMapper {
     fun toResponse(product: Product): ProductResponse {

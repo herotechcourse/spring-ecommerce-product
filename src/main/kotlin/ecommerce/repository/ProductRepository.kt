@@ -1,9 +1,9 @@
-package ecommerce.product.store
+package ecommerce.repository
 
-import ecommerce.helper.JdbcHelper.insertAndReturnKey
-import ecommerce.product.data.Product
-import ecommerce.product.data.ProductMapper
-import ecommerce.product.data.ProductRequest
+import ecommerce.dto.ProductRequest
+import ecommerce.dto.mapper.ProductMapper
+import ecommerce.entity.Product
+import ecommerce.helper.JdbcHelper
 import ecommerce.sql.ProductConstsSQL
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.jdbc.core.RowMapper
@@ -13,7 +13,7 @@ import java.sql.PreparedStatement
 import java.sql.ResultSet
 
 @Repository
-class ProductStore(private val jdbcTemplate: JdbcTemplate) {
+class ProductRepository(private val jdbcTemplate: JdbcTemplate) {
     private val rowMapper =
         RowMapper<Product> { rs: ResultSet, _ ->
             Product(
@@ -80,7 +80,7 @@ class ProductStore(private val jdbcTemplate: JdbcTemplate) {
     fun insertWithKeyholder(request: ProductRequest): Long {
         require(!existsByName(request.name)) { "Product with name ${request.name} already exists" }
         val sql = ProductConstsSQL.INSERT.trimIndent()
-        val id = insertAndReturnKey(jdbcTemplate, sql, ::prepareInsertStatement, request)
+        val id = JdbcHelper.insertAndReturnKey(jdbcTemplate, sql, ::prepareInsertStatement, request)
 
         return requireNotNull(id) {
             "Failed to retrieve generated ID after inserting product '${request.name}'. " +

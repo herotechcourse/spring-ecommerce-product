@@ -1,4 +1,4 @@
-package ecommerce.product.data
+package ecommerce.dto
 
 class ProductResponse(
     val id: Long,

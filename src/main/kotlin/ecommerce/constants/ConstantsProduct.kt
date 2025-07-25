@@ -1,4 +1,4 @@
-package ecommerce.product.data
+package ecommerce.constants
 
 object ConstantsProduct {
     object Validation {

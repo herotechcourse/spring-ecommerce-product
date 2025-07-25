@@ -1,4 +1,4 @@
-package ecommerce.auth.sql
+package ecommerce.sql
 
 object MemberConstsSQL {
     const val COUNT_ALL = "SELECT count(*) FROM memebers"

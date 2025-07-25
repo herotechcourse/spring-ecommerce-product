@@ -1,19 +1,18 @@
-package ecommerce.auth.store
+package ecommerce.repository
 
-import ecommerce.auth.data.Member
-import ecommerce.auth.data.MemberRequest
-import ecommerce.auth.sql.MemberConstsSQL
-import ecommerce.helper.JdbcHelper.insertAndReturnKey
+import ecommerce.entity.Member
+import ecommerce.dto.MemberRequest
+import ecommerce.sql.MemberConstsSQL
+import ecommerce.helper.JdbcHelper
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.jdbc.core.RowMapper
 import org.springframework.stereotype.Repository
 import java.sql.Connection
 import java.sql.PreparedStatement
 import java.sql.ResultSet
-import kotlin.collections.first
 
 @Repository
-class MemberStore(private val jdbcTemplate: JdbcTemplate) {
+class MemberRepository(private val jdbcTemplate: JdbcTemplate) {
     private val rowMapper =
         RowMapper<Member> { rs: ResultSet, _ ->
             Member(
@@ -32,7 +31,7 @@ class MemberStore(private val jdbcTemplate: JdbcTemplate) {
     fun insertWithKeyholder(request: MemberRequest): Long {
         require(!existsByEmail(request.email)) // TODO message? {}
         val sql = MemberConstsSQL.INSERT.trimIndent()
-        val id = insertAndReturnKey(jdbcTemplate, sql, ::prepareInsertStatement, request)
+        val id = JdbcHelper.insertAndReturnKey(jdbcTemplate, sql, ::prepareInsertStatement, request)
         return requireNotNull(id) {
             "Failed to retrieve generated ID after inserting product '${request.email}'. " +
                 "Database key generation failed."

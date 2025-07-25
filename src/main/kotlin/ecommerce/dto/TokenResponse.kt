@@ -1,4 +1,4 @@
-package ecommerce.auth.data
+package ecommerce.dto
 
 class TokenResponse(
     val accessToken: String,

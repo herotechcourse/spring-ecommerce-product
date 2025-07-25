@@ -1,9 +1,9 @@
-package ecommerce.product.controller
+package ecommerce.controller
 
-import ecommerce.product.data.ProductMapper
-import ecommerce.product.data.ProductRequest
-import ecommerce.product.data.ProductResponse
-import ecommerce.product.store.ProductStore
+import ecommerce.dto.ProductRequest
+import ecommerce.dto.ProductResponse
+import ecommerce.dto.mapper.ProductMapper
+import ecommerce.repository.ProductRepository
 import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-class ProductController(private val store: ProductStore) {
+class ProductController(private val store: ProductRepository) {
     @PostMapping(PRODUCTS_ENDPOINT)
     fun createProduct(
         @Valid @RequestBody request: ProductRequest,

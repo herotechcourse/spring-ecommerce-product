@@ -1,4 +1,4 @@
-package ecommerce.auth.data
+package ecommerce.entity
 
 class Member(
     val id: Long,

@@ -1,4 +1,4 @@
-package ecommerce.auth.data
+package ecommerce.dto
 
 import jakarta.validation.constraints.Email
 import jakarta.validation.constraints.NotBlank

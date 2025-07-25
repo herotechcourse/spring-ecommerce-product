@@ -1,10 +1,10 @@
-package ecommerce.auth.controller
+package ecommerce.controller
 
-import ecommerce.auth.data.MemberMapper
-import ecommerce.auth.data.MemberRequest
-import ecommerce.auth.data.TokenResponse
-import ecommerce.auth.service.JwtTokenProvider
-import ecommerce.auth.store.MemberStore
+import ecommerce.dto.mapper.MemberMapper
+import ecommerce.dto.MemberRequest
+import ecommerce.dto.TokenResponse
+import ecommerce.repository.MemberRepository
+import ecommerce.service.JwtTokenProvider
 import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-class LoginController(
-    private val store: MemberStore,
+class MemberController(
+    private val store: MemberRepository,
     private val jwtTokenProvider: JwtTokenProvider,
 ) {
     @PostMapping(REGISTER_ENDPOINT)

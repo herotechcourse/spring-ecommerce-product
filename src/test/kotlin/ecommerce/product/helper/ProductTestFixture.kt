@@ -1,8 +1,8 @@
-package ecommerce.product.helper
+package ecommerce.helper
 
-import ecommerce.product.data.ConstantsProduct.Validation.IMAGE_URL_MAX_LENGTH
-import ecommerce.product.data.DummyRequest
-import ecommerce.product.data.ProductRequest
+import ecommerce.constants.ConstantsProduct
+import ecommerce.dto.DummyRequest
+import ecommerce.dto.ProductRequest
 import io.restassured.RestAssured
 import io.restassured.http.ContentType
 import io.restassured.response.ExtractableResponse
@@ -47,7 +47,7 @@ object ProductTestFixture {
         val INVALID_PRICE_TOO_SMALL =
             ProductRequest(
                 name = "Ice Latte",
-                price = BigDecimal("0.01"),
+                price = BigDecimal("0.00"),
                 imageUrl = "https://example.com/image.jpg",
             )
 
@@ -104,5 +104,5 @@ object ProductTestFixture {
             .then().log().all().extract()
     }
 
-    private fun superLongUrl(): String = "https://" + "o".repeat(IMAGE_URL_MAX_LENGTH - "https://".length + 1)
+    private fun superLongUrl(): String = "https://" + "o".repeat(ConstantsProduct.Validation.IMAGE_URL_MAX_LENGTH - "https://".length + 1)
 }

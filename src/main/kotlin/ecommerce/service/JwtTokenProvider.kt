@@ -1,6 +1,6 @@
-package ecommerce.auth.service
+package ecommerce.service
 
-import ecommerce.auth.data.Member
+import ecommerce.entity.Member
 import io.jsonwebtoken.JwtException
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.security.Keys
