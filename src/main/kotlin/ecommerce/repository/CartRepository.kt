@@ -2,7 +2,7 @@ package ecommerce.repository
 
 import org.springframework.jdbc.core.simple.JdbcClient
 import org.springframework.stereotype.Repository
-import ecommerce.dto.CartItemDto
+import ecommerce.dto.RawCartItemDto
 
 @Repository
 class CartRepository(private val jdbcClient: JdbcClient) {
@@ -62,7 +62,7 @@ class CartRepository(private val jdbcClient: JdbcClient) {
         return quantity
     }
 
-    fun findOrCreateCartId(userId: Long): Long {
+    fun findOrCreateCartId(userId: Long): Long? {
         var cartId: Long?
 
         var sql: String = "SELECT cart_id FROM carts WHERE user_id = ?"
@@ -82,7 +82,7 @@ class CartRepository(private val jdbcClient: JdbcClient) {
         return cartId
     }
 
-    fun showAllItemsInCart(cartId: Long): List<CartItemDto> {
+    fun showAllItemsInCart(cartId: Long): List<RawCartItemDto> {
         val sql = """
             SELECT cart_id, product_id, quantity
             FROM cart_items
@@ -91,7 +91,7 @@ class CartRepository(private val jdbcClient: JdbcClient) {
         val cartItems = jdbcClient
             .sql(sql)
             .param(1, cartId)
-            .query(CartItemDto::class.java)
+            .query(RawCartItemDto::class.java)
             .list()
         return cartItems
     }
