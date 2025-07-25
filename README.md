@@ -158,3 +158,21 @@ Using the token received after login, implement functionality that allows the us
 
 - [x] Create `CheckLoginInterceptor`
   - [x] Protects `/api/wishes/**` routes with token validation
+
+## Step 2-4
+
+Implements admin statistics endpoints to retrieve insights from users' carts.
+
+### Feature List
+
+- [ ] Retrieve Top 5 Most Added Products to Cart in the Last 30 Days
+  - [ ] Returns product name, add count, and last added time
+  - [ ] Orders by count  and last added time 
+  - [ ] Limited to 5 products
+
+- [ ] Retrieve Members Who Added Items to Their Cart in the Last 7 Days
+  - [ ] Returns unique members with ID and email
+
+- [ ] Restrict Access to Admin Endpoints
+  - [ ] Only users with ADMIN role can access /admin/**
+  - [ ] Implemented AuthInterceptor for role-based access control
