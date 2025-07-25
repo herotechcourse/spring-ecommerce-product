@@ -9,6 +9,8 @@ interface ProductStore {
 
     fun findById(id: Long): Product?
 
+    fun findByName(name: String): Product?
+
     fun save(product: Product)
 
     fun update(

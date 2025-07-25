@@ -34,6 +34,11 @@ class JdbcProductStore(private val jdbcTemplate: JdbcTemplate) : ProductStore {
             ?: throw NoSuchElementException("Product with id $id not found")
     }
 
+    override fun findByName(name: String): Product? {
+        val sql = "SELECT COUNT(*) FROM products WHERE product_name = ?"
+        return jdbcTemplate.queryForObject(sql, productRowMapper, name)
+    }
+
     override fun save(product: Product) {
         val sql = "insert into products(product_name,price,image_url) values (?,?,?)"
         jdbcTemplate.update(sql, product.name, product.price, product.imageUrl)
