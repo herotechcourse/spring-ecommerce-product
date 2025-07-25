@@ -53,34 +53,33 @@
 - [x] `fun logIn(loginRequest: LoginRequest)`: String
 
 ## Repository
+### CartProductRepository
+- `getCartProducts(cartID: Long)`: List<CartProductResponseDTO>
+- `findCartProduct(cartID: Long, productID: Long)`: CartProductDTO?
+- `updateProductQuantity(cartProductId: Long, quantity: Int)`: Int
+- `removeProduct(cartID: Long, productID: Long)`: Int
+- `addProduct(cartID: Long, productID: Long)`: Long
+### CartRepository
+- `createCartForUser(userId: Long)`: Void
+- `findMembersCart(userId: Long?)`: CartDTO?
+### CartStatisticsRepository
+- `create(userID: Long?, productID: Long, action: CartAction)`: Long
+- `getTopAddedProducts(limit: Int = 5)`: List<TopAddedProductsDTO>
+- `getMembersWhoAddedToCart(days: Int = 7)`: List<MembersWhoAddedToCartDTO>
 ### ProductRepository
 - `findAll()`: List<ProductDTO>
 - `findById(id: Long)`: ProductDTO?
 - `create(product: ProductDTO)`: Long
-- `update(id: Long, product: ProductDTO)`
-- `deleteById(id: Long)`
+- `findByName(name: String)`: ProductDTO?
 - `existsByName(name: String)`: Boolean
-
+- `create(product: ProductDTO)`: Long
+- `update(id: Long, product: ProductDTO)`: Int
+- `deleteById(id: Long)`: Int
 ### UserRepository
-- `create`: Long
-- `findByEmailAndPassword`: UserDTO?
-- `existsByEmail`: Boolean
-
-### CartRepository
-- `createCartForUser`
-- `findMembersCart`
-
-### CartProductRepository
-- `getCartProducts`
-- `findCartProduct`
-- `updateProductQuantity`
-- `removeProduct`
-- `addProduct`
-
-### CartStatisticsRepository
-- `create`
-- `getTopAddedProducts`
-- `getMembersWhoAddedToCart`
+- `create(user: UserDTO)`: Long
+- `findByEmailAndPassword(email: String, password: String)`: UserDTO?
+- `findByEmail(email: String)`: UserDTO?
+- `existsByEmail(email: String)`: Boolean
 
 ## DTO
 ### Auth
@@ -207,22 +206,22 @@
 ## Tests
 ### Controller
 #### Admin
--[x] AdminCartStatisticsControllerTest
--[x] AdminProductControllerTest
+- [x] AdminCartStatisticsControllerTest
+- [x] AdminProductControllerTest
 #### Guest
--[x] GuestProductControllerTest
+- [x] GuestProductControllerTest
 #### Member
--[x] CartControllerTest
--[x] MemberAuthControllerTest
+- [x] CartControllerTest
+- [x] MemberAuthControllerTest
 ### DTO
--[x] ProductDTOTest
--[x] UserRequestDTOTest
+- [x] ProductDTOTest
+- [x] UserRequestDTOTest
 ### Repository
--[x] CartRepositoryTest
--[x] CartStatisticsRepositoryTest
--[x] ProductRepositoryTest
--[x] UserRepositoryTest
+- [x] CartRepositoryTest
+- [x] CartStatisticsRepositoryTest
+- [x] ProductRepositoryTest
+- [x] UserRepositoryTest
 ### Service
--[x] CartServiceTest
--[x] MemberAuthServiceTest
--[x] ProductServiceTest
+- [x] CartServiceTest
+- [x] MemberAuthServiceTest
+- [x] ProductServiceTest
