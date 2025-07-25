@@ -1,6 +1,6 @@
-package ecommerce.auth.helper
+package ecommerce.helper
 
-import ecommerce.auth.data.MemberRequest
+import ecommerce.dto.MemberRequest
 import io.jsonwebtoken.Claims
 import io.jsonwebtoken.Jwts
 import java.util.Date

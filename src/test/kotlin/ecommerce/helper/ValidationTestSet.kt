@@ -1,4 +1,4 @@
-package ecommerce.auth.helper
+package ecommerce.helper
 
 import io.jsonwebtoken.security.Keys
 import io.jsonwebtoken.security.MacAlgorithm

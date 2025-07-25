@@ -1,9 +1,9 @@
-package ecommerce.auth.controller
+package ecommerce.controller
 
-import ecommerce.auth.data.TokenResponse
-import ecommerce.auth.helper.MemberTestFixture.RequestCases
-import ecommerce.auth.helper.MemberTestFixture.ValidationCase
-import ecommerce.auth.helper.TestExpected
+import ecommerce.dto.TokenResponse
+import ecommerce.helper.MemberTestFixture.RequestCases
+import ecommerce.helper.MemberTestFixture.ValidationCase
+import ecommerce.helper.TestExpected
 import io.restassured.RestAssured
 import io.restassured.http.ContentType
 import org.assertj.core.api.Assertions.assertThat

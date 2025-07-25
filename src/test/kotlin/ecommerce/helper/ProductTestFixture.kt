@@ -1,8 +1,8 @@
 package ecommerce.helper
 
 import ecommerce.constants.ConstantsProduct
-import ecommerce.dto.DummyRequest
 import ecommerce.dto.ProductRequest
+import ecommerce.dto.DummyRequest
 import io.restassured.RestAssured
 import io.restassured.http.ContentType
 import io.restassured.response.ExtractableResponse
@@ -47,7 +47,7 @@ object ProductTestFixture {
         val INVALID_PRICE_TOO_SMALL =
             ProductRequest(
                 name = "Ice Latte",
-                price = BigDecimal("0.00"),
+                price = BigDecimal("0.01"),
                 imageUrl = "https://example.com/image.jpg",
             )
 

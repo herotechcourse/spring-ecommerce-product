@@ -1,9 +1,9 @@
-package ecommerce.product.controller
+package ecommerce.controller
 
-import ecommerce.product.data.ProductResponse
-import ecommerce.product.helper.ProductTestFixture
-import ecommerce.product.helper.ProductTestFixture.ValidRequest.AMERICANO
-import ecommerce.product.helper.ProductTestFixture.postTestProduct
+import ecommerce.dto.ProductResponse
+import ecommerce.helper.ProductTestFixture
+import ecommerce.helper.ProductTestFixture.ValidRequest.AMERICANO
+import ecommerce.helper.ProductTestFixture.postTestProduct
 import io.restassured.RestAssured
 import io.restassured.http.ContentType
 import org.assertj.core.api.Assertions.assertThat
