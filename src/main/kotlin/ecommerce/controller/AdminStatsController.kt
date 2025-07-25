@@ -1,5 +1,8 @@
 package ecommerce.controller
 
+import ecommerce.annotation.AdminOnly
+import ecommerce.dto.ActiveUsersResponse
+import ecommerce.dto.MemberDto
 import ecommerce.dto.TopProductStats
 import ecommerce.service.AdminStatsService
 import org.springframework.http.ResponseEntity
@@ -14,9 +17,17 @@ class AdminStatsController(
 ) {
     @GetMapping("/top-products")
     fun getTopProducts(
-        // @AdminOnly member: AdminOnly,
+        @AdminOnly member: MemberDto,
     ): ResponseEntity<List<TopProductStats>> {
         val productStats = adminStatsService.getTopProducts()
         return ResponseEntity.ok(productStats)
+    }
+
+    @GetMapping("/active-users")
+    fun getTopActiveUsers(
+        @AdminOnly member: MemberDto,
+    ): ResponseEntity<List<ActiveUsersResponse>> {
+        val activeUsers = adminStatsService.getTopActiveUsers()
+        return ResponseEntity.ok(activeUsers)
     }
 }
