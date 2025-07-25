@@ -8,4 +8,6 @@ interface MemberStore {
     fun findAllMembers(): List<Member>
 
     fun findMemberByEmail(email: String): Member
+
+    fun findMemberById(id: Long): Member?
 }
