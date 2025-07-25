@@ -1,12 +1,17 @@
 package ecommerce.controller.api
 
 import ecommerce.dto.ProductForm
+import ecommerce.exception.InternalServerErrorException
+import ecommerce.exception.NotFoundException
+import ecommerce.exception.ProductNameAlreadyExistsException
 import ecommerce.model.Product
 import ecommerce.service.ProductService
 import jakarta.validation.Valid
+import org.springframework.dao.DataAccessException
 import org.springframework.http.ResponseEntity
-import org.springframework.validation.BindingResult
+import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.annotation.DeleteMapping
+import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
@@ -21,15 +26,7 @@ class ProductController(private val productService: ProductService) {
     @PostMapping("/products")
     fun createProduct(
         @RequestBody @Valid productForm: ProductForm,
-        bindingResult: BindingResult,
-    ): ResponseEntity<Any> {
-        if (bindingResult.hasErrors()) {
-            val errors =
-                bindingResult.fieldErrors.associate { error ->
-                    error.field to (error.defaultMessage ?: "Invalid value")
-                }
-            return ResponseEntity.badRequest().body(errors)
-        }
+    ): ResponseEntity<Product> {
         return productService.insert(productForm)
     }
 
@@ -43,7 +40,7 @@ class ProductController(private val productService: ProductService) {
     fun getProduct(
         @PathVariable id: Long,
     ): ResponseEntity<Product> {
-        val product = productService.findById(id) ?: return ResponseEntity.notFound().build()
+        val product = productService.findById(id) ?: throw NotFoundException("Product not found - ID: $id")
         return ResponseEntity.ok(product)
     }
 
@@ -54,19 +51,50 @@ class ProductController(private val productService: ProductService) {
     ): ResponseEntity<Product> {
         val product = Product.toEntity(newProduct, id)
         val result = productService.update(product)
-        if (result == 1) {
-            val target = productService.findById(id) ?: return ResponseEntity.notFound().build()
-            return ResponseEntity.ok(target)
+        when (result) {
+            1 -> {
+                val target =
+                    productService.findById(id) ?: throw NotFoundException("Product not found - ID: $id")
+                return ResponseEntity.ok(target)
+            }
+            0 -> throw NotFoundException("Product not found - ID: $id")
+            else -> throw InternalServerErrorException("Unexpected update on Product - ID: $id")
         }
-        return ResponseEntity.notFound().build()
     }
 
     @DeleteMapping("/products/{id}")
     fun deleteProduct(
         @PathVariable id: Long,
     ): ResponseEntity<Void> {
-        productService.findById(id) ?: return ResponseEntity.notFound().build()
+        productService.findById(id) ?: throw NotFoundException("Product not found - ID: $id")
         productService.delete(id)
         return ResponseEntity.noContent().build()
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException::class)
+    fun handleValidationException(e: MethodArgumentNotValidException): ResponseEntity<Map<String, Any>> {
+        val errors =
+            e.bindingResult.fieldErrors.associate { error ->
+                error.field to (error.defaultMessage ?: "Invalid value")
+            }
+        val errorBody = mapOf("errors" to errors)
+        println("MethodArgumentNotValidException occurred: $errorBody")
+        return ResponseEntity.badRequest().body(errorBody)
+    }
+
+    @ExceptionHandler(ProductNameAlreadyExistsException::class)
+    fun handleProductNameAlreadyExistsExceptionHandler(e: Exception): ResponseEntity<Map<String, Any>> {
+        val error = mapOf("name" to e.message)
+        val errorBody = mapOf("errors" to error)
+        println("ProductNameAlreadyExistsException occurred: $errorBody")
+        return ResponseEntity.badRequest().body(errorBody)
+    }
+
+    @ExceptionHandler(DataAccessException::class)
+    fun handleDataAccessException(e: Exception): ResponseEntity<Map<String, Any>> {
+        val error = mapOf("description" to e.message)
+        val errorBody = mapOf("errors" to error)
+        println("DataAccessException occurred: $errorBody")
+        return ResponseEntity.internalServerError().body(errorBody)
     }
 }

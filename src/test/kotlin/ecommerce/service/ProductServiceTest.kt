@@ -2,9 +2,11 @@ package ecommerce.service
 
 import ecommerce.dao.JdbcProductDAO
 import ecommerce.dto.ProductForm
+import ecommerce.exception.ProductNameAlreadyExistsException
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.HttpStatus
@@ -47,8 +49,7 @@ class ProductServiceTest {
     @Test
     fun `insert() - should return 400 when name of product already exists`() {
         val productForm = ProductForm(name = "Iron Man", price = 1.5, imageUrl = "https://www.product.com/image/1")
-        val response = productService.insert(productForm)
-        assertThat(response.statusCode.value()).isEqualTo(HttpStatus.BAD_REQUEST.value())
+        assertThrows<ProductNameAlreadyExistsException> { productService.insert(productForm) }
     }
 
     @Test
