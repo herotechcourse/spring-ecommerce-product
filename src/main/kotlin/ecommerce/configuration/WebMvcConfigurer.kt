@@ -9,13 +9,15 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 class WebMvcConfigurer(
     private val jwtAuthInterceptor: JwtAuthInterceptor,
     private val loginMemberArgumentResolver: LoginMemberArgumentResolver,
+    private val adminOnlyResolver: AdminOnlyResolver,
 ) : WebMvcConfigurer {
     override fun addInterceptors(registry: InterceptorRegistry) {
         registry.addInterceptor(jwtAuthInterceptor)
-            .addPathPatterns("/api/user/wishes/**")
+            .addPathPatterns("/api/user/wishes/**", "/api/admin/**")
     }
 
     override fun addArgumentResolvers(resolvers: MutableList<HandlerMethodArgumentResolver?>) {
         resolvers.add(loginMemberArgumentResolver)
+        resolvers.add(adminOnlyResolver)
     }
 }
