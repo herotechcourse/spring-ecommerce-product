@@ -16,7 +16,7 @@ class CartRepository(private val jdbcTemplate: JdbcTemplate) {
                 id = rs.getLong("id"),
                 userId = rs.getLong("user_id"),
                 productId = rs.getLong("product_id"),
-                quantity = rs.getInt("quantity")
+                quantity = rs.getInt("quantity"),
             )
         }
 
@@ -25,7 +25,10 @@ class CartRepository(private val jdbcTemplate: JdbcTemplate) {
         return jdbcTemplate.query(sql, rowMapper, userId)
     }
 
-    fun findByUserIdAndProductId(userId: Long, productId: Long): CartItem? {
+    fun findByUserIdAndProductId(
+        userId: Long,
+        productId: Long,
+    ): CartItem? {
         val sql = "SELECT * FROM cart_items WHERE user_id = ? AND product_id = ?"
         return jdbcTemplate.query(sql, rowMapper, userId, productId).firstOrNull()
     }
@@ -44,13 +47,20 @@ class CartRepository(private val jdbcTemplate: JdbcTemplate) {
         return id
     }
 
-    fun updateQuantity(userId: Long, productId: Long, quantity: Int): Boolean {
+    fun updateQuantity(
+        userId: Long,
+        productId: Long,
+        quantity: Int,
+    ): Boolean {
         val sql = "UPDATE cart_items SET quantity = ? WHERE user_id = ? AND product_id = ?"
         val rowsAffected = jdbcTemplate.update(sql, quantity, userId, productId)
         return rowsAffected > 0
     }
 
-    fun deleteByUserIdAndProductId(userId: Long, productId: Long): Boolean {
+    fun deleteByUserIdAndProductId(
+        userId: Long,
+        productId: Long,
+    ): Boolean {
         val sql = "DELETE FROM cart_items WHERE user_id = ? AND product_id = ?"
         val rowsAffected = jdbcTemplate.update(sql, userId, productId)
         return rowsAffected > 0

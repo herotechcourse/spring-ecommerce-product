@@ -16,18 +16,19 @@ import org.springframework.web.server.ResponseStatusException
 class LoginMemberArgumentResolver : HandlerMethodArgumentResolver {
     override fun supportsParameter(parameter: MethodParameter): Boolean {
         return parameter.hasParameterAnnotation(LoginMember::class.java) &&
-                parameter.parameterType == User::class.java
+            parameter.parameterType == User::class.java
     }
 
     override fun resolveArgument(
         parameter: MethodParameter,
         mavContainer: ModelAndViewContainer?,
         webRequest: NativeWebRequest,
-        binderFactory: WebDataBinderFactory?
+        binderFactory: WebDataBinderFactory?,
     ): Any {
         val request = webRequest.nativeRequest as HttpServletRequest
-        val user = request.getAttribute("authenticatedUser") as? User
-            ?: throw ResponseStatusException(HttpStatus.UNAUTHORIZED, "User not authenticated")
+        val user =
+            request.getAttribute("authenticatedUser") as? User
+                ?: throw ResponseStatusException(HttpStatus.UNAUTHORIZED, "User not authenticated")
 
         return user
     }

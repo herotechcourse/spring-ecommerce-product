@@ -8,5 +8,5 @@ data class CartItemHistory(
     val productId: Long,
     val quantity: Int,
     val action: String = "ADD",
-    val createdAt: LocalDateTime? = null
+    val createdAt: LocalDateTime? = null,
 )

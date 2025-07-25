@@ -12,16 +12,16 @@ import org.springframework.web.servlet.HandlerInterceptor
 @Component
 class AdminRoleInterceptor(
     private val jwtService: JwtService,
-    private val userService: UserService
+    private val userService: UserService,
 ) : HandlerInterceptor {
-
     override fun preHandle(
         request: HttpServletRequest,
         response: HttpServletResponse,
-        handler: Any
+        handler: Any,
     ): Boolean {
-        val authHeader = request.getHeader("Authorization")
-            ?: throw ResponseStatusException(HttpStatus.UNAUTHORIZED, "Missing Authorization header")
+        val authHeader =
+            request.getHeader("Authorization")
+                ?: throw ResponseStatusException(HttpStatus.UNAUTHORIZED, "Missing Authorization header")
 
         if (!authHeader.startsWith("Bearer ")) {
             throw ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid Authorization header format")
@@ -30,8 +30,9 @@ class AdminRoleInterceptor(
         val token = authHeader.removePrefix("Bearer ").trim()
         val email = jwtService.validateAndExtractEmail(token)
 
-        val user = userService.getByEmail(email)
-            ?: throw ResponseStatusException(HttpStatus.UNAUTHORIZED, "User not found")
+        val user =
+            userService.getByEmail(email)
+                ?: throw ResponseStatusException(HttpStatus.UNAUTHORIZED, "User not found")
 
         if (user.role != "ADMIN") {
             throw ResponseStatusException(HttpStatus.UNAUTHORIZED, "Access denied: ADMIN role required")

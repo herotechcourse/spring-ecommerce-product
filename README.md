@@ -126,5 +126,11 @@ This means the count reflects the number of times products were added, not the q
 - generate key via `openssl rand -base64 32`
 
 ## future work
-- add functionality that users can choose their own name (currently their prefix before @ in their mail is returned as name in the recent active users API)
-- replace `jdbcTemplate` with `jdbcClient`
+
+Prioritized list (highest first):
+- Let users choose their own name. Right now, the API for recently active users uses the part before @ in their email.
+- Use more test types as covered in the lecture if not already implemented.
+- Move error messages to a shared constant, such as a companion object.
+- Write detailed API documentation for each endpoint, including sample requests and responses.
+- Rename test files to match the names of the source files they test.
+- Replace JdbcTemplate with JdbcClient, which is the newer alternative.

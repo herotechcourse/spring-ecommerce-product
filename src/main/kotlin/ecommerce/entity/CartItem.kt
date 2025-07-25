@@ -4,7 +4,7 @@ class CartItem(
     var id: Long? = null,
     var userId: Long,
     var productId: Long,
-    var quantity: Int
+    var quantity: Int,
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

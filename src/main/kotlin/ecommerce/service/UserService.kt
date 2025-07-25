@@ -11,9 +11,9 @@ class UserService(
     fun register(
         email: String,
         password: String,
-        role: String
+        role: String,
     ): Long {
-        if (userRepository.existsByEmail(email)) throw IllegalArgumentException("[Error] Email already in use.")
+        if (userRepository.existsByEmail(email)) throw IllegalArgumentException("Email already in use.")
 
         val user = User(email = email, password = password, role = role)
         return userRepository.create(user)
@@ -23,7 +23,10 @@ class UserService(
         return userRepository.getByEmail(email)
     }
 
-    fun checkPassword(user: User, rawPassword: String): Boolean {
+    fun checkPassword(
+        user: User,
+        rawPassword: String,
+    ): Boolean {
         return rawPassword == user.password
     }
 }

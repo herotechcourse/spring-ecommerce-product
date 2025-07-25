@@ -16,9 +16,8 @@ import org.springframework.test.web.servlet.post
 @AutoConfigureMockMvc
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 class AdminStatisticsControllerTest(
-    @Autowired val mockMvc: MockMvc
+    @Autowired val mockMvc: MockMvc,
 ) {
-
     val objectMapper = jacksonObjectMapper()
     lateinit var adminToken: String
     lateinit var userToken: String
@@ -32,21 +31,23 @@ class AdminStatisticsControllerTest(
         adminToken = login("admin@mail.com", "123456")
         userToken = login("user@mail.com", "654321")
 
-        productIds = listOf(
-            createProduct("Product A", 9.99, ),
-            createProduct("Product B", 19.99),
-            createProduct("Product C", 29.99)
-        )
+        productIds =
+            listOf(
+                createProduct("Product A", 9.99),
+                createProduct("Product B", 19.99),
+                createProduct("Product C", 29.99),
+            )
 
         repeat(3) { addToCart(productIds[0]) }
         repeat(2) { addToCart(productIds[1]) }
         repeat(1) { addToCart(productIds[2]) }
 
-        val result = mockMvc.get("/admin/stats/top-products") {
-            header("Authorization", "Bearer $adminToken")
-        }.andExpect {
-            status { isOk() }
-        }.andReturn()
+        val result =
+            mockMvc.get("/admin/stats/top-products") {
+                header("Authorization", "Bearer $adminToken")
+            }.andExpect {
+                status { isOk() }
+            }.andReturn()
 
         val responseJson = objectMapper.readTree(result.response.contentAsString)
         val names = responseJson.map { it["productName"].asText() }
@@ -62,15 +63,16 @@ class AdminStatisticsControllerTest(
         adminToken = login("admin@mail.com", "123456")
         userToken = login("user@mail.com", "654321")
 
-        productIds = listOf(
-            createProduct("Product A", 10.0),
-            createProduct("Product B", 20.0),
-            createProduct("Product C", 30.0), // add 3 times
-            createProduct("Product D", 40.0),
-            createProduct("Product E", 50.0),
-            createProduct("Product F", 60.0), // add 2 times
-            createProduct("Product G", 70.0)
-        )
+        productIds =
+            listOf(
+                createProduct("Product A", 10.0),
+                createProduct("Product B", 20.0),
+                createProduct("Product C", 30.0),
+                createProduct("Product D", 40.0),
+                createProduct("Product E", 50.0),
+                createProduct("Product F", 60.0),
+                createProduct("Product G", 70.0),
+            )
 
         addToCart(productIds[0])
         addToCart(productIds[1])
@@ -80,11 +82,12 @@ class AdminStatisticsControllerTest(
         repeat(2) { addToCart(productIds[5]) }
         addToCart(productIds[6])
 
-        val result = mockMvc.get("/admin/stats/top-products") {
-            header("Authorization", "Bearer $adminToken")
-        }.andExpect {
-            status { isOk() }
-        }.andReturn()
+        val result =
+            mockMvc.get("/admin/stats/top-products") {
+                header("Authorization", "Bearer $adminToken")
+            }.andExpect {
+                status { isOk() }
+            }.andReturn()
 
         val responseJson = objectMapper.readTree(result.response.contentAsString)
         val names = responseJson.map { it["productName"].asText() }
@@ -111,11 +114,12 @@ class AdminStatisticsControllerTest(
         addToCart(user1Token, productId) // user 1 second add
         addToCart(user2Token, productId)
 
-        val result = mockMvc.get("/admin/stats/recent-members") {
-            header("Authorization", "Bearer $adminToken")
-        }.andExpect {
-            status { isOk() }
-        }.andReturn()
+        val result =
+            mockMvc.get("/admin/stats/recent-members") {
+                header("Authorization", "Bearer $adminToken")
+            }.andExpect {
+                status { isOk() }
+            }.andReturn()
 
         val json = objectMapper.readTree(result.response.contentAsString)
         val emails = json.map { it["email"].asText() }
@@ -129,48 +133,62 @@ class AdminStatisticsControllerTest(
         assertThat(emails).doesNotContain("user3@mail.com") // ensure inactive user is excluded
     }
 
-
     // helper functions
 
-    private fun register(email: String, password: String, role: String) {
+    private fun register(
+        email: String,
+        password: String,
+        role: String,
+    ) {
         mockMvc.post("/api/members/register") {
             contentType = MediaType.APPLICATION_JSON
-            content = """
+            content =
+                """
                 {
                     "email": "$email",
                     "password": "$password",
                     "role": "$role"
                 }
-            """.trimIndent()
+                """.trimIndent()
         }.andExpect { status { isOk() } }
     }
 
-    private fun login(email: String, password: String): String {
-        val result = mockMvc.post("/api/members/login") {
-            contentType = MediaType.APPLICATION_JSON
-            content = """
-                {
-                    "email": "$email",
-                    "password": "$password"
-                }
-            """.trimIndent()
-        }.andExpect { status { isOk() } }.andReturn()
+    private fun login(
+        email: String,
+        password: String,
+    ): String {
+        val result =
+            mockMvc.post("/api/members/login") {
+                contentType = MediaType.APPLICATION_JSON
+                content =
+                    """
+                    {
+                        "email": "$email",
+                        "password": "$password"
+                    }
+                    """.trimIndent()
+            }.andExpect { status { isOk() } }.andReturn()
 
         return objectMapper.readTree(result.response.contentAsString)["token"].asText()
     }
 
-    private fun createProduct(name: String, price: Double): Long {
-        val result = mockMvc.post("/api/products") {
-            header("Authorization", "Bearer $adminToken")
-            contentType = MediaType.APPLICATION_JSON
-            content = """
-                {
-                    "name": "$name",
-                    "price": $price,
-                    "imageUrl": "https://tastesbetterfromscratch.com/wp-content/uploads/2020/08/Pistachio-Ice-Cream-5-300x300.jpg"
-                }
-            """.trimIndent()
-        }.andExpect { status { isCreated() } }.andReturn()
+    private fun createProduct(
+        name: String,
+        price: Double,
+    ): Long {
+        val result =
+            mockMvc.post("/api/products") {
+                header("Authorization", "Bearer $adminToken")
+                contentType = MediaType.APPLICATION_JSON
+                content =
+                    """
+                    {
+                        "name": "$name",
+                        "price": $price,
+                        "imageUrl": "https://tastesbetterfromscratch.com/wp-content/uploads/2020/08/Pistachio-Ice-Cream-5-300x300.jpg"
+                    }
+                    """.trimIndent()
+            }.andExpect { status { isCreated() } }.andReturn()
 
         return result.response.getHeader("Location")!!.substringAfterLast("/").toLong()
     }
@@ -179,25 +197,30 @@ class AdminStatisticsControllerTest(
         mockMvc.post("/api/cart") {
             header("Authorization", "Bearer $userToken")
             contentType = MediaType.APPLICATION_JSON
-            content = """
+            content =
+                """
                 {
                     "productId": $productId,
                     "quantity": 1
                 }
-            """.trimIndent()
+                """.trimIndent()
         }.andExpect { status { isCreated() } }
     }
 
-    private fun addToCart(token: String, productId: Long) {
+    private fun addToCart(
+        token: String,
+        productId: Long,
+    ) {
         mockMvc.post("/api/cart") {
             header("Authorization", "Bearer $token")
             contentType = MediaType.APPLICATION_JSON
-            content = """
-            {
-                "productId": $productId,
-                "quantity": 1
-            }
-        """.trimIndent()
+            content =
+                """
+                {
+                    "productId": $productId,
+                    "quantity": 1
+                }
+                """.trimIndent()
         }.andExpect { status { isCreated() } }
     }
 }

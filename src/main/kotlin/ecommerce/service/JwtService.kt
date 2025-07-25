@@ -21,8 +21,9 @@ class JwtService(
     private val expirationMillis: Long = 1000 * 60 * 60 * 24
 
     fun generateToken(email: String): String {
-        val user = userRepository.getByEmail(email)
-            ?: throw IllegalArgumentException("User not found")
+        val user =
+            userRepository.getByEmail(email)
+                ?: throw IllegalArgumentException("User not found")
 
         val now = Date()
         val expiry = Date(now.time + expirationMillis)
@@ -37,13 +38,13 @@ class JwtService(
             .compact()
     }
 
-
     fun validateAndExtractEmail(token: String): String {
         try {
-            val claimsJws = Jwts.parser()
-                .verifyWith(secretKey)
-                .build()
-                .parseSignedClaims(token)
+            val claimsJws =
+                Jwts.parser()
+                    .verifyWith(secretKey)
+                    .build()
+                    .parseSignedClaims(token)
 
             return claimsJws.payload.subject
         } catch (e: Exception) {

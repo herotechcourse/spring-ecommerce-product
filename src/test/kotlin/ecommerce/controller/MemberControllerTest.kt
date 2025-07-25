@@ -130,11 +130,11 @@ class MemberControllerTest {
     fun `logging in with correct credentials should return 200 and JWT token`() {
         val registerRequest =
             """
-        {
-          "email": "loginuser@example.com",
-          "password": "loginpass123"
-        }
-        """.trimIndent()
+            {
+              "email": "loginuser@example.com",
+              "password": "loginpass123"
+            }
+            """.trimIndent()
 
         mockMvc.perform(
             MockMvcRequestBuilders.post("/api/members/register")
@@ -144,11 +144,11 @@ class MemberControllerTest {
 
         val loginRequest =
             """
-        {
-          "email": "loginuser@example.com",
-          "password": "loginpass123"
-        }
-        """.trimIndent()
+            {
+              "email": "loginuser@example.com",
+              "password": "loginpass123"
+            }
+            """.trimIndent()
 
         val result =
             mockMvc.perform(
@@ -168,11 +168,11 @@ class MemberControllerTest {
     fun `logging in with wrong password should return 403`() {
         val registerRequest =
             """
-        {
-          "email": "wrongpass@example.com",
-          "password": "correctpass"
-        }
-        """.trimIndent()
+            {
+              "email": "wrongpass@example.com",
+              "password": "correctpass"
+            }
+            """.trimIndent()
 
         mockMvc.perform(
             MockMvcRequestBuilders.post("/api/members/register")
@@ -182,11 +182,11 @@ class MemberControllerTest {
 
         val loginRequest =
             """
-        {
-          "email": "wrongpass@example.com",
-          "password": "wrongpass"
-        }
-        """.trimIndent()
+            {
+              "email": "wrongpass@example.com",
+              "password": "wrongpass"
+            }
+            """.trimIndent()
 
         mockMvc.perform(
             MockMvcRequestBuilders.post("/api/members/login")
@@ -199,11 +199,11 @@ class MemberControllerTest {
     fun `logging in with non-existent email should return 403`() {
         val loginRequest =
             """
-        {
-          "email": "doesnotexist@example.com",
-          "password": "testPassword"
-        }
-        """.trimIndent()
+            {
+              "email": "doesnotexist@example.com",
+              "password": "testPassword"
+            }
+            """.trimIndent()
 
         mockMvc.perform(
             MockMvcRequestBuilders.post("/api/members/login")
@@ -216,11 +216,11 @@ class MemberControllerTest {
     fun `logging in with blank email should return 400`() {
         val loginRequest =
             """
-        {
-          "email": "",
-          "password": "validpass"
-        }
-        """.trimIndent()
+            {
+              "email": "",
+              "password": "validpass"
+            }
+            """.trimIndent()
 
         mockMvc.perform(
             MockMvcRequestBuilders.post("/api/members/login")

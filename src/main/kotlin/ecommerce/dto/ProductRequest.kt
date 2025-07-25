@@ -8,18 +8,18 @@ import jakarta.validation.constraints.Size
 
 data class ProductRequest(
     @field:NotBlank
-    @field:Size(min = 1, max = 15, message = "[Error] Name must not exceed 15 characters.")
+    @field:Size(min = 1, max = 15, message = "Name must not exceed 15 characters.")
     @field:Pattern(
         regexp = "^[a-zA-Z0-9 ()\\[\\]+\\-&/_]*$",
-        message = "[Error] Name contains invalid special characters.",
+        message = "Name contains invalid special characters.",
     )
     val name: String,
-    @field:DecimalMin(value = "0.01", message = "[Error] Price must be greater than 0.")
+    @field:DecimalMin(value = "0.01", message = "Price must be greater than 0.")
     val price: Double,
     @field:NotBlank
     @field:Pattern(
         regexp = "^https?://.*",
-        message = "[Error] Image URL must start with http:// or https://",
+        message = "Image URL must start with http:// or https://",
     )
     val imageUrl: String,
 ) {

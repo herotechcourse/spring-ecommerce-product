@@ -21,7 +21,6 @@ import org.springframework.test.annotation.DirtiesContext
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 class CRUDTest {
-
     private lateinit var productRepository: ProductRepository
 
     @LocalServerPort
@@ -47,7 +46,7 @@ class CRUDTest {
         jdbcTemplate.execute("DROP TABLE products IF EXISTS")
         jdbcTemplate.execute(
             "CREATE TABLE IF NOT EXISTS products(" +
-                    "id BIGINT AUTO_INCREMENT, name VARCHAR(255) NOT NULL, price DOUBLE NOT NULL, image_url VARCHAR(512) NOT NULL)",
+                "id BIGINT AUTO_INCREMENT, name VARCHAR(255) NOT NULL, price DOUBLE NOT NULL, image_url VARCHAR(512) NOT NULL)",
         )
 
         val products =

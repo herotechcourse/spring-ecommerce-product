@@ -11,7 +11,7 @@ import org.springframework.web.server.ResponseStatusException
 class ProductService(private val productRepository: ProductRepository) {
     fun validateUniqueName(name: String) {
         if (productRepository.existsByName(name)) {
-            throw ResponseStatusException(HttpStatus.BAD_REQUEST, "[Error] Product name must be unique.")
+            throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Product name must be unique.")
         }
     }
 
@@ -30,11 +30,11 @@ class ProductService(private val productRepository: ProductRepository) {
     ) {
         validateUniqueName(request.name)
         val updated = productRepository.update(id, request.toEntity(id))
-        if (!updated) throw ResponseStatusException(HttpStatus.NOT_FOUND, "[Error] Product not found.")
+        if (!updated) throw ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found.")
     }
 
     fun deleteProduct(id: Long) {
         val deleted = productRepository.delete(id)
-        if (!deleted) throw RuntimeException("[Error] Product not found.")
+        if (!deleted) throw RuntimeException("Product not found.")
     }
 }

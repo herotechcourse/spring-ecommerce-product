@@ -12,7 +12,7 @@ class StatisticsService(private val cartItemHistoryRepository: CartItemHistoryRe
             TopProductStat(
                 productName = it["product_name"].toString(),
                 addCount = (it["add_count"] as Number).toInt(),
-                latestAddedAt = it["latest_added_at"].toString()
+                latestAddedAt = it["latest_added_at"].toString(),
             )
         }
     }

@@ -9,11 +9,15 @@ import org.springframework.stereotype.Service
 import org.springframework.web.server.ResponseStatusException
 
 @Service
-class CartService(private val cartRepository: CartRepository, private val cartItemHistoryRepository: CartItemHistoryRepository,) {
-
-    fun addItem(userId: Long, productId: Long, quantity: Int) {
-        val existingItem = cartRepository.findByUserId(userId)
-            .find { it.productId == productId }
+class CartService(private val cartRepository: CartRepository, private val cartItemHistoryRepository: CartItemHistoryRepository) {
+    fun addItem(
+        userId: Long,
+        productId: Long,
+        quantity: Int,
+    ) {
+        val existingItem =
+            cartRepository.findByUserId(userId)
+                .find { it.productId == productId }
 
         if (existingItem != null) {
             cartRepository.updateQuantity(userId, productId, existingItem.quantity + quantity)
@@ -25,8 +29,8 @@ class CartService(private val cartRepository: CartRepository, private val cartIt
             CartItemHistory(
                 userId = userId,
                 productId = productId,
-                quantity = quantity
-            )
+                quantity = quantity,
+            ),
         )
     }
 
@@ -34,15 +38,22 @@ class CartService(private val cartRepository: CartRepository, private val cartIt
         return cartRepository.findByUserId(userId)
     }
 
-    fun removeItem(userId: Long, productId: Long) {
+    fun removeItem(
+        userId: Long,
+        productId: Long,
+    ) {
         val deleted = cartRepository.deleteByUserIdAndProductId(userId, productId)
         if (!deleted) {
             throw ResponseStatusException(HttpStatus.NOT_FOUND, "Cart item not found")
         }
     }
 
-    fun updateQuantity(userId: Long, productId: Long, quantity: Int) {
-        val existing = cartRepository.findByUserIdAndProductId(userId, productId)
+    fun updateQuantity(
+        userId: Long,
+        productId: Long,
+        quantity: Int,
+    ) {
+        cartRepository.findByUserIdAndProductId(userId, productId)
             ?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "Cart item not found")
 
         if (quantity == 0) {

@@ -40,7 +40,7 @@ class ProductRequestTest {
         val violations = validator.validate(product)
 
         Assertions.assertThat(violations).hasSize(1)
-        Assertions.assertThat(violations.first().message).isEqualTo("[Error] Name must not exceed 15 characters.")
+        Assertions.assertThat(violations.first().message).isEqualTo("Name must not exceed 15 characters.")
     }
 
     @Test
@@ -55,7 +55,7 @@ class ProductRequestTest {
         val violations = validator.validate(product)
 
         Assertions.assertThat(violations).hasSize(1)
-        Assertions.assertThat(violations.first().message).isEqualTo("[Error] Name contains invalid special characters.")
+        Assertions.assertThat(violations.first().message).isEqualTo("Name contains invalid special characters.")
     }
 
     @Test
@@ -70,7 +70,7 @@ class ProductRequestTest {
         val violations = validator.validate(product)
 
         Assertions.assertThat(violations).hasSize(1)
-        Assertions.assertThat(violations.first().message).isEqualTo("[Error] Price must be greater than 0.")
+        Assertions.assertThat(violations.first().message).isEqualTo("Price must be greater than 0.")
     }
 
     @Test
@@ -85,7 +85,7 @@ class ProductRequestTest {
         val violations = validator.validate(product)
 
         Assertions.assertThat(violations).hasSize(1)
-        Assertions.assertThat(violations.first().message).isEqualTo("[Error] Image URL must start with http:// or https://")
+        Assertions.assertThat(violations.first().message).isEqualTo("Image URL must start with http:// or https://")
     }
 
     @Test
@@ -104,10 +104,10 @@ class ProductRequestTest {
         val messages = violations.map { it.message }
 
         Assertions.assertThat(messages).containsExactlyInAnyOrder(
-            "[Error] Name must not exceed 15 characters.",
-            "[Error] Name contains invalid special characters.",
-            "[Error] Price must be greater than 0.",
-            "[Error] Image URL must start with http:// or https://",
+            "Name must not exceed 15 characters.",
+            "Name contains invalid special characters.",
+            "Price must be greater than 0.",
+            "Image URL must start with http:// or https://",
         )
     }
 }
