@@ -1,6 +1,7 @@
 package ecommerce.controller.api
 
 import ecommerce.dao.JdbcProductDAO
+import ecommerce.dto.ProductForm
 import ecommerce.exception.NotFoundException
 import ecommerce.model.Product
 import ecommerce.service.ProductService
@@ -232,14 +233,95 @@ class ProductControllerTest {
 
     @Test
     fun update() {
-        val newProduct = Product(name = "new product", price = 1.6, imageUrl = "https://www.product.com/image/2")
+        val targetId = 1L
+        val newProductForm = ProductForm(name = "new product", price = 1.6, imageUrl = "https://www.product.com/image/2")
         create()
-        val response = controller.updateProduct(1, newProduct)
+        val response = controller.updateProduct(targetId, newProductForm)
         assertThat(response.statusCode.value()).isEqualTo(HttpStatus.OK.value())
         val actual = response.body
-        assertThat(actual?.name).isEqualTo(newProduct.name)
-        assertThat(actual?.price).isEqualTo(newProduct.price)
-        assertThat(actual?.imageUrl).isEqualTo(newProduct.imageUrl)
+        assertThat(actual?.id).isEqualTo(targetId)
+        assertThat(actual?.name).isEqualTo(newProductForm.name)
+        assertThat(actual?.price).isEqualTo(newProductForm.price)
+        assertThat(actual?.imageUrl).isEqualTo(newProductForm.imageUrl)
+    }
+
+    @Test
+    fun `update() - should return 400 when name is blank`() {
+        val targetId = 1L
+        val name = ""
+        val response =
+            RestAssured
+                .given().log().all()
+                .body(Product(id = targetId, name = name, price = 1.5, imageUrl = "https://www.product.com/image/1"))
+                .contentType(ContentType.JSON)
+                .`when`().put("/api/products/$targetId")
+                .then().log().all().extract()
+
+        val targets =
+            listOf(
+                "Contains unallowed character",
+                "Product name is required",
+                "Must be no more than 15 characters, including spaces",
+            )
+        val resBody = response.jsonPath().getMap<String, String>("errors")
+        val actual = resBody["name"]
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value())
+        assertThat(actual).isIn(targets)
+    }
+
+    @Test
+    fun `update() - should return 400 when price is 0`() {
+        val targetId = 1L
+        val response =
+            RestAssured
+                .given().log().all()
+                .body(Product(id = targetId, name = "base", price = 0.0, imageUrl = "https://www.product.com/image/1"))
+                .contentType(ContentType.JSON)
+                .`when`().put("/api/products/$targetId")
+                .then().log().all().extract()
+
+        val expected = "Product price must be greater than zero"
+        val resBody = response.jsonPath().getMap<String, String>("errors")
+        val actual = resBody["price"]
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value())
+        assertThat(actual).isEqualTo(expected)
+    }
+
+    @Test
+    fun `update() - should return 400 when image URL is not valid`() {
+        val targetId = 1L
+        val response =
+            RestAssured
+                .given().log().all()
+                .body(Product(name = "base", price = 2.0, imageUrl = "ssh://www.product.com/image/1"))
+                .contentType(ContentType.JSON)
+                .`when`().put("/api/products/$targetId")
+                .then().log().all().extract()
+
+        val expected = "Must start with 'https://'."
+        val resBody = response.jsonPath().getMap<String, String>("errors")
+        val actual = resBody["imageUrl"]
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value())
+        assertThat(actual).isEqualTo(expected)
+    }
+
+    @Test
+    fun `update() - should return 400 when name of product already exists`() {
+        val targetId = 1L
+        val name = "Iron Man"
+        val response =
+            RestAssured
+                .given().log().all()
+                .body(Product(id = targetId, name = name, price = 2.0, imageUrl = "https://www.product.com/image/1"))
+                .contentType(ContentType.JSON)
+                .`when`().put("/api/products/$targetId")
+                .then().log().all().extract()
+
+        val expected = "Product with name '$name' already exists."
+        val resBody = response.jsonPath().getMap<String, String>("errors")
+        val actual = resBody["name"]
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value())
+        assertThat(actual).isEqualTo(expected)
     }
 
     @Test

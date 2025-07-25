@@ -13,13 +13,7 @@ class ProductService(private val jdbcProductDao: JdbcProductDAO) {
     fun insert(form: ProductForm): ResponseEntity<Product> {
         checkProductNameExists(form.name)
         val product = ProductForm.toProduct(form)
-        var id: Long
-        try {
-            id = jdbcProductDao.insert(product)
-        } catch (exception: Exception) {
-            println("createProduct(): " + exception.message)
-            return ResponseEntity.internalServerError().build()
-        }
+        val id = jdbcProductDao.insert(product)
         val insertedProduct = jdbcProductDao.findById(id)
         val uri = URI.create("/api/products/$id")
         return ResponseEntity.created(uri).body(insertedProduct)
@@ -39,7 +33,14 @@ class ProductService(private val jdbcProductDao: JdbcProductDAO) {
 
     fun findById(id: Long): Product? = jdbcProductDao.findById(id)
 
-    fun update(product: Product): Int = jdbcProductDao.update(product)
+    fun update(
+        form: ProductForm,
+        id: Long,
+    ): Int {
+        checkProductNameExists(form.name)
+        val product = ProductForm.toEntity(form, id)
+        return jdbcProductDao.update(product)
+    }
 
     fun delete(id: Long): Int = jdbcProductDao.delete(id)
 }

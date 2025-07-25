@@ -46,10 +46,9 @@ class ProductController(private val productService: ProductService) {
     @PutMapping("/products/{id}")
     fun updateProduct(
         @PathVariable id: Long,
-        @RequestBody newProduct: Product,
+        @RequestBody @Valid productForm: ProductForm,
     ): ResponseEntity<Product> {
-        val product = Product.toEntity(newProduct, id)
-        val result = productService.update(product)
+        val result = productService.update(productForm, id)
         when (result) {
             1 -> {
                 val target =

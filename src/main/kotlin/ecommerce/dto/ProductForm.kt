@@ -21,5 +21,13 @@ data class ProductForm(
         fun toProduct(productForm: ProductForm): Product {
             return Product(name = productForm.name, price = productForm.price, imageUrl = productForm.imageUrl)
         }
+
+        fun toEntity(
+            productForm: ProductForm,
+            id: Long,
+        ): Product {
+            val product = ProductForm.toProduct(productForm)
+            return Product.toEntity(product, id)
+        }
     }
 }
