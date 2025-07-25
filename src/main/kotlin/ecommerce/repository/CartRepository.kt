@@ -1,5 +1,6 @@
 package ecommerce.repository
 
+import ecommerce.dto.ProductStatResponse
 import ecommerce.model.CartItem
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.jdbc.core.RowMapper
@@ -43,4 +44,25 @@ class CartRepository(
             productId
         )
     }
+
+    fun getTop5MostAddedProducts(): List<ProductStatResponse> {
+        val sql = """
+        SELECT p.name, COUNT(*) AS count, MAX(c.created_at) AS last_added_at
+        FROM cart c
+        JOIN products p ON c.product_id = p.id
+        WHERE c.created_at >= DATEADD('DAY', -30, CURRENT_DATE)
+        GROUP BY p.id, p.name
+        ORDER BY count DESC, last_added_at DESC
+        LIMIT 5
+    """.trimIndent()
+
+        return jdbcTemplate.query(sql) { rs, _ ->
+            ProductStatResponse(
+                name = rs.getString("name"),
+                count = rs.getInt("count"),
+                lastAddedAt = rs.getTimestamp("last_added_at").toLocalDateTime().toString()
+            )
+        }
+    }
+
 }

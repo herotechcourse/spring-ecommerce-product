@@ -1,5 +1,6 @@
 package ecommerce.service
 
+import ecommerce.dto.ProductStatResponse
 import ecommerce.model.CartItem
 import ecommerce.repository.CartRepository
 import org.springframework.stereotype.Service
@@ -20,4 +21,9 @@ class CartService(
     fun removeFromCart(memberId: Long, productId: Long) {
         cartRepository.removeFromCart(memberId, productId)
     }
+
+    fun getTop5MostAddedProducts(): List<ProductStatResponse> {
+        return cartRepository.getTop5MostAddedProducts()
+    }
+
 }
