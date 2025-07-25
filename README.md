@@ -28,11 +28,11 @@
 - [x] Modify the controller to use the new product repository
 
 ### Step 2.1: Product Validation System
-- [x] **Comprehensive data validation for product operations**
+- [x] **Comprehensive product validation**
   - [x] **Product name validation**
     - [x] Maximum 15 characters including spaces
     - [x] Allow only these special characters: `( )`, `[ ]`, `+`, `-`, `&`, `/`, `_`
-    - [ ] Ensure unique names across all products (needs custom `@UniqueProductName` validator)
+    - [x] Ensure unique names across all products (needs custom `@UniqueProductName` validator)
   - [x] **Product price validation**
     - [x] Must be greater than 0 (using `@DecimalMin`)
   - [x] **Product image URL validation**
@@ -40,11 +40,11 @@
 - [x] **Proper error handling with Jakarta Bean Validation**
   - [x] Return appropriate HTTP status codes for validation failures (400 Bad Request)
   - [x] Provide clear, specific error messages for each validation case
-  - [ ] Handle duplicate name conflicts with meaningful responses
+  - [x] Handle duplicate name conflicts with meaningful responses
 - [x] **Implementation details**
   - [x] Created `ProductRequest.kt` with validation annotations
   - [x] Used `@Valid` in controller methods
-  - [x] GlobalControllerAdvice handles `MethodArgumentNotValidException`
+  - [] (optional) custom function to handle `MethodArgumentNotValidException` in GlobalControllerAdvice 
 
 ### Step 2.2: clients can register and login as a user
 - [ ] **User registration feature**

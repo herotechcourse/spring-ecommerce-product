@@ -1,4 +1,4 @@
-package ecommerce.model
+package ecommerce.dto.product
 
 data class ProductPatchRequest(
     val name: String? = null,
