@@ -2,8 +2,8 @@ package ecommerce.dto
 
 import ecommerce.model.Product
 
-class CartItemDto(
+class RawCartItemDto(
     val cartId: Long,
     val quantity: Long,
-    val product: Product,
+    val productId: Long,
 )
