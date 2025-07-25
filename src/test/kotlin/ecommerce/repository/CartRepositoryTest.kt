@@ -19,9 +19,19 @@ class CartRepositoryTest {
     @BeforeEach
     fun setUp() {
         cartRepository = CartRepository(jdbcTemplate)
+        jdbcTemplate.execute("DELETE FROM cart_history") // prima le tabelle figlie
         jdbcTemplate.execute("DELETE FROM cart_items")
-        jdbcTemplate.execute("DELETE FROM carts")
+        jdbcTemplate.execute("DELETE FROM carts") // poi le tabelle genitrici
         jdbcTemplate.execute("DELETE FROM products")
+        jdbcTemplate.execute("DELETE FROM members")
+
+        jdbcTemplate.update(
+            "INSERT INTO members (id, email, password, role) VALUES (?, ?, ?, ?)",
+            1L,
+            "test@example.com",
+            "hashedpassword",
+            "USER",
+        )
     }
 
     @Test
