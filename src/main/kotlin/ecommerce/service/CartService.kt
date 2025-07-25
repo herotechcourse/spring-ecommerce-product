@@ -3,6 +3,7 @@ package ecommerce.service
 import ecommerce.dto.CartItemResponse
 import ecommerce.dto.CartUpdateResult
 import ecommerce.exception.ElementNotFoundException
+import ecommerce.repository.AdminStatsRepository
 import ecommerce.repository.CartItemRepository
 import ecommerce.repository.CartRepository
 import org.springframework.stereotype.Service
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service
 class CartService(
     private val cartRepository: CartRepository,
     private val cartItemRepository: CartItemRepository,
+    private val adminStatsRepository: AdminStatsRepository,
 ) {
     fun addProductToCart(
         userId: Long,
@@ -24,6 +26,7 @@ class CartService(
         when (existingItem) {
             null -> {
                 cartItemRepository.addProductToCart(productId, newCart.id, quantity)
+                adminStatsRepository.addProductToStats(productId, newCart.id)
                 return CartUpdateResult.PRODUCT_ADDED
             }
             else -> {
