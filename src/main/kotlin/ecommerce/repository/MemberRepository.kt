@@ -1,9 +1,11 @@
 package ecommerce.repository
 
-import ecommerce.entity.Member
 import ecommerce.dto.MemberRequest
-import ecommerce.sql.MemberConstsSQL
+import ecommerce.entity.Member
 import ecommerce.helper.JdbcHelper
+import ecommerce.sql.MemberConstsSQL
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.jdbc.core.RowMapper
 import org.springframework.stereotype.Repository
@@ -13,6 +15,7 @@ import java.sql.ResultSet
 
 @Repository
 class MemberRepository(private val jdbcTemplate: JdbcTemplate) {
+    private val logger: Logger = LoggerFactory.getLogger(MemberRepository::class.java)
     private val rowMapper =
         RowMapper<Member> { rs: ResultSet, _ ->
             Member(
@@ -24,18 +27,13 @@ class MemberRepository(private val jdbcTemplate: JdbcTemplate) {
 
     fun existsByEmail(email: String): Boolean {
         val sql = MemberConstsSQL.COUNT_BY_EMAIL
-        val found = jdbcTemplate.queryForObject(sql, Int::class.java, email)
-        return found != null && found > 0
+        val existing = jdbcTemplate.queryForObject(sql, Int::class.java, email)
+        return existing != null && existing > 0
     }
 
-    fun insertWithKeyholder(request: MemberRequest): Long {
-        require(!existsByEmail(request.email)) // TODO message? {}
+    fun insert(request: MemberRequest): Long? {
         val sql = MemberConstsSQL.INSERT.trimIndent()
-        val id = JdbcHelper.insertAndReturnKey(jdbcTemplate, sql, ::prepareInsertStatement, request)
-        return requireNotNull(id) {
-            "Failed to retrieve generated ID after inserting product '${request.email}'. " +
-                "Database key generation failed."
-        }
+        return JdbcHelper.insertAndReturnKey(jdbcTemplate, sql, ::prepareInsertStatement, request)
     }
 
     private fun prepareInsertStatement(
@@ -57,14 +55,11 @@ class MemberRepository(private val jdbcTemplate: JdbcTemplate) {
             0 -> null
             1 -> result.first()
             else -> {
-                throw IllegalStateException(
-                    "Data integrity violation: found ${result.size} members with same id $id. " +
-                        "This should never happen with a proper primary key constraint.",
-                )
+                logger.warn("Multiple members found with the same id $id (count=${result.size})")
+                null
             }
         }
     }
-
 //    fun save(member: Member): Member
 //
 //    fun findByEmail(email: String): Member?
