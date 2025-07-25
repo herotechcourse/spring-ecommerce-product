@@ -8,23 +8,6 @@ Implement a simple HTTP API that allows users to retrieve, add, update, and dele
 
 Implement the API to send and receive HTTP messages as shown in the example below.
 
-### Request
-```aiignore
-GET /api/products HTTP/1.1
-Response
-HTTP/1.1 200
-Content-Type: application/json
-
-[
-    {
-        "id": 8146027,
-        "name": "Iced Americano T",
-        "price": 4.50,
-        "imageUrl": "https://st.kakaocdn.net/product/gift/product/20231010111814_9a667f9eccc943648797925498bdd8a3.jpg"
-    }
-]
-```
-
 ## Features Step1-1
 
 - [x] Implement Product entity class
@@ -145,7 +128,7 @@ Authorization: Bearer <token>
 
 ## Step 2.3 - Cart Functionality (Add, View, Remove)
 
-### 🧩 Features to Implement
+### Features to Implement step 2.3
 
 - [x] Add `CartItem` domain model to represent cart entries (memberId, productId, createdAt)
 - [x] Add `cart_items` table in schema.sql with proper foreign keys
@@ -160,3 +143,16 @@ Authorization: Bearer <token>
   - `POST /api/cart` – Add product to cart
   - `GET /api/cart` – View cart items
   - `DELETE /api/cart` – Remove product from cart
+
+
+## Step 2.4 - Cart Statistics & Admin Role
+
+### Features to Implement step 2.4
+
+- [ ] add endpoint to get top 5 most added products in last 30 days
+- [ ] add endpoint to get members who added to cart in last 7 days
+- [ ] restrict `/admin/**` endpoints to users with ADMIN role
+- [ ] return detailed product stats (name, count, last added time)
+- [ ] return member info (id, name, email) for recent cart activity
+
+
