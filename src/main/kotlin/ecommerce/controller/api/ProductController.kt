@@ -1,4 +1,4 @@
-package ecommerce.api
+package ecommerce.controller.api
 
 import ecommerce.dto.ProductForm
 import ecommerce.model.Product

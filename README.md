@@ -19,14 +19,14 @@ ProductForm
 
 - [x] is a data class, as a DTO to validate form from request
 - [x] has property `name: String`
-  - [x] validate 'NotBlank'
-  - [x] validate 'Pattern' for regex
-  - [x] validate 'Size'
+    - [x] validate 'NotBlank'
+    - [x] validate 'Pattern' for regex
+    - [x] validate 'Size'
 - [x] has property `price: Double`
-  - [x] validate 'Positive'
+    - [x] validate 'Positive'
 - [x] has property `imageUrl: String`
-  - [x] validate 'NotBlank'
-  - [x] validate 'Pattern' for regex
+    - [x] validate 'NotBlank'
+    - [x] validate 'Pattern' for regex
 
 ### DAO (Data Access Object)
 
@@ -44,6 +44,13 @@ JdbcProductDAO : ProductDAO
 
 ### Service
 
+AuthService
+
+- [ ] `checkInvalidLogin()`
+- [ ] `findmember()`
+- [ ] `findMemberByToken()`
+- [ ] `createToken()`
+
 ProductService
 
 - [x] is a service layer between `ProductController` and `JdbcProductDAO`
@@ -51,6 +58,32 @@ ProductService
   exists by name or not from DAO, then insert the product if it is valid
 
 ### Controller
+
+MemberController
+
+- HTTP Methods
+- [ ] `registerMember(@RequestBody)`
+    ```
+    POST /api/members/register HTTP/1.1
+    Content-Type: application/json
+    host: localhost:8080
+        
+    {
+        "email": "admin@email.com",
+        "password": "password"
+    }
+    ```
+- [ ] `loginMember(@RequestBody)`
+    ```
+    POST /api/members/login HTTP/1.1
+    Content-Type: application/json
+    host: localhost:8080
+    
+    {
+        "email": "admin@email.com",
+        "password": "password"
+    }
+    ```
 
 ProductController
 
@@ -107,6 +140,17 @@ updateProductForm.html
     - [x] configure the database setting with `application.properties`
 
 ## Functional Requirements
+
+### Step 2.2
+
+Implement user account features including registration, login, and authentication so that users can access member-only
+functionality in the future.
+
+- A member registers with an **email** and **password**.
+- To receive an access token, the client must send email and password.
+    - If the credentials match a registered user, issue a token.
+
+Implement the API to send and receive HTTP messages as shown below.
 
 ### Step 2.1
 

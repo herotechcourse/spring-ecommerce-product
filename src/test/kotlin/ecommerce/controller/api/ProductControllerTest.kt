@@ -1,5 +1,6 @@
-package ecommerce.api
+package ecommerce.controller.api
 
+import ecommerce.controller.api.ProductController
 import ecommerce.dao.JdbcProductDAO
 import ecommerce.model.Product
 import ecommerce.service.ProductService
