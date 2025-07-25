@@ -102,8 +102,8 @@
 - [x] delete - DELETE
     - [x] `deleteProduct(@PathVariable id: Long)`
         - [x] Request -> DELETE /api/products/{id} HTTP/1.1
-- [ ] handleValidationException
-- [ ] handleProductNameAlreadyExistsException
+- [x] handleValidationException
+- [x] handleProductNameAlreadyExistsException
 
 #### ProductViewController
 
@@ -141,10 +141,14 @@
 - [x] `@ControllerAdvice`
 - [x] has `handleNotFoundException()`
 - [x] has `handleInternalServerErrorException()`
+- [x] has `handleDataAccessException()`
+- [x] has `handlerIllegalStateException()`
 
-- [ ] NotFoundException
+- NotFoundException
 
-- [ ] InternalServerErrorException
+- InternalServerErrorException
+
+- ProductNameAlreadyExistsException
 
 ### etc.
 
