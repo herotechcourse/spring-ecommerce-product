@@ -9,41 +9,60 @@ HTTP API that allows users to retrieve, add, update, and delete products.
   Framework.
 
 ---
+
 ## Review
+
 ### Code Structure & Refactoring
 
--[ ] Consider switching from `application.properties` to `application.yaml`
--[ ] In `ProductStore.update()`, `ProductStore.delete()` throw an **exception** 
-→ try-catch in ProductStore/ProductController
+-[x] Consider switching from `application.properties` to `application.yaml`
+-[x] In `ProductStore.update()`, `ProductStore.delete()` throw an **exception**.
 -[x] Remove the `Product.toResponse()` extension function and move it inside a relevant class
-  Prevent the model from depending on higher layers like Controller or Response.
--[x] Likewise, move `ProductRequest.toEntity()` from an extension function to an internal method 
+ Prevent the model from depending on higher layers like Controller or Response.
+-[x] Likewise, move `ProductRequest.toEntity()` from an extension function to an internal method
 -[x] Avoid unnecessary use of extensions → Delete all extensions
 
 ### Class Design Review
 
 -[x] Explain or reconsider the use of `data class` for `Product`, `ProductRequest`, and `ProductResponse`
-  Check if `equals`, `hashCode`, and `toString` are truly needed.
+ Check if `equals`, `hashCode`, and `toString` are truly needed.
 
 ### Cleanup & Simplification
 
--[ ] Remove manual ID generation logic from `ProductStore.createAndReturnId()`
-  → this is not ID creator, ask to review again.
+- Remove manual ID generation logic from `ProductStore.createAndReturnId()`
+  → _this is not ID creator, ask to reviewer again_.
 -[ ] In `TextFixture.kt`, move `FLAT_WHITE` and `AMERICANO` under the `Dummy` object or remove `Dummy` altogether
 -[x] Reconsider the placement and responsibility of `AssertTemplate` → Delete
-  Decide whether assertion logic should be part of the fixture or separated.
+ Decide whether assertion logic should be part of the fixture or separated.
 
 ---
+
 ## Step 2
-### ProductRequest Name
-- [x] Must be **no more than 15 characters**, including spaces.
-- [x] Allowed special characters: `()`, `[]`, `+`, `-`, `&`, `/`, `_`
-- [x] All other special characters are **not allowed**.
-- [x] Must be **unique** across all products.
 
-### ProductRequest Price
-- [x] Must be **greater than 0.00**.
+### Validate
+#### Product
+-[x] Validate `ProductRequest.name`
+  -[x] Must be **no more than 15 characters**, including spaces.
+  -[x] Allowed special characters: `()`, `[]`, `+`, `-`, `&`, `/`, `_`
+  -[x] All other special characters are **not allowed**.
+  -[x] Must be **unique** across all products.
+-[x] Validate `ProductRequest.price`
+  -[x] Must be **greater than 0.00**.
+-[x] Validate `ProductRequest.imageUrl`
+  -[x] Must start with **http://** or **https://**
+#### Member
+-[ ] Validate `ProductRequest.email`
+  -[x] Must be Email format
+  -[x] Must be **unique** across all members.
+  -[x] Not black
+-[ ] Validate `ProductRequest.password`
+  -[x] Basic size check
+  -[ ] more?
 
-### ProductRequest Image URL
-- [x] Must start with **http://** or **https://**
+### Refactor
+-[x] The application is now structured into Controller, Service, and Repository layers in Member.
+  - Business logic is handled in the Service layer, which throws specific custom exceptions depending on the condition.
+  Repository methods are allowed to return null, and the responsibility for interpreting the result lies in the Service.
+  - related with...  "In `ProductStore.update()`, `ProductStore.delete()` throw an exception".
+-[x] The application is now structured into Controller, Service, and Repository layers in Product.
 
+-[ ] Implement new tests for Member status code -> and move on
