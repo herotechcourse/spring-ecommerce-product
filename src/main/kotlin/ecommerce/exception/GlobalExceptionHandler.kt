@@ -116,4 +116,14 @@ class GlobalExceptionHandler {
             )
         return ResponseEntity(errorMessage, HttpStatus.BAD_REQUEST)
     }
+
+    @ExceptionHandler(ForbiddenException::class)
+    fun handleForbiddenException(ex: ForbiddenException): ResponseEntity<ErrorMessageModel> {
+        val errorMessage =
+            ErrorMessageModel(
+                HttpStatus.FORBIDDEN.value(),
+                ex.message,
+            )
+        return ResponseEntity(errorMessage, HttpStatus.FORBIDDEN)
+    }
 }
