@@ -19,7 +19,28 @@ VALUES ('Espresso', 2.50, 'https://upload.wikimedia.org/wikipedia/commons/4/45/A
         'https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dGlyYW1pc3V8ZW58MHx8MHx8fDA%3D');
 
 INSERT INTO MEMBERS (EMAIL, PASSWORD, ROLE)
-VALUES ('admin@test.com', '$2a$10$y3rEiacoc/0F1Qh0mVweo.rYAAuyCbOGhuPI/fk3XnC20irt21.nm', 'ADMIN');
+VALUES ('admin@test.com', '$2a$10$y3rEiacoc/0F1Qh0mVweo.rYAAuyCbOGhuPI/fk3XnC20irt21.nm', 'ADMIN'),
+       ('user1@example.com', '$2a$10$y3rEiacoc/0F1Qh0mVweo.rYAAuyCbOGhuPI/fk3XnC20irt21.nm', 'USER'),
+       ('user2@example.com', '$2a$10$y3rEiacoc/0F1Qh0mVweo.rYAAuyCbOGhuPI/fk3XnC20irt21.nm', 'USER'),
+       ('user3@example.com', '$2a$10$y3rEiacoc/0F1Qh0mVweo.rYAAuyCbOGhuPI/fk3XnC20irt21.nm', 'USER');
+
 
 INSERT INTO CARTS (MEMBER_ID)
-VALUES (1);
+VALUES (1),
+       (2),
+       (3),
+       (4);
+
+INSERT INTO CART_ITEMS (CART_ID, PRODUCT_ID, QUANTITY, CREATED_AT)
+VALUES (2, 7, 3, '2025-07-14 15:00:34'),
+       (2, 8, 2, '2025-07-19 15:00:34'),
+       (3, 8, 2, '2025-06-25 15:00:34'),
+       (3, 2, 1, '2025-06-30 15:00:34');
+
+INSERT INTO CART_HISTORY (CART_ID, PRODUCT_ID, STATUS, CREATED_AT)
+VALUES (2, 7, 'ADDED', '2025-07-24 15:00:34'),
+       (2, 8, 'ADDED', '2025-07-19 15:00:34'),
+       (3, 8, 'ADDED', '2025-07-25 15:00:34'),
+       (3, 2, 'ADDED', '2025-07-23 15:00:34');
+
+
