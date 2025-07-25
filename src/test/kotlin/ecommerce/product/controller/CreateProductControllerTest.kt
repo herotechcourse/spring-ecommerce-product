@@ -1,9 +1,9 @@
 package ecommerce.product.controller
 
 import ecommerce.product.data.ProductResponse
-import ecommerce.product.helper.TestFixture
-import ecommerce.product.helper.TestFixture.ValidRequest.AMERICANO
-import ecommerce.product.helper.TestFixture.postTestProduct
+import ecommerce.product.helper.ProductTestFixture
+import ecommerce.product.helper.ProductTestFixture.ValidRequest.AMERICANO
+import ecommerce.product.helper.ProductTestFixture.postTestProduct
 import io.restassured.RestAssured
 import io.restassured.http.ContentType
 import org.assertj.core.api.Assertions.assertThat
@@ -39,7 +39,7 @@ class CreateProductControllerTest {
         val response =
             RestAssured
                 .given().log().all()
-                .body(TestFixture.InvalidDummy.SUPER_LONG_URL)
+                .body(ProductTestFixture.InvalidDummy.SUPER_LONG_URL)
                 .contentType(ContentType.JSON)
                 .`when`().post("/api/products")
                 .then().log().all().extract()
@@ -52,7 +52,7 @@ class CreateProductControllerTest {
         val response =
             RestAssured
                 .given().log().all()
-                .body(TestFixture.InvalidDummy.NO_NAME)
+                .body(ProductTestFixture.InvalidDummy.NO_NAME)
                 .contentType(ContentType.JSON)
                 .`when`().post("/api/products")
                 .then().log().all().extract()
@@ -65,7 +65,7 @@ class CreateProductControllerTest {
         val response =
             RestAssured
                 .given().log().all()
-                .body(TestFixture.InvalidDummy.NO_PRICE)
+                .body(ProductTestFixture.InvalidDummy.NO_PRICE)
                 .contentType(ContentType.JSON)
                 .`when`().post("/api/products")
                 .then().log().all().extract()
@@ -78,7 +78,7 @@ class CreateProductControllerTest {
         val response =
             RestAssured
                 .given().log().all()
-                .body(TestFixture.InvalidDummy.NO_URL)
+                .body(ProductTestFixture.InvalidDummy.NO_URL)
                 .contentType(ContentType.JSON)
                 .`when`().post("/api/products")
                 .then().log().all().extract()

@@ -1,11 +1,11 @@
 package ecommerce.product.data
 
-import ecommerce.product.helper.TestFixture.InvalidRequest.INVALID_IMAGE_URL_CHARACTERS
-import ecommerce.product.helper.TestFixture.InvalidRequest.INVALID_IMAGE_URL_EXCEED
-import ecommerce.product.helper.TestFixture.InvalidRequest.INVALID_NAME_CHARACTERS
-import ecommerce.product.helper.TestFixture.InvalidRequest.INVALID_NAME_EXCEED
-import ecommerce.product.helper.TestFixture.InvalidRequest.INVALID_PRICE_TOO_SMALL
-import ecommerce.product.helper.TestFixture.ValidRequest.AMERICANO
+import ecommerce.product.helper.ProductTestFixture.InvalidRequest.INVALID_IMAGE_URL_CHARACTERS
+import ecommerce.product.helper.ProductTestFixture.InvalidRequest.INVALID_IMAGE_URL_EXCEED
+import ecommerce.product.helper.ProductTestFixture.InvalidRequest.INVALID_NAME_CHARACTERS
+import ecommerce.product.helper.ProductTestFixture.InvalidRequest.INVALID_NAME_EXCEED
+import ecommerce.product.helper.ProductTestFixture.InvalidRequest.INVALID_PRICE_TOO_SMALL
+import ecommerce.product.helper.ProductTestFixture.ValidRequest.AMERICANO
 import ecommerce.view.ValidationMessages.Invalid.IMAGE_URL_MUST_LENGTH
 import ecommerce.view.ValidationMessages.Invalid.IMAGE_URL_MUST_PATTERN
 import ecommerce.view.ValidationMessages.Invalid.NAME_MUST_LENGTH

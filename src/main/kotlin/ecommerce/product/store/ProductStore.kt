@@ -3,7 +3,7 @@ package ecommerce.product.store
 import ecommerce.product.data.Product
 import ecommerce.product.data.ProductMapper
 import ecommerce.product.data.ProductRequest
-import ecommerce.sql.ConstantsSQL
+import ecommerce.sql.ProductConstsSQL
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.jdbc.core.RowMapper
 import org.springframework.jdbc.support.GeneratedKeyHolder
@@ -25,12 +25,12 @@ class ProductStore(private val jdbcTemplate: JdbcTemplate) {
         }
 
     fun findAll(): List<Product> {
-        val sql = ConstantsSQL.SELECT_ALL
+        val sql = ProductConstsSQL.SELECT_ALL
         return jdbcTemplate.query(sql, rowMapper)
     }
 
     fun findById(id: Long): Product? {
-        val sql = ConstantsSQL.SELECT_BY_ID
+        val sql = ProductConstsSQL.SELECT_BY_ID
         val result = jdbcTemplate.query(sql, arrayOf(id), rowMapper)
 
         return when (result.size) {
@@ -51,7 +51,7 @@ class ProductStore(private val jdbcTemplate: JdbcTemplate) {
     ): Product {
         require(existsById(id)) { "Product with id $id not found" }
 
-        val sql = ConstantsSQL.UPDATE_BY_ID.trimIndent()
+        val sql = ProductConstsSQL.UPDATE_BY_ID.trimIndent()
         val entity = ProductMapper.toEntity(request, id)!!
         jdbcTemplate.update(sql, entity.name, entity.price, entity.imageUrl, entity.id)
 
@@ -61,18 +61,18 @@ class ProductStore(private val jdbcTemplate: JdbcTemplate) {
     fun deleteById(id: Long) {
         require(existsById(id)) { "Product with id $id not found" }
 
-        val sql = ConstantsSQL.DELETE_BY_ID.trimIndent()
+        val sql = ProductConstsSQL.DELETE_BY_ID.trimIndent()
         jdbcTemplate.update(sql, id)
     }
 
     fun existsById(id: Long): Boolean {
-        val sql = ConstantsSQL.COUNT_BY_ID
+        val sql = ProductConstsSQL.COUNT_BY_ID
         val found = jdbcTemplate.queryForObject(sql, Int::class.java, id)
         return found != null && found > 0
     }
 
     fun existsByName(name: String): Boolean {
-        val sql = ConstantsSQL.COUNT_BY_NAME
+        val sql = ProductConstsSQL.COUNT_BY_NAME
         val found = jdbcTemplate.queryForObject(sql, Int::class.java, name)
         return found != null && found > 0
     }

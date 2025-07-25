@@ -11,5 +11,6 @@ object ValidationMessages {
         const val PRICE_MUST_SCALE = "Price must have up to $PRICE_DECIMAL_SCALE} decimal places"
         const val IMAGE_URL_MUST_LENGTH = "Name must be between 1 and $IMAGE_URL_MAX_LENGTH characters"
         const val IMAGE_URL_MUST_PATTERN = "Image URL must start with `http://` or `https://`"
+        const val CAN_NOT_BE_EMPTY = "Can not be empty"
     }
 }

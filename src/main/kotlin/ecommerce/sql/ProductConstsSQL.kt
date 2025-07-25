@@ -1,6 +1,6 @@
 package ecommerce.sql
 
-object ConstantsSQL {
+object ProductConstsSQL {
     const val COUNT_ALL = "SELECT count(*) FROM products"
     const val SELECT_ALL = "SELECT id, name, price, image_url FROM products"
     const val SELECT_BY_ID = "SELECT id, name, price, image_url FROM products WHERE id = ?"

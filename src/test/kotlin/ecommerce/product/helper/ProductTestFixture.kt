@@ -9,7 +9,7 @@ import io.restassured.response.ExtractableResponse
 import io.restassured.response.Response
 import java.math.BigDecimal
 
-object TestFixture {
+object ProductTestFixture {
     object ValidRequest {
         val FLAT_WHITE =
             ProductRequest(
