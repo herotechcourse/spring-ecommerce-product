@@ -18,7 +18,6 @@ class MemberService(
             throw IllegalArgumentException("Email already in use")
         }
 
-        // ❗ SECURITY WARNING: For learning purposes only
         val saved = memberRepository.save(Member(email = request.email, password = request.password))
         val token = jwtTokenProvider.createToken(saved.id)
         return TokenResponse(token)
