@@ -4,7 +4,7 @@ class User(
     var id: Long? = null,
     var email: String,
     var password: String,
-    var role: String = "USER",
+    var role: String? = null,
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

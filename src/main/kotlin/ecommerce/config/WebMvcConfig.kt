@@ -8,7 +8,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 @Configuration
 class WebMvcConfig(
     private val jwtAuthInterceptor: JwtAuthInterceptor,
-    private val loginMemberArgumentResolver: LoginMemberArgumentResolver
+    private val loginMemberArgumentResolver: LoginMemberArgumentResolver,
+    private val adminRoleInterceptor: AdminRoleInterceptor
 ) : WebMvcConfigurer {
 
     override fun addInterceptors(registry: InterceptorRegistry) {
@@ -20,6 +21,9 @@ class WebMvcConfig(
                 "/api/members/login",
                 "/debug/**"
             )
+
+        registry.addInterceptor(adminRoleInterceptor)
+            .addPathPatterns("/admin/**")
     }
 
     override fun addArgumentResolvers(resolvers: MutableList<HandlerMethodArgumentResolver>) {

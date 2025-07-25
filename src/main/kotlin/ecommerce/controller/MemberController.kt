@@ -37,7 +37,9 @@ class MemberController(
     fun register(
         @Valid @RequestBody request: RegisterRequest,
     ): ResponseEntity<RegisterResponse> {
-        val userID = userService.register(request.email, request.password)
+        val role = request.role ?: "USER"
+
+        val userID = userService.register(request.email, request.password, role)
         val token = jwtService.generateToken(request.email)
         val response = RegisterResponse(token)
         return ResponseEntity.ok(response)

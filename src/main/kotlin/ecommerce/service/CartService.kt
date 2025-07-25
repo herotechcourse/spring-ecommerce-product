@@ -1,27 +1,33 @@
 package ecommerce.service
 
 import ecommerce.entity.CartItem
+import ecommerce.entity.CartItemHistory
+import ecommerce.repository.CartItemHistoryRepository
 import ecommerce.repository.CartRepository
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
 import org.springframework.web.server.ResponseStatusException
 
 @Service
-class CartService(private val cartRepository: CartRepository) {
+class CartService(private val cartRepository: CartRepository, private val cartItemHistoryRepository: CartItemHistoryRepository,) {
 
-    fun addItem(userId: Long, productId: Long) {
-        val existing = cartRepository.findByUserIdAndProductId(userId, productId)
-        if (existing != null) {
-            val newQuantity = existing.quantity + 1
-            cartRepository.updateQuantity(userId, productId, newQuantity)
+    fun addItem(userId: Long, productId: Long, quantity: Int) {
+        val existingItem = cartRepository.findByUserId(userId)
+            .find { it.productId == productId }
+
+        if (existingItem != null) {
+            cartRepository.updateQuantity(userId, productId, existingItem.quantity + quantity)
         } else {
-            val newItem = CartItem(
+            cartRepository.create(CartItem(0, userId, productId, quantity))
+        }
+
+        cartItemHistoryRepository.insert(
+            CartItemHistory(
                 userId = userId,
                 productId = productId,
-                quantity = 1
+                quantity = quantity
             )
-            cartRepository.create(newItem)
-        }
+        )
     }
 
     fun getCart(userId: Long): List<CartItem> {

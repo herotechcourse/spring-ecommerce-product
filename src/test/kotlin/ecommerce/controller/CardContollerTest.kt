@@ -38,7 +38,7 @@ class CartControllerIntegrationTest @Autowired constructor(
 
     @BeforeEach
     fun setup() {
-        user = User(email = "user@mail.com", password = "p123456")
+        user = User(email = "user@mail.com", password = "p123456", role = "USER")
         user.id = userRepository.create(user)
 
         token = jwtService.generateToken(user.email)

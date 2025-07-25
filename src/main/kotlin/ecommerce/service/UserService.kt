@@ -11,10 +11,11 @@ class UserService(
     fun register(
         email: String,
         password: String,
+        role: String
     ): Long {
         if (userRepository.existsByEmail(email)) throw IllegalArgumentException("[Error] Email already in use.")
 
-        val user = User(email = email, password = password, role = "USER")
+        val user = User(email = email, password = password, role = role)
         return userRepository.create(user)
     }
 

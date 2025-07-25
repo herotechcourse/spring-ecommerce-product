@@ -42,6 +42,8 @@ class CRUDTest {
     fun setUp() {
         productRepository = ProductRepository(jdbcTemplate)
 
+        jdbcTemplate.execute("DROP TABLE cart_items IF EXISTS")
+        jdbcTemplate.execute("DROP TABLE cart_item_history IF EXISTS")
         jdbcTemplate.execute("DROP TABLE products IF EXISTS")
         jdbcTemplate.execute(
             "CREATE TABLE IF NOT EXISTS products(" +
@@ -80,7 +82,7 @@ class CRUDTest {
             ps.setString(3, product.imageUrl)
         }
 
-        val user = User(email = "user@mail.com", password = "p123456")
+        val user = User(email = "user@mail.com", password = "p123456", role = "USER")
         user.id = userRepository.create(user)
 
         token = jwtService.generateToken(user.email)

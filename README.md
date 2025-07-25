@@ -88,14 +88,14 @@
 #### step 2-4
 
 - [ ] admin statistics
-  - [ ] retrieve most added products via `GET /admin/stats/top-products`
-    - [ ] returns top 5 products most frequently added to carts in the last 30 days 
-    - [ ] if counts are equal, sort by most recently added 
-    - [ ] response includes:
-      - [ ] product name
-      - [ ] number of times added
-      - [ ] most recent added time
-  - [ ]  retrieve recently active members via `GET /admin/stats/recent-members`
+  - [x] retrieve most added products via `GET /admin/stats/top-products`
+    - [x] returns top 5 products most frequently added to carts in the last 30 days 
+    - [x] if counts are equal, sort by most recently added 
+    - [x] response includes:
+      - [x] product name
+      - [x] number of times added
+      - [x] most recent added time
+  - [ ] retrieve recently active members via `GET /admin/stats/recent-members`
     - [ ] returns members who added items to their cart in the last 7 days 
       - [ ] no duplicate members even if multiple items were added 
       - [ ] response includes:
@@ -103,12 +103,24 @@
         - [ ] name
         - [ ] email
 
-- [ ] restrict admin access to /admin/** endpoints 
-  - [ ] only allow users with ADMIN role
-  - [ ] implement HandlerInterceptor to:
-    - [ ] extract and validate JWT token 
-    - [ ] check user role (from token or DB?)
-    - [ ] respond with 401 Unauthorized if access is denied
+- [x] restrict admin access to /admin/** endpoints 
+  - [x] only allow users with ADMIN role
+  - [x] implement HandlerInterceptor for admin
+    - [x] extract and validate JWT token 
+    - [x] check user role
+    - [x] respond with 401 Unauthorized if access is denied
+
+## interpretation of requirements
+
+**Note on Statistics**
+
+The query for top 5 most added products counts how often a product was added to carts over the last 30 days. Each row in the `cart_item_history` table with an `ADD` action counts as one addition.
+
+So if one user adds the same product 5 times in separate calls, and 5 rows are logged, it counts as 5 additions.
+If a user adds 5 units of a product in a single call and only one row is logged, it counts as 1 addition.
+
+This means the count reflects the number of times products were added, not the quantity added.
+
 
 ## notes
 

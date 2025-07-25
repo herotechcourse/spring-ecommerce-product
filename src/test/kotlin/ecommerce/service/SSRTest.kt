@@ -47,6 +47,8 @@ class SSRTest() {
     fun setUp() {
         productRepository = ProductRepository(jdbcTemplate)
 
+        jdbcTemplate.execute("DROP TABLE cart_items IF EXISTS")
+        jdbcTemplate.execute("DROP TABLE cart_item_history IF EXISTS")
         jdbcTemplate.execute("DROP TABLE products IF EXISTS")
         jdbcTemplate.execute(
             "CREATE TABLE IF NOT EXISTS products(" +

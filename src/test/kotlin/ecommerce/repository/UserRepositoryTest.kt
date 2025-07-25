@@ -19,7 +19,10 @@ class UserRepositoryTest {
     fun setUp() {
         userRepository = UserRepository(jdbcTemplate)
 
-        jdbcTemplate.execute("DROP TABLE IF EXISTS users")
+        jdbcTemplate.execute("DROP TABLE cart_items IF EXISTS")
+        jdbcTemplate.execute("DROP TABLE cart_item_history IF EXISTS")
+        jdbcTemplate.execute("DROP TABLE users IF EXISTS")
+        jdbcTemplate.execute("DROP TABLE products IF EXISTS")
         jdbcTemplate.execute(
             """
             CREATE TABLE users (

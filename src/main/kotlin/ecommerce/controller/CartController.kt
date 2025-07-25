@@ -21,7 +21,7 @@ class CartController(
         @LoginMember user: User,
         @RequestBody request: CartItemRequest
     ): ResponseEntity<Void> {
-        cartService.addItem(user.id!!, request.productId)
+        cartService.addItem(user.id!!, request.productId, request.quantity) // <-- pass quantity here
         return ResponseEntity.status(HttpStatus.CREATED).build()
     }
 
