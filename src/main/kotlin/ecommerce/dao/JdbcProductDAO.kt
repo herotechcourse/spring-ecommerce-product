@@ -70,12 +70,7 @@ class JdbcProductDAO(private val db: JdbcTemplate) : ProductDAO {
 
     fun existsByName(productName: String): Boolean {
         val sql = "SELECT COUNT(*) FROM product WHERE name = ?"
-        try {
-            val count = db.queryForObject(sql, Long::class.java, productName)
-            return count != null && count > 0
-        } catch (exception: Exception) {
-            println("existsByName(): " + exception.message)
-            return false
-        }
+        val count = db.queryForObject(sql, Long::class.java, productName)
+        return count != null && count > 0
     }
 }

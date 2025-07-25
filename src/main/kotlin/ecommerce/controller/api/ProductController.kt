@@ -7,7 +7,6 @@ import ecommerce.exception.ProductNameAlreadyExistsException
 import ecommerce.model.Product
 import ecommerce.service.ProductService
 import jakarta.validation.Valid
-import org.springframework.dao.DataAccessException
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -88,13 +87,5 @@ class ProductController(private val productService: ProductService) {
         val errorBody = mapOf("errors" to error)
         println("ProductNameAlreadyExistsException occurred: $errorBody")
         return ResponseEntity.badRequest().body(errorBody)
-    }
-
-    @ExceptionHandler(DataAccessException::class)
-    fun handleDataAccessException(e: Exception): ResponseEntity<Map<String, Any>> {
-        val error = mapOf("description" to e.message)
-        val errorBody = mapOf("errors" to error)
-        println("DataAccessException occurred: $errorBody")
-        return ResponseEntity.internalServerError().body(errorBody)
     }
 }
