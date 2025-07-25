@@ -1,5 +1,7 @@
 package ecommerce.controller.api
 
+import ecommerce.annotation.LoginMember
+import ecommerce.domain.Member
 import ecommerce.dto.product.CreateProductRequest
 import ecommerce.dto.product.ProductResponse
 import ecommerce.dto.product.UpdateProductRequest
@@ -23,6 +25,7 @@ import java.net.URI
 class ProductApiController(private val productService: ProductService) {
     @PostMapping
     fun createProduct(
+        //@LoginMember member: Member,
         @Valid @RequestBody newProductRequest: CreateProductRequest,
     ): ResponseEntity<ProductResponse> {
         val product = newProductRequest.toDomain()
@@ -32,6 +35,7 @@ class ProductApiController(private val productService: ProductService) {
 
     @GetMapping("{id}")
     fun getProductById(
+        @LoginMember member: Member,
         @PathVariable("id") id: Long,
     ): ResponseEntity<ProductResponse> {
         val product = productService.getProductById(id)
@@ -39,13 +43,14 @@ class ProductApiController(private val productService: ProductService) {
     }
 
     @GetMapping
-    fun getProducts(): ResponseEntity<List<ProductResponse>> {
+    fun getProducts(@LoginMember member: Member,): ResponseEntity<List<ProductResponse>> {
         val products = productService.getAllProducts().map { it.toResponse() }
         return ResponseEntity.ok().body(products)
     }
 
     @PutMapping("/{id}")
     fun updateProduct(
+        @LoginMember member: Member,
         @Valid
         @PathVariable("id") id: Long,
         @RequestBody request: UpdateProductRequest,
@@ -57,6 +62,7 @@ class ProductApiController(private val productService: ProductService) {
 
     @DeleteMapping("/{id}")
     fun deleteProduct(
+        @LoginMember member: Member,
         @PathVariable("id") id: Long,
     ): ResponseEntity<Void> {
         productService.deleteProduct(id)
