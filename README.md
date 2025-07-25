@@ -10,7 +10,7 @@
 - [x] `PATCH /api/admin/products/:id` update one or more attributes of Product by ID
 - [x] `DELETE /api/admin/products/:id` delete the product by ID
 #### AdminAuthController
--[x] `POST /api/admin/auth/signIn`
+- [x] `POST /api/admin/auth/signIn`
 
 ### Guest
 #### GuestProductController
