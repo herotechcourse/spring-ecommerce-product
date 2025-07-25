@@ -143,3 +143,20 @@ Authorization: Bearer <token>
 - [x] Extend `JWTProvider` with a `getSubject(token: String)` method to extract member ID from token
 - [x] Implement `findByToken(token: String)` in `MemberService` to return the authenticated member  
 
+## Step 2.3 - Cart Functionality (Add, View, Remove)
+
+### 🧩 Features to Implement
+
+- [ ] Add `CartItem` domain model to represent cart entries (memberId, productId, createdAt)
+- [ ] Add `cart_items` table in schema.sql with proper foreign keys
+- [ ] Create `CartRequest` DTO to handle add/remove product input
+- [ ] Implement `CartRepository` to:
+  - [ ] Add a product to the authenticated member's cart
+  - [ ] Retrieve all cart items for a member
+  - [ ] Remove a product from the member's cart
+- [ ] Create and register `@LoginMember` annotation and `LoginMemberArgumentResolver` to resolve the authenticated member from JWT
+- [ ] Create `CartService` to encapsulate cart logic and communicate with the repository
+- [ ] Create `CartController` with endpoints:
+  - `POST /api/cart` – Add product to cart
+  - `GET /api/cart` – View cart items
+  - `DELETE /api/cart` – Remove product from cart
