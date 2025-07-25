@@ -10,6 +10,7 @@ import org.springframework.test.annotation.DirtiesContext
 import ecommerce.ProductMock.FLAT_WHITE
 import ecommerce.ProductMock.AMERICANO
 import ecommerce.ProductMock.createProduct
+import ecommerce.model.Product
 
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
