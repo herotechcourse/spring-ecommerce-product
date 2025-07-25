@@ -1,5 +1,6 @@
 package ecommerce.repository
 
+import ecommerce.dto.ActiveMemberResponse
 import ecommerce.dto.ProductStatResponse
 import ecommerce.model.CartItem
 import org.springframework.jdbc.core.JdbcTemplate
@@ -65,4 +66,20 @@ class CartRepository(
         }
     }
 
+    fun getRecentlyActiveMembers(): List<ActiveMemberResponse> {
+        val sql = """
+        SELECT DISTINCT m.id, m.name, m.email
+        FROM cart c
+        JOIN members m ON c.member_id = m.id
+        WHERE c.created_at >= DATEADD('DAY', -7, CURRENT_DATE)
+    """.trimIndent()
+
+        return jdbcTemplate.query(sql) { rs, _ ->
+            ActiveMemberResponse(
+                id = rs.getLong("id"),
+                name = rs.getString("name"),
+                email = rs.getString("email"),
+            )
+        }
+    }
 }

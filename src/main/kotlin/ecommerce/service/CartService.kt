@@ -1,5 +1,6 @@
 package ecommerce.service
 
+import ecommerce.dto.ActiveMemberResponse
 import ecommerce.dto.ProductStatResponse
 import ecommerce.model.CartItem
 import ecommerce.repository.CartRepository
@@ -26,4 +27,7 @@ class CartService(
         return cartRepository.getTop5MostAddedProducts()
     }
 
+    fun getRecentlyActiveMembers(): List<ActiveMemberResponse> {
+        return cartRepository.getRecentlyActiveMembers()
+    }
 }

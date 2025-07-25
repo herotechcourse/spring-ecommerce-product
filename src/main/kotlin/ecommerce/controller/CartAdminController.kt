@@ -18,4 +18,12 @@ class CartAdminController(
         val result = cartService.getTop5MostAddedProducts()
         return ResponseEntity.ok(result)
     }
+
+    @GetMapping("/active-members")
+    fun getActiveMembers(
+        @LoginMember member: Member
+    ): ResponseEntity<Any> {
+        val result = cartService.getRecentlyActiveMembers()
+        return ResponseEntity.ok(result)
+    }
 }
