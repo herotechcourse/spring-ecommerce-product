@@ -254,13 +254,13 @@ The admin should be able to retrieve a list of members who added at least one pr
 
 ### Features
 - [x] Add `created_at TIMESTAMP` column to `cart_items` for tracking addition time
-- [ ] GET /api/admin/stats/top-products
+- [x] GET /api/admin/stats/top-products
 
   Create query to retrieve top 5 most added products in the last 30 days
     (with GROUP BY, COUNT, MAX(created_at), ORDER BY, LIMIT)
-- [ ] GET /api/admin/stats/active-members
+- [x] GET /api/admin/stats/active-members
 
   Create query to retrieve distinct members who added items to cart in the last 7 days
     (using JOIN, WHERE created_at > NOW() - INTERVAL 7 DAY, DISTINCT)
-- [ ] Map the query results to appropriate DTOs (e.g. TopProductStats, ActiveMemberDto)
-- [ ] Admin-only access enforced for both endpoints
+- [x] Map the query results to appropriate DTOs (e.g. TopProductStats, ActiveMemberDto)
+- [x] Admin-only access enforced for both endpoints
