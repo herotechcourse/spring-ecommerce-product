@@ -1,6 +1,6 @@
-package ecommerce.store
+package ecommerce.repository
 
-import ecommerce.product.Product
+import ecommerce.model.Product
 
 interface BaseProductStore {
 

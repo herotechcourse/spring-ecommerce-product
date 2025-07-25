@@ -1,4 +1,4 @@
-package ecommerce.product
+package ecommerce.controller
 
 import io.restassured.RestAssured
 import io.restassured.http.ContentType

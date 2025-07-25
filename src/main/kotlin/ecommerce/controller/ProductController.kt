@@ -1,6 +1,9 @@
-package ecommerce.product
+package ecommerce.controller
 
-import ecommerce.store.ProductStore
+import ecommerce.model.Product
+import ecommerce.dto.ProductDTO
+import ecommerce.service.ProductService
+import ecommerce.repository.ProductStore
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
@@ -20,7 +23,7 @@ class ProductController(private val repository: ProductStore, private val produc
     fun create(
         @RequestBody product: Product,
     ): ResponseEntity<Product> {
-        val newProduct = Product.toEntity(product)
+        val newProduct = Product.Companion.toEntity(product)
 
         productService.validateName(newProduct.name)
         productService.validatePrice(newProduct.price)

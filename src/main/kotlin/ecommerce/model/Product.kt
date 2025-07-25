@@ -1,5 +1,6 @@
-package ecommerce.product
+package ecommerce.model
 
+import ecommerce.dto.ProductDTO
 import java.math.BigDecimal
 
 data class Product(

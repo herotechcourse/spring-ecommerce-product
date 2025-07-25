@@ -1,6 +1,6 @@
-package ecommerce.store
+package ecommerce.repository
 
-import ecommerce.product.Product
+import ecommerce.model.Product
 import org.springframework.dao.DataAccessException
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.jdbc.core.RowMapper

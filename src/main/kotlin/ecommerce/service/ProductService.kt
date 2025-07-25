@@ -1,6 +1,6 @@
-package ecommerce.product
+package ecommerce.service
 
-import ecommerce.store.BaseProductStore
+import ecommerce.repository.BaseProductStore
 import org.springframework.stereotype.Service
 import java.math.BigDecimal
 
