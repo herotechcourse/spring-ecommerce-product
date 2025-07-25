@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service
 
 @Service
 class MemberService(private val memberStore: MemberStore) {
-
     fun create(member: Member): Member {
         val allMembers = findAll()
         val emailAlreadyExists = allMembers.any { it.email == member.email }

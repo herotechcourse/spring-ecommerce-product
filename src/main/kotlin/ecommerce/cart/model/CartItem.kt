@@ -11,5 +11,5 @@ data class CartItem(
     @field:NotNull
     @field:Positive
     val quantity: Int,
-    val product: Product? = null
+    val product: Product? = null,
 )

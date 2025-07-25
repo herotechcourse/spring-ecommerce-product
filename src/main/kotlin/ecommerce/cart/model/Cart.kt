@@ -1,7 +1,7 @@
 package ecommerce.cart.model
 
 data class Cart(
-    val id: Long? = null,
+    val id: Long,
     val memberId: Long,
-    val items: List<CartItem> = listOf()
+    val items: List<CartItem> = listOf(),
 )
