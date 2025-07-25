@@ -1,11 +1,13 @@
 package ecommerce.service
 
 import ecommerce.domain.Cart
+import ecommerce.domain.CartEvent
 import ecommerce.domain.CartItem
 import ecommerce.dto.cart.CartResponse
 import ecommerce.dto.cartItem.CartItemResponse
 import ecommerce.exception.CartOperationException
 import ecommerce.exception.ResourceNotFoundException
+import ecommerce.repository.CartEventRepository
 import ecommerce.repository.CartItemRepository
 import ecommerce.repository.CartRepository
 import org.springframework.stereotype.Service
@@ -16,6 +18,7 @@ class CartService(
     private val cartRepository: CartRepository,
     private val cartItemRepository: CartItemRepository,
     private val productService: ProductService,
+    private val cartEventRepository: CartEventRepository,
 ) {
     private fun getOrCreateCartForMember(memberId: Long): Cart {
         if (memberId <= 0) throw IllegalArgumentException("memberId must be greater than 0")
@@ -81,6 +84,13 @@ class CartService(
 
             cartItemRepository.create(newCartItem)
         }
+        val cartEvent = CartEvent(
+            memberId = memberId,
+            productId = productId,
+            quantityAdded = quantity,
+            timestamp = LocalDateTime.now(),
+        )
+        cartEventRepository.save(cartEvent)
         val updatedCartItems = getCartItems(memberId)
 
         val totalPrice = updatedCartItems.sumOf { it.price * it.quantity }

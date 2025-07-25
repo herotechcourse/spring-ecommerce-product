@@ -30,3 +30,13 @@ CREATE TABLE IF NOT EXISTS cart_items (
     FOREIGN KEY (cart_id) REFERENCES carts(id),
     FOREIGN KEY (product_id) REFERENCES products(id)
 );
+
+CREATE TABLE IF NOT EXISTS cart_events (
+    id  BIGINT AUTO_INCREMENT PRIMARY KEY,
+    member_id     BIGINT     NOT NULL,
+    product_id BIGINT NOT NULL,
+    quantity_added INT NOT NULL,
+    timestamp TIMESTAMP NOT NULL,
+    FOREIGN KEY (member_id) REFERENCES members(user_id),
+    FOREIGN KEY (product_id) REFERENCES products(id)
+)
