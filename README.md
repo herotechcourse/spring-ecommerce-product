@@ -4,7 +4,7 @@
 
 ### Model
 
-Product
+#### Product
 
 - [x] is a class
 - [x] has property `id: Long`
@@ -15,7 +15,7 @@ Product
 
 ### DTO (Data Transfer Object)
 
-ProductForm
+#### ProductForm
 
 - [x] is a data class, as a DTO to validate form from request
 - [x] has property `name: String`
@@ -30,7 +30,7 @@ ProductForm
 
 ### DAO (Data Access Object)
 
-interface ProductDAO
+#### interface ProductDAO
 
 - [x] `findAll()` - query to database to get all products
 - [x] `findById()` - query for an object to database
@@ -38,20 +38,20 @@ interface ProductDAO
 - [x] `update()` - query to database to update a product
 - [x] `delete()` - query to database to delete a product
 
-JdbcProductDAO : ProductDAO
+#### JdbcProductDAO : ProductDAO
 
 - [x] `existsByName()` - query to database to get count of product with the name
 
 ### Service
 
-AuthService
+#### AuthService
 
 - [ ] `checkInvalidLogin()`
 - [ ] `findmember()`
 - [ ] `findMemberByToken()`
 - [ ] `createToken()`
 
-ProductService
+#### ProductService
 
 - [x] is a service layer between `ProductController` and `JdbcProductDAO`
 - [x] `insert()` takes 'ProductForm' which is validated with `jakarta` from controller, and validate the product name
@@ -59,7 +59,7 @@ ProductService
 
 ### Controller
 
-MemberController
+#### MemberController
 
 - HTTP Methods
 - [ ] `registerMember(@RequestBody)`
@@ -85,11 +85,11 @@ MemberController
     }
     ```
 
-ProductController
+#### ProductController
 
 - HTTP Methods
 - [x] add - POST
-    - [x] `createProduct(@RequestBody)`
+    - [x] `createProduct(@RequestBody @Valid)`
         - [x] Request -> POST /api/products HTTP/1.1
 - [x] retrieve - GET
     - [x] `readProducts()`
@@ -97,40 +97,54 @@ ProductController
     - [x] `readProduct()`
         - [x] Request -> GET /api/products/{id} HTTP/1.1
 - [x] update - PUT
-    - [x] `updateProduct(@PathVariable id: Long, @RequestBody)`
+    - [x] `updateProduct(@PathVariable id: Long, @RequestBody @Valid)`
         - [x] Request -> PUT /api/products/{id} HTTP/1.1
 - [x] delete - DELETE
     - [x] `deleteProduct(@PathVariable id: Long)`
         - [x] Request -> DELETE /api/products/{id} HTTP/1.1
+- [ ] handleValidationException
+- [ ] handleProductNameAlreadyExistsException
 
-ProductViewController
+#### ProductViewController
 
 - [x] `displayMain()` shows the main page
-    - currently, it redirects to `/products`
+  - currently, it redirects to `/products`
 - [x] `displayProducts()` shows list of products with view of products.html
 - [x] `displayCreateProductForm()` shows page for create product form with view of createProductForm.html
 - [x] `displayUpdateProductForm()` shows page for update product form with view of updateProductForm.html
 
 ### View
 
-products.html
+#### products.html
 
 - [x] use table to show list of product
 - [x] add JS code to send DELETE request to Product api
 - [x] make the delete button color in RED!!!!
 - [x] add JS code to request GET request to Product api to receive all products data
 
-createProductForm.html
+#### createProductForm.html
 
 - [x] use form to submit data to backend
 - [x] add JS code to send POST request to Product api
 
-updateProductForm.html
+#### updateProductForm.html
 
 - [x] take product with id
 - [x] use form to submit data to backend
 - [x] add JS code to send PUT request to Product api
 - [x] add JS code to request GET request to Product api to receive an updating product data
+
+### Exception
+
+#### GlobalExceptionHandler
+
+- [x] `@ControllerAdvice`
+- [x] has `handleNotFoundException()`
+- [x] has `handleInternalServerErrorException()`
+
+- [ ] NotFoundException
+
+- [ ] InternalServerErrorException
 
 ### etc.
 
