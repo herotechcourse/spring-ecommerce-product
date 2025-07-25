@@ -1,5 +1,18 @@
 # spring-ecommerce-product
 
+## table of contents
+
+- [Feature List](#feature-list)
+  - [Step 1](#step1)
+  - [Step 2](#step2)
+    - [Step 2-1](#step-2-1)
+    - [Step 2-2](#step-2-2)
+    - [Step 2-3](#step-2-3)
+    - [Step 2-4](#step-2-4)
+- [Interpretation of Requirements](#interpretation-of-requirements)
+- [Notes](#notes)
+- [Future Work](#future-work)
+
 ## feature list
 
 ### step1
