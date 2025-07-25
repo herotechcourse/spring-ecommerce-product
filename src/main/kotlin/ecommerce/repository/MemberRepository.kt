@@ -13,10 +13,10 @@ class MemberRepository(private val jdbcTemplate: JdbcTemplate) {
     private val memberRowMapper =
         RowMapper<Member> { rs: ResultSet, _ ->
             Member(
-                rs.getLong("userId"),
-                rs.getString("userName"),
+                rs.getLong("user_id"),
+                rs.getString("user_name"),
                 rs.getString("email"),
-                rs.getString("passwordHash"),
+                rs.getString("password_hash"),
                 rs.getString("role"),
             )
         }
