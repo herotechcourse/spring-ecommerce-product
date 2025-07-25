@@ -47,7 +47,7 @@ object ProductTestFixture {
         val INVALID_PRICE_TOO_SMALL =
             ProductRequest(
                 name = "Ice Latte",
-                price = BigDecimal("0.01"),
+                price = BigDecimal("0.00"),
                 imageUrl = "https://example.com/image.jpg",
             )
 
