@@ -32,13 +32,16 @@ class ProductController(
     }
 
     @GetMapping
-    fun getAllProducts(): ResponseEntity<List<ProductResponse>> {
+    fun getAllProducts(
+        @AdminOnly member: MemberDto,
+    ): ResponseEntity<List<ProductResponse>> {
         return ResponseEntity.ok(productService.findAll())
     }
 
     @GetMapping("/{id}")
     fun getProduct(
         @PathVariable id: Long,
+        @AdminOnly member: MemberDto,
     ): ResponseEntity<ProductResponse> {
         return ResponseEntity.ok(productService.findById(id))
     }
