@@ -217,8 +217,48 @@ This step implements cart-related features for authenticated users, allowing eac
   Removes the specified product from the authenticated user's cart.
 - [x] **Update product quantity from cart**
   Update the specified product quantity from the authenticated user's cart. If the wished quantity is 0, then delete the product
+- [x] **Separate Controllers for legged in user, admin and guests**
+```kotlin
+    "/api/wishes/**"
+    "/api/products/**"
+```
 
 ###  Authentication & Member Injection
 
 The application defines a custom WebMvcConfigurer to integrate a `HandlerInterceptor` that validates JWT tokens and injects the authenticated user's email into the request. It also registers a custom `HandlerMethodArgumentResolver` (`LoginMemberArgumentResolver`) to automatically resolve `@LoginMember` annotated parameters in controller methods, enabling clean and secure access to authenticated user data.
 
+# Step 2-4
+
+## Functional Requirements
+In this step, we implement statistical features for administrators, allowing them to monitor product engagement and user activity based on cart data.
+
+These statistics support business operations such as product planning, marketing, and user behavior analysis.
+
+- Enable the admin to identify which products are most frequently added to user carts. 
+- Track recently active users who interacted with the cart feature. 
+Two endpoints must be provided:
+1. Top 5 Most Added Products to Cart in the Last 30 Days.
+The admin should receive a ranked list of the 5 most-added products over the past month. 
+- If two or more products have the same count, the most recently added appears first.
+- The output must include:
+  - Product name 
+  - Number of times it was added 
+  - Most recent added timestamp
+2. Members Who Added Items to Their Cart in the Last 7 Days
+The admin should be able to retrieve a list of members who added at least one product in the past 7 days.
+- Each member should appear only once. 
+- The output must include:
+  - Member ID 
+  - Name 
+  - Email
+
+✅ Checklist of Implemented Features
+- [ ] Add `created_at TIMESTAMP` column to `cart_items` for tracking addition time
+- [ ] GET /api/admin/stats/top-products
+- Create query to retrieve top 5 most added products in the last 30 days
+  (with GROUP BY, COUNT, MAX(created_at), ORDER BY, LIMIT)
+- [ ] GET /api/admin/stats/active-members
+  Create query to retrieve distinct members who added items to cart in the last 7 days
+  (using JOIN, WHERE created_at > NOW() - INTERVAL 7 DAY, DISTINCT)
+- [ ] Map the query results to appropriate DTOs (e.g. TopProductStats, ActiveMemberDto)
+- [ ] Admin-only access enforced for both endpoints
