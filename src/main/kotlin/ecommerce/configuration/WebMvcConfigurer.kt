@@ -13,7 +13,11 @@ class WebMvcConfigurer(
 ) : WebMvcConfigurer {
     override fun addInterceptors(registry: InterceptorRegistry) {
         registry.addInterceptor(jwtAuthInterceptor)
-            .addPathPatterns("/api/user/wishes/**", "/api/admin/**")
+            .addPathPatterns(
+                "/api/user/wishes/**",
+                "/api/admin/**",
+                "api/admin/stats/**",
+            )
     }
 
     override fun addArgumentResolvers(resolvers: MutableList<HandlerMethodArgumentResolver?>) {
