@@ -1,4 +1,3 @@
 package ecommerce.auth
 
-class JWTProvider {
-}
+class JWTProvider

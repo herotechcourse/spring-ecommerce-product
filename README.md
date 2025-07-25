@@ -110,29 +110,27 @@ Authorization: Bearer <token>
 
 ## Features Step 2-2
 
-- [ ] Create Member entity class to represent user accounts
+- [x] Create Member entity class to represent user accounts
 
-- [ ] Implement MemberRequest and TokenResponse DTOs for request/response handling
+- [x] Implement MemberRequest and TokenResponse DTOs for request/response handling
 
-- [ ] Add MemberRepository to manage member data
+- [x] Add MemberRepository to manage member data
 
-- [ ] Use BCryptPasswordEncoder to hash user passwords before saving
+- [x] Implement MemberService with:
 
-- [ ] Implement MemberService with:
+- [x] register() method to create a new user and issue a JWT
 
-- [ ] register() method to create a new user and issue a JWT
+- [x] login() method to authenticate credentials and issue a JWT
 
-- [ ] login() method to authenticate credentials and issue a JWT
+- [x] Create JWTProvider utility to generate and validate tokens
 
-- [ ] Create JWTProvider utility to generate and validate tokens
+- [x] Implement MemberController with:
 
-- [ ] Implement MemberController with:
+- [x] POST /api/members/register endpoint
 
-- [ ] POST /api/members/register endpoint
+- [x] POST /api/members/login endpoint
 
-- [ ] POST /api/members/login endpoint
-
-- [ ] Return appropriate HTTP status codes:
+- [x] Return appropriate HTTP status codes:
 
    - 201 Created on successful registration
 
@@ -142,6 +140,6 @@ Authorization: Bearer <token>
 
    - 401 Unauthorized for missing or invalid token
 
-- [ ] Extend `JWTProvider` with a `getSubject(token: String)` method to extract member ID from token
-- [ ] Implement `findByToken(token: String)` in `MemberService` to return the authenticated member  
+- [x] Extend `JWTProvider` with a `getSubject(token: String)` method to extract member ID from token
+- [x] Implement `findByToken(token: String)` in `MemberService` to return the authenticated member  
 

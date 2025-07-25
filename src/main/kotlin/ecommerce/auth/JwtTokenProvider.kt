@@ -32,11 +32,12 @@ class JwtTokenProvider(
 
     fun getSubject(token: String): String {
         return try {
-            val claims = Jwts.parser()
-                .verifyWith(secretKey)
-                .build()
-                .parseSignedClaims(token)
-                .payload
+            val claims =
+                Jwts.parser()
+                    .verifyWith(secretKey)
+                    .build()
+                    .parseSignedClaims(token)
+                    .payload
             claims.subject
         } catch (e: JwtException) {
             throw IllegalArgumentException("Invalid or expired token")
@@ -45,10 +46,11 @@ class JwtTokenProvider(
 
     fun validateToken(token: String): Boolean {
         return try {
-            val claims = Jwts.parser()
-                .verifyWith(secretKey)
-                .build()
-                .parseSignedClaims(token)
+            val claims =
+                Jwts.parser()
+                    .verifyWith(secretKey)
+                    .build()
+                    .parseSignedClaims(token)
             !claims.payload.expiration.before(Date())
         } catch (e: Exception) {
             false

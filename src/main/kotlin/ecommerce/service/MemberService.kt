@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service
 @Service
 class MemberService(
     private val memberRepository: MemberRepository,
-    private val jwtTokenProvider: JwtTokenProvider
+    private val jwtTokenProvider: JwtTokenProvider,
 ) {
     fun register(request: MemberRequest): TokenResponse {
         val existing = memberRepository.findByEmail(request.email)
@@ -25,8 +25,9 @@ class MemberService(
     }
 
     fun login(request: MemberRequest): TokenResponse {
-        val member = memberRepository.findByEmail(request.email)
-            ?: throw IllegalArgumentException("Invalid email or password")
+        val member =
+            memberRepository.findByEmail(request.email)
+                ?: throw IllegalArgumentException("Invalid email or password")
 
         if (member.password != request.password) {
             throw IllegalArgumentException("Invalid email or password")
@@ -37,8 +38,9 @@ class MemberService(
     }
 
     fun findByToken(token: String): Member {
-        val memberId = jwtTokenProvider.getSubject(token).toLongOrNull()
-            ?: throw IllegalArgumentException("Invalid token")
+        val memberId =
+            jwtTokenProvider.getSubject(token).toLongOrNull()
+                ?: throw IllegalArgumentException("Invalid token")
         return memberRepository.findById(memberId)
             ?: throw IllegalArgumentException("Member not found")
     }
