@@ -21,8 +21,7 @@ repositories {
 
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-jdbc")
-    implementation("jakarta.validation:jakarta.validation-api:3.0.2")
-    implementation("org.hibernate.validator:hibernate-validator:7.0.1.Final")
+    implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
@@ -33,10 +32,8 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
-
     testImplementation("com.h2database:h2")
     testImplementation("io.rest-assured:rest-assured")
-    // testImplementation("org.mockito:mockito-inline:5.2.0")
 }
 
 kotlin {
