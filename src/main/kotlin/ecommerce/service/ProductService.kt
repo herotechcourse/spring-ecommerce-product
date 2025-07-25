@@ -32,33 +32,7 @@ class ProductService(private val productRepository: ProductRepository) {
             productRepository.findById(id)
                 ?: throw ResourceNotFoundException("Product", "id", id)
 
-        if (updatedProduct.name != existingProduct.name) {
-            if (productRepository.findByName(updatedProduct.name) != null) {
-                throw InvalidInputException("Product with name '${updatedProduct.name}' already exists. Name must be unique.")
-            }
-        }
-
         productRepository.update(id, updatedProduct)
-    }
-
-    fun decreaseProductStock(
-        id: Long,
-        amount: Int,
-    ) {
-        val existingProduct =
-            productRepository.findById(id)
-                ?: throw ResourceNotFoundException("Product", "id", id)
-
-        if (amount <= 0) {
-            throw IllegalArgumentException("Decrease amount must be positive.")
-        }
-
-        if (existingProduct.quantity < amount) {
-            throw IllegalStateException("Decrease amount must be positive.")
-        }
-
-        existingProduct.quantity -= amount
-        productRepository.update(id, existingProduct)
     }
 
     fun deleteProduct(id: Long) = productRepository.delete(id)
