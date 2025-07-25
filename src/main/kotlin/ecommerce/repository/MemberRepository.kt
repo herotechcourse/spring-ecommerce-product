@@ -15,6 +15,7 @@ class MemberRepository(private val db: JdbcClient) {
                 rs.getLong("id"),
                 rs.getString("email"),
                 rs.getString("password"),
+                rs.getString("role"),
             )
         }
 
@@ -46,6 +47,7 @@ class MemberRepository(private val db: JdbcClient) {
                     id = rs.getLong("id"),
                     email = rs.getString("email"),
                     password = rs.getString("password"),
+                    role = rs.getString("role"),
                 )
             }
             .optional()
