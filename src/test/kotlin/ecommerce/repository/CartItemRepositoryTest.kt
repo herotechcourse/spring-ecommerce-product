@@ -16,6 +16,7 @@ class CartItemRepositoryTest {
     @BeforeEach
     fun setUp() {
         cartItemRepository = CartItemRepository(jdbcTemplate)
+        jdbcTemplate.execute("DELETE FROM cart_history")
         jdbcTemplate.execute("DELETE FROM cart_items")
         jdbcTemplate.execute("DELETE FROM carts")
         jdbcTemplate.execute("DELETE FROM products")
