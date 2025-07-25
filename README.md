@@ -55,9 +55,9 @@
   - [x] Validation email and password (same as register)
   - [x] Authentication - verify credentials against stored hash
   - [x] JWT Generation - issue an access token after a successful signin
-- [ ] 3.Authentication / Authorization
-  - [ ] Unauthorized for missing or invalid token
-  - [ ] Forbidden for incorrect login
+- [x] 3.Authentication / Authorization
+  - [x] Unauthorized for missing or invalid token
+  - [x] Forbidden for incorrect login
 
 ## Tests for User Authentication
   - [ ] test(register): should register a new member and return 201 Created with token
@@ -77,19 +77,19 @@
 
 ## Cart Functionality & API Security
 
-- [ ] Implement API Security with JWT:
-  - [ ] Extract JWT from `Authorization: Bearer <token>` header.
-  - [ ] Validate JWT (signature and expiration).
-  - [ ] Resolve authenticated `Member` object for controller methods.
-  - [ ] Return `401 Unauthorized` for missing/invalid tokens.
-- [ ] Implement Shopping Cart Features:
-  - [ ] Add `Cart` domain entity/concept to manage product items.
-  - [ ] Create `CartItem` domain entity/concept to represent products in the cart.
-  - [ ] Build `CartRepository` for persistence of cart data.
-  - [ ] Develop `CartService` for business logic related to cart operations.
-  - [ ] Implement `Cart` related DTOs for API requests and responses.
-  - [ ] Expose REST API endpoints for cart operations:
-    - [ ] `GET /api/cart`: Retrieve user's cart contents.
-    - [ ] `POST /api/cart/items`: Add a product to the user's cart.
-    - [ ] `DELETE /api/cart/items/{productId}`: Remove a product from the user's cart.
-  - [ ] Ensure all cart endpoints are protected and require a valid JWT.
+- [x] Implement API Security with JWT:
+  - [x] Extract JWT from `Authorization: Bearer <token>` header.
+  - [x] Validate JWT (signature and expiration).
+  - [x] Resolve authenticated `Member` object for controller methods.
+  - [x] Return `401 Unauthorized` for missing/invalid tokens.
+- [x] Implement Shopping Cart Features:
+  - [x] Add `Cart` domain entity/concept to manage product items.
+  - [x] Create `CartItem` domain entity/concept to represent products in the cart.
+  - [x] Build `CartRepository` for persistence of cart data.
+  - [x] Develop `CartService` for business logic related to cart operations.
+  - [x] Implement `Cart` related DTOs for API requests and responses.
+  - [x] Expose REST API endpoints for cart operations:
+    - [x] `GET /api/cart`: Retrieve user's cart contents.
+    - [x] `POST /api/cart`: Add a product to the user's cart.
+    - [x] `DELETE /api/cart/{productId}`: Remove a product from the user's cart.
+  - [x] Ensure all cart endpoints are protected and require a valid JWT.
