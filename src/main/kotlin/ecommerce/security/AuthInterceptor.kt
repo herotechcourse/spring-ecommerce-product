@@ -1,5 +1,6 @@
 package ecommerce.security
 
+import ecommerce.exception.ForbiddenException
 import ecommerce.exception.UnauthorizedException
 import ecommerce.service.AuthService
 import jakarta.servlet.http.HttpServletRequest
@@ -14,6 +15,13 @@ class AuthInterceptor(
 ) : HandlerInterceptor {
     companion object {
         const val AUTHENTICATED_MEMBER = "authenticatedMember"
+
+        private val PATH_ROLE_REQUIREMENTS =
+            mapOf(
+                "/api/admin/products" to listOf("ADMIN"),
+                "/api/products" to listOf("USER", "ADMIN"),
+                "/api/cart" to listOf("USER", "ADMIN"),
+            )
     }
 
     override fun preHandle(
@@ -40,6 +48,21 @@ class AuthInterceptor(
                 ?: throw UnauthorizedException("Authenticated member not found in database.")
 
         request.setAttribute(AUTHENTICATED_MEMBER, member)
+
+        val requestURI = request.requestURI
+
+        val requiredRolesForPath =
+            PATH_ROLE_REQUIREMENTS.entries
+                .filter { (pathPrefix, _) -> requestURI.startsWith(pathPrefix) }
+                .maxByOrNull { it.key.length }
+                ?.value
+
+        if (requiredRolesForPath != null) {
+            if (requiredRolesForPath.isNotEmpty() && !requiredRolesForPath.contains(member.role)) {
+                throw ForbiddenException("User role '${member.role}' is not authorized to access this resource.")
+            }
+        } else {
+        }
 
         return true
     }

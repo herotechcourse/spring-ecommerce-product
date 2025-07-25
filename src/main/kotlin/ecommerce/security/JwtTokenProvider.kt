@@ -1,5 +1,7 @@
 package ecommerce.security
 
+import io.jsonwebtoken.Claims
+import io.jsonwebtoken.ExpiredJwtException
 import io.jsonwebtoken.JwtException
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.security.Keys
@@ -38,27 +40,37 @@ class JwtTokenProvider(
             .compact()
     }
 
+    private fun getClaims(token: String): Claims {
+        return Jwts.parser()
+            .verifyWith(secretKey)
+            .build()
+            .parseSignedClaims(token)
+            .payload
+    }
+
     fun getSubjectFromToken(token: String): String {
-        val claims =
-            Jwts.parser()
-                .verifyWith(secretKey)
-                .build()
-                .parseSignedClaims(token)
-                .payload
+        val claims = getClaims(token)
         return claims.subject
+    }
+
+    fun getRoleFromToken(token: String): String {
+        val claims = getClaims(token)
+        return claims.get("role", String::class.java)
+            ?: throw IllegalStateException("Role claim 'role' missing or not a String in token.")
     }
 
     fun validateToken(token: String): Boolean {
         return try {
-            val claims =
-                Jwts.parser()
-                    .verifyWith(secretKey)
-                    .build()
-                    .parseSignedClaims(token)
-            !claims.payload.expiration.before(Date())
+            getClaims(token)
+            true
+        } catch (e: ExpiredJwtException) {
+            println("JWT token is expired: ${e.message}")
+            false
         } catch (e: JwtException) {
+            println("Invalid JWT token: ${e.message}")
             false
         } catch (e: IllegalArgumentException) {
+            println("JWT token is null, empty, or malformed: ${e.message}")
             false
         }
     }

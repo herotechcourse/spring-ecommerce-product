@@ -3,6 +3,7 @@ package ecommerce.advice
 import ecommerce.exception.AuthenticationException
 import ecommerce.exception.CartOperationException
 import ecommerce.exception.DuplicateEmailException
+import ecommerce.exception.ForbiddenException
 import ecommerce.exception.InvalidInputException
 import ecommerce.exception.ResourceNotFoundException
 import ecommerce.exception.UnauthorizedException
@@ -137,5 +138,14 @@ class GlobalExceptionHandler {
     ): ResponseEntity<String> {
         println("CartOperation failed for request ${request.requestURI}: ${ex.message}")
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.message)
+    }
+
+    @ExceptionHandler(ForbiddenException::class)
+    fun handleForbiddenException(
+        ex: ForbiddenException,
+        request: HttpServletRequest,
+    ): ResponseEntity<String> {
+        println("Forbidden access attempt for request ${request.requestURI}: ${ex.message}")
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ex.message)
     }
 }

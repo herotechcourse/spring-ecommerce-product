@@ -18,6 +18,7 @@ class AuthService(
         userName: String,
         email: String,
         password: String,
+        role: String = "USER",
     ): String {
         if (memberRepository.findByEmail(email) != null) {
             throw DuplicateEmailException("Member with email $email already exists")
@@ -29,7 +30,7 @@ class AuthService(
                 userName = userName,
                 email = email,
                 passwordHash = hashPass,
-                role = "USER",
+                role = role,
             )
 
         memberRepository.create(newMember)
@@ -66,6 +67,6 @@ class AuthService(
     }
 
     fun getMemberById(userId: Long): Member? {
-        return memberRepository.findByUserId(userId)
+        return memberRepository.findByMemberId(userId)
     }
 }
