@@ -1,5 +1,6 @@
 package ecommerce
 
+import ecommerce.exception.InternalServerErrorException
 import ecommerce.exception.NotFoundException
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ControllerAdvice
@@ -13,9 +14,9 @@ class GlobalExceptionHandler {
         return ResponseEntity.notFound().build()
     }
 
-    @ExceptionHandler(InterruptedException::class)
-    fun handleInternalServerErrorException(e: InterruptedException): ResponseEntity<Void> {
-        println("InterruptedException occurred: " + e.message)
+    @ExceptionHandler(InternalServerErrorException::class)
+    fun handleInternalServerErrorException(e: InternalServerErrorException): ResponseEntity<Void> {
+        println("InternalServerErrorException occurred: " + e.message)
         return ResponseEntity.internalServerError().build()
     }
 }
