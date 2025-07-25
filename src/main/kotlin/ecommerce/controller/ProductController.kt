@@ -1,5 +1,7 @@
 package ecommerce.controller
 
+import ecommerce.annotation.AdminOnly
+import ecommerce.dto.MemberDto
 import ecommerce.dto.ProductRequest
 import ecommerce.dto.ProductResponse
 import ecommerce.service.ProductService
@@ -23,6 +25,7 @@ class ProductController(
     @PostMapping
     fun createProduct(
         @Valid @RequestBody product: ProductRequest,
+        @AdminOnly member: MemberDto,
     ): ResponseEntity<Void> {
         productService.createProduct(product)
         return ResponseEntity(HttpStatus.CREATED)
@@ -44,6 +47,7 @@ class ProductController(
     fun updateProduct(
         @PathVariable id: Long,
         @Valid @RequestBody product: ProductRequest,
+        @AdminOnly member: MemberDto,
     ): ResponseEntity<Void> {
         productService.updateProduct(id, product)
         return ResponseEntity.noContent().build()
@@ -52,6 +56,7 @@ class ProductController(
     @DeleteMapping("/{id}")
     fun deleteProduct(
         @PathVariable id: Long,
+        @AdminOnly member: MemberDto,
     ): ResponseEntity<Void> {
         productService.deleteProduct(id)
         return ResponseEntity.noContent().build()
