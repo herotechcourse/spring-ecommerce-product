@@ -35,7 +35,7 @@ class MemberRepositoryTest {
 
     @Test
     fun save() {
-        val user = Member(null, "test@example.com", "test123")
+        val user = Member(null, "test@example.com", "test123", "USER")
         val id = memberRepository.save(user)
         val count =
             db.sql("SELECT COUNT(*) FROM members")
@@ -48,7 +48,7 @@ class MemberRepositoryTest {
 
     @Test
     fun findByEmail() {
-        val user = Member(null, "test@example.com", "test123")
+        val user = Member(null, "test@example.com", "test123", "USER")
         memberRepository.save(user)
         db.sql("SELECT COUNT(*) FROM members")
             .query(Int::class.java)

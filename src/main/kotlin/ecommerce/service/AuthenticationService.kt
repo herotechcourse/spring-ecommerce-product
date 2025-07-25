@@ -26,7 +26,7 @@ class AuthenticationService(
         }
 
         val hashedPassword = passwordEncoder.encode(request.password)
-        val member = Member(null, request.email, hashedPassword)
+        val member = Member(null, request.email, hashedPassword, "USER")
 
         val memberId =
             memberRepository.save(member)
