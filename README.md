@@ -233,6 +233,7 @@ fun extract(request: HttpServletRequest): String {
     }
 }
 ```
+- if user gets deleted, do I delete the cart?
 
 
 
