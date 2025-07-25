@@ -1,5 +1,6 @@
 package ecommerce.repository
 
+import ecommerce.dto.ActiveUsersResponse
 import ecommerce.dto.TopProductStats
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.jdbc.core.RowMapper
@@ -17,6 +18,14 @@ class AdminStatsRepository(
                 rs.getString("product_name"),
                 rs.getInt("added_count"),
                 rs.getTimestamp("last_added_at"),
+            )
+        }
+
+    private val activeUsers =
+        RowMapper<ActiveUsersResponse> { rs, _ ->
+            ActiveUsersResponse(
+                rs.getLong("id"),
+                rs.getString("email"),
             )
         }
 
@@ -57,5 +66,17 @@ class AdminStatsRepository(
                 "created_at" to now,
             )
         return insert.executeAndReturnKey(productMap).toLong()
+    }
+
+    fun getTop5ActiveUsers(): List<ActiveUsersResponse> {
+        val sql =
+            """
+            SELECT DISTINCT m.ID, m.EMAIL FROM MEMBERS m
+            JOIN CARTS c ON m.id = c.MEMBER_ID
+            RIGHT JOIN CART_HISTORY ch ON ch.CART_ID = c.ID
+            WHERE ch.CREATED_AT >= CURRENT_DATE - INTERVAL '7' DAY
+            LIMIT 5
+            """.trimIndent()
+        return jdbcTemplate.query(sql, activeUsers)
     }
 }
