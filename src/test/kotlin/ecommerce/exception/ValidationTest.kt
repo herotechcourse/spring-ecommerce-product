@@ -1,31 +1,50 @@
 package ecommerce.exception
 
 import ecommerce.dto.ProductRequest
+import ecommerce.dto.RegistrationRequest
 import io.restassured.RestAssured
 import io.restassured.http.ContentType
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.TestInstance
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.HttpStatus
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.test.annotation.DirtiesContext
 
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-@SpringBootTest(
-    webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT,
-    properties = ["spring.sql.init.mode=never"],
-)
-class GlobalExceptionHandlerTest {
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
+class ValidationTest {
     @Autowired
     private lateinit var jdbcTemplate: JdbcTemplate
 
+    lateinit var token: String
+
     @BeforeEach
     fun setUp() {
-        jdbcTemplate.execute("DROP TABLE products IF EXISTS")
+        jdbcTemplate.execute("DROP TABLE CART_HISTORY IF EXISTS")
+        jdbcTemplate.execute("DROP TABLE CART_ITEMS IF EXISTS")
+        jdbcTemplate.execute("DROP TABLE CARTS IF EXISTS")
+        jdbcTemplate.execute("DROP TABLE PRODUCTS IF EXISTS")
 
         jdbcTemplate.execute(createQuery())
+        val loginRequest =
+            RegistrationRequest(
+                "admin@test.com",
+                "12345678",
+            )
+
+        val response =
+            RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(loginRequest)
+                .post("/api/members/login")
+                .then().extract()
+
+        token = response.body().jsonPath().getString("token")
     }
 
     private fun createQuery(): String {
@@ -47,9 +66,10 @@ class GlobalExceptionHandlerTest {
         val response =
             RestAssured
                 .given().log().all().body(product)
+                .auth().oauth2(token)
                 .contentType(ContentType.JSON)
                 .`when`()
-                .request("POST", "/api/products")
+                .request("POST", "/api/admin/products")
                 .then()
                 .extract()
                 .response()
@@ -64,8 +84,9 @@ class GlobalExceptionHandlerTest {
             RestAssured
                 .given().log().all().body(product)
                 .contentType(ContentType.JSON)
+                .auth().oauth2(token)
                 .`when`()
-                .request("POST", "/api/products")
+                .request("POST", "/api/admin/products")
                 .then()
                 .extract()
                 .response()
@@ -80,8 +101,9 @@ class GlobalExceptionHandlerTest {
             RestAssured
                 .given().log().all().body(product)
                 .contentType(ContentType.JSON)
+                .auth().oauth2(token)
                 .`when`()
-                .request("POST", "/api/products")
+                .request("POST", "/api/admin/products")
                 .then()
                 .extract()
                 .response()
@@ -98,8 +120,9 @@ class GlobalExceptionHandlerTest {
             RestAssured
                 .given().log().all().body(product)
                 .contentType(ContentType.JSON)
+                .auth().oauth2(token)
                 .`when`()
-                .request("POST", "/api/products")
+                .request("POST", "/api/admin/products")
                 .then()
                 .extract()
                 .response()
@@ -116,8 +139,9 @@ class GlobalExceptionHandlerTest {
             RestAssured
                 .given().log().all().body(product)
                 .contentType(ContentType.JSON)
+                .auth().oauth2(token)
                 .`when`()
-                .request("POST", "/api/products")
+                .request("POST", "/api/admin/products")
                 .then()
                 .extract()
                 .response()
@@ -134,8 +158,9 @@ class GlobalExceptionHandlerTest {
             RestAssured
                 .given().log().all().body(product)
                 .contentType(ContentType.JSON)
+                .auth().oauth2(token)
                 .`when`()
-                .request("POST", "/api/products")
+                .request("POST", "/api/admin/products")
                 .then()
                 .extract()
                 .response()
