@@ -1,12 +1,12 @@
 package ecommerce.product.store
 
+import ecommerce.helper.JdbcHelper.insertAndReturnKey
 import ecommerce.product.data.Product
 import ecommerce.product.data.ProductMapper
 import ecommerce.product.data.ProductRequest
 import ecommerce.sql.ProductConstsSQL
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.jdbc.core.RowMapper
-import org.springframework.jdbc.support.GeneratedKeyHolder
 import org.springframework.stereotype.Repository
 import java.sql.Connection
 import java.sql.PreparedStatement
@@ -79,22 +79,16 @@ class ProductStore(private val jdbcTemplate: JdbcTemplate) {
 
     fun insertWithKeyholder(request: ProductRequest): Long {
         require(!existsByName(request.name)) { "Product with name ${request.name} already exists" }
-        val sql = ConstantsSQL.INSERT.trimIndent()
-        val keyHolder = GeneratedKeyHolder()
+        val sql = ProductConstsSQL.INSERT.trimIndent()
+        val id = insertAndReturnKey(jdbcTemplate, sql, ::prepareInsertStatement, request)
 
-        jdbcTemplate.update({ connection ->
-            createPreparedStatement(connection, sql, request)
-        }, keyHolder)
-
-        val id = keyHolder.key?.toLong()
-        require(id != null) {
+        return requireNotNull(id) {
             "Failed to retrieve generated ID after inserting product '${request.name}'. " +
                 "Database key generation failed."
         }
-        return id
     }
 
-    private fun createPreparedStatement(
+    private fun prepareInsertStatement(
         connection: Connection,
         sql: String,
         request: ProductRequest,
