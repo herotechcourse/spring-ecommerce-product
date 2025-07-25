@@ -147,16 +147,16 @@ Authorization: Bearer <token>
 
 ### 🧩 Features to Implement
 
-- [ ] Add `CartItem` domain model to represent cart entries (memberId, productId, createdAt)
-- [ ] Add `cart_items` table in schema.sql with proper foreign keys
-- [ ] Create `CartRequest` DTO to handle add/remove product input
-- [ ] Implement `CartRepository` to:
-  - [ ] Add a product to the authenticated member's cart
-  - [ ] Retrieve all cart items for a member
-  - [ ] Remove a product from the member's cart
-- [ ] Create and register `@LoginMember` annotation and `LoginMemberArgumentResolver` to resolve the authenticated member from JWT
-- [ ] Create `CartService` to encapsulate cart logic and communicate with the repository
-- [ ] Create `CartController` with endpoints:
+- [x] Add `CartItem` domain model to represent cart entries (memberId, productId, createdAt)
+- [x] Add `cart_items` table in schema.sql with proper foreign keys
+- [x] Create `CartRequest` DTO to handle add/remove product input
+- [x] Implement `CartRepository` to:
+  - [x] Add a product to the authenticated member's cart
+  - [x] Retrieve all cart items for a member
+  - [x] Remove a product from the member's cart
+- [x] Create and register `@LoginMember` annotation and `LoginMemberArgumentResolver` to resolve the authenticated member from JWT
+- [x] Create `CartService` to encapsulate cart logic and communicate with the repository
+- [x] Create `CartController` with endpoints:
   - `POST /api/cart` – Add product to cart
   - `GET /api/cart` – View cart items
   - `DELETE /api/cart` – Remove product from cart
