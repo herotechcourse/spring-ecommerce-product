@@ -1,44 +1,49 @@
 package ecommerce.controller
 
-import ecommerce.dto.CartDto
 import ecommerce.dto.CartItemDto
+import ecommerce.dto.CartItemRequest
+import ecommerce.model.Member
+import ecommerce.service.CartService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
+import java.net.URI
 
 @RestController
 @RequestMapping("/api/cart")
-class CartController {
+class CartController(private val cartService: CartService) {
 
     @GetMapping
-    fun getItems(
-        @RequestBody request: CartDto
+    fun getAllItems(
+        @LoginMember member: Member,
     ): ResponseEntity<List<CartItemDto>> {
         // authenticate user -> happens automatically via Interception
         // get items from service
         // return items
+        cartService.getAllItems(member.id!!)
         return ResponseEntity.status(HttpStatus.OK).body(emptyList())
     }
 
-    @PostMapping("/{productId}")
+    @PostMapping
     fun addItem(
-        @RequestBody request: CartDto,
-        @PathVariable productId: Long,
+        @LoginMember member: Member,
+        @RequestBody request: CartItemRequest,
     ): ResponseEntity<Unit> {
-        return ResponseEntity.ok().build()
+        cartService.addItems(member.id!!, request)
+        return ResponseEntity.created(URI("/api/cart/${cartId}/items/${productId}/${quantity}")).build()
     }
 
-    @DeleteMapping("/{productId}}")
+    @DeleteMapping
     fun deleteItem(
-        @RequestBody request: CartDto,
-        @PathVariable productId: Long,
+        @LoginMember member: Member,
+        @RequestBody request: CartItemRequest,
     ): ResponseEntity<Unit> {
+        cartService.deleteItems(member.id!!, request)
         return ResponseEntity.noContent().build()
     }
 }
