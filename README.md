@@ -40,3 +40,14 @@
 - [x] Error Handling with Authentication/Authorization 
   - 401 - unauthorized
   - 403 - forbidden
+
+## Cart Functionality
+- [] Each user has their own shopping cart
+- [] User can add product to cart
+  - add specified quantity of product
+  - if product present in cart, quantity -> +1
+  - validation to ensure product exists and quantity is valid
+- [] retrieve products from cart
+- [] remove products from cart
+- [] all cart operations require valid JWT for authentication
+- [] user can only access and modify their own cart
