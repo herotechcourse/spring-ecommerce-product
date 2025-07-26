@@ -8,11 +8,12 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.test.annotation.DirtiesContext
+import org.springframework.test.context.ActiveProfiles
 
+@ActiveProfiles("test")
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @JdbcTest
 class ProductRepositoryTest {
-
     private lateinit var productRepository: ProductRepository
 
     @Autowired
@@ -24,7 +25,6 @@ class ProductRepositoryTest {
         jdbcTemplate.execute("DROP TABLE IF EXISTS cart_items")
         jdbcTemplate.execute("DROP TABLE IF EXISTS members")
         jdbcTemplate.execute("DROP TABLE IF EXISTS products")
-
 
         createQuery().split(";")
             .filter { it.isNotBlank() }
@@ -98,7 +98,7 @@ class ProductRepositoryTest {
                 FOREIGN KEY (member_id) REFERENCES members(id),
                 FOREIGN KEY (product_id) REFERENCES products(id)
             );
-        """.trimIndent()
+            """.trimIndent()
     }
 
     private fun createData(): String {
@@ -107,6 +107,6 @@ class ProductRepositoryTest {
             INSERT INTO products (name, price, image_url) VALUES ('Hand cream', 6.99, 'https://cdn.idealo.com/folder/Product/6178/3/6178302/s1_produktbild_gross/neutrogena-hydro-boost-creme-gel-50ml.jpg');
             INSERT INTO products (name, price, image_url) VALUES ('Chair', 77.99, 'https://encrypted-tbn1.gstatic.com/shopping?q=tbn:ANd9GcRqUHblIQ5QCehPdDXFHqSqUKqxNExCjw_mKe-wsYJYNXP7S7pnlrGpBKEPGzutl3CSIxRQSJjb3HbbQevqNeDMZQdxtP0ml591k0zsn-b-4KAMs9aMwJngvHNPGf7KHbNhUuOn6g&usqp=CAc');
             INSERT INTO products (name, price, image_url) VALUES ('Notebook', 3.49, 'https://upload.wikimedia.org/wikipedia/commons/6/6e/Moleskine_notebook.jpg');
-        """.trimIndent()
+            """.trimIndent()
     }
 }

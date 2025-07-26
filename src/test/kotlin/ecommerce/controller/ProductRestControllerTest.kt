@@ -10,11 +10,12 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.HttpStatus
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.test.annotation.DirtiesContext
+import org.springframework.test.context.ActiveProfiles
 
+@ActiveProfiles("test")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 class ProductRestControllerTest {
-
     @Autowired
     lateinit var jdbcTemplate: JdbcTemplate
 
@@ -30,43 +31,51 @@ class ProductRestControllerTest {
                 price DOUBLE NOT NULL,
                 image_url VARCHAR(500)
             )
-            """.trimIndent()
+            """.trimIndent(),
         )
 
-        val productJson = """
+        val productJson =
+            """
             {
                 "name": "cafe",
                 "price": 39.0,
                 "imageUrl": "https://test.com/image.jpg"
             }
-        """.trimIndent()
+            """.trimIndent()
 
-        val response = RestAssured
-            .given().log().all()
-            .contentType(ContentType.JSON)
-            .body(productJson)
-            .`when`().post("/api/products")
-            .then().extract().response()
+        val response =
+            RestAssured
+                .given().log().all()
+                .contentType(ContentType.JSON)
+                .body(productJson)
+                .`when`().post("/api/products")
+                .then().log().all()
+                .extract().response()
+
+        println("Status code: ${response.statusCode}")
+        println("Body: ${response.body.asString()}")
 
         productId = response.jsonPath().getLong("id")
     }
 
     @Test
     fun addProduct() {
-        val productJson = """
+        val productJson =
+            """
             {
                 "name": "table",
                 "price": 45.0,
                 "imageUrl": "https://test.com/image2.jpg"
             }
-        """.trimIndent()
+            """.trimIndent()
 
-        val response = RestAssured
-            .given().log().all()
-            .contentType(ContentType.JSON)
-            .body(productJson)
-            .`when`().post("/api/products")
-            .then().extract().response()
+        val response =
+            RestAssured
+                .given().log().all()
+                .contentType(ContentType.JSON)
+                .body(productJson)
+                .`when`().post("/api/products")
+                .then().extract().response()
 
         assertThat(response.statusCode).isEqualTo(HttpStatus.OK.value())
         val created = response.jsonPath()
@@ -77,10 +86,11 @@ class ProductRestControllerTest {
 
     @Test
     fun getProducts_returnsList() {
-        val response = RestAssured
-            .given().log().all()
-            .`when`().get("/api/products")
-            .then().extract().response()
+        val response =
+            RestAssured
+                .given().log().all()
+                .`when`().get("/api/products")
+                .then().extract().response()
 
         assertThat(response.statusCode).isEqualTo(HttpStatus.OK.value())
         val productList = response.jsonPath().getList("", Map::class.java)

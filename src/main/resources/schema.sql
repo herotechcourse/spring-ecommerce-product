@@ -1,4 +1,4 @@
-CREATE TABLE products (
+CREATE TABLE IF NOT EXISTS products (
     id        INT NOT NULL AUTO_INCREMENT,
     name      VARCHAR(100) NOT NULL,
     price     DOUBLE NOT NULL,
@@ -6,7 +6,7 @@ CREATE TABLE products (
     PRIMARY KEY (id)
 );
 
-CREATE TABLE members (
+CREATE TABLE IF NOT EXISTS members (
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(100),
     email VARCHAR(255) NOT NULL UNIQUE,
@@ -14,7 +14,7 @@ CREATE TABLE members (
     role VARCHAR(20) DEFAULT 'USER'
 );
 
-CREATE TABLE cart_items (
+CREATE TABLE IF NOT EXISTS cart_items (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     member_id BIGINT NOT NULL,
     product_id BIGINT NOT NULL,
