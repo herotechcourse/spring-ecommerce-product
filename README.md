@@ -151,6 +151,16 @@ Implement a functionality that allows users to add or remove items from a cart. 
 - [x] Create Repository for cart
 - [x] Create Controller for cart
 
+#### Return values
+| Action                    | Status Code    | Body                         | Notes                      |
+| ------------------------- | -------------- | ---------------------------- | -------------------------- |
+| Add new product           | 201 Created    | `ItemDto`                    | Optional `Location` header |
+| Increase quantity         | 200 OK         | `ItemDto`                    |                            |
+| Remove product completely | 204 No Content | None                         | Lightweight, RESTful       |
+| Reduce quantity           | 200 OK         | `ItemDto` (updated quantity) |                            |
+| Remove non-existent item  | 404 Not Found  | Error body (optional)        |                            |
+
+
 ## Learnings
 ### JDBC & DAO
 - my `ProductRepository` class is a DAO (Data Access Object): a design pattern for data access abstraction, meaning that
@@ -234,6 +244,10 @@ fun extract(request: HttpServletRequest): String {
 }
 ```
 - if user gets deleted, do I delete the cart?
-
-
+- Is it ok to throw exceptions form the repository? How do I handle failing delete operations?
+- Should `fun removeProductFromCart(productId: Long, quantity: Long, cartId: Long)` have instead
+of Long types have @valueClass types like ProductId, or should it take a CartRequest DTO as argument?
+- What happens if the product ID gets updated?
+- If I show all items in the cart, what should I do if one or more products do not exist anymore? Throw an exception, or just return the products that exist?
+-> I use INNER JOIN to ignore non existent products for now
 
