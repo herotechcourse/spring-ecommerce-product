@@ -1,7 +1,6 @@
 package ecommerce.repository
 
 import ecommerce.dto.CartItemDto
-import ecommerce.exception.InternalServerErrorException
 import ecommerce.exception.NotFoundException
 import org.springframework.jdbc.core.simple.JdbcClient
 import org.springframework.stereotype.Repository
@@ -13,22 +12,38 @@ class CartRepository(private val jdbcClient: JdbcClient) {
         productQuantity: Long,
         cartId: Long,
     ): CartItemDto {
-        val sql =
-            """
-            INSERT INTO cart_items (product_id, cart_id, quantity)
-            VALUES (?, ?, ?)
-            ON DUPLICATE KEY UPDATE quantity = quantity + ?
-            """.trimIndent()
-        val rowsAffected =
-            jdbcClient
-                .sql(sql)
-                .params(productId, cartId, productQuantity, productQuantity)
+        val updateSql = """
+        UPDATE cart_items
+        SET quantity = quantity + ?
+        WHERE product_id = ? AND cart_id = ?
+    """.trimIndent()
+
+        val insertSql = """
+        INSERT INTO cart_items (product_id, cart_id, quantity)
+        VALUES (?, ?, ?)
+    """.trimIndent()
+
+        val rowsUpdated = jdbcClient
+            .sql(updateSql)
+            .params(productQuantity, productId, cartId)
+            .update()
+
+        if (rowsUpdated == 0) {
+            // No existing row, insert new one
+            val rowsInserted = jdbcClient
+                .sql(insertSql)
+                .params(productId, cartId, productQuantity)
                 .update()
 
-        if (rowsAffected <= 0) throw NotFoundException("Failed to add: Product $productId not found")
+            if (rowsInserted == 0) {
+                throw NotFoundException("Failed to add: Product $productId not found")
+            }
+        }
 
-        return showItem(cartId, productId) ?: throw NotFoundException("Failed to add: Product $productId not found")
+        return showItem(cartId, productId)
+            ?: throw NotFoundException("Failed to add: Product $productId not found in cart")
     }
+
 
     fun removeItemFromCart(
         productId: Long,
@@ -109,20 +124,9 @@ class CartRepository(private val jdbcClient: JdbcClient) {
     }
 
     fun findOrCreateCartId(userId: Long): Long {
-        var cartId: Long?
 
-        var sql = "SELECT cart_id FROM carts WHERE user_id = ?"
-        cartId =
-            jdbcClient
-                .sql(sql)
-                .query(Long::class.java)
-                .optional()
-                .orElse(null)
-
-        if (cartId != null) return cartId
-
-        sql = "INSERT INTO carts (user_id) VALUES (?)"
-        cartId =
+        val sql = "SELECT cart_id FROM carts WHERE user_id = ?"
+        val foundId: Long? =
             jdbcClient
                 .sql(sql)
                 .param(1, userId)
@@ -130,7 +134,21 @@ class CartRepository(private val jdbcClient: JdbcClient) {
                 .optional()
                 .orElse(null)
 
-        return cartId ?: throw InternalServerErrorException("Cart could not be created")
+        if (foundId != null) return foundId
+
+        val insertSql = "INSERT INTO carts (user_id) VALUES (?)"
+        jdbcClient
+            .sql(insertSql)
+            .param(1, userId)
+            .update()
+
+        val cartId = jdbcClient
+            .sql("SELECT cart_id FROM carts WHERE user_id = ?")
+            .param(1, userId)
+            .query(Long::class.java)
+            .single()
+
+        return cartId
     }
 
     fun showAllItemsInCart(cartId: Long): List<CartItemDto> {
