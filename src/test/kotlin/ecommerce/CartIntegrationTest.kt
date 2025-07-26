@@ -14,10 +14,9 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.web.server.LocalServerPort
 import org.springframework.http.HttpStatus
+import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.test.annotation.DirtiesContext
 import org.springframework.test.context.ActiveProfiles
-import org.springframework.jdbc.core.JdbcTemplate
-
 
 @ActiveProfiles("test")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -31,6 +30,7 @@ class CartIntegrationTest {
     private lateinit var productRepository: ProductRepository
     private lateinit var token: String
     private lateinit var product: Product
+
     @Autowired
     lateinit var jdbcTemplate: JdbcTemplate
 
@@ -42,32 +42,37 @@ class CartIntegrationTest {
         jdbcTemplate.execute("DROP TABLE IF EXISTS products")
         jdbcTemplate.execute("DROP TABLE IF EXISTS members")
 
-        jdbcTemplate.execute("""
-        CREATE TABLE members (
-            id BIGINT AUTO_INCREMENT PRIMARY KEY,
-            email VARCHAR(255) NOT NULL,
-            password VARCHAR(255) NOT NULL
+        jdbcTemplate.execute(
+            """
+            CREATE TABLE members (
+                id BIGINT AUTO_INCREMENT PRIMARY KEY,
+                email VARCHAR(255) NOT NULL,
+                password VARCHAR(255) NOT NULL
+            )
+            """.trimIndent(),
         )
-    """.trimIndent())
 
-        jdbcTemplate.execute("""
-        CREATE TABLE products (
-            id BIGINT AUTO_INCREMENT PRIMARY KEY,
-            name VARCHAR(255) NOT NULL,
-            price DOUBLE NOT NULL,
-            image_url VARCHAR(500)
+        jdbcTemplate.execute(
+            """
+            CREATE TABLE products (
+                id BIGINT AUTO_INCREMENT PRIMARY KEY,
+                name VARCHAR(255) NOT NULL,
+                price DOUBLE NOT NULL,
+                image_url VARCHAR(500)
+            )
+            """.trimIndent(),
         )
-    """.trimIndent())
 
-        jdbcTemplate.execute("""
-    CREATE TABLE cart_items (
-        id BIGINT AUTO_INCREMENT PRIMARY KEY,
-        member_id BIGINT NOT NULL,
-        product_id BIGINT NOT NULL,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-    )
-""".trimIndent())
-
+        jdbcTemplate.execute(
+            """
+            CREATE TABLE cart_items (
+                id BIGINT AUTO_INCREMENT PRIMARY KEY,
+                member_id BIGINT NOT NULL,
+                product_id BIGINT NOT NULL,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+            """.trimIndent(),
+        )
 
         val memberRequest = MemberRequest("user@example.com", "password123")
 
