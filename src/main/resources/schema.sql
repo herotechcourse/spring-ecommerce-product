@@ -13,3 +13,13 @@ CREATE TABLE IF NOT EXISTS members (
     password    VARCHAR(255)    NOT NULL,
     role        VARCHAR(255)    NOT NULL
    );
+
+CREATE TABLE IF NOT EXISTS cart_items (
+    id          BIGINT      PRIMARY KEY AUTO_INCREMENT,
+    member_id   VARCHAR(40) NOT NULL,
+    product_id  BIGINT      NOT NULL,
+    quantity    INT         NOT NULL,
+    UNIQUE(member_id, product_id),
+    FOREIGN KEY(member_id) REFERENCES members(id) ON DELETE CASCADE,
+    FOREIGN KEY(product_id) REFERENCES products(id) ON DELETE CASCADE
+);
