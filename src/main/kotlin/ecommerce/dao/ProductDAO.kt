@@ -12,4 +12,6 @@ interface ProductDAO {
     fun update(product: Product): Int
 
     fun delete(id: Long): Int
+
+    fun existsByName(name: String): Boolean
 }

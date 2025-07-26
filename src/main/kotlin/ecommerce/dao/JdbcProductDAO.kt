@@ -68,9 +68,9 @@ class JdbcProductDAO(private val db: JdbcTemplate) : ProductDAO {
         return value
     }
 
-    fun existsByName(productName: String): Boolean {
+    override fun existsByName(name: String): Boolean {
         val sql = "SELECT COUNT(*) FROM product WHERE name = ?"
-        val count = db.queryForObject(sql, Long::class.java, productName)
+        val count = db.queryForObject(sql, Long::class.java, name)
         return count != null && count > 0
     }
 }
