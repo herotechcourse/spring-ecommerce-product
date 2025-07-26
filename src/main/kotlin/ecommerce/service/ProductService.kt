@@ -1,7 +1,7 @@
 package ecommerce.service
 
-import ecommerce.exception.DuplicateProductNameException
-import ecommerce.exception.ProductNotFoundException
+import ecommerce.exception.product.DuplicateProductNameException
+import ecommerce.exception.product.ProductNotFoundException
 import ecommerce.model.Product
 import ecommerce.repository.ProductRepository
 import org.springframework.stereotype.Service

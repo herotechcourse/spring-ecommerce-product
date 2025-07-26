@@ -1,4 +1,3 @@
-package ecommerce.exception
+package ecommerce.exception.auth
 
-class EmailAlreadyExistsException(message: String): RuntimeException(message)
-
+class EmailAlreadyExistsException(message: String) : RuntimeException(message)

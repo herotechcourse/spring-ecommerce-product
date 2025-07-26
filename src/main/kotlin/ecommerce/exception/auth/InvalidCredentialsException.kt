@@ -1,3 +1,3 @@
-package ecommerce.exception
+package ecommerce.exception.auth
 
-class InvalidCredentialsException(message: String): RuntimeException(message)
+class InvalidCredentialsException(message: String) : RuntimeException(message)
