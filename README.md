@@ -10,7 +10,6 @@
 - [x] Tests for CRUD operations
 
 ## Admin
-- [x] Login for Admin
 - [x] Admin can view, add, update, and delete products
 - [x] Template for Product Page
 - [x] Add Button for Edit a Product
@@ -72,9 +71,9 @@
   - [x] Develop `CartService` for business logic related to cart operations.
   - [x] Implement `Cart` related DTOs for API requests and responses.
   - [x] Expose REST API endpoints for cart operations:
-    - [x] `GET /api/cart`: Retrieve user's cart contents.
-    - [x] `POST /api/cart`: Add a product to the user's cart.
-    - [x] `DELETE /api/cart/{productId}`: Remove a product from the user's cart.
+  - [x] `GET /api/cart`: Retrieve user's cart contents.
+  - [x] `POST /api/cart`: Add a product to the user's cart.
+  - [x] `DELETE /api/cart/{productId}`: Remove a product from the user's cart.
   - [x] Ensure all cart endpoints are protected and require a valid JWT.
 
 ## Cart Statistics (Admin Reports)

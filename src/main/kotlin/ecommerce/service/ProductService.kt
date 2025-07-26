@@ -3,6 +3,7 @@ package ecommerce.service
 import ecommerce.domain.Product
 import ecommerce.exception.InvalidInputException
 import ecommerce.exception.ResourceNotFoundException
+
 import ecommerce.repository.ProductRepository
 import org.springframework.stereotype.Service
 
@@ -19,6 +20,7 @@ class ProductService(private val productRepository: ProductRepository) {
         if (productRepository.findByName(newProduct.name) != null) {
             throw InvalidInputException("Product name ${newProduct.name} already exists")
         }
+
         productRepository.create(newProduct)
     }
 

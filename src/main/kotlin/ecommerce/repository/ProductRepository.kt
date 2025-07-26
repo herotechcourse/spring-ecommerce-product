@@ -31,6 +31,7 @@ class ProductRepository(private val jdbcTemplate: JdbcTemplate) {
         return jdbcTemplate.query(sql, productRowMapper, id).firstOrNull()
     }
 
+
     fun findByName(name: String): Product? {
         val sql = "select * from products where name = ?"
         return jdbcTemplate.query(sql, productRowMapper, name).toList().firstOrNull()
@@ -40,6 +41,7 @@ class ProductRepository(private val jdbcTemplate: JdbcTemplate) {
         val sql = "select id, name, price, img, quantity from products"
         return jdbcTemplate.query(sql, productRowMapper)
     }
+
 
     fun create(product: Product): Product {
         val sql = "insert into products (name, price, img, quantity) values (?, ?, ?, ?)"
@@ -57,6 +59,7 @@ class ProductRepository(private val jdbcTemplate: JdbcTemplate) {
         product.id = keyHolder.key?.toLong() ?: throw IllegalStateException("Failed to retrieve generated ID for product.")
 
         return product
+
     }
 
     fun update(
