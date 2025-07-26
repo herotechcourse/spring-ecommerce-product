@@ -11,14 +11,14 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping("/admin/statistics")
 class StatisticsController(private val statService: StatService){
     @GetMapping("/top-products")
-    fun topProducts(): ResponseEntity<ProductStatsDto> {
-        val stats = statService.topProducts()
+    fun topProducts(): ResponseEntity<List<ProductStatsDto>> {
+        val stats = statService.getTop5ProductsInThePast30Days()
         return ResponseEntity.ok(stats)
     }
 
     @GetMapping("/active-members")
     fun activeMembers(): ResponseEntity<List<MemberStatsDto>> {
-        val stats = statService.activeMembers()
+        val stats = statService.getActiveMembersInThePast7Days()
         return ResponseEntity.ok(stats)
     }
 }
