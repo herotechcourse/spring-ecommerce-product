@@ -1,6 +1,7 @@
 package ecommerce.repository
 
 import ecommerce.domain.CartEvent
+import ecommerce.dto.report.MemberCartActivityDTO
 import ecommerce.dto.report.ProductCartCountDTO
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.jdbc.core.RowMapper
@@ -19,6 +20,15 @@ class CartEventRepository(private val jdbcTemplate: JdbcTemplate) {
                 productName = rs.getString("productName"),
                 addedCount = rs.getLong("addedCount"),
                 lastAddedTime = rs.getTimestamp("lastAddedTime").toLocalDateTime(),
+            )
+        }
+
+    private val memberCartActivityDTOMapper =
+        RowMapper<MemberCartActivityDTO> { rs: ResultSet, _ ->
+            MemberCartActivityDTO(
+                memberId = rs.getLong("memberId"),
+                userName = rs.getString("userName"),
+                email = rs.getString("email"),
             )
         }
 
@@ -61,5 +71,23 @@ class CartEventRepository(private val jdbcTemplate: JdbcTemplate) {
         """
 
         return jdbcTemplate.query(sql, cartItemMapper, startDate)
+    }
+
+    fun findMembersWhoAddedItemsInLastDays(startDate: LocalDateTime): List<MemberCartActivityDTO> {
+        val sql = """
+            SELECT DISTINCT
+                m.user_id AS memberId,
+                m.user_name AS userName,
+                m.email AS email
+            FROM
+                cart_events ce
+            JOIN
+                members m ON ce.member_id = m.user_id
+            WHERE
+                ce.timestamp >= ?
+            ORDER BY
+                m.user_id ASC -- Order for consistent results
+        """
+        return jdbcTemplate.query(sql, memberCartActivityDTOMapper, startDate)
     }
 }

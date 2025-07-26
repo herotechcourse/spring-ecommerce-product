@@ -2,6 +2,7 @@ package ecommerce.controller.api
 
 import ecommerce.annotation.LoginMember
 import ecommerce.domain.Member
+import ecommerce.dto.report.MemberCartActivityDTO
 import ecommerce.dto.report.ProductCartCountDTO
 import ecommerce.service.ReportService
 import org.springframework.http.ResponseEntity
@@ -18,5 +19,14 @@ class AdminReportController(private val reportService: ReportService) {
     ): ResponseEntity<List<ProductCartCountDTO>> {
         val topProducts = reportService.findTop5MostAddedProductsInLast30Days()
         return ResponseEntity.ok(topProducts)
+    }
+
+    @GetMapping("/members-added-to-cart-7-days")
+    fun getMembersWhoAddedItemsInLast7Days(
+        @LoginMember admin: Member,
+    ): ResponseEntity<List<MemberCartActivityDTO>> {
+        println("Admin ${admin.userName} (ID: ${admin.userId}) is requesting members who added items report.")
+        val members = reportService.getMembersWhoAddedItemsInLast7Days()
+        return ResponseEntity.ok(members)
     }
 }
