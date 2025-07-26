@@ -2,21 +2,215 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Your Cart</title>
+    <style>
+        /* Basic styling */
+        #cart-items ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        #cart-items li {
+            margin-bottom: 1rem;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 0.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .product-info {
+            flex-grow: 1;
+        }
+        .product-name {
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+        .product-price {
+            color: #555;
+        }
+        button {
+            background-color: #dc3545; /* Bootstrap danger red */
+            border: none;
+            color: white;
+            padding: 0.4rem 0.8rem;
+            cursor: pointer;
+            border-radius: 4px;
+            font-size: 0.9rem;
+        }
+        button:hover {
+            background-color: #c82333;
+        }
+        #clear-cart-btn {
+            margin: 1rem 0;
+            background-color: #007bff; /* Bootstrap primary */
+        }
+        #clear-cart-btn:hover {
+            background-color: #0069d9;
+        }
+    </style>
 </head>
 <body>
 <h1>Your Cart</h1>
-<div th:if="${#lists.isEmpty(items)}">
-    <p>Your cart is empty.</p>
-</div>
-<div th:unless="${#lists.isEmpty(items)}">
-    <ul>
-        <li th:each="item : ${items}">
-            Product ID: <span th:text="${item.productId}">-</span>,
+<button id="clear-cart-btn">Clear Cart</button>
+<div id="cart-items">Loading your cart...</div>
 
-            Quantity: <span th:text="${item.quantity}">-</span>
-            <!-- you can enhance this with product details if available -->
-        </li>
-    </ul>
-</div>
+<script>
+    async function loadCart() {
+        const token = localStorage.getItem("token");
+        if (!token) {
+            alert("Please log in first.");
+            window.location.href = "/auth/login";
+            return;
+        }
+
+        try {
+            const response = await fetch("/api/cart/mycart", {
+                headers: {
+                    "Authorization": "Bearer " + token
+                }
+            });
+
+            if (!response.ok) {
+                if (response.status === 401) {
+                    alert("Unauthorized, please login.");
+                    window.location.href = "/auth/login";
+                } else {
+                    alert("Failed to load your cart: " + response.status);
+                }
+                return;
+            }
+
+            const cart = await response.json();
+            renderCart(cart);
+        } catch (error) {
+            console.error("Error fetching cart:", error);
+            alert("An error occurred while loading your cart.");
+        }
+    }
+
+    function renderCart(cart) {
+        const container = document.getElementById("cart-items");
+        if (!container) {
+            console.error("No container to render cart items");
+            return;
+        }
+
+        if (!cart.items || cart.items.length === 0) {
+            container.innerHTML = "<p>Your cart is empty.</p>";
+            return;
+        }
+
+        let html = "<ul>";
+        cart.items.forEach(item => {
+            const product = item.product;
+            if (product) {
+                html += `
+                    <li data-product-id="${product.id}">
+                        <div class="product-info">
+                            <div class="product-name">${product.name}</div>
+                            <div class="product-price">Price: $${product.price.toFixed(2)}</div>
+                            <div>Quantity: ${item.quantity}</div>
+                        </div>
+                        <button class="remove-item-btn">Remove</button>
+                    </li>
+                `;
+            } else {
+                html += `
+                    <li data-product-id="${item.productId}">
+                        <div class="product-info">
+                            <div>Product ID: ${item.productId} (details not available)</div>
+                            <div>Quantity: ${item.quantity}</div>
+                        </div>
+                        <button class="remove-item-btn">Remove</button>
+                    </li>
+                `;
+            }
+        });
+        html += "</ul>";
+
+        container.innerHTML = html;
+
+        // Add event listeners to all remove buttons
+        container.querySelectorAll(".remove-item-btn").forEach(button => {
+            button.addEventListener("click", async (event) => {
+                const li = event.target.closest("li");
+                const productId = li.getAttribute("data-product-id");
+                await removeItem(productId);
+            });
+        });
+    }
+
+    async function removeItem(productId) {
+        const token = localStorage.getItem("token");
+        if (!token) {
+            alert("Please log in first.");
+            window.location.href = "/auth/login";
+            return;
+        }
+        try {
+            const response = await fetch(`/api/cart/items/${productId}`, {
+                method: "DELETE",
+                headers: {
+                    "Authorization": "Bearer " + token
+                }
+            });
+            if (response.ok) {
+                // Response includes updated cart; re-render it
+                const updatedCart = await response.json();
+                renderCart(updatedCart);
+                alert("Item removed from cart.");
+            } else if (response.status === 401) {
+                alert("Unauthorized. Please log in.");
+                window.location.href = "/auth/login";
+            } else {
+                const errorText = await response.text();
+                alert(`Failed to remove item: ${response.status} - ${errorText}`);
+            }
+        } catch (error) {
+            console.error("Error removing item:", error);
+            alert("An error occurred while removing the item.");
+        }
+    }
+
+    async function clearCart() {
+        const token = localStorage.getItem("token");
+        if (!token) {
+            alert("Please log in first.");
+            window.location.href = "/auth/login";
+            return;
+        }
+        if (!confirm("Are you sure you want to clear your entire cart?")) {
+            return;
+        }
+        try {
+            const response = await fetch("/api/cart/clear", {
+                method: "DELETE",
+                headers: {
+                    "Authorization": "Bearer " + token
+                }
+            });
+            if (response.ok || response.status === 204) {
+                // No content returned, just reload cart UI
+                const container = document.getElementById("cart-items");
+                container.innerHTML = "<p>Your cart is empty.</p>";
+                alert("Cart cleared.");
+            } else if (response.status === 401) {
+                alert("Unauthorized. Please log in.");
+                window.location.href = "/auth/login";
+            } else {
+                const errorText = await response.text();
+                alert(`Failed to clear cart: ${response.status} - ${errorText}`);
+            }
+        } catch (error) {
+            console.error("Error clearing cart:", error);
+            alert("An error occurred while clearing the cart.");
+        }
+    }
+
+    // Wire clear button
+    document.getElementById("clear-cart-btn").addEventListener("click", () => {
+        clearCart();
+    });
+
+    document.addEventListener("DOMContentLoaded", loadCart);
+</script>
 </body>
 </html>
