@@ -1,9 +1,10 @@
 package ecommerce.dto
 
-import ecommerce.model.Product
-
 class CartItemDto(
-    val cartId: Long,
     val quantity: Long,
-    val product: Product,
+    val productId: Long,
+    val productName: String,
+    val productPrice: Double,
+    val productImageUrl: String,
 )
+
