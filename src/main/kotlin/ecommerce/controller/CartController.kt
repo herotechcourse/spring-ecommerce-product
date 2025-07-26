@@ -1,9 +1,10 @@
 package ecommerce.controller
 
+import ecommerce.annotation.LoginMember
 import ecommerce.dto.AllCartItemsDto
 import ecommerce.dto.CartItemDto
 import ecommerce.dto.CartItemRequest
-import ecommerce.model.Member
+import ecommerce.dto.MemberDto
 import ecommerce.service.CartService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -21,27 +22,27 @@ class CartController(private val cartService: CartService) {
 
     @GetMapping
     fun getAllItems(
-        @LoginMember member: Member,
+        @LoginMember member: MemberDto,
     ): ResponseEntity<AllCartItemsDto> {
-        val allCartItemsDto = cartService.getAllItems(member.id!!)
+        val allCartItemsDto = cartService.getAllItems(member.id)
         return ResponseEntity.status(HttpStatus.OK).body(allCartItemsDto)
     }
 
     @PostMapping
     fun addItem(
-        @LoginMember member: Member,
+        @LoginMember member: MemberDto,
         @RequestBody request: CartItemRequest,
     ): ResponseEntity<CartItemDto> {
-        val cartItemDto = cartService.addItem(member.id!!, request)
+        val cartItemDto = cartService.addItem(member.id, request)
         return ResponseEntity.created(URI("/api/cart/items/${cartItemDto.productId}")).body(cartItemDto)
     }
 
     @DeleteMapping
     fun deleteItem(
-        @LoginMember member: Member,
+        @LoginMember member: MemberDto,
         @RequestBody request: CartItemRequest,
     ): ResponseEntity<CartItemDto?> {
-        val cartItemDto = cartService.deleteItem(member.id!!, request)
+        val cartItemDto = cartService.deleteItem(member.id, request)
         if (cartItemDto == null) {
             return ResponseEntity.noContent().build()
         }

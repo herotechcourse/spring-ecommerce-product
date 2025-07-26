@@ -4,7 +4,7 @@ import ecommerce.exception.NotFoundException
 import ecommerce.exception.UnauthorizedException
 import ecommerce.infrastructure.JwtTokenProvider
 import ecommerce.model.Member
-import ecommerce.dto.MemberResponse
+import ecommerce.dto.MemberDto
 import ecommerce.dto.TokenRequest
 import ecommerce.dto.TokenResponse
 import ecommerce.repository.MemberRepository
@@ -15,17 +15,17 @@ class AuthService(
     private val jwtTokenProvider: JwtTokenProvider,
     private val memberRepository: MemberRepository,
 ) {
-    fun findMember(payload: String): MemberResponse {
+    fun findMember(payload: String): MemberDto {
         val member = memberRepository.findByEmail(payload)
         if (member == null) {
             throw NotFoundException("Member not found")
             // or is it better to return 500?
         }
         // TODO check other options for retrieval of member id when it is null
-        return MemberResponse(member.id, member.email, member.role)
+        return MemberDto(member.id!!, member.email, member.role)
     }
 
-    fun findMemberByToken(token: String): MemberResponse {
+    fun findMemberByToken(token: String): MemberDto {
         if (!jwtTokenProvider.validateToken(token)) {
             throw UnauthorizedException("Invalid token")
         }

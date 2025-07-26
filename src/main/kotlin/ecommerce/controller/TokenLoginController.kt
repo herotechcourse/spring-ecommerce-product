@@ -3,7 +3,7 @@ package ecommerce.controller
 import ecommerce.service.AuthService
 import ecommerce.exception.UnauthorizedException
 import ecommerce.infrastructure.AuthorizationExtractor
-import ecommerce.dto.MemberResponse
+import ecommerce.dto.MemberDto
 import ecommerce.dto.TokenRequest
 import ecommerce.dto.TokenResponse
 import jakarta.servlet.http.HttpServletRequest
@@ -45,7 +45,7 @@ class TokenLoginController(private val authService: AuthService) {
      * accept: application/json
      */
     @GetMapping("me/token")
-    fun findMyInfo(request: HttpServletRequest): ResponseEntity<MemberResponse> {
+    fun findMyInfo(request: HttpServletRequest): ResponseEntity<MemberDto> {
         val token = authorizationExtractor.extract(request)
         if (token.isEmpty()) {
             throw UnauthorizedException()
