@@ -18,6 +18,7 @@ class WebConfig(
 
     override fun addInterceptors(registry: InterceptorRegistry) {
         registry.addInterceptor(checkLoginInterceptor)
-            .addPathPatterns("/api/wishes/**")
+            .addPathPatterns("/api/wishes/**", "/admin/**")
+            .excludePathPatterns("/api/members/login", "/api/members/register")
     }
 }
