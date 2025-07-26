@@ -49,6 +49,7 @@ HTTP API that allows users to retrieve, add, update, and delete products.
   -[x] Must be **greater than 0.00**.
 -[x] Validate `ProductRequest.imageUrl`
   -[x] Must start with **http://** or **https://**
+
 #### Member
 -[ ] Validate `ProductRequest.email`
   -[x] Must be Email format
@@ -76,6 +77,8 @@ HTTP API that allows users to retrieve, add, update, and delete products.
 - [ ] implement `login`
   - success: 200 ok
   - failure
-    -[ ] Invalid email or password → 401 Unauthorized 
-    -[ ] Account isn't activated or suspended → 403 Forbidden 
+    -[x] Invalid email or password → 401 Unauthorized 
+    -[ ] Account isn't activated or suspended → 403 Forbidden
+      - MemberStatus
+      - MemberRole
     -[ ] Too many failed attempts → 429 Too Many Requests
