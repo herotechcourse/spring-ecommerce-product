@@ -32,4 +32,4 @@ create table CART_ITEMS (
     PRIMARY KEY (cart_id, product_id),
     FOREIGN KEY (cart_id) REFERENCES CARTS(cart_id) ON DELETE CASCADE,
     FOREIGN KEY (product_id) REFERENCES PRODUCTS(id)
-)
+);

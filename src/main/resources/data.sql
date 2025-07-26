@@ -12,3 +12,4 @@ INSERT INTO members (email, password, role)
 VALUES ('jack@mail.com', 'My_Password', 'user');
 INSERT INTO members (email, password, role)
 VALUES ('grace@mail.com', 'Helloooooo', 'user');
+

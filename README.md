@@ -256,3 +256,10 @@ of Long types Value Class types like ProductId, or should it take a CartRequestD
 
 ### Future work
 - Statistics still need to be tested with the new interception feature
+
+## Considerations
+
+- TODO read about difference btw RestController and Controller
+- TODO why do we combine Controller and ControllerView
+- read and learn SQL commands in H2 console
+- 
