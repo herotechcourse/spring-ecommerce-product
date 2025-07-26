@@ -28,7 +28,7 @@ create table CART_ITEMS (
     cart_id INT,
     product_id INT,
     quantity INT DEFAULT 1,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (cart_id, product_id),
     FOREIGN KEY (cart_id) REFERENCES CARTS(cart_id) ON DELETE CASCADE,
     FOREIGN KEY (product_id) REFERENCES PRODUCTS(id)

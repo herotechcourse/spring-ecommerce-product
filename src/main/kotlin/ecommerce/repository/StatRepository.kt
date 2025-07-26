@@ -11,7 +11,7 @@ class StatRepository(private val jdbcTemplate: JdbcTemplate) {
         val query = """
             SELECT DISTINCT
                 m.id AS member_id,
-                m.email,
+                m.email
             FROM
                 cart_items ci
             JOIN
@@ -19,7 +19,7 @@ class StatRepository(private val jdbcTemplate: JdbcTemplate) {
             JOIN
                 members m ON c.user_id = m.id
             WHERE
-                ci.created_at > CURRENT_TIMESTAMP - INTERVAL 7 DAY;
+                ci.created_at >= DATEADD('DAY', -7, CURRENT_DATE);
         """
 
         return jdbcTemplate.query(query) { rs, _ ->
@@ -35,14 +35,14 @@ class StatRepository(private val jdbcTemplate: JdbcTemplate) {
         val query = """
             SELECT
                 p.name AS product_name,
-                COUNT(ci.product_id) AS product_quantity,
+                COUNT(ci.quantity) AS product_quantity,
                 MAX(ci.created_at) AS most_recent
             FROM
                 cart_items ci
             JOIN
                 products p ON ci.product_id = p.id
             WHERE
-                ci.created_at > CURRENT_TIMESTAMP - INTERVAL 30 DAY
+                ci.created_at >= DATEADD('DAY', -30, CURRENT_DATE)
             GROUP BY
                 p.name
             ORDER BY
