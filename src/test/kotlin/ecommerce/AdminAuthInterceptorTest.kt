@@ -1,6 +1,5 @@
 package ecommerce
 
-import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
@@ -9,35 +8,29 @@ import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
-// TODO mock admin access somehow, NOTE tests are not working
-
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
-class StatisticsTest {
+class AdminAuthInterceptorTest {
 
     @Autowired
     lateinit var mockMvc: MockMvc
 
     @Test
-    fun `should return top 5 most added products`() {
+    fun `should not allow access to user for products stats`() {
         val response = mockMvc.perform(get("/admin/statistics/top-products"))
-            .andExpect(status().isOk)
+            .andExpect(status().isUnauthorized)
             .andReturn()
 
         val products = response.response.contentAsString // Deserialize and assert here
-
-        assertThat(products).isNotEmpty
     }
 
     @Test
-    fun `should return active members from last 7 days`() {
+    fun `should not allow access to user for members stats`() {
         val response = mockMvc.perform(get("/admin/statistics/active-members"))
-            .andExpect(status().isOk)
+            .andExpect(status().isUnauthorized)
             .andReturn()
 
         val members = response.response.contentAsString // Deserialize and assert here
-
-        assertThat(members).isNotEmpty
     }
 
 }

@@ -1,7 +1,9 @@
 package ecommerce.infrastructure
 
 import jakarta.servlet.http.HttpServletRequest
+import org.springframework.stereotype.Component
 
+@Component
 class AuthorizationExtractor {
     fun extract(request: HttpServletRequest): String {
         val headers = request.getHeaders(HEADER)
