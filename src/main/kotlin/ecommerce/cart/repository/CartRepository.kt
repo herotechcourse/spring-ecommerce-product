@@ -1,10 +1,13 @@
 package ecommerce.cart.repository
 
+import ecommerce.admin.dto.RecentMemberResponse
+import ecommerce.admin.dto.TopProductResponse
 import ecommerce.cart.domain.CartItem
 import jakarta.validation.ValidationException
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert
 import org.springframework.stereotype.Repository
+import java.time.LocalDateTime
 
 @Repository
 class CartRepository(
@@ -22,6 +25,7 @@ class CartRepository(
             mapOf(
                 "member_id" to cartItem.memberId,
                 "product_id" to cartItem.productId,
+                "added_at" to (cartItem.addedAt ?: LocalDateTime.now()),
             )
         val id = simpleJdbcInsert.executeAndReturnKey(parameters).toLong()
         cartItem.id = id
@@ -53,5 +57,44 @@ class CartRepository(
         val sql = "SELECT COUNT(*) FROM CART_ITEMS WHERE member_id = ? AND product_id = ?"
         val count = jdbcTemplate.queryForObject(sql, Int::class.java, memberId, productId) ?: 0
         return count > 0
+    }
+
+    fun findTopProductsInLast30Days(): List<TopProductResponse> {
+        val sql = """
+            SELECT 
+                p.name AS product_name,
+                COUNT(*) AS add_count,
+                MAX(ci.added_at) AS last_added_at
+            FROM CART_ITEMS ci
+            JOIN PRODUCTS p ON ci.product_id = p.id
+            WHERE ci.added_at >= CURRENT_TIMESTAMP - 30 DAY
+            GROUP BY p.id, p.name
+            ORDER BY add_count DESC, last_added_at DESC
+            LIMIT 5
+        """
+        return jdbcTemplate.query(sql) { rs, _ ->
+            TopProductResponse(
+                productName = rs.getString("product_name"),
+                addCount = rs.getLong("add_count"),
+                lastAddedAt = rs.getTimestamp("last_added_at").toLocalDateTime(),
+            )
+        }
+    }
+
+    fun findRecentMembersInLast7Days(): List<RecentMemberResponse> {
+        val sql = """
+            SELECT DISTINCT 
+                m.id AS member_id,
+                m.email
+            FROM MEMBERS m
+            JOIN CART_ITEMS ci ON m.id = ci.member_id
+            WHERE ci.added_at >= CURRENT_TIMESTAMP - 7 DAY
+        """
+        return jdbcTemplate.query(sql) { rs, _ ->
+            RecentMemberResponse(
+                memberId = rs.getLong("member_id"),
+                email = rs.getString("email"),
+            )
+        }
     }
 }
