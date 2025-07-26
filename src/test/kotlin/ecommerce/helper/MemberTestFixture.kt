@@ -2,6 +2,10 @@ package ecommerce.helper
 
 import ecommerce.dto.MemberRequest
 import io.jsonwebtoken.Jwts
+import io.restassured.RestAssured
+import io.restassured.http.ContentType
+import io.restassured.response.ExtractableResponse
+import io.restassured.response.Response
 
 object MemberTestFixture {
     object RequestCases {
@@ -19,5 +23,14 @@ object MemberTestFixture {
                 validityInMilliseconds = 3600000,
                 algorithm = Jwts.SIG.HS256,
             )
+    }
+
+    fun registerMember(request: MemberRequest, path: String = "/api/members/register"): ExtractableResponse<Response> {
+        return RestAssured
+                .given().log().all()
+                .body(request)
+                .contentType(ContentType.JSON)
+                .`when`().post("/api/members/register")
+                .then().log().all().extract()
     }
 }
