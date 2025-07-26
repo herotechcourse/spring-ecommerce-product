@@ -45,6 +45,8 @@ class TokenLoginControllerTest {
     fun setUp() {
         productRepository = ProductRepository(jdbcTemplate)
 
+        jdbcTemplate.execute("DROP TABLE IF EXISTS cart_items")
+        jdbcTemplate.execute("DROP TABLE IF EXISTS carts")
         jdbcTemplate.execute("DROP TABLE members IF EXISTS")
         jdbcTemplate.execute(
             "CREATE TABLE members(" + " id SERIAL, email VARCHAR(20) UNIQUE, password VARCHAR(50), role VARCHAR(10))",

@@ -20,7 +20,7 @@ create table CARTS
 (
     cart_id        INT AUTO_INCREMENT,
     user_id   INT UNIQUE,
-    PRIMARY KEY (id),
+    PRIMARY KEY (cart_id),
     FOREIGN KEY (user_id) REFERENCES MEMBERS(id)
 );
 
@@ -29,6 +29,6 @@ create table CART_ITEMS (
     product_id INT,
     quantity INT DEFAULT 1,
     PRIMARY KEY (cart_id, product_id),
-    FOREIGN KEY (cart_id) REFERENCES CARTS(id) ON DELETE CASCADE,
+    FOREIGN KEY (cart_id) REFERENCES CARTS(cart_id) ON DELETE CASCADE,
     FOREIGN KEY (product_id) REFERENCES PRODUCTS(id)
 )
