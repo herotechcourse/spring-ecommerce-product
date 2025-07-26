@@ -2,5 +2,5 @@ package ecommerce.dto
 
 class AllCartItemsDto(
     val cartId: Long,
-    val items: List<AllCartItemsDto> = emptyList(),
+    val items: List<CartItemDto> = emptyList(),
 )
