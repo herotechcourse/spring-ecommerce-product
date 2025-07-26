@@ -165,14 +165,14 @@ Implements admin statistics endpoints to retrieve insights from users' carts.
 
 ### Feature List
 
-- [ ] Retrieve Top 5 Most Added Products to Cart in the Last 30 Days
-  - [ ] Returns product name, add count, and last added time
-  - [ ] Orders by count  and last added time 
-  - [ ] Limited to 5 products
+- [x] Retrieve Top 5 Most Added Products to Cart in the Last 30 Days
+  - [x] Returns product name, add count, and last added time
+  - [x] Orders by count  and last added time 
+  - [x] Limited to 5 products
 
-- [ ] Retrieve Members Who Added Items to Their Cart in the Last 7 Days
-  - [ ] Returns unique members with ID and email
+- [x] Retrieve Members Who Added Items to Their Cart in the Last 7 Days
+  - [x] Returns unique members with ID and email
 
-- [ ] Restrict Access to Admin Endpoints
-  - [ ] Only users with ADMIN role can access /admin/**
-  - [ ] Implemented AuthInterceptor for role-based access control
+- [x] Restrict Access to Admin Endpoints
+  - [x] Only users with ADMIN role can access /admin/**
+  - [x] Implemented AuthInterceptor for role-based access control
