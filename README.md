@@ -161,6 +161,20 @@ Implement a functionality that allows users to add or remove items from a cart. 
 | Remove non-existent item  | 404 Not Found  | Error body (optional)        |                            |
 
 
+## Step 2.4 - Cart Statistics
+The administrator should be able to view statistical in fo based on users' carts.
+
+## Featurer list - Step 2.4
+- [ ] Retrieve the Top 5 Most Added Products to Cart in the Last 30 Days
+  - [ ] Returns the top 5 products that were added to carts most frequently in the past 30 days.
+  - [ ] If multiple products have the same count, the one most recently added should be listed first.
+  - [ ] The response must include the product name, the number of times it was added, and the most recent added time.
+- [ ] Retrieve Members Who Added Items to Their Cart in the Last 7 Days
+    - [ ] Returns a list of members who added at least one product to their cart in the past 7 days.
+    - [ ] Each member should appear only once, even if they added multiple products.
+    - [ ] The response must include the member ID, name, and email.
+- [ ] (Optional) Restrict access to those stat API so that only users with the ADMIN role can access it.
+
 ## Learnings
 ### JDBC & DAO
 - my `ProductRepository` class is a DAO (Data Access Object): a design pattern for data access abstraction, meaning that
