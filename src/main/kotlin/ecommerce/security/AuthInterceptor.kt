@@ -30,10 +30,13 @@ class AuthInterceptor(
         response: HttpServletResponse,
         handler: Any,
     ): Boolean {
-        val token =
-            request.getHeader("Authorization")
-                ?.removePrefix("Bearer ")
-                ?: throw UnauthorizedException("Authorization header is missing or malformed.")
+        val authorizationHeader = request.getHeader("Authorization")
+
+        if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
+            throw UnauthorizedException("Authorization header is missing or malformed.")
+        }
+
+        val token = authorizationHeader.removePrefix("Bearer ")
 
         if (!jwtTokenProvider.validateToken(token)) {
             throw UnauthorizedException("Invalid or expired access token.")

@@ -59,24 +59,7 @@
   - [x] Unauthorized for missing or invalid token
   - [x] Forbidden for incorrect login
 
-## Tests for User Authentication
-  - [ ] test(register): should register a new member and return 201 Created with token
-  - [ ] test(register): should return 400 for blank user name
-  - [ ] test(register): should return 400 for blank email
-  - [ ] test(register): should return 400 for invalid email format
-  - [ ] test(register): should return 400 for blank password
-  - [ ] test(register): should return 400 for password shorter than 8 characters
-  - [ ] test(register): should return 400 for duplicate email registration
-  - [ ] test(login): should log in an existing member and return 200 OK with token
-  - [ ] test(login): should return 401 for non-existent email
-  - [ ] test(login): should return 401 for incorrect password
-  - [ ] test(login): should return 401 for blank email (handled by Auth Service)
-  - [ ] test(login): should return 401 for blank password (handled by Auth Service)
-  - [ ] test(login): should return 400 for invalid email format
-  - [ ] test(login): should return 400 for password shorter than 8 characters
-
 ## Cart Functionality & API Security
-
 - [x] Implement API Security with JWT:
   - [x] Extract JWT from `Authorization: Bearer <token>` header.
   - [x] Validate JWT (signature and expiration).
@@ -95,7 +78,6 @@
   - [x] Ensure all cart endpoints are protected and require a valid JWT.
 
 ## Cart Statistics (Admin Reports)
-
 - [x] Implement Cart Event Logging:
   - [x] Add CartEvent domain entity to track ADD_TO_CART actions.
   - [x] Create CartEventRepository for persistence of cart event data.
@@ -108,88 +90,76 @@
   - [x] Ensure endpoint is protected and requires ADMIN role.
 
 ## Admin Report Controller Tests
-
-- [ ] Integration Tests for "Top 5 Most Added Products" Report (GET /api/admin/reports/top-products-30-days)
-  - [ ] Should return 200 OK and correct data with a valid ADMIN token.
-  - [ ] Should return 403 Forbidden with a valid USER token.
-  - [ ] Should return 401 Unauthorized with no token.
-  - [ ] Should return 200 OK and an empty list if no relevant events exist.
-- [ ] Integration Tests for "Members Who Added Items" Report (GET /api/admin/reports/members-added-to-cart-7-days)
-  - [ ] Should return 200 OK and correct unique member data with a valid ADMIN token.
-  - [ ] Should return 403 Forbidden with a valid USER token.
-  - [ ] Should return 401 Unauthorized with no token.
-  - [ ] Should return 200 OK and an empty list if no relevant member activity exists.
+- [x] Integration Tests for "Top 5 Most Added Products" Report (GET /api/admin/reports/top-products-30-days)
+  - [x] Should return 200 OK and correct data with a valid ADMIN token.
+  - [x] Should return 403 Forbidden with a valid USER token.
+  - [x] Should return 401 Unauthorized with no token.
+  - [x] Should return 200 OK and an empty list if no relevant events exist.
+- [x] Integration Tests for "Members Who Added Items" Report (GET /api/admin/reports/members-added-to-cart-7-days)
+  - [x] Should return 200 OK and correct unique member data with a valid ADMIN token.
+  - [x] Should return 403 Forbidden with a valid USER token.
+  - [x] Should return 401 Unauthorized with no token.
 
 ## Cart API Controller Tests
-
-- [ ] Integration Tests for Cart Retrieval (GET /api/cart)
-  - [ ] Should return 200 OK with cart contents for a valid USER or ADMIN token.
-  - [ ] Should return 401 Unauthorized with no token.
-  - [ ] Should return 401 Unauthorized with an invalid token.
-- [ ] Integration Tests for Adding Products to Cart (POST /api/cart/items)
-  - [ ] Should return 200 OK and updated cart for a valid USER or ADMIN token.
-  - [ ] Should return 401 Unauthorized with no token.
-  - [ ] Should return 401 Unauthorized with an invalid token.
-  - [ ] Should return 400 Bad Request for invalid request body (e.g., negative quantity).
-  - [ ] Should return 400 Bad Requests if the quantity exceeds product stock.
-- [ ] Integration Tests for Removing Products from Cart (DELETE /api/cart/items/{productId})
-  - [ ] Should return 204 No Content for a valid USER or ADMIN token.
-  - [ ] Should return 401 Unauthorized with no token.
-  - [ ] Should return 401 Unauthorized with an invalid token.
-  - [ ] Should return 404 Not Found if product not in carts.
+- [x] Integration Tests for Cart Retrieval (GET /api/cart)
+  - [x] Should return 200 OK with no cart contents for a valid USER token.
+- [x] Should return 200 OK with cart contents for a valid USER token.
+  - [x] Should return 401 Unauthorized with no token.
+  - [x] Should return 401 Unauthorized with an invalid token.
+- [x] Integration Tests for Adding Products to Cart (POST /api/cart/items)
+  - [x] Should return 200 OK and update cart for a valid USER token.
+  - [x] Should return 200 OK and update quantity if product already in cart
+  - [x] Should return 401 Unauthorized with no token.
+  - [x] Should return 401 Unauthorized with an invalid token.
+  - [x] Should return 400 Bad Request for invalid request body (e.g., negative quantity).
+  - [x] Should return 400 Bad Requests if the quantity exceeds product stock.
+- [x] Integration Tests for Removing Products from Cart (DELETE /api/cart/items/{productId})
+  - [x] Should return 204 No Content for a valid USER token.
+  - [x] Should return 401 Unauthorized with no token.
+  - [x] Should return 401 Unauthorized with an invalid token.
+  - [x] Should return 404 Not Found if product not in carts.
 
 ## Member API Controller Tests
-
-- [ ] Integration Tests for User Registration (POST /api/members/register)
+- [x] Integration Tests for User Registration (POST /api/members/register)
   - [x] Should register a new member and return 201 Created.
-  - [x] Should return 400 for blank user name.
+  - [x] Should return 400 for blank username.
   - [x] Should return 400 for blank email.
   - [x] Should return 400 for invalid email format.
   - [x] Should return 400 for blank password.
   - [x] Should return 400 for password shorter than 8 characters.
   - [x] Should return 400 for duplicate email registration.
-  - [ ] Integration Tests for User Login (POST /api/members/login)
+- [x] Integration Tests for User Login (POST /api/members/login)
   - [x] Should log in an existing member and return 200 OK with token.
   - [x] Should return 401 for non-existent email.
   - [x] Should return 401 for incorrect password.
-  - [x] Should return 401 for blank email.
-  - [x] Should return 401 for blank password.
+  - [x] Should return 400 for blank email.
+  - [x] Should return 400 for blank password.
   - [x] Should return 400 for invalid email format.
-  - [x] Should return 400 for password shorter than 8 characters.
-- [ ] Integration Tests for Member-Specific Operations (if any, e.g., GET /api/members/profile)
-  - [ ] Should return 200 OK for a valid USER or ADMIN token.
-    - [ ] Should return 401 Unauthorized with no token.
 
 ## Auth Interceptor Tests
-
-- [ ] Unit Tests for preHandle Logic
-  - [ ] Should return true for public paths.
-  - [ ] Should throw UnauthorizedException for missing/invalid token.
-  - [ ] Should throw ForbiddenException when a user role is not in PATH_ROLE_REQUIREMENTS.
-  - [ ] Should return true when a user role is authorized for the path.
-  - [ ] Should correctly set AUTHENTICATED_MEMBER_ATTRIBUTE in request.
-  - [ ] Test specific path prefix matching logic (e.g., longer prefix takes precedence).
+- [x] Unit Tests for preHandle Logic
+  - [x] Should throw UnauthorizedException for missing/invalid token.
+  - [x] Should throw ForbiddenException when a user role is not in PATH_ROLE_REQUIREMENTS.
+  - [x] Should return true when a user role is authorized for the path.
+  - [x] Should correctly set AUTHENTICATED_MEMBER_ATTRIBUTE in request.
+  - [x] Should handle path prefix matching correctly.
 
 ## JWT Token Provider Tests
-
-- [ ] Unit Tests for Token Generation
-  - [ ] Should generate a non-empty token.
-  - [ ] Should include correct subject (member ID).
-  - [ ] Should include correct email claim.
-  - [ ] Should include correct role claim.
-  - [ ] Should have correct issuedAt and expiration times.
-- [ ] Unit Tests for Token Validation
-  - [ ] Should return true for a valid, non-expired token.
-  - [ ] Should return false for an expired token.
-  - [ ] Should return false for a token with an invalid signature.
-  - [ ] Should return false for a malformed token.
-- [ ] Unit Tests for Claim Extraction
-  - [ ] Should correctly extract subject from a valid token.
-  - [ ] Should correctly extract a role from a valid token.
-  - [ ] Should throw exception if the required claim is missing/invalid.
+- [x] Unit Tests for Token Generation
+  - [x] Should generate a non-empty token.
+  - [x] Should include correct subject (member ID).
+  - [x] Should include correct email claim.
+  - [x] Should include correct role claim.
+- [x] Unit Tests for Token Validation
+  - [x] Should return true for a valid, non-expired token.
+  - [x] Should return false for an expired token.
+  - [x] Should return false for a token with an invalid signature.
+- [x] Unit Tests for Claim Extraction
+  - [x] Should correctly extract subject from a valid token.
+  - [x] Should correctly extract a role from a valid token.
+  - [x] Should throw exception if the required claim is missing/invalid.
 
 ## Global Exception Handler Tests
-
 - [ ] Unit Tests for Exception Mapping
   - [ ] Should map UnauthorizedException to 401 Unauthorized.
   - [ ] Should map ForbiddenException to 403 Forbidden.

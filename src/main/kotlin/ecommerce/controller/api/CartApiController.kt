@@ -4,7 +4,6 @@ import ecommerce.annotation.LoginMember
 import ecommerce.domain.Member
 import ecommerce.dto.cart.AddToCartRequest
 import ecommerce.dto.cart.CartResponse
-import ecommerce.dto.cartItem.CartItemResponse
 import ecommerce.service.CartService
 import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
@@ -22,9 +21,23 @@ class CartApiController(private val cartService: CartService) {
     @GetMapping
     fun getCart(
         @LoginMember member: Member,
-    ): ResponseEntity<List<CartItemResponse>?> {
+    ): ResponseEntity<CartResponse> {
         val cartItems = cartService.getCartItems(member.userId)
-        return ResponseEntity.ok().body(cartItems)
+        val cartEntity = cartService.getCart(member.userId)
+
+        val totalPrice = cartItems.sumOf { it.price * it.quantity }
+        val totalQuantity = cartItems.sumOf { it.quantity }
+
+        val cartResponse =
+            CartResponse(
+                id = cartEntity.id,
+                memberId = member.userId,
+                items = cartItems,
+                totalPrice = totalPrice,
+                totalQuantity = totalQuantity,
+            )
+
+        return ResponseEntity.ok().body(cartResponse)
     }
 
     @PostMapping

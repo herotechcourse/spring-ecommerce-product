@@ -49,7 +49,7 @@ class CartItemRepository(private val jdbcTemplate: JdbcTemplate) {
     }
 
     fun update(cartItem: CartItem) {
-        val sql = "update cart_items set quantity = ? where cart_id = ?"
+        val sql = "update cart_items set quantity = ? where id = ?"
         jdbcTemplate.update(sql, cartItem.quantity, cartItem.id)
     }
 

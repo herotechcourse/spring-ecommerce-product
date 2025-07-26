@@ -3,6 +3,7 @@ package ecommerce.repository
 import ecommerce.domain.CartEvent
 import ecommerce.domain.Member
 import ecommerce.domain.Product
+import ecommerce.dto.report.MemberCartActivityDTO
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
@@ -77,7 +78,9 @@ class CartEventRepositoryTest
             val savedEvent = createTestCartEvent(member.userId, product.id, 2)
 
             assertThat(savedEvent.id).isNotNull().isGreaterThan(0)
-            assertThat(jdbcTemplate.queryForObject("SELECT COUNT(*) FROM cart_events", Int::class.java)).isEqualTo(initialCount + 1)
+            assertThat(jdbcTemplate.queryForObject("SELECT COUNT(*) FROM cart_events", Int::class.java)).isEqualTo(
+                initialCount + 1,
+            )
         }
 
         @Test
@@ -158,5 +161,34 @@ class CartEventRepositoryTest
             assertThat(result[0].addedCount).isEqualTo(3)
             assertThat(result[1].productName).isEqualTo(product2.name)
             assertThat(result[1].addedCount).isEqualTo(3)
+        }
+
+        @Test
+        fun `findMembersWhoAddedItemsInLastDays should return unique members within 7 days`() {
+            val member1 = createTestMember(email = "bo@gmail.com")
+            val member2 = createTestMember(email = "elena@gmail.com")
+            val member3 = createTestMember(email = "ace@gmail.com")
+
+            val product1 = createTestProduct(name = "spf1")
+            val product2 = createTestProduct(name = "spf2")
+            val product3 = createTestProduct(name = "spf3")
+
+            val now = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS)
+
+            createTestCartEvent(member1.userId, product1.id, 1, now.minusDays(1))
+            createTestCartEvent(member1.userId, product2.id, 1, now.minusDays(2))
+            createTestCartEvent(member2.userId, product1.id, 1, now.minusDays(5))
+            createTestCartEvent(member3.userId, product3.id, 1, now.minusDays(8))
+
+            val expectedMembers =
+                listOf(
+                    MemberCartActivityDTO(memberId = member1.userId, userName = member1.userName, email = member1.email),
+                    MemberCartActivityDTO(memberId = member2.userId, userName = member2.userName, email = member2.email),
+                ).sortedBy { it.memberId }
+
+            val result = cartEventRepository.findMembersWhoAddedItemsInLastDays(now.minusDays(7))
+
+            assertThat(result).hasSize(2)
+            assertThat(result.sortedBy { it.memberId }).isEqualTo(expectedMembers)
         }
     }

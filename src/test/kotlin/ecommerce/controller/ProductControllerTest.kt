@@ -10,6 +10,7 @@ import io.restassured.RestAssured
 import io.restassured.http.ContentType
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
@@ -18,6 +19,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.jdbc.core.JdbcTemplate
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
+@DisplayName("Admin Report Controller Tests")
 class ProductControllerTest {
     @LocalServerPort
     private var port: Int = 0
@@ -118,9 +120,6 @@ class ProductControllerTest {
 
     @Test
     fun `it should return all the products with valid authentication`() {
-        val createdProduct1 = createProductHelper(name = "lotion", price = 20.0, img = "http://lotion.jpeg", quantity = 1)
-        val createdProduct2 = createProductHelper(name = "lotion2", price = 20.0, img = "http://lotion2.jpeg", quantity = 2)
-
         val response =
             RestAssured
                 .given().log().all()
@@ -162,14 +161,13 @@ class ProductControllerTest {
     fun `it should delete a product by its id with valid authentication`() {
         val createdProduct = createProductHelper(name = "lotion", price = 50.0, img = "http://lotion.jpg", quantity = 1)
 
-        val response =
-            RestAssured
-                .given().log().all()
-                .header("Authorization", "Bearer $testAccessToken")
-                .`when`().delete("/api/products/{id}", createdProduct.id)
-                .then().log().all()
-                .assertThat().statusCode(HttpStatus.NO_CONTENT.value())
-                .extract()
+        RestAssured
+            .given().log().all()
+            .header("Authorization", "Bearer $testAccessToken")
+            .`when`().delete("/api/products/{id}", createdProduct.id)
+            .then().log().all()
+            .assertThat().statusCode(HttpStatus.NO_CONTENT.value())
+            .extract()
 
         RestAssured
             .given().log().all()
