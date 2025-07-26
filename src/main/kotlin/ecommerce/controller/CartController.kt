@@ -1,5 +1,6 @@
 package ecommerce.controller
 
+import ecommerce.dto.AllCartItemsDto
 import ecommerce.dto.CartItemDto
 import ecommerce.dto.CartItemRequest
 import ecommerce.model.Member
@@ -21,29 +22,29 @@ class CartController(private val cartService: CartService) {
     @GetMapping
     fun getAllItems(
         @LoginMember member: Member,
-    ): ResponseEntity<List<CartItemDto>> {
-        // authenticate user -> happens automatically via Interception
-        // get items from service
-        // return items
-        cartService.getAllItems(member.id!!)
-        return ResponseEntity.status(HttpStatus.OK).body(emptyList())
+    ): ResponseEntity<AllCartItemsDto> {
+        val allCartItemsDto = cartService.getAllItems(member.id!!)
+        return ResponseEntity.status(HttpStatus.OK).body(allCartItemsDto)
     }
 
     @PostMapping
     fun addItem(
         @LoginMember member: Member,
         @RequestBody request: CartItemRequest,
-    ): ResponseEntity<Unit> {
-        cartService.addItems(member.id!!, request)
-        return ResponseEntity.created(URI("/api/cart/${cartId}/items/${productId}/${quantity}")).build()
+    ): ResponseEntity<CartItemDto> {
+        val cartItemDto = cartService.addItem(member.id!!, request)
+        return ResponseEntity.created(URI("/api/cart/items/${cartItemDto.productId}")).body(cartItemDto)
     }
 
     @DeleteMapping
     fun deleteItem(
         @LoginMember member: Member,
         @RequestBody request: CartItemRequest,
-    ): ResponseEntity<Unit> {
-        cartService.deleteItems(member.id!!, request)
-        return ResponseEntity.noContent().build()
+    ): ResponseEntity<CartItemDto?> {
+        val cartItemDto = cartService.deleteItem(member.id!!, request)
+        if (cartItemDto == null) {
+            return ResponseEntity.noContent().build()
+        }
+        return ResponseEntity.ok().body(cartItemDto)
     }
 }
