@@ -136,14 +136,14 @@ Implement a functionality that allows users to add or remove items from a cart. 
 
 ## Feature list - Step 2-3
 ### Authentication
-- [ ] Users use the token received after login
-  - [ ] Use `Authorization: Bearer <token>` header
-- [ ] Throw 401 if the token is invalid
+- [x] Users use the token received after login
+  - [x] Use `Authorization: Bearer <token>` header
+- [x] Throw 401 if the token is invalid
 
 ### Cart
-- [ ] Users can retrieve the list of products in their cart
-- [ ] Users can add products to their cart
-- [ ] Users can remove products from their cart
+- [x] Users can retrieve the list of products in their cart
+- [x] Users can add products to their cart
+- [x] Users can remove products from their cart
 
 - [x] Create a Cart
 - [x] Add Cart table to the database
