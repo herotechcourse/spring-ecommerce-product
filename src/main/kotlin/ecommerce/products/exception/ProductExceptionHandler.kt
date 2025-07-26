@@ -5,8 +5,10 @@ import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RestControllerAdvice
 
-@RestControllerAdvice
-class GlobalExceptionHandler {
+class ProductValidationException(message: String) : RuntimeException(message)
+
+@RestControllerAdvice("productExceptionHandler")
+class ProductExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException::class)
     fun handleValidationException(ex: MethodArgumentNotValidException): ResponseEntity<Map<String, Any>> {
         val errors =
