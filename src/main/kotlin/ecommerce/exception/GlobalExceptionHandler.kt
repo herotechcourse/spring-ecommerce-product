@@ -28,4 +28,9 @@ class GlobalExceptionHandler {
     fun handleUnauthorized(e: UnauthorizedException): ResponseEntity<String> {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.message)
     }
+
+    @ExceptionHandler(InternalServerErrorException::class)
+    fun handleInternalError(e: InternalServerErrorException): ResponseEntity<String> {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.message)
+    }
 }
