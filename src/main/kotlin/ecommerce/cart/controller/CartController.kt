@@ -1,44 +1,57 @@
 package ecommerce.cart.controller
 
+import ecommerce.auth.application.AuthService
+import ecommerce.auth.infrastructure.AuthorizationExtractor
+import ecommerce.auth.infrastructure.BearerAuthorizationExtractor
 import ecommerce.cart.model.Cart
 import ecommerce.cart.service.CartService
+import jakarta.servlet.http.HttpServletRequest
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.DeleteMapping
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestParam
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/api/cart")
-class CartController(private val cartService: CartService) {
-    @GetMapping("/{memberId}")
-    fun getCart(
-        @PathVariable memberId: Long,
-    ): ResponseEntity<Cart> {
+class CartController(
+    private val cartService: CartService,
+    private val authService: AuthService,
+) {
+    private val authorizationExtractor: AuthorizationExtractor<String> = BearerAuthorizationExtractor()
+
+    @GetMapping("/")
+    fun getCart(request: HttpServletRequest): ResponseEntity<Cart> {
+        val token = authorizationExtractor.extract(request)
+        val memberId = authService.findMemberByToken(token).id
         val cart = cartService.getOrCreateCart(memberId)
         return ResponseEntity.ok(cart)
     }
 
-    @PostMapping("/{memberId}/items")
+    @PostMapping("/items")
     fun addItem(
-        @PathVariable memberId: Long,
+        request: HttpServletRequest,
         @RequestParam productId: Long,
         @RequestParam quantity: Int,
-    ): ResponseEntity<Cart> = ResponseEntity.ok(cartService.addItem(memberId, productId, quantity))
+    ): ResponseEntity<Cart> {
+        val token = authorizationExtractor.extract(request)
+        val memberId = authService.findMemberByToken(token).id
+        val cart = cartService.addItem(memberId, productId, quantity)
+        return ResponseEntity.ok(cart)
+    }
 
-    @DeleteMapping("/{memberId}/items/{productId}")
+    @DeleteMapping("/items/{productId}")
     fun removeItem(
-        @PathVariable memberId: Long,
+        request: HttpServletRequest,
         @PathVariable productId: Long,
-    ): ResponseEntity<Cart> = ResponseEntity.ok(cartService.removeItem(memberId, productId))
+    ): ResponseEntity<Cart> {
+        val token = authorizationExtractor.extract(request)
+        val memberId = authService.findMemberByToken(token).id
+        val cart = cartService.removeItem(memberId, productId)
+        return ResponseEntity.ok(cart)
+    }
 
-    @DeleteMapping("/{memberId}/clear")
-    fun clearCart(
-        @PathVariable memberId: Long,
-    ): ResponseEntity<Void> {
+    @DeleteMapping("/clear")
+    fun clearCart(request: HttpServletRequest): ResponseEntity<Void> {
+        val token = authorizationExtractor.extract(request)
+        val memberId = authService.findMemberByToken(token).id
         cartService.clear(memberId)
         return ResponseEntity.noContent().build()
     }
