@@ -4,6 +4,7 @@ object MemberConstsSQL {
     const val COUNT_ALL = "SELECT count(*) FROM memebers"
     const val SELECT_ALL = "SELECT id, email, password FROM members"
     const val SELECT_BY_ID = "SELECT id, email, password FROM members WHERE id = ?"
+    const val SELECT_BY_EMAIL = "SELECT id, email, password FROM members WHERE email = ?"
     const val INSERT =
         "INSERT INTO members (email, password) VALUES (?, ?)"
     const val UPDATE_BY_ID = " UPDATE members SET email = ?, password = ? WHERE id = ?"

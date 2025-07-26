@@ -7,6 +7,7 @@ import ecommerce.sql.MemberConstsSQL
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.jdbc.core.JdbcTemplate
+import org.springframework.jdbc.core.PreparedStatementSetter
 import org.springframework.jdbc.core.RowMapper
 import org.springframework.stereotype.Repository
 import java.sql.Connection
@@ -49,7 +50,9 @@ class MemberRepository(private val jdbcTemplate: JdbcTemplate) {
 
     fun findById(id: Long): Member? {
         val sql = MemberConstsSQL.SELECT_BY_ID
-        val result = jdbcTemplate.query(sql, arrayOf(id), rowMapper)
+        val result = jdbcTemplate.query(sql, PreparedStatementSetter { ps ->
+            ps.setLong(1, id)
+        }, rowMapper)
 
         return when (result.size) {
             0 -> null
@@ -60,11 +63,25 @@ class MemberRepository(private val jdbcTemplate: JdbcTemplate) {
             }
         }
     }
-//    fun save(member: Member): Member
-//
-//    fun findByEmail(email: String): Member?
-//
-//    fun existsByEmail(email: String): Boolean
-//
+
+    fun findByEmail(email: String): Member? {
+        val sql = MemberConstsSQL.SELECT_BY_EMAIL
+        val result = jdbcTemplate.query(sql, PreparedStatementSetter { ps ->
+            ps.setString(1, email)
+        }, rowMapper)
+
+        return when (result.size) {
+            0 -> null
+            1 -> result.first()
+            else -> {
+                logger.warn("Multiple members found with the same email: $email")
+                null
+            }
+        }
+    }
+
+    fun matches(actual: String, expected: String): Boolean {
+        return actual == expected
+    }
 //    fun deleteById(id: Long): Boolean
 }
