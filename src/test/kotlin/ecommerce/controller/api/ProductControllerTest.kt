@@ -202,6 +202,7 @@ class ProductControllerTest {
         create()
         create()
         val response = controller.getProducts()
+        assertThat(response.body?.size).isEqualTo(7)
         assertThat(response.statusCode.value()).isEqualTo(HttpStatus.OK.value())
     }
 
@@ -307,7 +308,7 @@ class ProductControllerTest {
 
     @Test
     fun `update() - should return 400 when name of product already exists`() {
-        val targetId = 1L
+        val targetId = 2L
         val name = "Iron Man"
         val response =
             RestAssured

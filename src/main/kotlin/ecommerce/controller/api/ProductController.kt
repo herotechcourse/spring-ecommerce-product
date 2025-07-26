@@ -18,24 +18,27 @@ import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
+import java.net.URI
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/products")
 class ProductController(private val productService: ProductService) {
-    @PostMapping("/products")
+    @PostMapping
     fun createProduct(
         @RequestBody @Valid productForm: ProductForm,
     ): ResponseEntity<Product> {
-        return productService.insert(productForm)
+        val product = productService.insert(productForm)
+        val uri = URI.create("/api/products/${product.id}")
+        return ResponseEntity.created(uri).body(product)
     }
 
-    @GetMapping("/products")
+    @GetMapping
     fun getProducts(): ResponseEntity<List<Product>> {
         val products = productService.findAll()
         return ResponseEntity.ok(products)
     }
 
-    @GetMapping("/products/{id}")
+    @GetMapping("{id}")
     fun getProduct(
         @PathVariable id: Long,
     ): ResponseEntity<Product> {
@@ -43,7 +46,7 @@ class ProductController(private val productService: ProductService) {
         return ResponseEntity.ok(product)
     }
 
-    @PutMapping("/products/{id}")
+    @PutMapping("{id}")
     fun updateProduct(
         @PathVariable id: Long,
         @RequestBody @Valid productForm: ProductForm,
@@ -52,7 +55,7 @@ class ProductController(private val productService: ProductService) {
         when (result) {
             1 -> {
                 val target =
-                    productService.findById(id) ?: throw NotFoundException("Product not found - ID: $id")
+                    productService.findById(id) ?: throw InternalServerErrorException("Product not found - ID: $id")
                 return ResponseEntity.ok(target)
             }
             0 -> throw NotFoundException("Product not found - ID: $id")
@@ -60,7 +63,7 @@ class ProductController(private val productService: ProductService) {
         }
     }
 
-    @DeleteMapping("/products/{id}")
+    @DeleteMapping("{id}")
     fun deleteProduct(
         @PathVariable id: Long,
     ): ResponseEntity<Void> {
