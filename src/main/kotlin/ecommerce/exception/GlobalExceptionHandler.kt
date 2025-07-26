@@ -1,7 +1,12 @@
 package ecommerce.exception
 
+import ecommerce.exception.auth.EmailAlreadyExistsException
+import ecommerce.exception.auth.InvalidCredentialsException
+import ecommerce.exception.product.DuplicateProductNameException
+import ecommerce.exception.product.ProductNotFoundException
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.security.authentication.BadCredentialsException
 import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.ResponseStatus
@@ -32,5 +37,23 @@ class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     fun handleGenericException(ex: Exception): Map<String, String> {
         return mapOf("error" to "An unexpected error occurred")
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(BadCredentialsException::class)
+    fun handleBadCredentialsException(ex: BadCredentialsException): Map<String, String> {
+        return mapOf("error" to ex.message.orEmpty())
+    }
+
+    @ResponseStatus(HttpStatus.CONFLICT)
+    @ExceptionHandler(EmailAlreadyExistsException::class)
+    fun handleEmailAlreadyExistsException(ex: EmailAlreadyExistsException): Map<String, String> {
+        return mapOf("error" to ex.message.orEmpty())
+    }
+
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    @ExceptionHandler(InvalidCredentialsException::class)
+    fun handleInvalidCredentialsException(ex: InvalidCredentialsException): Map<String, String> {
+        return mapOf("error" to ex.message.orEmpty())
     }
 }
