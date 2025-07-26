@@ -1,46 +1,62 @@
 package ecommerce.repository
 
+import ecommerce.dto.CartItemDto
+import ecommerce.exception.NotFoundException
 import org.springframework.jdbc.core.simple.JdbcClient
 import org.springframework.stereotype.Repository
-import ecommerce.dto.RawCartItemDto
 
 @Repository
 class CartRepository(private val jdbcClient: JdbcClient) {
-    fun addProductToCart(productId: Long, cartId: Long): Boolean {
+    fun addProductToCart(productId: Long, productQuantity: Long, cartId: Long): CartItemDto? {
         val sql = """
-        INSERT INTO cart_items (product_id, cart_id, quantity)
-        VALUES (?, ?, 1)
-        ON DUPLICATE KEY UPDATE quantity = quantity + 1
+            INSERT INTO cart_items (product_id, cart_id, quantity)
+            VALUES (?, ?, ?)
+            ON DUPLICATE KEY UPDATE quantity = quantity + ?
         """.trimIndent()
         val rowsAffected = jdbcClient
             .sql(sql)
-            .params(productId, cartId)
+            .params(productId, cartId, productQuantity, productQuantity)
             .update()
 
-        return rowsAffected > 0
+        if (rowsAffected <= 0) return null
+
+        return showItem(cartId, productId) ?: throw NotFoundException("Failed to add: Product $productId not found in cart $cartId")
     }
 
-    fun removeProductFromCart(productId: Long, cartId: Long): Boolean {
-        val quantity = quantityInCart(productId, cartId)
-        var sql: String
+    fun removeProductFromCart(productId: Long, quantity: Long, cartId: Long): CartItemDto? {
+        val currentQuantity = quantityInCart(productId, cartId)
 
-        if (quantity == 0L) {
-            return false
+        if (currentQuantity == 0L) {
+            throw NotFoundException("Failed to delete: Product $productId not found in cart $cartId")
+        } else if (currentQuantity > quantity) {
+            decreaseItemQuantity(productId, quantity, cartId)
+            return showItem(productId, cartId) ?: throw NotFoundException("Failed to delete: Product $productId not found in cart $cartId")
+        } else {
+            deleteItemRow(productId, cartId)
+            return null
         }
-        else if (quantity > 1) {
-            // decrease quantity
-            sql = """
+    }
+
+    private fun decreaseItemQuantity(productId: Long, quantity: Long, cartId: Long) {
+        val sql = """
                 UPDATE cart_items
-                SET quantity = quantity - 1
+                SET quantity = quantity - ?
                 WHERE product_id = ? AND cart_id = ?
             """.trimIndent()
-        } else {
-            // delete whole row
-            sql = """
+
+        jdbcClient
+            .sql(sql)
+            .params(quantity, productId, cartId)
+            .update()
+
+        throw NotFoundException("Failed to delete: product $productId not found in cart $cartId")
+    }
+
+    private fun deleteItemRow(productId: Long, cartId: Long) {
+        val sql = """
                 DELETE FROM cart_items
                 WHERE product_id = ? AND cart_id = ?
             """.trimIndent()
-        }
 
         val rowsAffected = jdbcClient
             .sql(sql)
@@ -48,7 +64,7 @@ class CartRepository(private val jdbcClient: JdbcClient) {
             .param(2, cartId)
             .update()
 
-        return rowsAffected > 0
+        throw NotFoundException("Failed to delete: product $productId not found in cart $cartId")
     }
 
     fun quantityInCart(productId: Long, cartId: Long): Long {
@@ -65,7 +81,7 @@ class CartRepository(private val jdbcClient: JdbcClient) {
     fun findOrCreateCartId(userId: Long): Long? {
         var cartId: Long?
 
-        var sql: String = "SELECT cart_id FROM carts WHERE user_id = ?"
+        var sql = "SELECT cart_id FROM carts WHERE user_id = ?"
         cartId = jdbcClient
             .sql(sql)
             .query(Long::class.java)
@@ -82,18 +98,45 @@ class CartRepository(private val jdbcClient: JdbcClient) {
         return cartId
     }
 
-    fun showAllItemsInCart(cartId: Long): List<RawCartItemDto> {
+    fun showAllItemsInCart(cartId: Long): List<CartItemDto> {
         val sql = """
-            SELECT cart_id, product_id, quantity
-            FROM cart_items
-            WHERE cart_id = ?
+            SELECT
+                ci.quantity,
+                p.id AS product_id,
+                p.name AS product_name,
+                p.price AS product_price,
+                p.image_url AS product_image_url
+            FROM cart_items ci
+            INNER JOIN products p ON ci_product_id = p.id
+            WHERE ci.cart_id = ?
         """.trimIndent()
         val cartItems = jdbcClient
             .sql(sql)
             .param(1, cartId)
-            .query(RawCartItemDto::class.java)
+            .query(CartItemDto::class.java)
             .list()
         return cartItems
+    }
+
+    fun showItem(cartId: Long, productId: Long): CartItemDto? {
+        val joinedSql = """
+            SELECT 
+                ci.quantity,
+                ci.product_id,
+                p.name AS product_name,
+                p.price AS product_price,
+                p.image_url AS product_image_url
+            FROM cart_items ci
+            JOIN products p ON ci.product_id = p.id
+            WHERE ci.cart_id = ? AND ci.product_id = ?
+        """.trimIndent()
+
+        return jdbcClient
+            .sql(joinedSql)
+            .params(cartId, productId)
+            .query(CartItemDto::class.java)
+            .optional()
+            .orElse(null)
     }
 
 }
