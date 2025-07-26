@@ -1,13 +1,14 @@
 package ecommerce.repository
 
 import ecommerce.dto.CartItemDto
+import ecommerce.exception.InternalServerErrorException
 import ecommerce.exception.NotFoundException
 import org.springframework.jdbc.core.simple.JdbcClient
 import org.springframework.stereotype.Repository
 
 @Repository
 class CartRepository(private val jdbcClient: JdbcClient) {
-    fun addProductToCart(productId: Long, productQuantity: Long, cartId: Long): CartItemDto {
+    fun addItemToCart(productId: Long, productQuantity: Long, cartId: Long): CartItemDto {
         val sql = """
             INSERT INTO cart_items (product_id, cart_id, quantity)
             VALUES (?, ?, ?)
@@ -23,7 +24,7 @@ class CartRepository(private val jdbcClient: JdbcClient) {
         return showItem(cartId, productId) ?: throw NotFoundException("Failed to add: Product $productId not found")
     }
 
-    fun removeProductFromCart(productId: Long, quantity: Long, cartId: Long): CartItemDto? {
+    fun removeItemFromCart(productId: Long, quantity: Long, cartId: Long): CartItemDto? {
         val currentQuantity = quantityInCart(productId, cartId)
 
         if (currentQuantity == 0L) {
@@ -82,7 +83,7 @@ class CartRepository(private val jdbcClient: JdbcClient) {
         return quantity
     }
 
-    fun findOrCreateCartId(userId: Long): Long? {
+    fun findOrCreateCartId(userId: Long): Long {
         var cartId: Long?
 
         var sql = "SELECT cart_id FROM carts WHERE user_id = ?"
@@ -91,6 +92,7 @@ class CartRepository(private val jdbcClient: JdbcClient) {
             .query(Long::class.java)
             .optional()
             .orElse(null)
+
         if (cartId != null) return cartId
 
         sql = "INSERT INTO carts (user_id) VALUES (?)"
@@ -98,8 +100,10 @@ class CartRepository(private val jdbcClient: JdbcClient) {
             .sql(sql)
             .param(1, userId)
             .query(Long::class.java)
-            .single()
-        return cartId
+            .optional()
+            .orElse(null)
+
+        return cartId ?: throw InternalServerErrorException("Cart could not be created")
     }
 
     fun showAllItemsInCart(cartId: Long): List<CartItemDto> {
