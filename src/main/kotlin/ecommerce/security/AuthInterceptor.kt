@@ -19,6 +19,7 @@ class AuthInterceptor(
         private val PATH_ROLE_REQUIREMENTS =
             mapOf(
                 "/api/admin/products" to listOf("ADMIN"),
+                "/api/admin/reports" to listOf("ADMIN"),
                 "/api/products" to listOf("USER", "ADMIN"),
                 "/api/cart" to listOf("USER", "ADMIN"),
             )

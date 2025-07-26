@@ -84,12 +84,7 @@ class CartService(
 
             cartItemRepository.create(newCartItem)
         }
-        val cartEvent = CartEvent(
-            memberId = memberId,
-            productId = productId,
-            quantityAdded = quantity,
-            timestamp = LocalDateTime.now(),
-        )
+        val cartEvent = CartEvent(memberId = memberId, productId = productId, quantityAdded = quantity, timestamp = LocalDateTime.now())
         cartEventRepository.save(cartEvent)
         val updatedCartItems = getCartItems(memberId)
 

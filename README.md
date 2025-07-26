@@ -93,3 +93,16 @@
     - [x] `POST /api/cart`: Add a product to the user's cart.
     - [x] `DELETE /api/cart/{productId}`: Remove a product from the user's cart.
   - [x] Ensure all cart endpoints are protected and require a valid JWT.
+
+## Cart Statistics (Admin Reports)
+
+- [x] Implement Cart Event Logging:
+  - [x] Add CartEvent domain entity to track ADD_TO_CART actions.
+  - [x] Create CartEventRepository for persistence of cart event data.
+  - [x] Integrate event logging into CartService's addProductToCart method.
+- [x] Implement "Top 5 Most Added Products" Report:
+  - [x] Create ProductCartCountDTO for report results.
+  - [x] Add query method (findTop5MostAddedProductsInLast30Days) to CartEventRepository.
+  - [x] Create ReportService with business logic for the report.
+  - [x] Expose GET /api/admin/reports/top-products-30-days endpoint.
+  - [x] Ensure endpoint is protected and requires ADMIN role.

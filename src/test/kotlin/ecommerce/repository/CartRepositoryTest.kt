@@ -24,17 +24,17 @@ class CartRepositoryTest
         private val jdbcTemplate: JdbcTemplate,
         private val memberRepository: MemberRepository,
     ) {
+        private fun createTestMember(email: String = "bo@gmail.com"): Member {
+            val member = Member(userName = "bo", email = email, passwordHash = "MojataBebushkaAngie10%", role = "USER")
+            memberRepository.create(member)
+            return member
+        }
+
         @BeforeEach
         fun setUp() {
             jdbcTemplate.execute("delete from cart_items")
             jdbcTemplate.execute("delete from carts")
             jdbcTemplate.execute("delete from members")
-        }
-
-        private fun createTestMember(email: String = "bo@gmail.com"): Member {
-            val member = Member(userName = "bo", email = email, passwordHash = "MojataBebushkaAngie10%", role = "USER")
-            memberRepository.create(member)
-            return member
         }
 
         @Test
@@ -51,7 +51,12 @@ class CartRepositoryTest
             cartRepository.create(newCart)
 
             assertThat(newCart.id).isGreaterThan(0)
-            assertThat(jdbcTemplate.queryForObject("SELECT COUNT(*) FROM carts", Int::class.java)).isEqualTo(initialCount + 1)
+            assertThat(
+                jdbcTemplate.queryForObject(
+                    "SELECT COUNT(*) FROM carts",
+                    Int::class.java,
+                ),
+            ).isEqualTo(initialCount + 1)
 
             val foundCart = cartRepository.findByMemberId(member.userId)
             assertThat(foundCart).isNotNull()
