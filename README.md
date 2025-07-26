@@ -32,15 +32,22 @@
 
 #### interface ProductDAO
 
-- [x] `findAll()` - query to database to get all products
-- [x] `findById()` - query for an object to database
-- [x] `insert()` - query to database to create new product
-- [x] `update()` - query to database to update a product
-- [x] `delete()` - query to database to delete a product
+- [x] `findAll()` - query database to get all products
+- [x] `findById()` - query database for an object
+- [x] `insert()` - query database to create new product
+- [x] `update()` - query database to update a product
+- [x] `delete()` - query database to delete a product
+- [x] `existsByName` - query database to get count of product with the name
 
 #### JdbcProductDAO : ProductDAO
 
-- [x] `existsByName()` - query to database to get count of product with the name
+#### interface MemberADO
+
+- [ ] `insert()` - query database to create new member
+- [ ] `findByEmail()` - query database for an object
+- [ ] `existsByEmail()` - query database to get count of member with the email
+
+#### JdbcMemberDAO: MemberDAO
 
 ### Service
 
@@ -59,7 +66,7 @@
 
 ### Controller
 
-#### MemberController
+#### AuthController
 
 - HTTP Methods
 - [ ] `registerMember(@RequestBody)`
@@ -102,7 +109,6 @@
 - [x] delete - DELETE
     - [x] `deleteProduct(@PathVariable id: Long)`
         - [x] Request -> DELETE /api/products/{id} HTTP/1.1
-- [x] handleValidationException
 - [x] handleProductNameAlreadyExistsException
 
 #### ProductViewController
@@ -143,6 +149,7 @@
 - [x] has `handleInternalServerErrorException()`
 - [x] has `handleDataAccessException()`
 - [x] has `handlerIllegalStateException()`
+- [x] has `handleValidationException()`
 
 - NotFoundException
 

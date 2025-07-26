@@ -8,7 +8,6 @@ import ecommerce.model.Product
 import ecommerce.service.ProductService
 import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.GetMapping
@@ -70,17 +69,6 @@ class ProductController(private val productService: ProductService) {
         productService.findById(id) ?: throw NotFoundException("Product not found - ID: $id")
         productService.delete(id)
         return ResponseEntity.noContent().build()
-    }
-
-    @ExceptionHandler(MethodArgumentNotValidException::class)
-    fun handleValidationException(e: MethodArgumentNotValidException): ResponseEntity<Map<String, Any>> {
-        val errors =
-            e.bindingResult.fieldErrors.associate { error ->
-                error.field to (error.defaultMessage ?: "Invalid value")
-            }
-        val errorBody = mapOf("errors" to errors)
-        println("MethodArgumentNotValidException occurred: $errorBody")
-        return ResponseEntity.badRequest().body(errorBody)
     }
 
     @ExceptionHandler(ProductNameAlreadyExistsException::class)
