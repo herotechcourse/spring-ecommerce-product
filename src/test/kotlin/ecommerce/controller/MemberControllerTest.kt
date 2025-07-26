@@ -52,4 +52,26 @@ class MemberControllerTest {
 
         assertThat(response.statusCode).isEqualTo(HttpStatus.CONFLICT.value())
     }
+
+    @Test
+    fun `should login and return expected token`() {
+        val request = RequestCases.VALID_ADMIN
+        val expect = TestExpected(request, ValidationCase.DEFAULT_CASE)
+
+        val response =
+            RestAssured
+                .given().log().all()
+                .body(request)
+                .contentType(ContentType.JSON)
+                .`when`().post("/api/members/login")
+                .then().log().all().extract()
+
+        val actual = response.body().`as`(TokenResponse::class.java)
+        val actualClaims = TestExpected.decode(actual.accessToken, ValidationCase.DEFAULT_CASE)
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value())
+        assertThat(actualClaims.subject).isEqualTo(expect.claims.subject)
+        assertThat(actualClaims["email"]).isEqualTo(expect.claims["email"])
+        assertThat(actualClaims["password"]).isNull()
+    }
 }
