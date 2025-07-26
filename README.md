@@ -165,15 +165,15 @@ Implement a functionality that allows users to add or remove items from a cart. 
 The administrator should be able to view statistical in fo based on users' carts.
 
 ## Featurer list - Step 2.4
-- [ ] Retrieve the Top 5 Most Added Products to Cart in the Last 30 Days
-  - [ ] Returns the top 5 products that were added to carts most frequently in the past 30 days.
-  - [ ] If multiple products have the same count, the one most recently added should be listed first.
+- [x] Retrieve the Top 5 Most Added Products to Cart in the Last 30 Days
+  - [x] Returns the top 5 products that were added to carts most frequently in the past 30 days.
+  - [x] If multiple products have the same count, the one most recently added should be listed first.
   - [x] The response must include the product name, the number of times it was added, and the most recent added time.
-- [ ] Retrieve Members Who Added Items to Their Cart in the Last 7 Days
-    - [ ] Returns a list of members who added at least one product to their cart in the past 7 days.
-    - [ ] Each member should appear only once, even if they added multiple products.
+- [x] Retrieve Members Who Added Items to Their Cart in the Last 7 Days
+    - [x] Returns a list of members who added at least one product to their cart in the past 7 days.
+    - [x] Each member should appear only once, even if they added multiple products.
     - [x] The response must include the member ID, name, and email.
-- [ ] (Optional) Restrict access to those stat API so that only users with the ADMIN role can access it.
+- [x] (Optional) Restrict access to those stat API so that only users with the ADMIN role can access it.
 
 ## Learnings
 ### JDBC & DAO
@@ -234,19 +234,9 @@ class GlobalExceptionHandler {
 
 
 ## Considerations
-
-- TODO read about difference btw RestController and Controller
-- TODO why do we combine Controller and ControllerView
-- read and learn SQL commands in H2 console
+- Read and learn SQL commands in H2 console
 - What do you return on incorrect password and email? Is 404 bad practice,
 since hackers could guess that the email already exists?
-- package ecommerce.controller.TokenLoginController: What is the best thing to return here? Shall I return the Location header inside created? Shall a redirection happen to the products page?
-```kotlin
-  fun registerMember(@Valid @RequestBody request: TokenRequest): ResponseEntity<TokenResponse> {
-        val tokenResponse = authService.register(request)
-        return ResponseEntity.status(HttpStatus.CREATED).body(tokenResponse)
-    }
-  ```
 - Is it okay to throw this kind of exception inside the extractor and not inside the Service?
 Shall all validation happen inside the Service?
 ```kotlin
@@ -257,11 +247,12 @@ fun extract(request: HttpServletRequest): String {
     }
 }
 ```
-- if user gets deleted, do I delete the cart?
-- Is it ok to throw exceptions form the repository? How do I handle failing delete operations?
+- If the user gets deleted, do I delete the cart?
 - Should `fun removeProductFromCart(productId: Long, quantity: Long, cartId: Long)` have instead
-of Long types have @valueClass types like ProductId, or should it take a CartRequest DTO as argument?
-- What happens if the product ID gets updated?
+of Long types Value Class types like ProductId, or should it take a CartRequestDTO as argument?
+- What happens if the product ID gets updated? How does that influence the cart?
 - If I show all items in the cart, what should I do if one or more products do not exist anymore? Throw an exception, or just return the products that exist?
--> I use INNER JOIN to ignore non existent products for now
+-> I use INNER JOIN to ignore non-existent products for now
 
+### Future work
+- Statistics still need to be tested with the new interception feature
