@@ -3,6 +3,7 @@ package ecommerce.cart.service
 import ecommerce.auth.service.MemberService
 import ecommerce.cart.exception.NotFoundException
 import ecommerce.cart.model.Cart
+import ecommerce.cart.model.CartDTO
 import ecommerce.cart.store.CartStore
 import ecommerce.products.store.ProductStore
 import org.springframework.stereotype.Service
@@ -18,6 +19,17 @@ class CartService(
             throw NotFoundException("Member does not exist")
         }
         return cartStore.findCartByMemberId(memberId) ?: cartStore.createCart(memberId)
+    }
+
+    fun getCartDTO(memberId: Long): CartDTO {
+        val cart = getOrCreateCart(memberId)
+
+        val populatedItems = cart.items.map { item ->
+            val product = productStore.findProductById(item.productId)
+            item.copy(product = product)
+        }
+        val enrichedCart = cart.copy(items = populatedItems)
+        return CartDTO.from(enrichedCart)
     }
 
     fun addItem(

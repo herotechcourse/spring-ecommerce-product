@@ -4,6 +4,7 @@ import ecommerce.auth.application.AuthService
 import ecommerce.auth.infrastructure.AuthorizationExtractor
 import ecommerce.auth.infrastructure.BearerAuthorizationExtractor
 import ecommerce.cart.model.Cart
+import ecommerce.cart.model.CartDTO
 import ecommerce.cart.service.CartService
 import jakarta.servlet.http.HttpServletRequest
 import org.springframework.http.ResponseEntity
@@ -23,6 +24,14 @@ class CartController(
         val memberId = authService.findMemberByToken(token).id
         val cart = cartService.getOrCreateCart(memberId)
         return ResponseEntity.ok(cart)
+    }
+
+    @GetMapping("/mycart")
+    fun getCartDto(request: HttpServletRequest): ResponseEntity<CartDTO> {
+        val token = authorizationExtractor.extract(request)
+        val memberId = authService.findMemberByToken(token).id
+        val cartDto = cartService.getCartDTO(memberId)
+        return ResponseEntity.ok(cartDto)
     }
 
     @PostMapping("/items")
