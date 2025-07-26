@@ -104,10 +104,10 @@ updateProductForm.html
 
 ## Features 2.3
 
-- [ ] Cart
-    - [ ] Create Cart
-    - [ ] Connect Cart to corresponding User
-    - [ ] Users can retrieve the list of products in their cart.
-    - [ ] Users can add products to their cart.
-    - [ ] Users can remove products from their cart.
-
+- [x] Cart
+    - [x] Create Cart
+    - [x] Connect Cart to corresponding User
+    - [x] Users can retrieve the list of products in their cart.
+    - [x] Users can add products to their cart.
+    - [x] Users can remove products from their cart.
+- [ ] (extra) Create Products and Cart View
