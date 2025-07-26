@@ -110,4 +110,4 @@ updateProductForm.html
     - [x] Users can retrieve the list of products in their cart.
     - [x] Users can add products to their cart.
     - [x] Users can remove products from their cart.
-- [ ] (extra) Create Products and Cart View
+- [x] (extra) Create Products and Cart View

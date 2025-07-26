@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Your Cart</title>
+</head>
+<body>
+<h1>Your Cart</h1>
+<div th:if="${#lists.isEmpty(items)}">
+    <p>Your cart is empty.</p>
+</div>
+<div th:unless="${#lists.isEmpty(items)}">
+    <ul>
+        <li th:each="item : ${items}">
+            Product ID: <span th:text="${item.productId}">-</span>,
+
+            Quantity: <span th:text="${item.quantity}">-</span>
+            <!-- you can enhance this with product details if available -->
+        </li>
+    </ul>
+</div>
+</body>
+</html>

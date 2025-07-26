@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css"
+    >
+</head>
+<body>
+<header class="container">
+    <nav>
+        <ul>
+            <li><a href="/cart/2">My Cart</a></li>
+        </ul>
+    </nav>
+</header>
+<main class="container">
+    <div class="product-cards" style="display: flex; flex-wrap: wrap; gap: 1rem;">
+        <div th:each="product : ${products}"
+             style="border: 1px solid #ccc; border-radius: 8px; padding: 1rem; width: 200px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+
+            <img th:src="${product.imageUrl}"
+                 alt="Product Image"
+                 style="width: 100%; height: 150px; object-fit: contain; margin-bottom: 0.5rem;" />
+
+            <h3 th:text="${product.name}"
+                style="margin: 0 0 0.5rem 0; font-size: 1.2rem;"></h3>
+
+            <p style="margin: 0 0 1rem 0; font-weight: bold;">$<span th:text="${product.price}">0.00</span></p>
+
+            <button type="button"
+                    th:attr="data-id=${product.id}"
+                    class="add-to-cart-button"
+                    style="padding: 0.5rem 1rem; background-color: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer;">
+                Add to Cart
+            </button>
+
+        </div>
+    </div>
+</main>
+</body>
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        document.querySelectorAll(".add-to-cart-button").forEach(button => {
+            button.addEventListener("click", async (event) => {
+                const productId = button.getAttribute("data-id");
+                const memberId = 2;  // Replace with actual logged-in member ID
+                const quantity = 1;
+
+                try {
+                    const response = await fetch(`/api/cart/${memberId}/items?productId=${productId}&quantity=${quantity}`, {
+                        method: "POST",
+                    });
+
+                    if (response.ok) {
+                        const cart = await response.json();
+                        alert(`Product added to cart! You now have ${cart.items.length} items.`);
+                    } else {
+                        const errorText = await response.text();
+                        alert(`Failed to add product to cart: ${response.status} - ${errorText}`);
+                    }
+                } catch (error) {
+                    console.error("Error adding to cart:", error);
+                    alert("An error occurred while adding the product to the cart.");
+                }
+            });
+        });
+    });
+</script>
+</html>
