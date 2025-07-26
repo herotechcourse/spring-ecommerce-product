@@ -1,8 +1,8 @@
 package ecommerce.utils
 
-import ecommerce.dto.CreateProductRequest
-import ecommerce.dto.ProductResponse
-import ecommerce.dto.UpdateProductRequest
+import ecommerce.dto.product.CreateProductRequest
+import ecommerce.dto.product.ProductResponse
+import ecommerce.dto.product.UpdateProductRequest
 import ecommerce.model.Product
 
 fun Product.toResponse() = ProductResponse(id, name, price, img, quantity)
