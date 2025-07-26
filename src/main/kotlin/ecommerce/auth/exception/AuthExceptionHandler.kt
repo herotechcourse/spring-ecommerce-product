@@ -14,7 +14,6 @@ class EmailAlreadyInUseException(message: String) : RuntimeException(message)
 
 @RestControllerAdvice("authExceptionHandler")
 class GlobalExceptionHandler {
-
     @ExceptionHandler(AuthException::class)
     fun handleInvalidAuthException(e: AuthException): ResponseEntity<String> {
         return ResponseEntity

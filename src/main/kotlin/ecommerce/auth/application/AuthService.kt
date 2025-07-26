@@ -31,11 +31,13 @@ class AuthService(
     }
 
     fun findMemberByToken(token: String): MemberDTO {
-        val payload = jwtTokenProvider.getPayload(token)
-            ?: throw AuthException("Invalid token or payload missing")
+        val payload =
+            jwtTokenProvider.getPayload(token)
+                ?: throw AuthException("Invalid token or payload missing")
 
-        val foundMember = memberService.findMember(payload)
-            ?: throw AuthException("Member not found")
+        val foundMember =
+            memberService.findMember(payload)
+                ?: throw AuthException("Member not found")
 
         return MemberDTO.from(foundMember)
     }

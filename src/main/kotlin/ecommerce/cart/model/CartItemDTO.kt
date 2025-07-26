@@ -7,7 +7,7 @@ data class CartItemDTO(
     val cartId: Long,
     val productId: Long,
     val quantity: Int,
-    val product: ProductDTO? = null
+    val product: ProductDTO? = null,
 ) {
     companion object {
         fun from(cartItem: CartItem): CartItemDTO {
@@ -16,7 +16,7 @@ data class CartItemDTO(
                 cartId = cartItem.cartId,
                 productId = cartItem.productId,
                 quantity = cartItem.quantity,
-                product = cartItem.product?.let { ProductDTO.from(it) }
+                product = cartItem.product?.let { ProductDTO.from(it) },
             )
         }
     }

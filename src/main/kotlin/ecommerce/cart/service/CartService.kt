@@ -24,10 +24,11 @@ class CartService(
     fun getCartDTO(memberId: Long): CartDTO {
         val cart = getOrCreateCart(memberId)
 
-        val populatedItems = cart.items.map { item ->
-            val product = productStore.findProductById(item.productId)
-            item.copy(product = product)
-        }
+        val populatedItems =
+            cart.items.map { item ->
+                val product = productStore.findProductById(item.productId)
+                item.copy(product = product)
+            }
         val enrichedCart = cart.copy(items = populatedItems)
         return CartDTO.from(enrichedCart)
     }
