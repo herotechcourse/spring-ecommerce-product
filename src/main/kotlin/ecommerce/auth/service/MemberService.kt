@@ -1,6 +1,6 @@
 package ecommerce.auth.service
 
-import ecommerce.auth.application.EmailAlreadyInUseException
+import ecommerce.auth.exception.EmailAlreadyInUseException
 import ecommerce.auth.model.Member
 import ecommerce.auth.store.MemberStore
 import org.springframework.stereotype.Service
@@ -11,7 +11,7 @@ class MemberService(private val memberStore: MemberStore) {
         val allMembers = findAll()
         val emailAlreadyExists = allMembers.any { it.email == member.email }
         if (emailAlreadyExists) {
-            throw EmailAlreadyInUseException()
+            throw EmailAlreadyInUseException("Email already exists")
         }
         return memberStore.createMember(member)
     }

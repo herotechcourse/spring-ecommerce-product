@@ -1,5 +1,6 @@
 package ecommerce.auth.application
 
+import ecommerce.auth.exception.AuthException
 import ecommerce.auth.infrastructure.JwtTokenProvider
 import ecommerce.auth.model.MemberDTO
 import ecommerce.auth.model.TokenRequest
@@ -19,7 +20,7 @@ class AuthService(
 
     fun issueTokenToLoggedUSer(tokenRequest: TokenRequest): TokenResponse {
         if (checkInvalidLogin(tokenRequest)) {
-            throw AuthException()
+            throw AuthException(message = "Invalid login")
         }
         return createToken(tokenRequest)
     }
