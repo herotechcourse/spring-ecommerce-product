@@ -29,7 +29,7 @@ HTTP API that allows users to retrieve, add, update, and delete products.
 ### Cleanup & Simplification
 
 - Remove manual ID generation logic from `ProductStore.createAndReturnId()`
-  → _this is not ID creator, ask to reviewer again_.
+  → _this is not ID creator, ask reviewer again_.
 -[ ] In `TextFixture.kt`, move `FLAT_WHITE` and `AMERICANO` under the `Dummy` object or remove `Dummy` altogether
 -[x] Reconsider the placement and responsibility of `AssertTemplate` → Delete
  Decide whether assertion logic should be part of the fixture or separated.
@@ -65,4 +65,17 @@ HTTP API that allows users to retrieve, add, update, and delete products.
   - related with...  "In `ProductStore.update()`, `ProductStore.delete()` throw an exception".
 -[x] The application is now structured into Controller, Service, and Repository layers in Product.
 
--[ ] Implement new tests for Member status code -> and move on
+
+### Member controller
+- [x] implement `register`
+  - success: 201 created
+  - failure
+    -[x] duplicated email: 409 Conflict
+    -[x] duplicated id: 422 Unprocessable Entity ->?
+    -[x] can not find data with id: 424 Failed Dependency ->?
+- [ ] implement `login`
+  - success: 200 ok
+  - failure
+    -[ ] Invalid email or password → 401 Unauthorized 
+    -[ ] Account isn't activated or suspended → 403 Forbidden 
+    -[ ] Too many failed attempts → 429 Too Many Requests
