@@ -3,3 +3,8 @@ INSERT INTO product (name, price, imageUrl) VALUES ('X-men', 1000, 'https://alex
 INSERT INTO product (name, price, imageUrl) VALUES ('Superman', 1000, 'https://alexnsan.comics/imageurl/3');
 INSERT INTO product (name, price, imageUrl) VALUES ('Naruto', 1000, 'https://alexnsan.comics/imageurl/4');
 INSERT INTO product (name, price, imageUrl) VALUES ('Full Metal Alchemist', 1000, 'https://alexnsan.comics/imageurl/5');
+;
+
+INSERT INTO member (email, password) VALUES ( 'san@htc.com', 'san1234');
+INSERT INTO member (email, password) VALUES ( 'dan@htc.com', 'dan1234');
+;
