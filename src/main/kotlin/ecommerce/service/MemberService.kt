@@ -11,20 +11,20 @@ import org.springframework.stereotype.Service
 
 @Service
 class MemberService(
-    private val store: MemberRepository,
+    private val repository: MemberRepository,
     private val jwtTokenProvider: JwtTokenProvider,
 ) {
     fun registerByEmail(request: MemberRequest): TokenResponse {
-        if (store.existsByEmail(request.email)) {
+        if (repository.existsByEmail(request.email)) {
             throw MemberAlreadyExistsException("Email ${request.email} already exists")
         }
 
         val id =
-            store.insert(request)
+            repository.insert(request)
                 ?: throw CanNotInsertWithKeyHolderException("Failed to insert member with email ${request.email}")
 
         val member =
-            store.findById(id)
+            repository.findById(id)
                 ?: throw RetrievalFailedException("Member with ID $id could not be retrieved after insertion")
 
         val token = jwtTokenProvider.createToken(member)
