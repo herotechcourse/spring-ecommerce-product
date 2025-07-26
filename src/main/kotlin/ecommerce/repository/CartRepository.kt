@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository
 
 @Repository
 class CartRepository(private val jdbcClient: JdbcClient) {
-    fun addProductToCart(productId: Long, productQuantity: Long, cartId: Long): CartItemDto? {
+    fun addProductToCart(productId: Long, productQuantity: Long, cartId: Long): CartItemDto {
         val sql = """
             INSERT INTO cart_items (product_id, cart_id, quantity)
             VALUES (?, ?, ?)
@@ -18,9 +18,9 @@ class CartRepository(private val jdbcClient: JdbcClient) {
             .params(productId, cartId, productQuantity, productQuantity)
             .update()
 
-        if (rowsAffected <= 0) return null
+        if (rowsAffected <= 0) throw NotFoundException("Failed to add: Product $productId not found")
 
-        return showItem(cartId, productId) ?: throw NotFoundException("Failed to add: Product $productId not found in cart $cartId")
+        return showItem(cartId, productId) ?: throw NotFoundException("Failed to add: Product $productId not found")
     }
 
     fun removeProductFromCart(productId: Long, quantity: Long, cartId: Long): CartItemDto? {
@@ -44,12 +44,14 @@ class CartRepository(private val jdbcClient: JdbcClient) {
                 WHERE product_id = ? AND cart_id = ?
             """.trimIndent()
 
-        jdbcClient
+        val rowsAffected = jdbcClient
             .sql(sql)
             .params(quantity, productId, cartId)
             .update()
 
-        throw NotFoundException("Failed to delete: product $productId not found in cart $cartId")
+        if (rowsAffected == 0) {
+            throw NotFoundException("Failed to delete: product $productId not found in cart $cartId")
+        }
     }
 
     private fun deleteItemRow(productId: Long, cartId: Long) {
@@ -64,7 +66,9 @@ class CartRepository(private val jdbcClient: JdbcClient) {
             .param(2, cartId)
             .update()
 
-        throw NotFoundException("Failed to delete: product $productId not found in cart $cartId")
+        if (rowsAffected == 0) {
+            throw NotFoundException("Failed to delete: product $productId not found in cart $cartId")
+        }
     }
 
     fun quantityInCart(productId: Long, cartId: Long): Long {
@@ -107,7 +111,7 @@ class CartRepository(private val jdbcClient: JdbcClient) {
                 p.price AS product_price,
                 p.image_url AS product_image_url
             FROM cart_items ci
-            INNER JOIN products p ON ci_product_id = p.id
+            INNER JOIN products p ON ci.product_id = p.id
             WHERE ci.cart_id = ?
         """.trimIndent()
         val cartItems = jdbcClient
