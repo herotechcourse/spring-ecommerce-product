@@ -3,6 +3,7 @@ package ecommerce
 import ecommerce.member.domain.Member
 import ecommerce.member.repository.MemberRepository
 import jakarta.validation.ValidationException
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
@@ -121,5 +122,14 @@ class MemberRepositoryTest {
         val exists = repository.existsByEmail("nonexistent@gmail.com")
 
         assertEquals(false, exists)
+    }
+
+    @AfterEach
+    fun tearDown() {
+        jdbcTemplate.execute("DELETE FROM CART_ITEMS")
+        jdbcTemplate.execute("DELETE FROM PRODUCTS")
+        jdbcTemplate.execute("DELETE FROM MEMBERS")
+        jdbcTemplate.execute("ALTER TABLE MEMBERS ALTER COLUMN id RESTART WITH 1")
+        jdbcTemplate.execute("ALTER TABLE PRODUCTS ALTER COLUMN id RESTART WITH 1")
     }
 }

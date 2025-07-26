@@ -134,22 +134,6 @@ class ProductControllerTest {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value())
     }
 
-//    @Test
-//    fun `create product with blank name should return 400`() {
-//        val response = RestAssured.given()
-//            .log().all()
-//            .contentType(ContentType.JSON)
-//            .body(Product(name = "", price = 2.50, imageUrl = "https://sprite.jpg"))
-//            .`when`()
-//            .post("/products")
-//            .then()
-//            .log().all()
-//            .extract()
-//
-//        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value())
-//        assertThat(response.jsonPath().getString("name")).isEqualTo("Product name cannot be blank")
-//    }
-
     @Test
     fun `create product with name longer than 15 characters should return 400`() {
         val response =

@@ -1,6 +1,7 @@
-package ecommerce.cart.service
+package ecommerce
 
 import ecommerce.cart.dto.CartRequest
+import ecommerce.cart.service.CartService
 import ecommerce.member.domain.Member
 import ecommerce.member.repository.MemberRepository
 import ecommerce.product.domain.Product
@@ -8,6 +9,7 @@ import ecommerce.product.repository.ProductRepository
 import jakarta.validation.ValidationException
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -86,5 +88,14 @@ class CartServiceTest {
             cartService.removeFromCart(member, product.id!!)
         }.isInstanceOf(ValidationException::class.java)
             .hasMessage("Product not found in cart")
+    }
+
+    @AfterEach
+    fun tearDown() {
+        jdbcTemplate.execute("DELETE FROM CART_ITEMS")
+        jdbcTemplate.execute("DELETE FROM PRODUCTS")
+        jdbcTemplate.execute("DELETE FROM MEMBERS")
+        jdbcTemplate.execute("ALTER TABLE MEMBERS ALTER COLUMN id RESTART WITH 1")
+        jdbcTemplate.execute("ALTER TABLE PRODUCTS ALTER COLUMN id RESTART WITH 1")
     }
 }

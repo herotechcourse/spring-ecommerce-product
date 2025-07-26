@@ -1,7 +1,9 @@
-package ecommerce.cart.repository
+package ecommerce
 
 import ecommerce.cart.domain.CartItem
+import ecommerce.cart.repository.CartRepository
 import jakarta.validation.ValidationException
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest
@@ -115,5 +117,14 @@ class CartRepositoryTest {
     fun `existsByMemberIdAndProductId should return false if item does not exist`() {
         val exists = cartRepository.existsByMemberIdAndProductId(memberId, 999L)
         assertEquals(false, exists)
+    }
+
+    @AfterEach
+    fun tearDown() {
+        jdbcTemplate.execute("DELETE FROM CART_ITEMS")
+        jdbcTemplate.execute("DELETE FROM PRODUCTS")
+        jdbcTemplate.execute("DELETE FROM MEMBERS")
+        jdbcTemplate.execute("ALTER TABLE MEMBERS ALTER COLUMN id RESTART WITH 1")
+        jdbcTemplate.execute("ALTER TABLE PRODUCTS ALTER COLUMN id RESTART WITH 1")
     }
 }

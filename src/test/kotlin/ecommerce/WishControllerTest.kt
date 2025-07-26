@@ -1,10 +1,11 @@
-package ecommerce.cart.controller
+package ecommerce
 
 import ecommerce.auth.security.JwtTokenProvider
 import ecommerce.cart.dto.CartRequest
 import io.restassured.RestAssured
 import io.restassured.http.ContentType
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -248,5 +249,14 @@ class WishControllerTest {
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value())
         assertThat(response.jsonPath().getString("error")).isEqualTo("Unauthorized: Invalid or expired JWT token")
+    }
+
+    @AfterEach
+    fun tearDown() {
+        jdbcTemplate.execute("DELETE FROM CART_ITEMS")
+        jdbcTemplate.execute("DELETE FROM PRODUCTS")
+        jdbcTemplate.execute("DELETE FROM MEMBERS")
+        jdbcTemplate.execute("ALTER TABLE MEMBERS ALTER COLUMN id RESTART WITH 1")
+        jdbcTemplate.execute("ALTER TABLE PRODUCTS ALTER COLUMN id RESTART WITH 1")
     }
 }
