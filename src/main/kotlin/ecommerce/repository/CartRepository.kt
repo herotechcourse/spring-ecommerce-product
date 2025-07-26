@@ -56,7 +56,8 @@ class CartRepository(private val jdbcClient: JdbcClient) {
             throw NotFoundException("Failed to delete: Product $productId not found in cart $cartId")
         } else if (currentQuantity > quantity) {
             decreaseItemQuantity(productId, quantity, cartId)
-            return showItem(productId, cartId) ?: throw NotFoundException("Failed to delete: Product $productId not found in cart $cartId")
+            return showItem(cartId, productId)
+                ?: throw NotFoundException("Failed to delete: Product $productId not found in cart $cartId")
         } else {
             deleteItemRow(productId, cartId)
             return null

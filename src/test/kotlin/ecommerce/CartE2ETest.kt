@@ -5,6 +5,8 @@ import ecommerce.dto.TokenRequest
 import ecommerce.repository.ProductRepository
 import io.restassured.RestAssured
 import io.restassured.http.ContentType
+import io.restassured.response.ExtractableResponse
+import io.restassured.response.Response
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -72,17 +74,16 @@ class CartE2ETest {
 
     }
 
-    @Test
-    fun `test adding valid products to cart`() {
-        // login
-        val loginRequest = TokenRequest(email = "simon@email.com", password = "Hello1234")
+    private fun login(email: String, password: String): String {
+        val loginRequest = TokenRequest(email, password)
         val loginResponse =
             RestAssured.given().log().all().body(loginRequest).contentType(ContentType.JSON).`when`()
                 .post("/api/members/login").then().log().all().extract()
         val token = loginResponse.body().jsonPath().getString("token")
+        return token
+    }
 
-        // request add product to cart
-        val cartRequest = CartItemRequest(2, 3)
+    private fun addProductRequest(cartRequest: CartItemRequest, token: String): ExtractableResponse<Response> {
         val cartResponse =
             RestAssured.given().log().all()
                 .header("Authorization", "Bearer $token")
@@ -91,8 +92,90 @@ class CartE2ETest {
                 .post("/api/cart")
                 .then().log().all()
                 .extract()
-        assertThat(cartResponse.statusCode()).isEqualTo(HttpStatus.CREATED.value())
+        return cartResponse
+    }
 
+    private fun deleteProductRequest(cartRequest: CartItemRequest, token: String): ExtractableResponse<Response> {
+        val cartResponse =
+            RestAssured.given().log().all()
+                .header("Authorization", "Bearer $token")
+                .body(cartRequest).contentType(ContentType.JSON)
+                .`when`()
+                .delete("/api/cart")
+                .then().log().all()
+                .extract()
+        return cartResponse
+    }
+
+    @Test
+    fun `test adding multiple valid products to cart`() {
+        // login
+        val token = login("sandra@email.com", "MyPassword")
+
+        // request add product to cart
+        val cartRequest = CartItemRequest(2, 3)
+        val cartResponse = addProductRequest(cartRequest, token)
+
+        assertThat(cartResponse.statusCode()).isEqualTo(HttpStatus.CREATED.value())
+        assertThat(cartResponse.body().jsonPath().getString("quantity")).isEqualTo("3")
+        assertThat(cartResponse.body().jsonPath().getString("productId")).isEqualTo("2")
+    }
+
+    @Test
+    fun `test adding invalid product to cart`() {
+        // login
+        val token = login("simon@email.com", "Hello1234")
+
+        // request add product to cart
+        val cartRequest = CartItemRequest(10, 3)
+        val cartResponse = addProductRequest(cartRequest, token)
+
+        assertThat(cartResponse.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value())
+    }
+
+    @Test
+    fun `test deleting one item from several cart`() {
+        // login
+        val token = login("simon@email.com", "Hello1234")
+
+        // add products
+        val addRequest = CartItemRequest(2, 3)
+        addProductRequest(addRequest, token)
+
+        // delete products
+        val deleteOneRequest = CartItemRequest(2, 1)
+        val deleteOneResponse = deleteProductRequest(deleteOneRequest, token)
+
+        assertThat(deleteOneResponse.statusCode()).isEqualTo(HttpStatus.OK.value())
+        assertThat(deleteOneResponse.body().jsonPath().getString("quantity")).isEqualTo("2")
+    }
+
+    @Test
+    fun `test deleting all items from several in cart`() {
+        // login
+        val token = login("simon@email.com", "Hello1234")
+
+        // add products
+        val addRequest = CartItemRequest(2, 3)
+        addProductRequest(addRequest, token)
+
+        // delete products
+        val deleteAllRequest = CartItemRequest(2, 3)
+        val deleteAllResponse = deleteProductRequest(deleteAllRequest, token)
+
+        assertThat(deleteAllResponse.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value())
+    }
+
+    @Test
+    fun `test deleting nonexistent item from cart`() {
+        // login
+        val token = login("simon@email.com", "Hello1234")
+
+        // delete products
+        val deleteNonexistentRequest = CartItemRequest(2, 2)
+        val deleteNonExistentResponse = deleteProductRequest(deleteNonexistentRequest, token)
+
+        assertThat(deleteNonExistentResponse.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value())
     }
 
     @Test
@@ -107,6 +190,40 @@ class CartE2ETest {
                 .extract()
 
         assertThat(tokenResponse.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value())
+    }
+
+    @Test
+    fun `test retrieving products`() {
+        // login
+        val token = login("simon@email.com", "Hello1234")
+
+        // add multiple products
+        val product1 = CartItemRequest(1, 3)
+        val product2 = CartItemRequest(2, 3)
+        val product3 = CartItemRequest(3, 3)
+        addProductRequest(product1, token)
+        addProductRequest(product2, token)
+        addProductRequest(product3, token)
+
+        val  cartResponse = RestAssured.given().log().all()
+            .header("Authorization", "Bearer $token")
+            .`when`()
+            .get("/api/cart")
+            .then().log().all()
+            .extract()
+
+        assertThat(cartResponse.statusCode()).isEqualTo(HttpStatus.OK.value())
+        val jsonPath = cartResponse.body().jsonPath()
+
+        assertThat(cartResponse.statusCode()).isEqualTo(HttpStatus.OK.value())
+        assertThat(jsonPath.getLong("cartId")).isEqualTo(1L)
+
+        val items: List<String> = jsonPath.getList("items")
+        assertThat(items).hasSize(3)
+
+        assertThat(jsonPath.getString("items[0].productName")).isEqualTo("cola")
+        assertThat(jsonPath.getInt("items[0].quantity")).isEqualTo(3)
+        assertThat(jsonPath.getDouble("items[0].productPrice")).isEqualTo(2.0)
     }
 
     @Test
