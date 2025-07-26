@@ -1,23 +1,94 @@
 package ecommerce.controller
 
+import ecommerce.dto.member.LoginRequest
+import ecommerce.dto.member.RegisterRequest
+import ecommerce.dto.product.CreateProductRequest
+import ecommerce.dto.product.ProductResponse
+import ecommerce.dto.product.UpdateProductRequest
 import ecommerce.model.Product
 import io.restassured.RestAssured
 import io.restassured.http.ContentType
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.boot.test.web.server.LocalServerPort
 import org.springframework.http.HttpStatus
 import org.springframework.test.annotation.DirtiesContext
+import org.springframework.web.servlet.function.RequestPredicates.contentType
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 class ProductControllerTest {
-    @Test
-    fun createProduct() {
+    @LocalServerPort
+    private var port: Int = 0
+    private lateinit var authToken: String
+
+    @BeforeEach
+    fun setupAuthentication() {
+        RestAssured.port = port
+        val registerRequest = RegisterRequest("validEmail@email.com", "SecureP@ss1")
+        RestAssured.given()
+            .contentType(ContentType.JSON)
+            .body(registerRequest)
+            .`when`().post("/api/members/register")
+            .then()
+            .statusCode(HttpStatus.CREATED.value())
+            .extract()
+
+        val loginRequest = LoginRequest("validEmail@email.com", "SecureP@ss1")
+        val response =
+            RestAssured.given()
+                .contentType(ContentType.JSON)
+                .body(loginRequest)
+                .`when`().post("/api/members/login")
+                .then()
+                .statusCode(HttpStatus.OK.value())
+                .extract()
+
+        authToken = response.jsonPath().getString("token")
+        assertThat(authToken).isNotNull().isNotBlank()
+    }
+
+    private fun createProductWithAuth(
+        id: Long,
+        name: String,
+        price: Double,
+        img: String,
+        quantity: Int,
+    ): ProductResponse {
+        val createRequest = CreateProductRequest(name = name, price = price, img = img, quantity = quantity)
         val response =
             RestAssured
                 .given().log().all()
-                .body(Product(id = 100, name = "test", price = 20.0, img = "http://img1", 2))
+                .header("Authorization", "Bearer $authToken")
+                .contentType(ContentType.JSON)
+                .body(createRequest) // Send the DTO
+                .`when`().post("/products")
+                .then().log().all().extract()
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value())
+        val locationHeader = response.header("Location")
+        assertThat(locationHeader).isNotNull()
+        val createdProductId = locationHeader.substringAfterLast("/").toLong()
+
+        return RestAssured.given()
+            .header("Authorization", "Bearer $authToken")
+            .contentType(ContentType.JSON)
+            .`when`().get("/products/$createdProductId")
+            .then()
+            .statusCode(HttpStatus.OK.value())
+            .extract().body().jsonPath().getObject("", ProductResponse::class.java)
+    }
+
+    @Test
+    fun `createProduct should return 201`() {
+        val createRequest = CreateProductRequest("Test Product", 10.0, "http://example_img", 2)
+        val response =
+            RestAssured
+                .given().log().all()
+                .header("Authorization", "Bearer $authToken")
+                .body(createRequest)
                 .contentType(ContentType.JSON)
                 .`when`().post("/products")
                 .then().log().all().extract()
@@ -26,54 +97,59 @@ class ProductControllerTest {
     }
 
     @Test
-    fun getProducts() {
+    fun `getProducts should return 200 OK`() {
+        createProductWithAuth(101, "ProductA", 10.0, "https://example.com/imgA", 5)
+        createProductWithAuth(102, "ProductB", 20.0, "https://example.com/imgB", 3)
         val response =
             RestAssured
                 .given().log().all()
+                .header("Authorization", "Bearer $authToken")
                 .contentType(ContentType.JSON)
                 .`when`().get("/products")
                 .then().log().all().extract()
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
-        assertThat(response.jsonPath().getList<Product>("")).hasSize(3)
+        assertThat(response.jsonPath().getList<Product>("")).hasSize(5)
     }
 
     @Test
-    fun updateProduct() {
-        createProduct()
-
+    fun `updateProduct should return 200 OK`() {
+        val createdProduct = createProductWithAuth(100, "original", 20.0, "https://example.com/original", 5)
+        val productIdToUpdate = createdProduct.id
+        val updateRequest = UpdateProductRequest("updated", 30.0, "https://example.com/original", 5)
         val response =
             RestAssured
                 .given().log().all()
-                .body(Product(id = 100, name = "test", price = 30.0, img = "http://img1", quantity = 2))
+                .header("Authorization", "Bearer $authToken")
+                .body(updateRequest)
                 .contentType(ContentType.JSON)
-                .`when`().put("/products/100")
+                .`when`().put("/products/$productIdToUpdate")
                 .then().log().all().extract()
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
+        val responseBody = response.jsonPath().getObject("", ProductResponse::class.java)
+        assertThat(responseBody.name).isEqualTo("updated")
+        assertThat(responseBody.price).isEqualTo(30.0)
     }
 
     @Test
-    fun delete() {
-        val initialProductName =
-            """
-            {
-            "name" : "ProductName",
-            "price": 10.0,
-            "img": "http://valid_image_url.com",
-            "quantity": 10
-            }
-            """.trimIndent()
-
-        RestAssured.given().contentType(ContentType.JSON).body(initialProductName).post("/products").then()
-            .statusCode(201)
+    fun `deleteProduct should return 204 No Content with authentication`() {
+        val createdProduct = createProductWithAuth(101, "productToDelete", 20.0, "https://example.com/original", 5)
+        val productToDeleteId = createdProduct.id
 
         val response =
             RestAssured
                 .given().log().all()
-                .`when`().delete("/products/1")
+                .header("Authorization", "Bearer $authToken")
+                .`when`().delete("/products/$productToDeleteId")
                 .then().log().all().extract()
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value())
+        RestAssured
+            .given()
+            .header("Authorization", "Bearer $authToken")
+            .`when`().get("/products/$productToDeleteId")
+            .then()
+            .statusCode(HttpStatus.NOT_FOUND.value())
     }
 }
