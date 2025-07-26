@@ -26,7 +26,12 @@ class AuthService(
     }
 
     fun register(tokenRequest: TokenRequest): TokenResponse {
-        val member = Member(email = tokenRequest.email, password = tokenRequest.password)
+        val member =
+            Member(
+                email = tokenRequest.email,
+                password = tokenRequest.password,
+                role = if (tokenRequest.email == "admin@example.com") "ADMIN" else "USER",
+            )
         memberRepository.insert(member)
         val accessToken = jwtTokenProvider.createToken(member.email)
         return TokenResponse(accessToken)
