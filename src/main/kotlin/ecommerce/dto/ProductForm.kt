@@ -26,7 +26,7 @@ data class ProductForm(
             productForm: ProductForm,
             id: Long,
         ): Product {
-            val product = ProductForm.toProduct(productForm)
+            val product = toProduct(productForm)
             return Product.toEntity(product, id)
         }
     }
