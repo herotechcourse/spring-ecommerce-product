@@ -61,7 +61,7 @@ class TokenLoginControllerTest {
     }
 
     @Test
-    fun `test registering valid member`()  {
+    fun `test registering valid member`() {
         val request = TokenRequest(email = "newmember@gmail.com", password = "abcdef1234")
         val response =
             RestAssured.given().log().all().body(request).contentType(ContentType.JSON).`when`()
@@ -79,7 +79,7 @@ class TokenLoginControllerTest {
     }
 
     @Test
-    fun `test valid logins`()  {
+    fun `test valid logins`() {
         val request = TokenRequest(email = "simon@email.com", password = "Hello1234")
         val response =
             RestAssured.given().log().all().body(request).contentType(ContentType.JSON).`when`()
@@ -88,7 +88,7 @@ class TokenLoginControllerTest {
     }
 
     @Test
-    fun `test login with non-registered member`()  {
+    fun `test login with non-registered member`() {
         val request = TokenRequest(email = "member@email.com", password = "MyPassword#")
         val response =
             RestAssured.given().log().all().body(request).contentType(ContentType.JSON).`when`()
@@ -98,7 +98,7 @@ class TokenLoginControllerTest {
     }
 
     @Test
-    fun `test login with incorrect password`()  {
+    fun `test login with incorrect password`() {
         val request = TokenRequest(email = "sam@email.com", password = "MyPassword#")
         val response =
             RestAssured.given().log().all().body(request).contentType(ContentType.JSON).`when`()
@@ -107,7 +107,7 @@ class TokenLoginControllerTest {
     }
 
     @Test
-    fun `test request with valid token`()  {
+    fun `test request with valid token`() {
         val loginRequest = TokenRequest(email = "sam@email.com", password = "abcdefghijkl")
         val loginResponse =
             RestAssured.given().log().all()
@@ -132,7 +132,7 @@ class TokenLoginControllerTest {
     }
 
     @Test
-    fun `test request with invalid token`()  {
+    fun `test request with invalid token`() {
         val token = "ndwndwoljdwpfkwkdsq.DNlwfk3wld'wamclwfjkepojfo3jf"
         val tokenResponse =
             RestAssured.given().log().all()
@@ -146,7 +146,7 @@ class TokenLoginControllerTest {
     }
 
     @Test
-    fun `test request without 'Authorization' header`()  {
+    fun `test request without 'Authorization' header`() {
         val loginRequest = TokenRequest(email = "sam@email.com", password = "abcdefghijkl")
         val loginResponse =
             RestAssured.given().log().all()

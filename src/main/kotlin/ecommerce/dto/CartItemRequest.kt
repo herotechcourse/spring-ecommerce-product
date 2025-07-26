@@ -1,7 +1,10 @@
 package ecommerce.dto
 
+import jakarta.validation.constraints.Min
+
 class CartItemRequest(
-    // Todo validate: id and quantity have to be strictly positive
+    @field:Min(1)
     val productId: Long,
+    @field:Min(1)
     val quantity: Long,
 )

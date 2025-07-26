@@ -19,7 +19,10 @@ class CartService(
         return AllCartItemsDto(cartId, items)
     }
 
-    fun addItem(memberId: Long, request: CartItemRequest): CartItemDto {
+    fun addItem(
+        memberId: Long,
+        request: CartItemRequest,
+    ): CartItemDto {
         val cartId = cartRepository.findOrCreateCartId(memberId)
         if (!productRepository.existsById(request.productId)) {
             throw NotFoundException("Product with ${request.productId} not found")
@@ -27,12 +30,14 @@ class CartService(
         return cartRepository.addItemToCart(request.productId, request.quantity, cartId)
     }
 
-    fun deleteItem(memberId: Long, request: CartItemRequest): CartItemDto? {
+    fun deleteItem(
+        memberId: Long,
+        request: CartItemRequest,
+    ): CartItemDto? {
         val cartId = cartRepository.findOrCreateCartId(memberId)
         if (!productRepository.existsById(request.productId)) {
             throw NotFoundException("Product with ${request.productId} not found")
         }
         return cartRepository.removeItemFromCart(request.productId, request.quantity, cartId)
     }
-
 }

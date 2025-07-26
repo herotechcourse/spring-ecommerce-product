@@ -12,7 +12,7 @@ import org.springframework.web.method.support.ModelAndViewContainer
 
 class LoginMemberArgumentResolver(
     private val authService: AuthService,
-    private val authExtractor: AuthorizationExtractor
+    private val authExtractor: AuthorizationExtractor,
 ) : HandlerMethodArgumentResolver {
     override fun supportsParameter(parameter: MethodParameter): Boolean {
         return parameter.hasParameterAnnotation(LoginMember::class.java)
@@ -22,10 +22,11 @@ class LoginMemberArgumentResolver(
         parameter: MethodParameter,
         mavContainer: ModelAndViewContainer?,
         webRequest: NativeWebRequest,
-        binderFactory: WebDataBinderFactory?
+        binderFactory: WebDataBinderFactory?,
     ): Any {
-        val request = webRequest.getNativeRequest(HttpServletRequest::class.java)
-            ?: throw UnauthorizedException()
+        val request =
+            webRequest.getNativeRequest(HttpServletRequest::class.java)
+                ?: throw UnauthorizedException()
 
         val token = authExtractor.extract(request)
         if (token.isBlank()) throw UnauthorizedException()

@@ -7,4 +7,3 @@ class CartItemDto(
     val productPrice: Double,
     val productImageUrl: String,
 )
-

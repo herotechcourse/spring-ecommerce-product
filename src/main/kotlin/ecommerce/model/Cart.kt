@@ -5,5 +5,3 @@ data class Cart(
     val userId: Long,
     val products: List<CartItem>,
 )
-
-
