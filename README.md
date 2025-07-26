@@ -24,9 +24,17 @@ HTTP API that allows users to retrieve, add, update, and delete products.
 - [x] connect validation to the methods responsible for creating and updating functions
 
 ### Authentication and Authorization 
-- [ ] create a register method to save users as members
-- [ ] create a login method to allow users to save their sessions
+
+#### Member
+- [ ] create a member model
+- [ ] create a member controller
+  - [ ] create a register method to save users as members POST
+  - [ ] create a GET method to retrieve member
+  - [ ] create a PATCH method to update user password
+  - [ ] create a Delete method to delete member
+- [ ] create a login method
 - [ ] implement the Authentication and Authorization methods
+- [ ] implement response to authentication
 
 ### Test: Product Controller
 - [x] test CRUD methods
