@@ -1,5 +1,6 @@
-package ecommerce.controller.api
+package ecommerce.controller
 
+import ecommerce.controller.api.ProductController
 import ecommerce.dao.JdbcProductDAO
 import ecommerce.dto.ProductForm
 import ecommerce.exception.NotFoundException
@@ -7,7 +8,7 @@ import ecommerce.model.Product
 import ecommerce.service.ProductService
 import io.restassured.RestAssured
 import io.restassured.http.ContentType
-import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -18,9 +19,11 @@ import org.springframework.jdbc.core.JdbcTemplate
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 class ProductControllerTest {
-    @Autowired private lateinit var jdbcTemplate: JdbcTemplate
+    @Autowired
+    private lateinit var jdbcTemplate: JdbcTemplate
 
-    @Autowired private lateinit var jdbcProductDao: JdbcProductDAO
+    @Autowired
+    private lateinit var jdbcProductDao: JdbcProductDAO
     private lateinit var productService: ProductService
     private lateinit var controller: ProductController
 
@@ -65,7 +68,7 @@ class ProductControllerTest {
                 .`when`().post("/api/products")
                 .then().log().all().extract()
 
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value())
+        Assertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value())
     }
 
     @Test
@@ -86,8 +89,8 @@ class ProductControllerTest {
             )
         val resBody = response.jsonPath().getMap<String, String>("errors")
         val actual = resBody["name"]
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value())
-        assertThat(actual).isIn(targets)
+        Assertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value())
+        Assertions.assertThat(actual).isIn(targets)
     }
 
     @Test
@@ -95,7 +98,13 @@ class ProductControllerTest {
         val response =
             RestAssured
                 .given().log().all()
-                .body(Product(name = "this is very long name", price = 1.5, imageUrl = "https://www.product.com/image/1"))
+                .body(
+                    Product(
+                        name = "this is very long name",
+                        price = 1.5,
+                        imageUrl = "https://www.product.com/image/1",
+                    ),
+                )
                 .contentType(ContentType.JSON)
                 .`when`().post("/api/products")
                 .then().log().all().extract()
@@ -103,8 +112,8 @@ class ProductControllerTest {
         val expected = "Must be no more than 15 characters, including spaces"
         val resBody = response.jsonPath().getMap<String, String>("errors")
         val actual = resBody["name"]
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value())
-        assertThat(actual).isEqualTo(expected)
+        Assertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value())
+        Assertions.assertThat(actual).isEqualTo(expected)
     }
 
     @Test
@@ -120,8 +129,8 @@ class ProductControllerTest {
         val expected = "Contains unallowed character"
         val resBody = response.jsonPath().getMap<String, String>("errors")
         val actual = resBody["name"]
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value())
-        assertThat(actual).isEqualTo(expected)
+        Assertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value())
+        Assertions.assertThat(actual).isEqualTo(expected)
     }
 
     @Test
@@ -137,8 +146,8 @@ class ProductControllerTest {
         val expected = "Product price must be greater than zero"
         val resBody = response.jsonPath().getMap<String, String>("errors")
         val actual = resBody["price"]
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value())
-        assertThat(actual).isEqualTo(expected)
+        Assertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value())
+        Assertions.assertThat(actual).isEqualTo(expected)
     }
 
     @Test
@@ -158,8 +167,8 @@ class ProductControllerTest {
             )
         val resBody = response.jsonPath().getMap<String, String>("errors")
         val actual = resBody["imageUrl"]
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value())
-        assertThat(actual).isIn(expected)
+        Assertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value())
+        Assertions.assertThat(actual).isIn(expected)
     }
 
     @Test
@@ -175,8 +184,8 @@ class ProductControllerTest {
         val expected = "Must start with 'https://'."
         val resBody = response.jsonPath().getMap<String, String>("errors")
         val actual = resBody["imageUrl"]
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value())
-        assertThat(actual).isEqualTo(expected)
+        Assertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value())
+        Assertions.assertThat(actual).isEqualTo(expected)
     }
 
     @Test
@@ -193,8 +202,8 @@ class ProductControllerTest {
         val expected = "Product with name '$name' already exists."
         val resBody = response.jsonPath().getMap<String, String>("errors")
         val actual = resBody["name"]
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value())
-        assertThat(actual).isEqualTo(expected)
+        Assertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value())
+        Assertions.assertThat(actual).isEqualTo(expected)
     }
 
     @Test
@@ -202,8 +211,8 @@ class ProductControllerTest {
         create()
         create()
         val response = controller.getProducts()
-        assertThat(response.body?.size).isEqualTo(7)
-        assertThat(response.statusCode.value()).isEqualTo(HttpStatus.OK.value())
+        Assertions.assertThat(response.body?.size).isEqualTo(7)
+        Assertions.assertThat(response.statusCode.value()).isEqualTo(HttpStatus.OK.value())
     }
 
     @Test
@@ -211,7 +220,7 @@ class ProductControllerTest {
         create()
         create()
         val response = controller.getProduct(2)
-        assertThat(response.statusCode.value()).isEqualTo(HttpStatus.OK.value())
+        Assertions.assertThat(response.statusCode.value()).isEqualTo(HttpStatus.OK.value())
     }
 
     @Test
@@ -224,7 +233,7 @@ class ProductControllerTest {
                 .`when`().get("/api/products/$id")
                 .then().log().all().extract()
 
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value())
+        Assertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value())
     }
 
     @Test
@@ -235,15 +244,16 @@ class ProductControllerTest {
     @Test
     fun update() {
         val targetId = 1L
-        val newProductForm = ProductForm(name = "new product", price = 1.6, imageUrl = "https://www.product.com/image/2")
+        val newProductForm =
+            ProductForm(name = "new product", price = 1.6, imageUrl = "https://www.product.com/image/2")
         create()
         val response = controller.updateProduct(targetId, newProductForm)
-        assertThat(response.statusCode.value()).isEqualTo(HttpStatus.OK.value())
+        Assertions.assertThat(response.statusCode.value()).isEqualTo(HttpStatus.OK.value())
         val actual = response.body
-        assertThat(actual?.id).isEqualTo(targetId)
-        assertThat(actual?.name).isEqualTo(newProductForm.name)
-        assertThat(actual?.price).isEqualTo(newProductForm.price)
-        assertThat(actual?.imageUrl).isEqualTo(newProductForm.imageUrl)
+        Assertions.assertThat(actual?.id).isEqualTo(targetId)
+        Assertions.assertThat(actual?.name).isEqualTo(newProductForm.name)
+        Assertions.assertThat(actual?.price).isEqualTo(newProductForm.price)
+        Assertions.assertThat(actual?.imageUrl).isEqualTo(newProductForm.imageUrl)
     }
 
     @Test
@@ -266,8 +276,8 @@ class ProductControllerTest {
             )
         val resBody = response.jsonPath().getMap<String, String>("errors")
         val actual = resBody["name"]
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value())
-        assertThat(actual).isIn(targets)
+        Assertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value())
+        Assertions.assertThat(actual).isIn(targets)
     }
 
     @Test
@@ -284,8 +294,8 @@ class ProductControllerTest {
         val expected = "Product price must be greater than zero"
         val resBody = response.jsonPath().getMap<String, String>("errors")
         val actual = resBody["price"]
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value())
-        assertThat(actual).isEqualTo(expected)
+        Assertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value())
+        Assertions.assertThat(actual).isEqualTo(expected)
     }
 
     @Test
@@ -302,8 +312,8 @@ class ProductControllerTest {
         val expected = "Must start with 'https://'."
         val resBody = response.jsonPath().getMap<String, String>("errors")
         val actual = resBody["imageUrl"]
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value())
-        assertThat(actual).isEqualTo(expected)
+        Assertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value())
+        Assertions.assertThat(actual).isEqualTo(expected)
     }
 
     @Test
@@ -321,15 +331,15 @@ class ProductControllerTest {
         val expected = "Product with name '$name' already exists."
         val resBody = response.jsonPath().getMap<String, String>("errors")
         val actual = resBody["name"]
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value())
-        assertThat(actual).isEqualTo(expected)
+        Assertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value())
+        Assertions.assertThat(actual).isEqualTo(expected)
     }
 
     @Test
     fun delete() {
         create()
         val response = controller.deleteProduct(1)
-        assertThat(response.statusCode.value()).isEqualTo(HttpStatus.NO_CONTENT.value())
+        Assertions.assertThat(response.statusCode.value()).isEqualTo(HttpStatus.NO_CONTENT.value())
         readProducts()
     }
 
@@ -343,7 +353,7 @@ class ProductControllerTest {
                 .`when`().delete("/api/products/$id")
                 .then().log().all().extract()
 
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value())
+        Assertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value())
     }
 
     @Test

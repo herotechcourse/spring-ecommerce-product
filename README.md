@@ -8,10 +8,16 @@
 
 - [x] is a class
 - [x] has property `id: Long`
-    - [x] get `id` from controller with `AtomicLong(1)`
 - [x] has property `name: String`
 - [x] has property `price: Double`
 - [x] has property `imageUrl: String`
+
+#### Member
+
+- [ ] is a class
+- [ ] has property `id: Long?`
+- [ ] has property `email: String`
+- [ ] has property `password: String`
 
 ### DTO (Data Transfer Object)
 
@@ -27,6 +33,28 @@
 - [x] has property `imageUrl: String`
     - [x] validate 'NotBlank'
     - [x] validate 'Pattern' for regex
+
+#### RegisterForm
+
+- [ ] is a data class, as a DTO to validate form from member registration request
+- [ ] has property `email: String`
+    - [ ] validate 'NotBlank'
+    - [ ] validate 'Email'
+- [ ] has property `password: String`
+    - [ ] validate 'Size'
+
+#### LoginForm
+
+- [ ] is a data class, as a DTO to validate form from member login request
+- [ ] has property `email: String`
+    - [ ] validate 'NotBlank'
+- [ ] has property `password: String`
+    - [ ] validate 'NotBlank'
+
+#### AuthResponse
+
+- [ ] is a data class, as a DTO to send access token as response
+- [ ] has property `accessToken: String`
 
 ### DAO (Data Access Object)
 
@@ -53,10 +81,12 @@
 
 #### AuthService
 
-- [ ] `checkInvalidLogin()`
-- [ ] `findmember()`
+- [ ] `register()`
+- [ ] `login()`
+- [ ] `findMemberById()`
 - [ ] `findMemberByToken()`
-- [ ] `createToken()`
+- [ ] `findMemberByEmail()`
+- [ ] `checkMemberEmailExists()`
 
 #### ProductService
 
@@ -114,7 +144,7 @@
 #### ProductViewController
 
 - [x] `displayMain()` shows the main page
-  - currently, it redirects to `/products`
+    - currently, it redirects to `/products`
 - [x] `displayProducts()` shows list of products with view of products.html
 - [x] `displayCreateProductForm()` shows page for create product form with view of createProductForm.html
 - [x] `displayUpdateProductForm()` shows page for update product form with view of updateProductForm.html
@@ -151,11 +181,26 @@
 - [x] has `handlerIllegalStateException()`
 - [x] has `handleValidationException()`
 
-- NotFoundException
+- [x] NotFoundException
 
-- InternalServerErrorException
+- [x] InternalServerErrorException
 
-- ProductNameAlreadyExistsException
+- [x] ProductNameAlreadyExistsException
+
+- [ ] MemberEmailAlreadyExistsException
+
+- [ ] AuthorizationException
+
+### Auth
+
+#### JwtTokenProvider
+
+- [ ] is a `@Component` to handle JWT
+- [ ] has a property `secretKey: String`
+- [ ] has a property `validityInMilliseconds: Long`
+- [ ] has a method `createToken(): String` to generate and return an access token
+- [ ] has a method `getPayLoad(): String` to decrypt token into payload
+- [ ] has a method `validateToken(): Boolean` to decrypt and validate token
 
 ### etc.
 
