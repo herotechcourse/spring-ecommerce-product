@@ -25,11 +25,11 @@
 
 #### CartItem
 
-- [ ] is a class
-- [ ] has property `id: Long?`
-- [ ] has property `memberId: Long`
-- [ ] has property `productId: Long`
-- [ ] has property `quantity: Int`
+- [x] is a class
+- [x] has property `id: Long?`
+- [x] has property `memberId: Long`
+- [x] has property `productId: Long`
+- [x] has property `quantity: Int`
 
 ### DTO (Data Transfer Object)
 
