@@ -1,7 +1,7 @@
 package ecommerce.dao
 
 import ecommerce.model.Product
-import org.assertj.core.api.Assertions
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -21,13 +21,14 @@ class JdbcProductDAOTest {
 
         jdbcTemplate.execute("DROP TABLE product CASCADE")
         jdbcTemplate.execute(
-            """CREATE TABLE product (
-                         id          LONG    NOT NULL AUTO_INCREMENT,
-                         name        varchar(255)    NOT NULL,
-                         price       DOUBLE  NOT NULL,
-                         imageUrl    TEXT    NOT NULL,
-                         PRIMARY KEY (id)
-                    );""",
+            """CREATE TABLE product 
+            (
+                id          LONG    NOT NULL AUTO_INCREMENT,
+                name        varchar(255)    NOT NULL,
+                price       DOUBLE  NOT NULL,
+                imageUrl    TEXT    NOT NULL,
+                PRIMARY KEY (id)
+            );""",
         )
 
         val query = """INSERT INTO product (name, price, imageUrl) VALUES ('Iron Man', 1000, 'https://alexnsan.comics/imageurl/1');
@@ -41,13 +42,13 @@ class JdbcProductDAOTest {
     @Test
     fun findAll() {
         val products = jdbcProductDao.findAll()
-        Assertions.assertThat(products).hasSize(5)
+        assertThat(products).hasSize(5)
     }
 
     @Test
     fun findById() {
         val product = jdbcProductDao.findById(1)
-        Assertions.assertThat(product?.name).isEqualTo("Iron Man")
+        assertThat(product?.name).isEqualTo("Iron Man")
     }
 
     @Test
@@ -55,7 +56,7 @@ class JdbcProductDAOTest {
         val product = Product(name = "Iron body", price = 99.0, imageUrl = "https://alexnsan.comics/imageurl/123")
         val id = jdbcProductDao.insert(product)
         val target = jdbcProductDao.findById(id)
-        Assertions.assertThat(target?.name).isEqualTo(product.name)
+        assertThat(target?.name).isEqualTo(product.name)
     }
 
     @Test
@@ -67,9 +68,9 @@ class JdbcProductDAOTest {
         val affectedRow = jdbcProductDao.update(product)
         val target = jdbcProductDao.findById(id)
 
-        Assertions.assertThat(affectedRow).isEqualTo(1)
-        Assertions.assertThat(target?.id).isEqualTo(product.id)
-        Assertions.assertThat(target?.name).isEqualTo(product.name)
+        assertThat(affectedRow).isEqualTo(1)
+        assertThat(target?.id).isEqualTo(product.id)
+        assertThat(target?.name).isEqualTo(product.name)
     }
 
     @Test
@@ -77,20 +78,20 @@ class JdbcProductDAOTest {
         val id = 1L
         val result = jdbcProductDao.delete(id)
 
-        Assertions.assertThat(result).isEqualTo(1)
+        assertThat(result).isEqualTo(1)
     }
 
     @Test
     fun `existsByName() - return true if a product with same name exists`() {
         val target = jdbcProductDao.existsByName("Iron Man")
 
-        Assertions.assertThat(target).isTrue()
+        assertThat(target).isTrue()
     }
 
     @Test
     fun `existsByName() - return false if a product with same name does not exist`() {
         val target = jdbcProductDao.existsByName("Iron Body")
 
-        Assertions.assertThat(target).isFalse()
+        assertThat(target).isFalse()
     }
 }

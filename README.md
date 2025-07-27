@@ -75,10 +75,10 @@
 
 #### interface MemberADO
 
-- [ ] `insert()` - query database to create new member
-- [ ] `findByEmail()` - query database for an object by email
-- [ ] `findById()` - query database for an object by id
-- [ ] `existsByEmail()` - query database to get count of member with the email
+- [x] `insert()` - query database to create new member
+- [x] `findByEmail()` - query database for an object by email
+- [x] `findById()` - query database for an object by id
+- [x] `existsByEmail()` - query database to get count of member with the email
 
 #### JdbcMemberDAO: MemberDAO
 
