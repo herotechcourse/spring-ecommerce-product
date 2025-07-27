@@ -23,6 +23,14 @@
   - [x] `from(loginForm: LoginForm)`
   - [x] `from(registerForm: RegisterForm)`
 
+#### CartItem
+
+- [ ] is a class
+- [ ] has property `id: Long?`
+- [ ] has property `memberId: Long`
+- [ ] has property `productId: Long`
+- [ ] has property `quantity: Int`
+
 ### DTO (Data Transfer Object)
 
 #### ProductForm
@@ -62,6 +70,22 @@
 
 ### DAO (Data Access Object)
 
+#### CartDAO
+
+- [ ] `getCartItemsByMemberId()`
+- [ ] `addItemToCart()`
+- [ ] `removeItemFromCart()`
+- [ ] `updateItemQuantity()`
+
+#### interface MemberADO
+
+- [x] `insert()` - query database to create new member
+- [x] `findByEmail()` - query database for an object by email
+- [x] `findById()` - query database for an object by id
+- [x] `existsByEmail()` - query database to get count of member with the email
+
+#### JdbcMemberDAO : MemberDAO
+
 #### interface ProductDAO
 
 - [x] `findAll()` - query database to get all products
@@ -73,16 +97,14 @@
 
 #### JdbcProductDAO : ProductDAO
 
-#### interface MemberADO
-
-- [x] `insert()` - query database to create new member
-- [x] `findByEmail()` - query database for an object by email
-- [x] `findById()` - query database for an object by id
-- [x] `existsByEmail()` - query database to get count of member with the email
-
-#### JdbcMemberDAO: MemberDAO
-
 ### Service
+
+#### CartService
+
+- [ ] `getCart()`
+- [ ] `addToCart()`
+- [ ] `removeFromCart()`
+- [ ] `updateQuantity()`
 
 #### AuthService
 
@@ -100,6 +122,15 @@
   exists by name or not from DAO, then insert the product if it is valid
 
 ### Controller
+
+#### CartController
+
+- [ ] `getMemberId()`
+- HTTP Methods
+- [ ] GET "/api/cart" - `viewCart()`
+- [ ] POST "/api/cart" - `addToCart(@RequestBody)`
+- [ ] DELETE "/api/cart/{id}" - `removeFromCart(@PathVariable)`
+- [ ] PUT "/api/cart/{id}" - `updateQuantity(@PathVariable, @RequestBody)`
 
 #### AuthController
 
@@ -217,7 +248,21 @@
 
 ## Functional Requirements
 
-### Step 2.2
+### Step 2.3 - Cart
+
+Using the token received after login, implement functionality that allows the user to add products to their own cart.
+
+- Users can retrieve the list of products in their cart.
+- Users can add products to their cart.
+- Users can remove products from their cart.
+
+Use the `Authorization` header to pass user credentials:
+
+```http request
+Authorization: Bearer <token>
+```
+
+### Step 2.2 - User Login
 
 Implement user account features including registration, login, and authentication so that users can access member-only
 functionality in the future.
@@ -228,7 +273,7 @@ functionality in the future.
 
 Implement the API to send and receive HTTP messages as shown below.
 
-### Step 2.1
+### Step 2.1 - Validation & Handling Exception
 
 When a product is created or updated, the client may send invalid data.
 In such cases, your application must respond with enough information for the client to understand **what is wrong and
