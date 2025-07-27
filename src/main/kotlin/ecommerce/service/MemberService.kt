@@ -3,7 +3,6 @@ package ecommerce.service
 import ecommerce.dto.MemberDTO
 import ecommerce.model.Member
 import ecommerce.repository.MemberRepository
-import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
 
 @Service
@@ -38,5 +37,10 @@ class MemberService (private val memberRepository: MemberRepository)  {
         validateEmail(memberDTO.email)
         validatePassword(memberDTO.password)
         return memberRepository.insert(memberDTO.toEntity())
+    }
+
+    fun findByEmail(email: String): Member? {
+        val member = memberRepository.findByEmail(email)
+        return member
     }
 }
