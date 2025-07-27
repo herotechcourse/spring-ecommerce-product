@@ -20,7 +20,7 @@ class MemberService(
         email: String,
         password: String,
         role: MemberRole = MemberRole.ROLE_USER,
-    ) {
+    ): Member {
         if (memberRepository.findByEmail(email) != null) {
             throw EmailAlreadyExistsException("Member with email $email already exists")
         }
@@ -31,6 +31,6 @@ class MemberService(
                 password = hashedPassword,
                 role = role,
             )
-        memberRepository.create(newMember)
+        return memberRepository.create(newMember)
     }
 }
