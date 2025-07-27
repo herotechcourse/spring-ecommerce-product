@@ -12,9 +12,8 @@ import org.springframework.web.method.support.ModelAndViewContainer
 
 @Component
 class LoginMemberArgumentResolver(
-    private val authService: AuthService
+    private val authService: AuthService,
 ) : HandlerMethodArgumentResolver {
-
     override fun supportsParameter(parameter: MethodParameter): Boolean {
         return parameter.hasParameterAnnotation(LoginMember::class.java)
     }
@@ -23,10 +22,11 @@ class LoginMemberArgumentResolver(
         parameter: MethodParameter,
         mavContainer: ModelAndViewContainer?,
         webRequest: NativeWebRequest,
-        binderFactory: WebDataBinderFactory?
+        binderFactory: WebDataBinderFactory?,
     ): Any {
-        val token = webRequest.getHeader("Authorization")?.removePrefix("Bearer ")
-            ?: throw AuthorizationException("Missing Authorization token")
+        val token =
+            webRequest.getHeader("Authorization")?.removePrefix("Bearer ")
+                ?: throw AuthorizationException("Missing Authorization token")
 
         val memberResponse = authService.findMemberByToken(token)
         return memberResponse
