@@ -3,6 +3,7 @@ package ecommerce.repository
 import ecommerce.dto.CartItem
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.stereotype.Repository
+import java.sql.Timestamp
 
 @Repository
 class CartRepository(private val jdbcTemplate: JdbcTemplate) {
@@ -12,11 +13,12 @@ class CartRepository(private val jdbcTemplate: JdbcTemplate) {
     ) {
         val sql =
             """
-            INSERT INTO CART (member_id, product_id, quantity)
-            VALUES (?, ?, 1)
+            INSERT INTO CART (member_id, product_id, quantity, created_at)
+            VALUES (?, ?, 1, ?)
             ON DUPLICATE KEY UPDATE quantity = quantity + 1
             """.trimIndent()
-        jdbcTemplate.update(sql, memberId, productId)
+        val now = Timestamp(System.currentTimeMillis())
+        jdbcTemplate.update(sql, memberId, productId, now)
     }
 
     fun remove(

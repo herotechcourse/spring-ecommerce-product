@@ -19,7 +19,7 @@ CREATE TABLE IF NOT EXISTS carts
     member_id INT NOT NULL,
     product_id INT NOT NULL,
     quantity INT NOT NULL DEFAULT 1,
-
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT unique_cart_item UNIQUE (member_id, product_id),
     CONSTRAINT fk_cart_member FOREIGN KEY (member_id) REFERENCES members(id),
     CONSTRAINT fk_cart_product FOREIGN KEY (product_id) REFERENCES products(id)
