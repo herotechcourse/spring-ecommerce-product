@@ -42,8 +42,10 @@ class JwtTokenProvider() {
                     .parseSignedClaims(token)
             !claims.payload.expiration.before(Date())
         } catch (e: JwtException) {
+            println(e.message)
             false
         } catch (e: IllegalArgumentException) {
+            println(e.message)
             false
         }
     }
