@@ -42,12 +42,24 @@
   - 403 - forbidden
 
 ## Cart Functionality
-- [] Each user has their own shopping cart
-- [] User can add product to cart
+- [x] Each user has their own shopping cart
+- [x] User can add product to cart
   - add specified quantity of product
   - if product present in cart, quantity -> +1
   - validation to ensure product exists and quantity is valid
-- [] retrieve products from cart
-- [] remove products from cart
-- [] all cart operations require valid JWT for authentication
-- [] user can only access and modify their own cart
+- [x] retrieve products from cart
+- [x] remove products from cart
+- [x] all cart operations require valid JWT for authentication
+- [x] user can only access and modify their own cart
+
+## Cart Statistics
+- [] Retrieve top 5 products added to any cart
+  - ranking based on count of additions
+  - tie breaking - most recent add listed first
+  - response includes - product name, total times added, most recent added time
+- [] Recently Active Members 
+  - List of members who added at least one product in last 7 days
+  - response includes - member ID, name, email
+- [] Role based access control(Admin only)
+  - statistical API endpoints - admins only
+  - 401 Unauthorized if user is not authorized
