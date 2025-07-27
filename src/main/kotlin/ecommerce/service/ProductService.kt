@@ -3,12 +3,12 @@ package ecommerce.service
 import ecommerce.dto.ProductDTO
 import ecommerce.model.Product
 import ecommerce.repository.BaseProductStore
-import ecommerce.repository.ProductStore
+import ecommerce.repository.ProductRepository
 import org.springframework.stereotype.Service
 import java.math.BigDecimal
 
 @Service
-class ProductService(private val repository: ProductStore, private val productStore: BaseProductStore) {
+class ProductService(private val repository: ProductRepository, private val productStore: BaseProductStore) {
 
     fun validateName(name: String)  {
         val regex = Regex("^[()\\[\\]+\\-&/_a-zA-Z0-9\\s]+\$")
@@ -59,5 +59,4 @@ class ProductService(private val repository: ProductStore, private val productSt
     fun deleteProductById(id: Long): Boolean {
         return repository.deleteById(id) != null
     }
-
 }
