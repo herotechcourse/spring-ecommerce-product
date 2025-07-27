@@ -10,7 +10,7 @@ class AuthService(
     private val memberRepository: MemberRepository,
     private val jwtTokenProvider: JwtTokenProvider,
 ) {
-    fun findMemberByToken(token: String): Member? {
+    fun findMemberByToken(token: String): Member {
         validateToken(token)
         val id = getPayloadFromToken(token)
         val member = memberRepository.findById(id)

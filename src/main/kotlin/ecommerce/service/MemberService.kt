@@ -4,9 +4,9 @@ import ecommerce.dto.MemberRequest
 import ecommerce.dto.TokenResponse
 import ecommerce.dto.mapper.MemberMapper
 import ecommerce.entity.Member
-import ecommerce.exception.CanNotInsertWithKeyHolderException
 import ecommerce.exception.LoginFailedException
 import ecommerce.exception.MemberAlreadyExistsException
+import ecommerce.exception.MemberInsertFailedException
 import ecommerce.exception.RetrievalFailedException
 import ecommerce.repository.MemberRepository
 import org.springframework.stereotype.Service
@@ -30,12 +30,8 @@ class MemberService(
 
         val id =
             repository.insert(request)
-                ?: throw CanNotInsertWithKeyHolderException("Failed to insert member with email ${request.email}")
+                ?: throw MemberInsertFailedException("Failed to insert member with email ${request.email}")
 
-        return findMemberByIdOrFail(id)
-    }
-
-    fun findMemberByIdOrFail(id: Long): Member {
         return repository.findById(id)
             ?: throw RetrievalFailedException("Member with ID $id could not be retrieved after insertion")
     }
