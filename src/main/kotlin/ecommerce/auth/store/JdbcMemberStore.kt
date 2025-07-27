@@ -15,15 +15,17 @@ class JdbcMemberStore(private val db: JdbcTemplate) : MemberStore {
                 rs.getLong("id"),
                 rs.getString("email"),
                 rs.getString("password"),
+                rs.getString("name"),
             )
         }
 
     override fun createMember(member: Member): Member {
         val keyHolder = GeneratedKeyHolder()
         db.update({ connection ->
-            connection.prepareStatement("INSERT INTO member (email, password) VALUES (?, ?)", arrayOf("id")).apply {
+            connection.prepareStatement("INSERT INTO member (email, password, name) VALUES (?, ?, ?)", arrayOf("id")).apply {
                 setString(1, member.email)
                 setString(2, member.password)
+                setString(3, member.name)
             }
         }, keyHolder)
         return member.copy(id = keyHolder.key?.toLong() ?: throw IllegalStateException("No ID returned"))

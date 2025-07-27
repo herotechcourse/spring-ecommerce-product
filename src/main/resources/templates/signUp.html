@@ -21,6 +21,13 @@
                 />
             </label>
             <label>
+                Name
+                <input
+                        name="name"
+                        placeholder="your name"
+                />
+            </label>
+            <label>
                 Password
                 <input
                         type="password"
@@ -43,8 +50,9 @@
         const form = event.target;
         const email = form.email.value.trim();
         const password = form.password.value;
+        const name = form.name.value
 
-        const body = JSON.stringify({email, password});
+        const body = JSON.stringify({email, password, name});
 
         try {
             const res = await fetch("/api/members/register", {

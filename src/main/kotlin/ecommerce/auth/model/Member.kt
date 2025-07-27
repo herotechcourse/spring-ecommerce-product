@@ -11,6 +11,9 @@ data class Member(
     @field:Email(message = "Email is required")
     val email: String,
     @field:NotNull(message = "Password is required")
-    @field:NotBlank(message = "Email is required")
+    @field:NotBlank(message = "Password is required")
     val password: String,
+    @field:NotNull(message = "Name is required")
+    @field:NotBlank(message = "Name is required")
+    val name: String,
 )

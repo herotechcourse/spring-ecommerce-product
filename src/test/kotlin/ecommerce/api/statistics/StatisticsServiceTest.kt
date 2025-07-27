@@ -37,7 +37,7 @@ class StatisticsServiceTest {
 
     @Test
     fun `getMembersAddedToCartLast7Days returns list from repository`() {
-        val expected = listOf(MemberDTO(1L, "a@gmail.com"))
+        val expected = listOf(MemberDTO(1L, "a@gmail.com", "Al"))
 
         Mockito.`when`(statisticsStore.findMembersAddedToCartLast7Days()).thenReturn(expected)
 

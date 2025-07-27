@@ -26,7 +26,7 @@ class StatisticsIntegrationTest
         fun `create 5 members and products and calculate statistics`() {
             val members =
                 (1..5).map {
-                    memberRepository.createMember(Member(email = "user$it@example.com", password = "password"))
+                    memberRepository.createMember(Member(email = "user$it@example.com", password = "password", name = "name$it"))
                 }
 
             val products =

@@ -21,7 +21,7 @@ class JdbcCartStoreTest
 
         @Test
         fun `should create a cart and associate to user`() {
-            jdbcTemplate.update("INSERT INTO member (email, password) VALUES (?, ?)", "a@gmail.com", "password")
+            jdbcTemplate.update("INSERT INTO member (email, password, name) VALUES (?, ?, ?)", "a@gmail.com", "password", "Al")
             val memberId =
                 jdbcTemplate.queryForObject("SELECT id FROM member WHERE email = 'a@gmail.com'", Long::class.java)
 
@@ -34,7 +34,7 @@ class JdbcCartStoreTest
 
         @Test
         fun `should add item and get it`() {
-            jdbcTemplate.update("INSERT INTO member (email, password) VALUES (?, ?)", "b@gmail.com", "password")
+            jdbcTemplate.update("INSERT INTO member (email, password, name) VALUES (?, ?, ?)", "b@gmail.com", "password", "Pip")
             val memberId =
                 jdbcTemplate.queryForObject("SELECT id FROM member WHERE email = 'b@gmail.com'", Long::class.java)
             jdbcTemplate.update(
@@ -55,7 +55,7 @@ class JdbcCartStoreTest
 
         @Test
         fun `should add item and delete it`() {
-            jdbcTemplate.update("INSERT INTO member (email, password) VALUES (?, ?)", "c@gmail.com", "password")
+            jdbcTemplate.update("INSERT INTO member (email, password, name) VALUES (?, ?, ?)", "c@gmail.com", "password", "Ccc")
             val memberId =
                 jdbcTemplate.queryForObject("SELECT id FROM member WHERE email = 'c@gmail.com'", Long::class.java)
             jdbcTemplate.update(
@@ -79,7 +79,7 @@ class JdbcCartStoreTest
 
         @Test
         fun `should add items and clear the cart`() {
-            jdbcTemplate.update("INSERT INTO member (email, password) VALUES (?, ?)", "d@gmail.com", "password")
+            jdbcTemplate.update("INSERT INTO member (email, password, name) VALUES (?, ?, ?)", "d@gmail.com", "password", "Ddd")
             val memberId =
                 jdbcTemplate.queryForObject("SELECT id FROM member WHERE email = 'd@gmail.com'", Long::class.java)
             jdbcTemplate.update(

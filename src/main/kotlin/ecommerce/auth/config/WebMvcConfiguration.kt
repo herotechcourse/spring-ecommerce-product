@@ -18,11 +18,12 @@ class WebMvcConfiguration(
         registry.addInterceptor(CheckLoginInterceptor(jwtTokenProvider))
             .addPathPatterns("/**")
             .excludePathPatterns(
+                "/",
                 "/api/members/register",
                 "/api/members/login",
                 "/api/me/token",
                 "/auth/login",
-                "/auth/registration",
+                "/auth/signup",
                 "/shop/",
                 "/cart/",
                 "/api/stats/**",

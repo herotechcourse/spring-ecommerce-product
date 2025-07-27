@@ -25,6 +25,7 @@ class AuthTest {
             Member(
                 email = "test@example.com",
                 password = "password",
+                name = "Al",
             )
         val token = jwtService.createToken(userDetails.email)
 

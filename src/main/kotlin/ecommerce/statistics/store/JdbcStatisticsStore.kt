@@ -31,7 +31,7 @@ class JdbcStatisticsStore(private val db: JdbcTemplate) : StatisticsStore {
     override fun findMembersAddedToCartLast7Days(): List<MemberDTO> {
         val sql =
             """
-            SELECT DISTINCT m.id, m.email
+            SELECT DISTINCT m.id, m.email, m.name
             FROM member m
             JOIN cart c ON c.member_id = m.id
             JOIN cart_item ci ON ci.cart_id = c.id
@@ -42,7 +42,7 @@ class JdbcStatisticsStore(private val db: JdbcTemplate) : StatisticsStore {
             MemberDTO(
                 id = rs.getLong("id"),
                 email = rs.getString("email"),
-                // add name if exists in schema and DTO
+                name = rs.getString("name"),
             )
         }
     }
