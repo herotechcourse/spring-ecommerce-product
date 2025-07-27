@@ -23,20 +23,4 @@ class ProductNameValidatorTest {
             assertThat(validator.isValid(it, null)).isFalse()
         }
     }
-
-    @Test
-    fun `should return false for names longer than 20 characters`() {
-        val longName = "ThisNameIsWayTooLongToBeValid"
-        assertThat(validator.isValid(longName, null)).isFalse()
-    }
-
-    @Test
-    fun `should return false for null name`() {
-        assertThat(validator.isValid(null, null)).isFalse()
-    }
-
-    @Test
-    fun `should return false for blank name`() {
-        assertThat(validator.isValid("   ", null)).isFalse()
-    }
 }

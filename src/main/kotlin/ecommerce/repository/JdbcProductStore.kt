@@ -35,8 +35,8 @@ class JdbcProductStore(private val jdbcTemplate: JdbcTemplate) : ProductStore {
     }
 
     override fun findByName(name: String): Product? {
-        val sql = "SELECT COUNT(*) FROM products WHERE product_name = ?"
-        return jdbcTemplate.queryForObject(sql, productRowMapper, name)
+        val sql = "SELECT * FROM products WHERE product_name = ?"
+        return jdbcTemplate.query(sql, productRowMapper, name).firstOrNull()
     }
 
     override fun save(product: Product) {

@@ -36,6 +36,13 @@ class JdbcProductStoreTest {
     }
 
     @Test
+    fun `should find product by name`() {
+        val product = productStore.findByName(name = "Phone")
+        Assertions.assertThat(product).isNotNull
+        Assertions.assertThat(product?.name).isEqualTo("Phone")
+    }
+
+    @Test
     fun `should save a new product`() {
         val newProduct = Product(name = "Tablet", price = 299.99, imageUrl = "tablet.jpg")
         productStore.save(newProduct) // no return value

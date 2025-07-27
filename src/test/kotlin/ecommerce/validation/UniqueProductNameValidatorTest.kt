@@ -38,11 +38,4 @@ class UniqueProductNameValidatorTest {
 
         assertThat(result).isFalse()
     }
-
-    @Test
-    fun `should return true when name is null (let @NotBlank handle it)`() {
-        val result = validator.isValid(null, null)
-
-        assertThat(result).isTrue()
-    }
 }

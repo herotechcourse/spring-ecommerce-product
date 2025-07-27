@@ -12,10 +12,9 @@ class UniqueProductNameValidator(
     private val productStore: ProductStore,
 ) : ConstraintValidator<UniqueProductName, String> {
     override fun isValid(
-        value: String?,
+        value: String,
         context: ConstraintValidatorContext?,
     ): Boolean {
-        if (value == null) return true
         return productStore.findByName(value) == null
     }
 }

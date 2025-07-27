@@ -25,7 +25,7 @@ class ProductControllerTest {
     }
 
     @Test
-    fun create() {
+    fun `create a product`() {
         val productRequest =
             ProductRequest(
                 name = "Product 1",
@@ -45,7 +45,7 @@ class ProductControllerTest {
     }
 
     @Test
-    fun `Returns Products`() {
+    fun `returns all products`() {
         val response =
             RestAssured.given()
                 .`when`().get("/products")
@@ -57,7 +57,7 @@ class ProductControllerTest {
     }
 
     @Test
-    fun update() {
+    fun `update a product`() {
         val productId = 1L
         val updatedProduct =
             ProductRequest(
@@ -78,18 +78,31 @@ class ProductControllerTest {
     }
 
     @Test
-    fun delete() {
-        create() // create a product first to delete
+    fun `delete a product`() {
+        val productRequest =
+            ProductRequest(
+                name = "Product 10",
+                price = 10.0,
+                imageUrl = "http://localhost:8080/image/upload/product1.jpg",
+            )
+
+        RestAssured.given()
+            .contentType(ContentType.JSON)
+            .body(productRequest)
+            .post("/products")
+            .then()
+            .extract()
 
         val response =
             RestAssured.given()
-                .`when`().delete("/products/1")
+                .`when`().delete("/products/10")
                 .then()
                 .extract()
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value())
     }
 
+    // validation for create products
     @Test
     fun `create fails when product name is blank`() {
         val invalidProduct =
@@ -130,7 +143,7 @@ class ProductControllerTest {
                 .extract()
 
         Assertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value())
-        Assertions.assertThat(response.asString()).contains("Invalid characters in product name", "name")
+        Assertions.assertThat(response.asString()).contains("Product name must be between 1 and 15 characters")
     }
 
     @Test
@@ -216,7 +229,7 @@ class ProductControllerTest {
         Assertions.assertThat(response.asString()).contains("Image URL must start with http:// or https://", "imageUrl")
     }
 
-// Now similar tests for update endpoint:
+// validation for update products
 
     @Test
     fun `update fails when product name is blank`() {
