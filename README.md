@@ -14,10 +14,14 @@
 
 #### Member
 
-- [ ] is a class
-- [ ] has property `id: Long?`
-- [ ] has property `email: String`
-- [ ] has property `password: String`
+- [x] is a class
+- [x] has property `id: Long?`
+- [x] has property `email: String`
+- [x] has property `password: String`
+- companion object
+  - [x] `toEntity()`
+  - [x] `from(loginForm: LoginForm)`
+  - [x] `from(registerForm: RegisterForm)`
 
 ### DTO (Data Transfer Object)
 
@@ -36,20 +40,20 @@
 
 #### RegisterForm
 
-- [ ] is a data class, as a DTO to validate form from member registration request
-- [ ] has property `email: String`
-    - [ ] validate 'NotBlank'
-    - [ ] validate 'Email'
-- [ ] has property `password: String`
-    - [ ] validate 'Size'
+- [x] is a data class, as a DTO to validate form from member registration request
+- [x] has property `email: String`
+    - [x] validate 'NotBlank'
+    - [x] validate 'Email'
+- [x] has property `password: String`
+    - [x] validate 'Size'
 
 #### LoginForm
 
-- [ ] is a data class, as a DTO to validate form from member login request
-- [ ] has property `email: String`
-    - [ ] validate 'NotBlank'
-- [ ] has property `password: String`
-    - [ ] validate 'NotBlank'
+- [x] is a data class, as a DTO to validate form from member login request
+- [x] has property `email: String`
+    - [x] validate 'NotBlank'
+- [x] has property `password: String`
+    - [x] validate 'NotBlank'
 
 #### AuthResponse
 
@@ -72,7 +76,8 @@
 #### interface MemberADO
 
 - [ ] `insert()` - query database to create new member
-- [ ] `findByEmail()` - query database for an object
+- [ ] `findByEmail()` - query database for an object by email
+- [ ] `findById()` - query database for an object by id
 - [ ] `existsByEmail()` - query database to get count of member with the email
 
 #### JdbcMemberDAO: MemberDAO
