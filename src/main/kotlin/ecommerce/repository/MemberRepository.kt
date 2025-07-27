@@ -1,6 +1,7 @@
 package ecommerce.repository
 
 import ecommerce.model.Member
+import ecommerce.model.Role
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.jdbc.core.RowMapper
 import org.springframework.stereotype.Repository
@@ -17,6 +18,7 @@ class MemberRepository(private val jdbcTemplate: JdbcTemplate) {
                 rs.getLong("id"),
                 rs.getString("email"),
                 rs.getString("password"),
+                Role.valueOf(rs.getString("role")),
             )
         }
 
@@ -26,21 +28,21 @@ class MemberRepository(private val jdbcTemplate: JdbcTemplate) {
         val id = index.getAndIncrement()
         val sql =
             """
-            INSERT INTO members ( id, email, password )
-            VALUES (?, ?, ?)
+            INSERT INTO members ( id, email, password, role )
+            VALUES (?, ?, ?, ?)
             """.trimIndent()
 
-        jdbcTemplate.update(sql, id, member.email, member.password)
+        jdbcTemplate.update(sql, id, member.email, member.password, member.role.toString())
         return member.copy(id = id)
     }
 
     fun findById(id: Long): Member? {
-        val sql = "SELECT id, email, password FROM members WHERE id = ?"
+        val sql = "SELECT id, email, password, role FROM members WHERE id = ?"
         return jdbcTemplate.query(sql, rowMapper, id).firstOrNull()
     }
 
     fun findByEmail(email: String): Member? {
-        val sql = "SELECT id, email, password FROM members WHERE email = ?"
+        val sql = "SELECT id, email, password, role FROM members WHERE email = ?"
         return jdbcTemplate.query(sql, rowMapper, email).firstOrNull()
     }
 
@@ -50,7 +52,7 @@ class MemberRepository(private val jdbcTemplate: JdbcTemplate) {
     }
 
     operator fun get(email: String): Member? {
-        val sql = "SELECT id, email, password FROM members WHERE email = ?"
+        val sql = "SELECT id, email, password, role FROM members WHERE email = ?"
         return jdbcTemplate.query(sql, rowMapper, email).firstOrNull()
     }
 }
