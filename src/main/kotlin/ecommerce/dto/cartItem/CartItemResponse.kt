@@ -5,5 +5,5 @@ data class CartItemResponse(
     val productName: String,
     val productPrice: Double,
     val productImg: String,
-    val quantity: Int
+    val quantity: Int,
 )

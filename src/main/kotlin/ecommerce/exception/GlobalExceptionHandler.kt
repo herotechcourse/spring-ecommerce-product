@@ -2,6 +2,7 @@ package ecommerce.exception
 
 import ecommerce.exception.auth.EmailAlreadyExistsException
 import ecommerce.exception.auth.InvalidCredentialsException
+import ecommerce.exception.cartItem.CartItemNotFoundException
 import ecommerce.exception.product.DuplicateProductNameException
 import ecommerce.exception.product.ProductNotFoundException
 import org.springframework.http.HttpStatus
@@ -54,6 +55,12 @@ class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     @ExceptionHandler(InvalidCredentialsException::class)
     fun handleInvalidCredentialsException(ex: InvalidCredentialsException): Map<String, String> {
+        return mapOf("error" to ex.message.orEmpty())
+    }
+
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(CartItemNotFoundException::class)
+    fun handleCartItemNotFoundException(ex: CartItemNotFoundException): Map<String, String> {
         return mapOf("error" to ex.message.orEmpty())
     }
 }
