@@ -17,6 +17,7 @@ class JdbcCartStore(private val db: JdbcTemplate) : CartStore {
                 cartId = rs.getLong("cart_id"),
                 productId = rs.getLong("product_id"),
                 quantity = rs.getInt("quantity"),
+                addedAt = rs.getTimestamp("added_at").toLocalDateTime(),
             )
         }
 
