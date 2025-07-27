@@ -1,6 +1,7 @@
 package ecommerce.repository
 
 import ecommerce.dto.CartItem
+import ecommerce.dto.MemberResponse
 import ecommerce.dto.TopProductStatResponse
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.stereotype.Repository
@@ -69,6 +70,25 @@ class CartRepository(private val jdbcTemplate: JdbcTemplate) {
                 name = rs.getString("product_name"),
                 count = rs.getInt("times_added"),
                 lastAddedAt = rs.getTimestamp("most_recent_added_time"),
+            )
+        }
+    }
+
+    fun findMembersWithCartActivityInLast7Days(): List<MemberResponse> {
+        val sql =
+            """
+            SELECT DISTINCT m.id, m.name, m.email
+            FROM members m
+            JOIN carts c ON m.id = c.member_id
+            WHERE c.created_at >= NOW() - INTERVAL 7 DAY
+            """.trimIndent()
+
+        return jdbcTemplate.query(sql) { rs, _ ->
+            MemberResponse(
+                id = rs.getLong("id"),
+                name = rs.getString("name"),
+                email = rs.getString("email"),
+                role = rs.getString("role"),
             )
         }
     }

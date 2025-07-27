@@ -1,6 +1,7 @@
 package ecommerce.service
 
 import ecommerce.dto.CartItem
+import ecommerce.dto.MemberResponse
 import ecommerce.dto.TopProductStatResponse
 import ecommerce.repository.CartRepository
 import ecommerce.repository.ProductStore
@@ -34,5 +35,9 @@ class CartService(
 
     fun findTop5ProductsInLast30Days(): List<TopProductStatResponse> {
         return cartRepository.findTop5ProductsInLast30Days()
+    }
+
+    fun findMembersWithCartActivityInLast7Days(): List<MemberResponse> {
+        return cartRepository.findMembersWithCartActivityInLast7Days()
     }
 }

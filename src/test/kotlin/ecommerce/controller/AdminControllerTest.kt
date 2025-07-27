@@ -87,4 +87,45 @@ class AdminControllerTest {
             status().isUnauthorized
         }
     }
+
+    @Test
+    fun `should return members who added items to cart in last 7 days when User role is Admin`() {
+        val memberResponse = MemberResponse(1L, "user@example.com", name = "Admin", role = UserRole.ADMIN.toString())
+        `when`(authService.findMemberByToken(token)).thenReturn(memberResponse)
+
+        val activeMembers =
+            listOf(
+                MemberResponse(2L, "jane@example.com", name = "Jane Smith", role = UserRole.USER.toString()),
+                MemberResponse(3L, "bob@example.com", name = "Bob Johnson", role = UserRole.USER.toString()),
+            )
+
+        `when`(cartService.findMembersWithCartActivityInLast7Days()).thenReturn(activeMembers)
+
+        mockMvc.perform(
+            get("/admin/cartactivity")
+                .header("Authorization", "Bearer $token"),
+        ).andExpect {
+            status().isOk
+            jsonPath("$.size()").value(2)
+            jsonPath("$[0].id").value(2)
+            jsonPath("$[0].name").value("Jane Smith")
+            jsonPath("$[0].email").value("jane@example.com")
+            jsonPath("$[1].name").value("Bob Johnson")
+        }
+
+        verify(cartService).findMembersWithCartActivityInLast7Days()
+    }
+
+    @Test
+    fun `should return status code 401 for cartactivity endpoint when User role is not Admin`() {
+        val memberResponse = MemberResponse(1L, "user@example.com", name = "John Doe", role = UserRole.USER.toString())
+        `when`(authService.findMemberByToken(token)).thenReturn(memberResponse)
+
+        mockMvc.perform(
+            get("/admin/cartactivity")
+                .header("Authorization", "Bearer $token"),
+        ).andExpect {
+            status().isUnauthorized
+        }
+    }
 }

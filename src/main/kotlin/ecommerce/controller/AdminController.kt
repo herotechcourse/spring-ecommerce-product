@@ -1,5 +1,6 @@
 package ecommerce.controller
 
+import ecommerce.dto.MemberResponse
 import ecommerce.dto.TopProductStatResponse
 import ecommerce.service.CartService
 import org.springframework.http.ResponseEntity
@@ -14,9 +15,13 @@ class AdminController(
 ) {
     @GetMapping("/topproducts")
     fun findTop5ProductsInLast30Days(): ResponseEntity<List<TopProductStatResponse>> {
-        println("I was here")
         val topProducts = cartService.findTop5ProductsInLast30Days()
-
         return ResponseEntity.ok(topProducts)
+    }
+
+    @GetMapping("/cartactivity")
+    fun findMembersWithCartActivityInLast7Days(): ResponseEntity<List<MemberResponse>> {
+        val activeMembers = cartService.findMembersWithCartActivityInLast7Days()
+        return ResponseEntity.ok(activeMembers)
     }
 }
