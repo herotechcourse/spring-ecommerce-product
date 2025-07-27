@@ -8,8 +8,9 @@ data class MemberDTO(
     var password: String,
     var role: Role = Role.USER
 ) {
-    fun toEntity(): Member {
+    fun toEntity(id: Long): Member {
         return Member(
+            id,
             email = this.email,
             password = this.password,
             role = this.role
