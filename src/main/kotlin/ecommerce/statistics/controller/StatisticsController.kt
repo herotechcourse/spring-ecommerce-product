@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/api/stats")
 class StatisticsController(private val statisticsService: StatisticsService) {
-
     @GetMapping("/top-products")
     fun getTopProducts(): ResponseEntity<List<ProductStatsDTO>> {
         val stats = statisticsService.getTop5MostAddedProductsLast30Days()

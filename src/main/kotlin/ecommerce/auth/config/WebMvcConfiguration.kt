@@ -25,7 +25,7 @@ class WebMvcConfiguration(
                 "/auth/registration",
                 "/shop/",
                 "/cart/",
-                "/api/stats/**"
+                "/api/stats/**",
             )
     }
 

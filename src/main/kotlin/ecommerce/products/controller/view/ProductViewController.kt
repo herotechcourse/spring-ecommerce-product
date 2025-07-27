@@ -15,7 +15,7 @@ class ProductViewController(private val productService: ProductService) {
     fun displayProducts(model: Model): String {
         val products = productService.findAll()
         model.addAttribute("products", products.map { ProductDTO.from(it) })
-        return "products"
+        return "adminPanel"
     }
 
     @GetMapping("/add/product")

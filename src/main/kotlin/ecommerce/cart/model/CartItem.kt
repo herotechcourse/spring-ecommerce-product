@@ -13,5 +13,5 @@ data class CartItem(
     @field:Positive
     val quantity: Int,
     val product: Product? = null,
-    var addedAt: LocalDateTime = LocalDateTime.now()
+    var addedAt: LocalDateTime = LocalDateTime.now(),
 )
