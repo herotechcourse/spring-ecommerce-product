@@ -17,14 +17,13 @@ class MemberService(
     private val jwtTokenProvider: JwtTokenProvider,
 ) {
     fun registerByEmail(request: MemberRequest): TokenResponse {
-
-        val member = findMemberOrFail(request)
+        val member = registerNewMember(request)
 
         val token = jwtTokenProvider.createToken(member)
         return MemberMapper.toResponse(token)
     }
 
-    private fun findMemberOrFail(request: MemberRequest): Member {
+    private fun registerNewMember(request: MemberRequest): Member {
         if (repository.existsByEmail(request.email)) {
             throw MemberAlreadyExistsException("Email ${request.email} already exists")
         }
@@ -33,6 +32,10 @@ class MemberService(
             repository.insert(request)
                 ?: throw CanNotInsertWithKeyHolderException("Failed to insert member with email ${request.email}")
 
+        return findMemberByIdOrFail(id)
+    }
+
+    fun findMemberByIdOrFail(id: Long): Member {
         return repository.findById(id)
             ?: throw RetrievalFailedException("Member with ID $id could not be retrieved after insertion")
     }
@@ -53,10 +56,12 @@ class MemberService(
             ?: throw RetrievalFailedException("Member with email $email does exist, but could not be retrieved")
     }
 
-    private fun validatePasswordOrFail(requestPassword: String, actualPassword: String) {
+    private fun validatePasswordOrFail(
+        requestPassword: String,
+        actualPassword: String,
+    ) {
         if (!repository.matches(requestPassword, actualPassword)) {
             throw LoginFailedException()
         }
     }
-
 }
