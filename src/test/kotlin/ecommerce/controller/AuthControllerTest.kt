@@ -10,7 +10,6 @@ import ecommerce.model.Member
 import ecommerce.service.AuthService
 import io.restassured.RestAssured
 import io.restassured.http.ContentType
-import org.assertj.core.api.Assertions
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -93,8 +92,8 @@ class AuthControllerTest {
             )
         val resBody = response.jsonPath().getMap<String, String>("errors")
         val actual = resBody["email"]
-        Assertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value())
-        Assertions.assertThat(actual).isIn(targets)
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value())
+        assertThat(actual).isIn(targets)
     }
 
     @Test
@@ -113,8 +112,8 @@ class AuthControllerTest {
             )
         val resBody = response.jsonPath().getMap<String, String>("errors")
         val actual = resBody["email"]
-        Assertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value())
-        Assertions.assertThat(actual).isIn(targets)
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value())
+        assertThat(actual).isIn(targets)
     }
 
     @Test
@@ -133,8 +132,29 @@ class AuthControllerTest {
             )
         val resBody = response.jsonPath().getMap<String, String>("errors")
         val actual = resBody["password"]
-        Assertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value())
-        Assertions.assertThat(actual).isIn(targets)
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value())
+        assertThat(actual).isIn(targets)
+    }
+
+    @Test
+    fun `registerMember() - should return 400 when email already exists`() {
+        val targetEmail = "dan@htc.com"
+        val response =
+            RestAssured
+                .given().log().all()
+                .body(Member(email = targetEmail, password = "test1234"))
+                .contentType(ContentType.JSON)
+                .`when`().post("/api/members/register")
+                .then().log().all().extract()
+
+        val targets =
+            listOf(
+                "Email $targetEmail already exists.",
+            )
+        val resBody = response.jsonPath().getMap<String, String>("errors")
+        val actual = resBody["email"]
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value())
+        assertThat(actual).isIn(targets)
     }
 
     @Test
@@ -177,8 +197,8 @@ class AuthControllerTest {
             )
         val resBody = response.jsonPath().getMap<String, String>("errors")
         val actual = resBody["email"]
-        Assertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value())
-        Assertions.assertThat(actual).isIn(targets)
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value())
+        assertThat(actual).isIn(targets)
     }
 
     @Test
@@ -197,7 +217,47 @@ class AuthControllerTest {
             )
         val resBody = response.jsonPath().getMap<String, String>("errors")
         val actual = resBody["password"]
-        Assertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value())
-        Assertions.assertThat(actual).isIn(targets)
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value())
+        assertThat(actual).isIn(targets)
+    }
+
+    @Test
+    fun `loginMember() - should return 401 when email is invalid`() {
+        val response =
+            RestAssured
+                .given().log().all()
+                .body(Member(email = "test@email.com", password = "test1234"))
+                .contentType(ContentType.JSON)
+                .`when`().post("/api/members/login")
+                .then().log().all().extract()
+
+        val targets =
+            listOf(
+                "Invalid email",
+            )
+        val resBody = response.jsonPath().getMap<String, String>("errors")
+        val actual = resBody["authorization"]
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value())
+        assertThat(actual).isIn(targets)
+    }
+
+    @Test
+    fun `loginMember() - should return 401 when password is invalid`() {
+        val response =
+            RestAssured
+                .given().log().all()
+                .body(Member(email = "dan@htc.com", password = "test1234"))
+                .contentType(ContentType.JSON)
+                .`when`().post("/api/members/login")
+                .then().log().all().extract()
+
+        val targets =
+            listOf(
+                "Invalid password",
+            )
+        val resBody = response.jsonPath().getMap<String, String>("errors")
+        val actual = resBody["authorization"]
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value())
+        assertThat(actual).isIn(targets)
     }
 }

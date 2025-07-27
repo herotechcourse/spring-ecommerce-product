@@ -3,9 +3,11 @@ package ecommerce.controller.api
 import ecommerce.dto.AuthResponse
 import ecommerce.dto.LoginForm
 import ecommerce.dto.RegisterForm
+import ecommerce.exception.AuthorizationException
 import ecommerce.exception.MemberEmailAlreadyExistsException
 import ecommerce.service.AuthService
 import jakarta.validation.Valid
+import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.PostMapping
@@ -37,9 +39,17 @@ class AuthController(
         return ResponseEntity.ok(authResponse)
     }
 
+    @ExceptionHandler(AuthorizationException::class)
+    fun handleAuthorizationException(e: AuthorizationException): ResponseEntity<Map<String, Any>> {
+        val error = mapOf("authorization" to e.message)
+        val errorBody = mapOf("errors" to error)
+        println("AuthorizationException occurred: $errorBody")
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorBody)
+    }
+
     @ExceptionHandler(MemberEmailAlreadyExistsException::class)
     fun handleMemberEmailAlreadyExistsExceptionHandler(e: Exception): ResponseEntity<Map<String, Any>> {
-        val error = mapOf("name" to e.message)
+        val error = mapOf("email" to e.message)
         val errorBody = mapOf("errors" to error)
         println("MemberEmailAlreadyExistsException occurred: $errorBody")
         return ResponseEntity.badRequest().body(errorBody)
