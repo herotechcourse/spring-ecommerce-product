@@ -8,7 +8,8 @@ CREATE TABLE products
 
 CREATE TABLE members
 (
-    id        BIGINT PRIMARY KEY AUTO_INCREMENT,
-    email     VARCHAR(320),
-    password  VARCHAR(8)
+    id       BIGINT PRIMARY KEY AUTO_INCREMENT,
+    email    VARCHAR(320),
+    password VARCHAR(8),
+    role     VARCHAR(8)
 );

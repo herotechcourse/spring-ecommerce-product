@@ -1,14 +1,15 @@
 package ecommerce.model
 
-enum class Role {
-    USER, ADMIN
+enum class Role(val role : String) {
+    USER("USER"),
+    ADMIN("ADMIN")
 }
 
 data class Member (
     var id: Long? = null,
     var email: String,
     var password: String,
-    var role: Role = Role.USER,
+    var role: Role
 ) {
     init {
         require(email.isNotBlank()) { "Email cannot be blank" }
@@ -16,13 +17,5 @@ data class Member (
         require( password.isNotBlank()) { "Password cannot be blank" }
         require(password.length >= 4) { "Password with a minimum of 4  and maximum of 8 characters long" }
         require(password.length <= 8) { "Password with a minimum of 4  and maximum of 8 characters long" }
-    }
-
-    companion object {
-        fun toEntity(
-            member: Member,
-        ): Member {
-            return Member(member.id, member.email, member.password)
-        }
     }
 }
