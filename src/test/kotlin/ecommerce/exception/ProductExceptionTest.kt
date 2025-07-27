@@ -27,7 +27,7 @@ class ProductExceptionTest {
     fun setupAuthentication() {
         RestAssured.port = port
         RestAssured.baseURI = "http://localhost"
-        val registerRequest = RegisterRequest("validEmail@email.com", "SecureP@ss1")
+        val registerRequest = RegisterRequest("validEmail@email.com", "SecureP@ss1", "name")
         RestAssured.given()
             .contentType(ContentType.JSON)
             .body(registerRequest)

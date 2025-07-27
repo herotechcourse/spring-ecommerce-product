@@ -26,7 +26,7 @@ class CartControllerTest {
     @BeforeEach
     fun setupAuthentication() {
         RestAssured.port = port
-        val registerRequest = RegisterRequest("validEmail@email.com", "SecureP@ss1")
+        val registerRequest = RegisterRequest("validEmail@email.com", "SecureP@ss1", "name")
         RestAssured.given()
             .contentType(ContentType.JSON)
             .body(registerRequest)

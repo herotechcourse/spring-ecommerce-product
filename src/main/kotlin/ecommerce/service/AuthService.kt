@@ -16,7 +16,7 @@ class AuthService(
     private val jwtTokenProvider: JwtTokenProvider,
 ) {
     fun register(request: RegisterRequest): String {
-        memberService.createMember(request.email, request.password)
+        memberService.createMember(request.email, request.password, name = request.name)
         val authentication =
             authenticationManager.authenticate(
                 UsernamePasswordAuthenticationToken(request.email, request.password),

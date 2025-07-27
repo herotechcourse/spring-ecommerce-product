@@ -16,4 +16,7 @@ data class RegisterRequest(
         message = "Password must contain at least one digit, one lowercase, one uppercase, and one special character",
     )
     val password: String,
+    @field:NotBlank(message = "Name cannot be empty")
+    @field:Size(min = 2, max = 100, message = "NAme must be between 2 and 100 characters")
+    val name: String,
 )

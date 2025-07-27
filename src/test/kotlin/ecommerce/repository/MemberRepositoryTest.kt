@@ -27,6 +27,7 @@ class MemberRepositoryTest
                     email = "anotherTest@email.com",
                     password = "AnotherSecure@123",
                     role = MemberRole.ROLE_USER,
+                    name = "validName",
                 )
             memberRepository.create(member)
             val foundMember = memberRepository.findByEmail(member.email)
@@ -46,6 +47,7 @@ class MemberRepositoryTest
                     email = "testEmail@email.com",
                     password = "Secure@123",
                     role = MemberRole.ROLE_USER,
+                    name = "validName",
                 )
             memberRepository.create(member)
             val foundMember = memberRepository.findById(member.id)

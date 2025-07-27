@@ -7,6 +7,7 @@ data class Member(
     var email: String,
     var password: String,
     var role: MemberRole = MemberRole.ROLE_USER,
+    var name: String,
 )
 
 enum class MemberRole {

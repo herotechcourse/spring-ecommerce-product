@@ -27,7 +27,7 @@ class AuthControllerTest {
     @Test
     fun `register with valid data should return 201 Created`() {
         val registerRequest =
-            RegisterRequest("valid@example.com", "SecureP@ss1")
+            RegisterRequest("valid@example.com", "SecureP@ss1", "name")
         val response =
             RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
@@ -45,14 +45,14 @@ class AuthControllerTest {
     @Test
     fun `register with existing email should return 409 Conflict`() {
         val email = "repeat@example.com"
-        val registerRequest = RegisterRequest(email, "SecureP@ss1")
+        val registerRequest = RegisterRequest(email, "SecureP@ss1", "name")
         RestAssured.given().log().all()
             .contentType(ContentType.JSON)
             .body(registerRequest)
             .`when`().post("/api/members/register")
             .then().statusCode(HttpStatus.CREATED.value())
 
-        val duplicateRegisterRequest = RegisterRequest(email, "AnotherP@ss1")
+        val duplicateRegisterRequest = RegisterRequest(email, "AnotherP@ss1", "name")
         val response =
             RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
@@ -68,7 +68,7 @@ class AuthControllerTest {
 
     @Test
     fun `register with invalid email format should return 400 Bad Request`() {
-        val invalidEmailRequest = RegisterRequest("invalid-email", "Password123!")
+        val invalidEmailRequest = RegisterRequest("invalid-email", "Password123!", "name")
         val response =
             RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
@@ -84,7 +84,7 @@ class AuthControllerTest {
 
     @Test
     fun `register with weak password should return 400 Bad Request`() {
-        val weakPasswordRequest = RegisterRequest("valid@example.com", "weakpassword")
+        val weakPasswordRequest = RegisterRequest("valid@example.com", "weakpassword", "name")
         val response =
             RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
@@ -104,9 +104,10 @@ class AuthControllerTest {
     fun `login with valid credentials should return 200 OK`() {
         val email = "GoodEmail@example.com"
         val password = "LoginP@ss1"
+        val name = "validName"
         RestAssured.given()
             .contentType(ContentType.JSON)
-            .body(RegisterRequest(email, password))
+            .body(RegisterRequest(email, password, name))
             .`when`().post("/api/members/register")
             .then().statusCode(HttpStatus.CREATED.value())
 
