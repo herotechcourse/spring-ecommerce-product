@@ -43,7 +43,7 @@ class ProductServiceTest {
                 price DOUBLE NOT NULL,
                 imageUrl TEXT NOT NULL
             );
-            """.trimIndent()
+            """.trimIndent(),
         )
 
         val insertSql = "INSERT INTO product (name, price, imageUrl) VALUES (?, ?, ?)"

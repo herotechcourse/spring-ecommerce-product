@@ -14,7 +14,6 @@ import java.util.UUID
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class ProductControllerTest {
-
     @LocalServerPort
     var port: Int = 0
 
@@ -24,19 +23,20 @@ class ProductControllerTest {
     fun loginAndGetToken() {
         RestAssured.port = port
 
-        val loginResponse = RestAssured.given()
-            .contentType(ContentType.JSON)
-            .body(
-                """
-                {
-                    "email": "admin@gmail.com",
-                    "password": "admin1234"
-                }
-                """.trimIndent()
-            )
-            .post("/api/members/login")
-            .then()
-            .extract()
+        val loginResponse =
+            RestAssured.given()
+                .contentType(ContentType.JSON)
+                .body(
+                    """
+                    {
+                        "email": "admin@gmail.com",
+                        "password": "admin1234"
+                    }
+                    """.trimIndent(),
+                )
+                .post("/api/members/login")
+                .then()
+                .extract()
 
         jwtToken = loginResponse.jsonPath().getString("accessToken")
     }
@@ -136,15 +136,16 @@ class ProductControllerTest {
             }
             """.trimIndent()
 
-        val location = RestAssured.given()
-            .header("Authorization", "Bearer $jwtToken")
-            .contentType(ContentType.JSON)
-            .body(json)
-            .post("/admin/api/products")
-            .then()
-            .statusCode(201)
-            .extract()
-            .header("Location")
+        val location =
+            RestAssured.given()
+                .header("Authorization", "Bearer $jwtToken")
+                .contentType(ContentType.JSON)
+                .body(json)
+                .post("/admin/api/products")
+                .then()
+                .statusCode(201)
+                .extract()
+                .header("Location")
 
         return location.substringAfterLast("/").toInt()
     }
