@@ -1,5 +1,6 @@
-package ecommerce.auth
+package ecommerce.service
 
+import ecommerce.auth.JwtProvider
 import ecommerce.dto.MemberDTO
 import ecommerce.repository.MemberRepository
 import org.springframework.http.HttpStatus

@@ -1,5 +1,6 @@
-package ecommerce.auth
+package ecommerce.controller
 
+import ecommerce.service.AuthService
 import ecommerce.dto.MemberDTO
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
