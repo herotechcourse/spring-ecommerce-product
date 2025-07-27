@@ -13,3 +13,11 @@ CREATE TABLE members
     password VARCHAR(8),
     role     VARCHAR(8)
 );
+
+CREATE TABLE cart
+(
+    id         BIGINT AUTO_INCREMENT PRIMARY KEY,
+    member_id  BIGINT NOT NULL,
+    product_id BIGINT NOT NULL,
+    quantity   INT    NOT NULL
+);
