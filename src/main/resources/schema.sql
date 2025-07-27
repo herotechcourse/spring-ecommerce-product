@@ -3,4 +3,12 @@ CREATE TABLE IF NOT EXISTS products (
     product_name VARCHAR(255) NOT NULL,
     price DOUBLE CHECK (price >= 0),
     image_url VARCHAR(255)
-    );
+);
+CREATE TABLE IF NOT EXISTS MEMBERS
+(
+    id       INT NOT NULL AUTO_INCREMENT,
+    email    VARCHAR(255) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    role     VARCHAR(50)  NOT NULL,
+    PRIMARY KEY (id)
+);
