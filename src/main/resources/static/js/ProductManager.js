@@ -37,18 +37,6 @@ function productManager() {
             const res = await fetch(`${API_ENDPOINT}/${id}`, { ...options, method: "PATCH" });
             return res;
         }
-
-        // async update(id, name, price, imageUrl) {
-        //     const payload = { name, price, imageUrl };
-        //
-        //     const options = {
-        //         headers: { "Content-Type": "application/json" },
-        //         body: JSON.stringify(payload)
-        //     };
-        //
-        //     const res = await fetch(`${API_ENDPOINT}/${id}`, { ...options, method: "PUT" });
-        //     return res;
-        // }
     }
 
     async function fetchProducts() {
