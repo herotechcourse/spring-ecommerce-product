@@ -70,12 +70,14 @@
 
 ### DAO (Data Access Object)
 
-#### CartDAO
+#### Interface CartDAO
 
-- [ ] `getCartItemsByMemberId()`
-- [ ] `addItemToCart()`
-- [ ] `removeItemFromCart()`
-- [ ] `updateItemQuantity()`
+- [x] `addItemToCart(memberId, productId, quantity)`
+- [x] `getCartItemsByMemberId(memberId)`
+- [x] `removeItemFromCart(memberId, productId)`
+- [x] `updateItemQuantityInCart(memberId, productId, quantity)`
+
+#### JdbcCartDAO : CartDAO
 
 #### interface MemberADO
 
