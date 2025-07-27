@@ -1,0 +1,26 @@
+package ecommerce.interceptor
+
+import ecommerce.handler.AuthorizationException
+import ecommerce.infrastructure.JWTProvider
+import jakarta.servlet.http.HttpServletRequest
+import jakarta.servlet.http.HttpServletResponse
+import org.springframework.stereotype.Component
+import org.springframework.web.servlet.HandlerInterceptor
+
+@Component
+class AuthInterceptor(
+    val jwtProvider: JWTProvider,
+) : HandlerInterceptor {
+    override fun preHandle(
+        request: HttpServletRequest,
+        response: HttpServletResponse,
+        handler: Any,
+    ): Boolean {
+        val accessToken =
+            request.getHeader("Authorization") ?: throw AuthorizationException("Authorization header missing")
+        if (!jwtProvider.validateToken(accessToken)) {
+            throw AuthorizationException("Invalid or expired JWT token")
+        }
+        return true
+    }
+}
