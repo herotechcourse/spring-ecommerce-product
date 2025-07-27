@@ -13,13 +13,14 @@ CREATE TABLE IF NOT EXISTS members
     PRIMARY KEY (id)
 );
 
-CREATE TABLE IF NOT EXISTS carts (
-    id INT  PRIMARY KEY AUTO_INCREMENT,
+CREATE TABLE IF NOT EXISTS carts
+(
+    id INT PRIMARY KEY AUTO_INCREMENT,
     member_id INT NOT NULL,
     product_id INT NOT NULL,
-    quantity INT DEFAULT 1,
+    quantity INT NOT NULL DEFAULT 1,
 
-    UNIQUE KEY unique_cart_item (member_id, product_id),
-    FOREIGN KEY (member_id) REFERENCES members(id),
-    FOREIGN KEY (product_id) REFERENCES products(id)
+    CONSTRAINT unique_cart_item UNIQUE (member_id, product_id),
+    CONSTRAINT fk_cart_member FOREIGN KEY (member_id) REFERENCES members(id),
+    CONSTRAINT fk_cart_product FOREIGN KEY (product_id) REFERENCES products(id)
 );
