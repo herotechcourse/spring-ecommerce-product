@@ -37,6 +37,7 @@ class AuthService(
 
         val newMember =
             NewMember(
+                name = tokenRequest.name,
                 email = tokenRequest.email,
                 password = tokenRequest.password,
                 role = role,
@@ -58,6 +59,6 @@ class AuthService(
         val member =
             memberRepository.findByEmail(email)
                 ?: throw AuthorizationException("Member not found with email: $email")
-        return MemberResponse(member.id, member.email, member.role)
+        return MemberResponse(member.id, member.email, role = member.role, name = "John Doe")
     }
 }

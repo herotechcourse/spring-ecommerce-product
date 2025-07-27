@@ -35,6 +35,7 @@ class MemberRepository(
             email = newMember.email,
             password = newMember.password,
             role = newMember.role,
+            name = "John Doe",
         )
     }
 
@@ -46,6 +47,7 @@ class MemberRepository(
                 email = rs.getString("email"),
                 password = rs.getString("password"),
                 role = rs.getString("role"),
+                name = rs.getString("name"),
             )
         }, email).firstOrNull()
     }

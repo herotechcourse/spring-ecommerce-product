@@ -5,4 +5,5 @@ data class Member(
     val email: String,
     val password: String,
     val role: String,
+    val name: String,
 )

@@ -33,7 +33,7 @@ class AuthControllerTest {
     @Autowired
     private lateinit var objectMapper: ObjectMapper
 
-    private val tokenRequest = TokenRequest("user@example.com", "password123", role = UserRole.USER.name)
+    private val tokenRequest = TokenRequest(name = "John Doe", "user@example.com", "password123", role = UserRole.USER.name)
     private val tokenResponse = TokenResponse("mocked-jwt-token")
 
     @Test
@@ -90,7 +90,7 @@ class AuthControllerTest {
 
     @Test
     fun `should get member if token exists`() {
-        val memberResponse = MemberResponse(1L, "user@example.com", role = "user")
+        val memberResponse = MemberResponse(1L, "user@example.com", role = "user", name = "John Doe")
         `when`(authService.findMemberByToken("mocked-jwt-token")).thenReturn(memberResponse)
 
         mockMvc.perform(

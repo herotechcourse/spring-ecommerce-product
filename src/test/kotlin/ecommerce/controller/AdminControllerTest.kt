@@ -54,7 +54,7 @@ class AdminControllerTest {
 
     @Test
     fun `should return top 5 most added products from last 30 days when User role is Admin`() {
-        val memberResponse = MemberResponse(1L, "user@example.com", role = UserRole.ADMIN.toString())
+        val memberResponse = MemberResponse(1L, "user@example.com", name = "John Doe", role = UserRole.ADMIN.toString())
         `when`(authService.findMemberByToken(token)).thenReturn(memberResponse)
 
         mockMvc.perform(
@@ -77,7 +77,7 @@ class AdminControllerTest {
 
     @Test
     fun `should return status code 401 when User role is not Admin`() {
-        val memberResponse = MemberResponse(1L, "user@example.com", role = UserRole.USER.toString())
+        val memberResponse = MemberResponse(1L, "user@example.com", name = "John Doe", role = UserRole.USER.toString())
         `when`(authService.findMemberByToken(token)).thenReturn(memberResponse)
 
         mockMvc.perform(

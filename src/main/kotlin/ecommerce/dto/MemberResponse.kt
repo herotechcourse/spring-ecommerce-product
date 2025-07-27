@@ -6,5 +6,6 @@ data class MemberResponse(
     val id: Long,
     @field:Email(message = "Invalid email")
     val email: String,
+    val name: String,
     val role: String,
 )

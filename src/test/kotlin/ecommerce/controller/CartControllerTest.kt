@@ -39,7 +39,7 @@ class CartControllerTest {
     private lateinit var objectMapper: ObjectMapper
 
     private val token = "mocked-jwt-token"
-    private val memberResponse = MemberResponse(id = 1L, email = "user@example.com", role = UserRole.USER.name)
+    private val memberResponse = MemberResponse(id = 1L, email = "user@example.com", name = "John Doe", role = UserRole.USER.name)
     private val cartRequest = CartRequest(productId = 100L)
 
     @BeforeEach
