@@ -1,17 +1,16 @@
 package ecommerce.repository
 
+import ecommerce.dto.MemberDTO
 import ecommerce.model.Member
 import ecommerce.model.Role
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.jdbc.core.RowMapper
+import org.springframework.jdbc.support.GeneratedKeyHolder
 import org.springframework.stereotype.Repository
 import java.sql.ResultSet
-import java.util.concurrent.atomic.AtomicLong
 
 @Repository
 class MemberRepository(private val jdbcTemplate: JdbcTemplate) {
-    private val index = AtomicLong(1)
-
     private val rowMapper =
         RowMapper<Member> { rs: ResultSet, _ ->
             Member(
@@ -23,17 +22,27 @@ class MemberRepository(private val jdbcTemplate: JdbcTemplate) {
         }
 
     fun insert(
-        member: Member,
+        memberDTO: MemberDTO,
     ): Member {
-        val id = index.getAndIncrement()
+        val keyHolder = GeneratedKeyHolder()
+
         val sql =
             """
-            INSERT INTO members ( id, email, password, role )
-            VALUES (?, ?, ?, ?)
+            INSERT INTO members ( email, password, role )
+            VALUES (?, ?, ?)
             """.trimIndent()
 
-        jdbcTemplate.update(sql, id, member.email, member.password, member.role.toString())
-        return member.copy(id = id)
+        jdbcTemplate.update({ connection ->
+            val ps = connection.prepareStatement(sql, arrayOf("id"))
+            ps.setString(1, memberDTO.email)
+            ps.setString(2, memberDTO.password)
+            ps.setString(3, memberDTO.role.toString())
+            ps
+        }, keyHolder)
+
+        val generatedId = keyHolder.key?.toLong() ?: throw IllegalStateException("Failed to retrieve ID")
+
+        return memberDTO.toEntity(generatedId)
     }
 
     fun findById(id: Long): Member? {
