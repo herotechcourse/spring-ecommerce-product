@@ -71,10 +71,19 @@ class JdbcCartDAOTest {
 
     @Test
     fun addItemToCart() {
-        val cartItemId = jdbcCartDAO.addItemToCart(MEMBER_ID, PRODUCT_ID)
+        val itemId = jdbcCartDAO.addItemToCart(MEMBER_ID, PRODUCT_ID)
+        assertThat(itemId).isNotNull()
         val cartItems = jdbcCartDAO.getCartItemsByMemberId(MEMBER_ID)
-        assertThat(cartItemId).isEqualTo(cartItems.first().id)
         assertThat(cartItems.first().quantity).isEqualTo(1)
+    }
+
+    @Test
+    fun `addItemToCart() - update quantity when the product already exists in the cart`() {
+        addItemToCart()
+        val itemId = jdbcCartDAO.addItemToCart(MEMBER_ID, PRODUCT_ID)
+        assertThat(itemId).isNotNull()
+        val cartItems = jdbcCartDAO.getCartItemsByMemberId(MEMBER_ID)
+        assertThat(cartItems.first().quantity).isEqualTo(2)
     }
 
     @Test
