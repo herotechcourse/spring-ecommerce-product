@@ -34,18 +34,14 @@ class MemberRepository(private val jdbcTemplate: JdbcTemplate) {
         return member.copy(id = id)
     }
 
-    fun findAll(): List<Member> {
-        val sql = "SELECT id, email, password FROM members"
-        return jdbcTemplate.query(sql, rowMapper)
+    fun findById(id: Long): Member? {
+        val sql = "SELECT id, email, password FROM members WHERE id = ?"
+        return jdbcTemplate.query(sql, rowMapper, id).firstOrNull()
     }
 
     fun findByEmail(email: String): Member? {
         val sql = "SELECT id, email, password FROM members WHERE email = ?"
         return jdbcTemplate.query(sql, rowMapper, email).firstOrNull()
-    }
-
-    fun isEmptyOrNull(): Boolean {
-        return count() == 0
     }
 
     fun count(): Int? {
