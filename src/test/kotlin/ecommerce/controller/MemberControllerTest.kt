@@ -81,7 +81,6 @@ class MemberControllerTest {
     @Test
     fun `should return 401 when logging in with unregistered email`() {
         val request = RequestCases.VALID_ADMIN
-        val expect = TestExpected(request, ValidationCase.DEFAULT_CASE)
 
         val response =
             RestAssured

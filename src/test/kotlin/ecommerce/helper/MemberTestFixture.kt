@@ -30,7 +30,7 @@ object MemberTestFixture {
                 .given().log().all()
                 .body(request)
                 .contentType(ContentType.JSON)
-                .`when`().post("/api/members/register")
+                .`when`().post(path)
                 .then().log().all().extract()
     }
 }
