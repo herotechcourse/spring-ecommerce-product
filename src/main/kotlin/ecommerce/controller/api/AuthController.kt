@@ -44,8 +44,4 @@ class AuthController(
         println("MemberEmailAlreadyExistsException occurred: $errorBody")
         return ResponseEntity.badRequest().body(errorBody)
     }
-
-    companion object {
-        val TEST_RESPONSE = AuthResponse(accessToken = "sampleToken")
-    }
 }

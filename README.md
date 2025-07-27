@@ -89,7 +89,7 @@
 - [x] `register()`
 - [x] `login()`
 - [x] `findMemberById()`
-- [ ] `findMemberByToken()`
+- [x] `findMemberByToken()`
 - [x] `findMemberByEmail()`
 - [x] `checkMemberEmailExists()`
 
@@ -200,12 +200,13 @@
 
 #### JwtTokenProvider
 
-- [ ] is a `@Component` to handle JWT
-- [ ] has a property `secretKey: String`
-- [ ] has a property `validityInMilliseconds: Long`
-- [ ] has a method `createToken(): String` to generate and return an access token
-- [ ] has a method `getPayLoad(): String` to decrypt token into payload
-- [ ] has a method `validateToken(): Boolean` to decrypt and validate token
+- [x] is a `@Component` to handle JWT
+- [x] has a property `secret: String`
+- [x] has a property `validityInMilliseconds: Long`
+- [x] has a property `secretKey: SecretKey`
+- [x] has a method `createToken(): String` to generate and return an access token
+- [x] has a method `getPayLoad(): String` to decrypt token into payload
+- [x] has a method `validateToken(): Boolean` to decrypt and validate token
 
 ### etc.
 

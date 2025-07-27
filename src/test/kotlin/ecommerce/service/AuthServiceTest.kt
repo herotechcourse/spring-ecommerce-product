@@ -1,5 +1,6 @@
 package ecommerce.service
 
+import ecommerce.auth.JwtTokenProvider
 import ecommerce.dao.JdbcMemberDAO
 import ecommerce.dto.LoginForm
 import ecommerce.dto.RegisterForm
@@ -18,12 +19,16 @@ class AuthServiceTest {
     @Autowired private lateinit var jdbcTemplate: JdbcTemplate
 
     @Autowired private lateinit var jdbcMemberDAO: JdbcMemberDAO
+
+    @Autowired private lateinit var jwtTokenProvider: JwtTokenProvider
+
     private lateinit var authService: AuthService
 
     @BeforeEach
     fun setUp() {
         jdbcMemberDAO = JdbcMemberDAO(jdbcTemplate)
-        authService = AuthService(jdbcMemberDAO)
+        jwtTokenProvider = JwtTokenProvider()
+        authService = AuthService(jdbcMemberDAO, jwtTokenProvider)
 
         jdbcTemplate.execute("DROP TABLE member CASCADE")
         jdbcTemplate.execute(
@@ -83,6 +88,6 @@ class AuthServiceTest {
         val password = "dan1234"
         val loginForm = LoginForm(email, password)
         val authResponse = authService.loginMember(loginForm)
-        assertThat(authResponse.accessToken).isEqualTo(AuthService.ACCESS_TOKEN)
+        assertThat(authResponse.accessToken).isNotNull()
     }
 }

@@ -1,7 +1,9 @@
 package ecommerce.controller
 
+import ecommerce.auth.JwtTokenProvider
 import ecommerce.controller.api.AuthController
 import ecommerce.dao.JdbcMemberDAO
+import ecommerce.dto.AuthResponse
 import ecommerce.dto.LoginForm
 import ecommerce.dto.RegisterForm
 import ecommerce.model.Member
@@ -22,13 +24,15 @@ class AuthControllerTest {
     @Autowired private lateinit var jdbcTemplate: JdbcTemplate
 
     @Autowired private lateinit var jdbcMemberDAO: JdbcMemberDAO
+
+    @Autowired private lateinit var jwtTokenProvider: JwtTokenProvider
     private lateinit var authService: AuthService
     private lateinit var controller: AuthController
 
     @BeforeEach
     fun setUp() {
         jdbcMemberDAO = JdbcMemberDAO(jdbcTemplate)
-        authService = AuthService(jdbcMemberDAO)
+        authService = AuthService(jdbcMemberDAO, jwtTokenProvider)
 
         jdbcTemplate.execute("DROP TABLE member CASCADE")
         jdbcTemplate.execute(
@@ -56,7 +60,7 @@ class AuthControllerTest {
         val testForm = RegisterForm(email, password)
         val response = controller.registerMember(testForm)
         assertThat(response.statusCode).isEqualTo(HttpStatus.CREATED)
-        assertThat(response.body).isEqualTo(AuthController.TEST_RESPONSE)
+        assertThat(response.body).isInstanceOf(AuthResponse::class.java)
     }
 
     @Test
@@ -70,7 +74,7 @@ class AuthControllerTest {
                 .then().log().all().extract()
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value())
-        assertThat(response.body().jsonPath().getString("accessToken")).isEqualTo(AuthController.TEST_RESPONSE.accessToken)
+        assertThat(response.body().jsonPath().getString("accessToken")).isInstanceOf(String::class.java)
     }
 
     @Test
@@ -140,7 +144,7 @@ class AuthControllerTest {
         val testForm = LoginForm(email, password)
         val response = controller.loginMember(testForm)
         assertThat(response.statusCode).isEqualTo(HttpStatus.OK)
-        assertThat(response.body).isEqualTo(AuthController.TEST_RESPONSE)
+        assertThat(response.body).isInstanceOf(AuthResponse::class.java)
     }
 
     @Test
@@ -154,7 +158,7 @@ class AuthControllerTest {
                 .then().log().all().extract()
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
-        assertThat(response.body().jsonPath().getString("accessToken")).isEqualTo(AuthController.TEST_RESPONSE.accessToken)
+        assertThat(response.body().jsonPath().getString("accessToken")).isInstanceOf(String::class.java)
     }
 
     @Test

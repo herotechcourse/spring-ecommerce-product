@@ -1,5 +1,6 @@
 package ecommerce.service
 
+import ecommerce.auth.JwtTokenProvider
 import ecommerce.dao.JdbcMemberDAO
 import ecommerce.dto.AuthResponse
 import ecommerce.dto.LoginForm
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service
 @Service
 class AuthService(
     private val jdbcMemberDAO: JdbcMemberDAO,
+    private val jwtTokenProvider: JwtTokenProvider,
 ) {
     fun registerMember(form: RegisterForm): Member {
         checkMemberEmailExists(form.email)
@@ -25,7 +27,7 @@ class AuthService(
     fun loginMember(form: LoginForm): AuthResponse {
         val member = jdbcMemberDAO.findByEmail(form.email) ?: throw AuthorizationException("Invalid email")
         if (member.password != form.password) throw AuthorizationException("Invalid password")
-        val accessToken = ACCESS_TOKEN
+        val accessToken = jwtTokenProvider.createToken(member.email)
         return AuthResponse(accessToken)
     }
 
@@ -33,7 +35,13 @@ class AuthService(
 
     fun findMemberByEmail(email: String): Member? = jdbcMemberDAO.findByEmail(email)
 
-    fun findMemberByToken(token: String): Member? = TODO()
+    fun findMemberByToken(token: String): Member? {
+        if (!jwtTokenProvider.validateToken(token)) {
+            throw AuthorizationException("Invalid token")
+        }
+        val email = jwtTokenProvider.getPayload(token)
+        return jdbcMemberDAO.findByEmail(email) ?: throw AuthorizationException("Invalid email")
+    }
 
     private fun checkMemberEmailExists(
         email: String,
@@ -45,9 +53,5 @@ class AuthService(
             val message = "Email $email already exists."
             throw MemberEmailAlreadyExistsException(message)
         }
-    }
-
-    companion object {
-        const val ACCESS_TOKEN = "sampleToken"
     }
 }
