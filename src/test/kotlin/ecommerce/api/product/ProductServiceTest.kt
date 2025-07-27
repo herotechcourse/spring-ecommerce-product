@@ -26,18 +26,24 @@ class ProductServiceTest {
 
     @BeforeEach
     fun setUp() {
-        productService = ProductService(productStore)
+        jdbcTemplate.execute("SET REFERENTIAL_INTEGRITY FALSE;")
 
+        jdbcTemplate.execute("DROP TABLE IF EXISTS cart_item;")
+        jdbcTemplate.execute("DROP TABLE IF EXISTS cart;")
+        jdbcTemplate.execute("DROP TABLE IF EXISTS member;")
         jdbcTemplate.execute("DROP TABLE IF EXISTS product;")
+
+        jdbcTemplate.execute("SET REFERENTIAL_INTEGRITY TRUE;")
+
         jdbcTemplate.execute(
             """
             CREATE TABLE product (
-                id LONG AUTO_INCREMENT PRIMARY KEY,
+                id BIGINT AUTO_INCREMENT PRIMARY KEY,
                 name VARCHAR(255) NOT NULL,
                 price DOUBLE NOT NULL,
                 imageUrl TEXT NOT NULL
             );
-            """.trimIndent(),
+            """.trimIndent()
         )
 
         val insertSql = "INSERT INTO product (name, price, imageUrl) VALUES (?, ?, ?)"
@@ -46,6 +52,8 @@ class ProductServiceTest {
         jdbcTemplate.update(insertSql, "Superman", 1000.0, "https://alexnsan.comics/imageurl/3")
         jdbcTemplate.update(insertSql, "Naruto", 1000.0, "https://alexnsan.comics/imageurl/4")
         jdbcTemplate.update(insertSql, "Full Metal Alchemist", 1000.0, "https://alexnsan.comics/imageurl/5")
+
+        productService = ProductService(productStore)
     }
 
     @Test
