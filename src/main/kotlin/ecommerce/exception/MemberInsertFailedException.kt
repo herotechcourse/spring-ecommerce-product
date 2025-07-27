@@ -4,4 +4,4 @@ import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.ResponseStatus
 
 @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
-class CanNotInsertWithKeyHolderException(message: String) : RuntimeException(message)
+class MemberInsertFailedException(message: String) : RuntimeException(message)

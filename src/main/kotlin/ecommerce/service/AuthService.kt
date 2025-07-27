@@ -7,14 +7,14 @@ import org.springframework.stereotype.Service
 
 @Service
 class AuthService(
-    private val memberRepository: MemberRepository,
+    private val repository: MemberRepository,
     private val jwtTokenProvider: JwtTokenProvider,
 ) {
     fun findMemberByToken(token: String): Member {
         validateToken(token)
         val id = getPayloadFromToken(token)
-        val member = memberRepository.findById(id)
-        return member
+        return repository.findById(id)
+            ?: throw InvalidTokenException("Member with ID $id not found")
     }
 
     private fun validateToken(token: String) {
