@@ -31,6 +31,12 @@ class ProductService(private val repository: ProductRepository, private val prod
         require(imageUrl.startsWith("http://") || imageUrl.startsWith("https://")) {"Image URL must start with http:// or https://"}
     }
 
+    fun validateProductId(productId: Long) {
+        require(repository.get(productId) != null) {
+            "Product with ID $productId does not exist."
+        }
+    }
+
     fun createProduct(product: Product): Product {
         val entity = Product.toEntity(product)
         validateName(entity.name)
