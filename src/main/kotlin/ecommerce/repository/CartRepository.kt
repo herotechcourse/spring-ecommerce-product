@@ -1,6 +1,7 @@
 package ecommerce.repository
 
 import ecommerce.dto.CartItem
+import ecommerce.dto.TopProductStatResponse
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.stereotype.Repository
 import java.sql.Timestamp
@@ -46,5 +47,29 @@ class CartRepository(private val jdbcTemplate: JdbcTemplate) {
                 quantity = rs.getInt("quantity"),
             )
         }, memberId)
+    }
+
+    fun findTop5ProductsInLast30Days(): List<TopProductStatResponse> {
+        val sql =
+            """
+            SELECT 
+                p.product_name,
+                COUNT(*) AS times_added,
+                MAX(c.created_at) AS most_recent_added_time
+            FROM carts c
+            JOIN products p ON c.product_id = p.id
+            WHERE c.created_at >= CURRENT_DATE - INTERVAL 30 DAY
+            GROUP BY c.product_id, p.product_name
+            ORDER BY times_added DESC, most_recent_added_time DESC
+            LIMIT 5
+            """.trimIndent()
+
+        return jdbcTemplate.query(sql) { rs, _ ->
+            TopProductStatResponse(
+                name = rs.getString("product_name"),
+                count = rs.getInt("times_added"),
+                lastAddedAt = rs.getTimestamp("most_recent_added_time"),
+            )
+        }
     }
 }

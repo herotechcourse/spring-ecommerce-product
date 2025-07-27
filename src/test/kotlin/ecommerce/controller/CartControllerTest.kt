@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import ecommerce.dto.CartItem
 import ecommerce.dto.CartRequest
 import ecommerce.dto.MemberResponse
+import ecommerce.model.UserRole
 import ecommerce.service.AuthService
 import ecommerce.service.CartService
 import org.junit.jupiter.api.BeforeEach
@@ -38,7 +39,7 @@ class CartControllerTest {
     private lateinit var objectMapper: ObjectMapper
 
     private val token = "mocked-jwt-token"
-    private val memberResponse = MemberResponse(id = 1L, email = "user@example.com")
+    private val memberResponse = MemberResponse(id = 1L, email = "user@example.com", role = UserRole.USER.name)
     private val cartRequest = CartRequest(productId = 100L)
 
     @BeforeEach

@@ -6,6 +6,7 @@ import ecommerce.dto.TokenRequest
 import ecommerce.dto.TokenResponse
 import ecommerce.handler.AuthorizationException
 import ecommerce.handler.ValidationException
+import ecommerce.model.UserRole
 import ecommerce.service.AuthService
 import org.mockito.Mockito.`when`
 import org.springframework.beans.factory.annotation.Autowired
@@ -32,7 +33,7 @@ class AuthControllerTest {
     @Autowired
     private lateinit var objectMapper: ObjectMapper
 
-    private val tokenRequest = TokenRequest("user@example.com", "password123")
+    private val tokenRequest = TokenRequest("user@example.com", "password123", role = UserRole.USER.name)
     private val tokenResponse = TokenResponse("mocked-jwt-token")
 
     @Test
@@ -89,7 +90,7 @@ class AuthControllerTest {
 
     @Test
     fun `should get member if token exists`() {
-        val memberResponse = MemberResponse(1L, "user@example.com")
+        val memberResponse = MemberResponse(1L, "user@example.com", role = "user")
         `when`(authService.findMemberByToken("mocked-jwt-token")).thenReturn(memberResponse)
 
         mockMvc.perform(

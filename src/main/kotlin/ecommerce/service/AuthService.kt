@@ -58,6 +58,6 @@ class AuthService(
         val member =
             memberRepository.findByEmail(email)
                 ?: throw AuthorizationException("Member not found with email: $email")
-        return MemberResponse(member.id, member.email)
+        return MemberResponse(member.id, member.email, member.role)
     }
 }

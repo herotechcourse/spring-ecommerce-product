@@ -1,6 +1,7 @@
 package ecommerce.service
 
 import ecommerce.dto.CartItem
+import ecommerce.dto.TopProductStatResponse
 import ecommerce.repository.CartRepository
 import ecommerce.repository.ProductStore
 import org.springframework.beans.factory.annotation.Qualifier
@@ -29,5 +30,9 @@ class CartService(
 
     fun getCartItems(memberId: Long): List<CartItem> {
         return cartRepository.getCartItems(memberId)
+    }
+
+    fun findTop5ProductsInLast30Days(): List<TopProductStatResponse> {
+        return cartRepository.findTop5ProductsInLast30Days()
     }
 }
