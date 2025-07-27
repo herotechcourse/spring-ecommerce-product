@@ -1,0 +1,166 @@
+package ecommerce.controller
+
+import ecommerce.controller.api.AuthController
+import ecommerce.dto.LoginForm
+import ecommerce.dto.RegisterForm
+import ecommerce.model.Member
+import io.restassured.RestAssured
+import io.restassured.http.ContentType
+import org.assertj.core.api.Assertions
+import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.Test
+import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.http.HttpStatus
+
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
+class AuthControllerTest {
+    private val controller = AuthController()
+
+    @Test
+    fun registerMember() {
+        val email = "test@email.com"
+        val password = "test1234"
+        val testForm = RegisterForm(email, password)
+        val response = controller.registerMember(testForm)
+        assertThat(response.statusCode).isEqualTo(HttpStatus.CREATED)
+        assertThat(response.body).isEqualTo(AuthController.TEST_RESPONSE)
+    }
+
+    @Test
+    fun `registerMember() - should insert member and return 201 when form is valid`() {
+        val response =
+            RestAssured
+                .given().log().all()
+                .body(Member(email = "test@email.com", password = "test1234"))
+                .contentType(ContentType.JSON)
+                .`when`().post("/api/members/register")
+                .then().log().all().extract()
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value())
+        assertThat(response.body().jsonPath().getString("accessToken")).isEqualTo(AuthController.TEST_RESPONSE.accessToken)
+    }
+
+    @Test
+    fun `registerMember() - should return 400 when email is blank`() {
+        val response =
+            RestAssured
+                .given().log().all()
+                .body(Member(email = "", password = "test1234"))
+                .contentType(ContentType.JSON)
+                .`when`().post("/api/members/register")
+                .then().log().all().extract()
+
+        val targets =
+            listOf(
+                "Email is required",
+            )
+        val resBody = response.jsonPath().getMap<String, String>("errors")
+        val actual = resBody["email"]
+        Assertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value())
+        Assertions.assertThat(actual).isIn(targets)
+    }
+
+    @Test
+    fun `registerMember() - should return 400 when email is not valid`() {
+        val response =
+            RestAssured
+                .given().log().all()
+                .body(Member(email = "abc.abc.com", password = "test1234"))
+                .contentType(ContentType.JSON)
+                .`when`().post("/api/members/register")
+                .then().log().all().extract()
+
+        val targets =
+            listOf(
+                "Email must be valid",
+            )
+        val resBody = response.jsonPath().getMap<String, String>("errors")
+        val actual = resBody["email"]
+        Assertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value())
+        Assertions.assertThat(actual).isIn(targets)
+    }
+
+    @Test
+    fun `registerMember() - should return 400 when password is shorter than 4 characters long`() {
+        val response =
+            RestAssured
+                .given().log().all()
+                .body(Member(email = "test@email.com", password = "123"))
+                .contentType(ContentType.JSON)
+                .`when`().post("/api/members/register")
+                .then().log().all().extract()
+
+        val targets =
+            listOf(
+                "Password must be at least 4 characters long",
+            )
+        val resBody = response.jsonPath().getMap<String, String>("errors")
+        val actual = resBody["password"]
+        Assertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value())
+        Assertions.assertThat(actual).isIn(targets)
+    }
+
+    @Test
+    fun loginMember() {
+        val email = "san@htc.com"
+        val password = "san1234"
+        val testForm = LoginForm(email, password)
+        val response = controller.loginMember(testForm)
+        assertThat(response.statusCode).isEqualTo(HttpStatus.OK)
+        assertThat(response.body).isEqualTo(AuthController.TEST_RESPONSE)
+    }
+
+    @Test
+    fun `loginMember() - should login member and return 200 when form is valid`() {
+        val response =
+            RestAssured
+                .given().log().all()
+                .body(Member(email = "san@htc.com", password = "san1234"))
+                .contentType(ContentType.JSON)
+                .`when`().post("/api/members/login")
+                .then().log().all().extract()
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
+        assertThat(response.body().jsonPath().getString("accessToken")).isEqualTo(AuthController.TEST_RESPONSE.accessToken)
+    }
+
+    @Test
+    fun `loginMember() - should return 400 when email is blank`() {
+        val response =
+            RestAssured
+                .given().log().all()
+                .body(Member(email = "", password = "test1234"))
+                .contentType(ContentType.JSON)
+                .`when`().post("/api/members/login")
+                .then().log().all().extract()
+
+        val targets =
+            listOf(
+                "Please enter your email address",
+            )
+        val resBody = response.jsonPath().getMap<String, String>("errors")
+        val actual = resBody["email"]
+        Assertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value())
+        Assertions.assertThat(actual).isIn(targets)
+    }
+
+    @Test
+    fun `loginMember() - should return 400 when password is blank`() {
+        val response =
+            RestAssured
+                .given().log().all()
+                .body(Member(email = "test@email.com", password = ""))
+                .contentType(ContentType.JSON)
+                .`when`().post("/api/members/login")
+                .then().log().all().extract()
+
+        val targets =
+            listOf(
+                "Please enter your password",
+            )
+        val resBody = response.jsonPath().getMap<String, String>("errors")
+        val actual = resBody["password"]
+        Assertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value())
+        Assertions.assertThat(actual).isIn(targets)
+    }
+}

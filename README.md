@@ -57,8 +57,8 @@
 
 #### AuthResponse
 
-- [ ] is a data class, as a DTO to send access token as response
-- [ ] has property `accessToken: String`
+- [x] is a data class, as a DTO to send access token as response
+- [x] has property `accessToken: String`
 
 ### DAO (Data Access Object)
 
@@ -104,7 +104,7 @@
 #### AuthController
 
 - HTTP Methods
-- [ ] `registerMember(@RequestBody)`
+- [x] `registerMember(@RequestBody)`
     ```
     POST /api/members/register HTTP/1.1
     Content-Type: application/json
@@ -115,7 +115,7 @@
         "password": "password"
     }
     ```
-- [ ] `loginMember(@RequestBody)`
+- [x] `loginMember(@RequestBody)`
     ```
     POST /api/members/login HTTP/1.1
     Content-Type: application/json
@@ -192,7 +192,7 @@
 
 - [x] ProductNameAlreadyExistsException
 
-- [ ] MemberEmailAlreadyExistsException
+- [x] MemberEmailAlreadyExistsException
 
 - [ ] AuthorizationException
 
