@@ -25,12 +25,15 @@ object MemberTestFixture {
             )
     }
 
-    fun registerMember(request: MemberRequest, path: String = "/api/members/register"): ExtractableResponse<Response> {
+    fun registerMember(
+        request: MemberRequest,
+        path: String = "/api/members/register",
+    ): ExtractableResponse<Response> {
         return RestAssured
-                .given().log().all()
-                .body(request)
-                .contentType(ContentType.JSON)
-                .`when`().post("/api/members/register")
-                .then().log().all().extract()
+            .given().log().all()
+            .body(request)
+            .contentType(ContentType.JSON)
+            .`when`().post(path)
+            .then().log().all().extract()
     }
 }

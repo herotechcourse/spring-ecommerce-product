@@ -1,8 +1,8 @@
 package ecommerce.helper
 
 import ecommerce.constants.ConstantsProduct
-import ecommerce.dto.ProductRequest
 import ecommerce.dto.DummyRequest
+import ecommerce.dto.ProductRequest
 import io.restassured.RestAssured
 import io.restassured.http.ContentType
 import io.restassured.response.ExtractableResponse

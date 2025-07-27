@@ -50,9 +50,14 @@ class MemberRepository(private val jdbcTemplate: JdbcTemplate) {
 
     fun findById(id: Long): Member? {
         val sql = MemberConstsSQL.SELECT_BY_ID
-        val result = jdbcTemplate.query(sql, PreparedStatementSetter { ps ->
-            ps.setLong(1, id)
-        }, rowMapper)
+        val result =
+            jdbcTemplate.query(
+                sql,
+                PreparedStatementSetter { ps ->
+                    ps.setLong(1, id)
+                },
+                rowMapper,
+            )
 
         return when (result.size) {
             0 -> null
@@ -66,9 +71,14 @@ class MemberRepository(private val jdbcTemplate: JdbcTemplate) {
 
     fun findByEmail(email: String): Member? {
         val sql = MemberConstsSQL.SELECT_BY_EMAIL
-        val result = jdbcTemplate.query(sql, PreparedStatementSetter { ps ->
-            ps.setString(1, email)
-        }, rowMapper)
+        val result =
+            jdbcTemplate.query(
+                sql,
+                PreparedStatementSetter { ps ->
+                    ps.setString(1, email)
+                },
+                rowMapper,
+            )
 
         return when (result.size) {
             0 -> null
@@ -80,7 +90,10 @@ class MemberRepository(private val jdbcTemplate: JdbcTemplate) {
         }
     }
 
-    fun matches(actual: String, expected: String): Boolean {
+    fun matches(
+        actual: String,
+        expected: String,
+    ): Boolean {
         return actual == expected
     }
 //    fun deleteById(id: Long): Boolean
