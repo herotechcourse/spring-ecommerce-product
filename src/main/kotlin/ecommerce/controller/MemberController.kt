@@ -19,9 +19,9 @@ class MemberController (private val repository: MemberRepository, private val me
     @PostMapping
     fun register(
         @RequestBody memberDTO: MemberDTO,
-    ): ResponseEntity<Member> {
+    ): ResponseEntity<Void> {
         val savedMember = memberService.register(memberDTO)
-        return ResponseEntity.created(URI.create("/members/" + savedMember.id)).body(savedMember)
+        return ResponseEntity.created(URI.create("/members/" + savedMember.id)).body(null)
     }
 
     @GetMapping("/{id}")
