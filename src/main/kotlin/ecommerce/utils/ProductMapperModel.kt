@@ -1,8 +1,8 @@
 package ecommerce.utils
 
-import ecommerce.dto.CreateProductRequest
-import ecommerce.dto.UpdateProductRequest
-import ecommerce.model.Product
+import ecommerce.domain.Product
+import ecommerce.dto.product.CreateProductRequest
+import ecommerce.dto.product.UpdateProductRequest
 
 fun CreateProductRequest.toModel(): Product =
     Product(
