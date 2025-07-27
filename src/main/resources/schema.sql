@@ -35,6 +35,7 @@ CREATE TABLE cart_item
     id         BIGINT NOT NULL AUTO_INCREMENT,
     cart_id    BIGINT NOT NULL,
     product_id BIGINT NOT NULL,
+    added_at   TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     quantity   INT    NOT NULL DEFAULT 1,
     PRIMARY KEY (id),
     FOREIGN KEY (cart_id) REFERENCES cart (id) ON DELETE CASCADE,

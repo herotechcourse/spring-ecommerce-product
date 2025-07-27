@@ -3,6 +3,7 @@ package ecommerce.cart.model
 import ecommerce.products.model.Product
 import jakarta.validation.constraints.NotNull
 import jakarta.validation.constraints.Positive
+import java.time.LocalDateTime
 
 data class CartItem(
     val id: Long? = null,
@@ -12,4 +13,5 @@ data class CartItem(
     @field:Positive
     val quantity: Int,
     val product: Product? = null,
+    var addedAt: LocalDateTime = LocalDateTime.now()
 )
