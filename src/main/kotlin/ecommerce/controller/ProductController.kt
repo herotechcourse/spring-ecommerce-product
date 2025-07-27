@@ -2,6 +2,9 @@ package ecommerce.controller
 
 import ecommerce.model.Product
 import ecommerce.dto.ProductDTO
+import ecommerce.model.Member
+import ecommerce.model.Role
+import ecommerce.resolver.LoginMember
 import ecommerce.service.ProductService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -20,8 +23,11 @@ class ProductController(private val productService: ProductService) {
 
     @PostMapping
     fun create(
-        @RequestBody product: Product,
+        @RequestBody product: Product, @LoginMember member: Member
     ): ResponseEntity<Product> {
+        if(member.role != Role.ADMIN) {
+            return ResponseEntity.status(401).build()
+        }
         val savedProduct = productService.createProduct(product)
         return ResponseEntity.created(URI.create("/products/${savedProduct.id}")).body(savedProduct)
     }
@@ -37,7 +43,11 @@ class ProductController(private val productService: ProductService) {
     fun patchUpdate(
         @RequestBody dto: ProductDTO,
         @PathVariable id: Long,
+        @LoginMember member: Member
     ): ResponseEntity<Product> {
+        if(member.role != Role.ADMIN) {
+            return ResponseEntity.status(401).build()
+        }
         val updatedProduct = productService.updateProduct(id, dto)
             ?: return ResponseEntity.notFound().build()
         return ResponseEntity.ok(updatedProduct)
@@ -46,7 +56,11 @@ class ProductController(private val productService: ProductService) {
     @DeleteMapping("/{id}")
     fun delete(
         @PathVariable id: Long,
+        @LoginMember member: Member
     ): ResponseEntity<Void> {
+        if(member.role != Role.ADMIN) {
+            return ResponseEntity.status(401).build()
+        }
         val deleted = productService.deleteProductById(id)
         return if (deleted) ResponseEntity.noContent().build()
         else ResponseEntity.notFound().build()
