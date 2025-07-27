@@ -55,7 +55,7 @@ class AuthControllerTest {
         mockMvc.perform(
             post("/auth/register")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(tokenRequest))
+                .content(objectMapper.writeValueAsString(tokenRequest)),
         )
             .andExpect(status().isBadRequest)
             .andExpect(jsonPath("$.message").value("Email is already registered"))
@@ -68,7 +68,7 @@ class AuthControllerTest {
         mockMvc.perform(
             post("/auth/login")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(tokenRequest))
+                .content(objectMapper.writeValueAsString(tokenRequest)),
         )
             .andExpect(status().isOk)
             .andExpect(jsonPath("$.accessToken").value("mocked-jwt-token"))
@@ -81,7 +81,7 @@ class AuthControllerTest {
         mockMvc.perform(
             post("/auth/login")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(tokenRequest))
+                .content(objectMapper.writeValueAsString(tokenRequest)),
         )
             .andExpect(status().isUnauthorized)
             .andExpect(jsonPath("$.message").value("Invalid password for email"))
@@ -94,19 +94,20 @@ class AuthControllerTest {
 
         mockMvc.perform(
             get("/auth/findmember")
-                .header("Authorization", "Bearer mocked-jwt-token")
+                .header("Authorization", "Bearer mocked-jwt-token"),
         )
             .andExpect(status().isOk)
             .andExpect(jsonPath("$.id").value(1))
             .andExpect(jsonPath("$.email").value("user@example.com"))
     }
+
     @Test
     fun `shouldn't get member if token does not exist or invalid`() {
         `when`(authService.findMemberByToken("invalid-token")).thenThrow(AuthorizationException("Invalid or expired JWT token"))
 
         mockMvc.perform(
             get("/auth/findmember")
-                .header("Authorization", "Bearer invalid-token")
+                .header("Authorization", "Bearer invalid-token"),
         )
             .andExpect(status().isUnauthorized)
             .andExpect(jsonPath("$.message").value("Invalid or expired JWT token"))
