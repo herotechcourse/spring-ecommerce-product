@@ -1,9 +1,14 @@
 package ecommerce.model
 
+enum class Role {
+    USER, ADMIN
+}
+
 data class Member (
     var id: Long? = null,
     var email: String,
     var password: String,
+    var role: Role = Role.USER,
 ) {
     init {
         require(email.isNotBlank()) { "Email cannot be blank" }
