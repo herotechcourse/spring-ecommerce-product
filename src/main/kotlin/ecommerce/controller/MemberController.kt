@@ -6,6 +6,7 @@ import ecommerce.repository.MemberRepository
 import ecommerce.service.MemberService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
@@ -25,8 +26,8 @@ class MemberController (private val repository: MemberRepository, private val me
     }
 
     @GetMapping("/{id}")
-    fun get(): ResponseEntity<List<Member>> {
-        if (repository.isEmptyOrNull()) return ResponseEntity.noContent().build()
-        return ResponseEntity.ok(repository.findAll())
+    fun get(@PathVariable id: Long): ResponseEntity<Member> {
+        val member = memberService.validateId(id)
+        return ResponseEntity.ok(member)
     }
 }
