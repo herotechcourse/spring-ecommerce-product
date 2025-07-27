@@ -111,3 +111,13 @@ updateProductForm.html
     - [x] Users can add products to their cart.
     - [x] Users can remove products from their cart.
 - [x] (extra) Create Products and Cart View
+
+## Features 2.4
+
+- [ ] Retrieve the Top 5 Most Added Products to Cart in the Last 30 Days.
+    - [ ] If multiple products have same count, the most recent added comes first.
+    - [ ] Response must include the product name, the number of times it was added, and the most recent added time.
+
+- [ ] Retrieve Members Who Added Items to Their Cart in the Last 7 Days.
+    - [ ] Each member should appear only once.
+    - [ ] The response must include the member ID, name, and email.
