@@ -16,7 +16,7 @@ interface ProductStore {
     fun update(
         id: Long,
         product: Product,
-    ): Int
+    ): Boolean
 
-    fun delete(id: Long): Int
+    fun delete(id: Long): Boolean
 }

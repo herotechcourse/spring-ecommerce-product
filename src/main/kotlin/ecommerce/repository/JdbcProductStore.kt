@@ -47,13 +47,17 @@ class JdbcProductStore(private val jdbcTemplate: JdbcTemplate) : ProductStore {
     override fun update(
         id: Long,
         product: Product,
-    ): Int {
+    ): Boolean {
         val sql = "update products set product_name = ?, price = ?, image_url = ? where id = ?"
-        return jdbcTemplate.update(sql, product.name, product.price, product.imageUrl, id)
+        return jdbcTemplate.update(sql, product.name, product.price, product.imageUrl, id) == NUMBER_OF_AFFECTED_ROWS
     }
 
-    override fun delete(id: Long): Int {
+    override fun delete(id: Long): Boolean {
         val sql = "delete from products where id = ?"
-        return jdbcTemplate.update(sql, id)
+        return jdbcTemplate.update(sql, id) == NUMBER_OF_AFFECTED_ROWS
+    }
+
+    companion object {
+        private const val NUMBER_OF_AFFECTED_ROWS = 1
     }
 }

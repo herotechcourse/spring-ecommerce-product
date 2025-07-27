@@ -18,7 +18,8 @@ class CollectionProductStore(val products: MutableList<Product>) : ProductStore 
     }
 
     override fun findByName(name: String): Product? {
-        return products.firstOrNull { it.name == name } ?: throw NoSuchElementException("Product with name $name not found")
+        return products.firstOrNull { it.name == name }
+            ?: throw NoSuchElementException("Product with name $name not found")
     }
 
     override fun save(product: Product) {
@@ -29,17 +30,17 @@ class CollectionProductStore(val products: MutableList<Product>) : ProductStore 
     override fun update(
         id: Long,
         product: Product,
-    ): Int {
+    ): Boolean {
         val updatedProduct = findById(id)
         updatedProduct?.name = product.name
         updatedProduct?.price = product.price
         updatedProduct?.imageUrl = product.imageUrl
-        return 1
+        return true
     }
 
-    override fun delete(id: Long): Int {
+    override fun delete(id: Long): Boolean {
         val deletedProduct = findById(id)
         products.remove(deletedProduct)
-        return 1
+        return true
     }
 }

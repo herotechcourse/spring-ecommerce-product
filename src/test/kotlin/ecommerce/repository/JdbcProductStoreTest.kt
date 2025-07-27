@@ -64,7 +64,7 @@ class JdbcProductStoreTest {
 
     @Test
     fun `should delete a product`() {
-        val rowNum = productStore.delete(1L)
-        Assertions.assertThat(rowNum).isEqualTo(1)
+        val isDeleted = productStore.delete(1L)
+        Assertions.assertThat(isDeleted).isEqualTo(true)
     }
 }
