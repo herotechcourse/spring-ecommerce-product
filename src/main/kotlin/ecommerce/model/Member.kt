@@ -6,7 +6,7 @@ enum class Role(val role : String) {
 }
 
 data class Member (
-    var id: Long? = null,
+    var id: Long,
     var email: String,
     var password: String,
     var role: Role
