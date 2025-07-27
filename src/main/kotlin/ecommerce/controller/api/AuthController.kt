@@ -4,7 +4,7 @@ import ecommerce.dto.AuthResponse
 import ecommerce.dto.LoginForm
 import ecommerce.dto.RegisterForm
 import ecommerce.exception.MemberEmailAlreadyExistsException
-import ecommerce.model.Member
+import ecommerce.service.AuthService
 import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ExceptionHandler
@@ -17,17 +17,15 @@ import java.net.URI
 @RestController
 @RequestMapping("/api/members")
 class AuthController(
-    // private val authService: AuthService,
+    private val authService: AuthService,
 ) {
     @PostMapping("/register")
     fun registerMember(
         @RequestBody @Valid form: RegisterForm,
     ): ResponseEntity<AuthResponse> {
-        // val member = authService.registerMember(form)
-        val member = Member.from(form)
+        val member = authService.registerMember(form)
         val uri = URI.create("/api/members/${member.id}")
-        // val authResponse = authService.loginMember(LoginForm.fromRegisterForm(form))
-        val authResponse = TEST_RESPONSE
+        val authResponse = authService.loginMember(LoginForm.fromRegisterForm(form))
         return ResponseEntity.created(uri).body(authResponse)
     }
 
@@ -35,8 +33,7 @@ class AuthController(
     fun loginMember(
         @RequestBody @Valid form: LoginForm,
     ): ResponseEntity<AuthResponse> {
-        // val authResponse = authService.loginMember(form)
-        val authResponse = TEST_RESPONSE
+        val authResponse = authService.loginMember(form)
         return ResponseEntity.ok(authResponse)
     }
 

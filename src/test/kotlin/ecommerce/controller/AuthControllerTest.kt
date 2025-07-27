@@ -1,20 +1,53 @@
 package ecommerce.controller
 
 import ecommerce.controller.api.AuthController
+import ecommerce.dao.JdbcMemberDAO
 import ecommerce.dto.LoginForm
 import ecommerce.dto.RegisterForm
 import ecommerce.model.Member
+import ecommerce.service.AuthService
 import io.restassured.RestAssured
 import io.restassured.http.ContentType
 import org.assertj.core.api.Assertions
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.HttpStatus
+import org.springframework.jdbc.core.JdbcTemplate
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 class AuthControllerTest {
-    private val controller = AuthController()
+    @Autowired private lateinit var jdbcTemplate: JdbcTemplate
+
+    @Autowired private lateinit var jdbcMemberDAO: JdbcMemberDAO
+    private lateinit var authService: AuthService
+    private lateinit var controller: AuthController
+
+    @BeforeEach
+    fun setUp() {
+        jdbcMemberDAO = JdbcMemberDAO(jdbcTemplate)
+        authService = AuthService(jdbcMemberDAO)
+
+        jdbcTemplate.execute("DROP TABLE member CASCADE")
+        jdbcTemplate.execute(
+            """CREATE TABLE member
+            (
+                id       LONG         NOT NULL AUTO_INCREMENT,
+                email    VARCHAR(255) NOT NULL UNIQUE,
+                password VARCHAR(255) NOT NULL,
+                PRIMARY KEY (id)
+            );""",
+        )
+
+        val query =
+            """INSERT INTO member (email, password) VALUES ( 'san@htc.com', 'san1234');
+            INSERT INTO member (email, password) VALUES ( 'dan@htc.com', 'dan1234');"""
+        jdbcTemplate.batchUpdate(query)
+
+        controller = AuthController(authService)
+    }
 
     @Test
     fun registerMember() {

@@ -86,12 +86,12 @@
 
 #### AuthService
 
-- [ ] `register()`
-- [ ] `login()`
-- [ ] `findMemberById()`
+- [x] `register()`
+- [x] `login()`
+- [x] `findMemberById()`
 - [ ] `findMemberByToken()`
-- [ ] `findMemberByEmail()`
-- [ ] `checkMemberEmailExists()`
+- [x] `findMemberByEmail()`
+- [x] `checkMemberEmailExists()`
 
 #### ProductService
 
@@ -194,7 +194,7 @@
 
 - [x] MemberEmailAlreadyExistsException
 
-- [ ] AuthorizationException
+- [x] AuthorizationException
 
 ### Auth
 
