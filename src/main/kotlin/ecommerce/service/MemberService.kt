@@ -36,7 +36,7 @@ class MemberService (private val memberRepository: MemberRepository)  {
     fun register(memberDTO: MemberDTO): Member {
         validateEmail(memberDTO.email)
         validatePassword(memberDTO.password)
-        return memberRepository.insert(memberDTO.toEntity())
+        return memberRepository.insert(memberDTO)
     }
 
     fun findByEmail(email: String): Member? {
