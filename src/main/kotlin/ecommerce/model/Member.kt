@@ -1,7 +1,9 @@
 package ecommerce.model
 
 import ecommerce.dto.LoginForm
+import ecommerce.dto.MemberResponse
 import ecommerce.dto.RegisterForm
+import ecommerce.exception.InternalServerErrorException
 
 data class Member(
     var id: Long? = null,
@@ -22,6 +24,11 @@ data class Member(
 
         fun from(registerForm: RegisterForm): Member {
             return Member(email = registerForm.email, password = registerForm.password)
+        }
+
+        fun toResponse(entity: Member): MemberResponse {
+            val id = entity.id ?: throw InternalServerErrorException("Member ID is null")
+            return MemberResponse(id = id, email = entity.email)
         }
     }
 }

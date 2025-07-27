@@ -1,15 +1,20 @@
 package ecommerce.controller.api
 
+import ecommerce.auth.AuthorizationExtractor
+import ecommerce.auth.BearerAuthorizationExtractor
 import ecommerce.dto.AuthResponse
 import ecommerce.dto.LoginForm
+import ecommerce.dto.MemberResponse
 import ecommerce.dto.RegisterForm
 import ecommerce.exception.AuthorizationException
 import ecommerce.exception.MemberEmailAlreadyExistsException
 import ecommerce.service.AuthService
+import jakarta.servlet.http.HttpServletRequest
 import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ExceptionHandler
+import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
@@ -21,6 +26,8 @@ import java.net.URI
 class AuthController(
     private val authService: AuthService,
 ) {
+    private val authorizationExtractor: AuthorizationExtractor<String> = BearerAuthorizationExtractor()
+
     @PostMapping("/register")
     fun registerMember(
         @RequestBody @Valid form: RegisterForm,
@@ -37,6 +44,13 @@ class AuthController(
     ): ResponseEntity<AuthResponse> {
         val authResponse = authService.loginMember(form)
         return ResponseEntity.ok(authResponse)
+    }
+
+    @GetMapping("/me")
+    fun findMyInformation(request: HttpServletRequest): ResponseEntity<MemberResponse> {
+        val token = authorizationExtractor.extract(request)
+        val member = authService.findMemberByToken(token)
+        return ResponseEntity.ok().body(member)
     }
 
     @ExceptionHandler(AuthorizationException::class)

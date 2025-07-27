@@ -5,6 +5,7 @@ import ecommerce.controller.api.AuthController
 import ecommerce.dao.JdbcMemberDAO
 import ecommerce.dto.AuthResponse
 import ecommerce.dto.LoginForm
+import ecommerce.dto.MemberResponse
 import ecommerce.dto.RegisterForm
 import ecommerce.model.Member
 import ecommerce.service.AuthService
@@ -16,6 +17,7 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.HttpStatus
+import org.springframework.http.MediaType
 import org.springframework.jdbc.core.JdbcTemplate
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
@@ -259,5 +261,29 @@ class AuthControllerTest {
         val actual = resBody["authorization"]
         assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value())
         assertThat(actual).isIn(targets)
+    }
+
+    @Test
+    fun tokenLogin() {
+        val targetEmail = "dan@htc.com"
+        val accessToken =
+            RestAssured
+                .given().log().all()
+                .body(LoginForm(targetEmail, "dan1234"))
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .`when`().post("/api/members/login")
+                .then().log().all().extract().`as`(AuthResponse::class.java).accessToken
+
+        val member =
+            RestAssured
+                .given().log().all()
+                .header("Authorization", "Bearer $accessToken")
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .`when`().get("/api/members/me")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value()).extract().`as`(MemberResponse::class.java)
+
+        assertThat(member.email).isEqualTo(targetEmail)
     }
 }
