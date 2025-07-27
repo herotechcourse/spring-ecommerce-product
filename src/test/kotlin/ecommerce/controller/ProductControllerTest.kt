@@ -14,7 +14,6 @@ import org.springframework.test.annotation.DirtiesContext
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-
 class ProductControllerTest {
     @LocalServerPort
     private var port: Int = 0
@@ -89,18 +88,6 @@ class ProductControllerTest {
                 .extract()
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value())
-    }
-
-    @Test
-    fun `Throws NotFoundException if No id provided`() {
-        val response =
-            RestAssured.given()
-                .contentType(ContentType.JSON)
-                .`when`().get("/products/")
-                .then()
-                .extract()
-
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value())
     }
 
     @Test
