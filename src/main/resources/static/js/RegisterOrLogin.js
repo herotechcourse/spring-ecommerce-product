@@ -59,17 +59,16 @@ function registerOrLoginHandler() {
 
     //Login functions
     function getLoginFormFields(form) {
-        const memberEmail = form.querySelector("input[name=member-email]");
-        const memberPassword = form.querySelector("input[name=member-password]");
+        const memberEmail = form.querySelector("input[name=member-email]").value;
+        const memberPassword = form.querySelector("input[name=member-password]").value;
         return {memberEmail, memberPassword};
     }
 
     async function handleLoginSubmit(e) {
         e.preventDefault();
         const form = document.getElementById("login-form");
-        const {email, password} = getLoginFormFields(form);
-        const memberEmail = email.value;
-        const memberPassword = password.value;
+        const formValues = getLoginFormFields(form);
+        const {memberEmail, memberPassword} = formValues;
         const res = await API.login(memberEmail, memberPassword);
 
         if (res.ok) {
