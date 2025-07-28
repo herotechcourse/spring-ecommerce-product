@@ -87,6 +87,9 @@
 
 #### JdbcCartDAO : CartDAO
 
+- [x] `getTop5AddedProductsInLast30Days()`
+- [x] `getActiveMembersInLast7Days()`
+
 #### interface MemberADO
 
 - [x] `insert()` - query database to create new member
@@ -132,6 +135,12 @@
   exists by name or not from DAO, then insert the product if it is valid
 
 ### Controller
+
+#### CartStatsController
+
+- HTTP Methods
+- [x] GET "/api/admin/cart-stats/top5-products" - `getTop5Products()`
+- [x] GET "/api/admin/cart-stats/active-members" - `getActiveMembers()`
 
 #### CartController
 
@@ -278,6 +287,45 @@
     - [x] configure the database setting with `application.properties`
 
 ## Functional Requirements
+
+### Step 2.4 - Cart Statistics
+
+The administrator should be able to view statistical information based on users' carts to support service operations.
+
+- Retrieve the Top 5 Most Added Products to Cart in the Last 30 Days
+  - Returns the top 5 products that were added to carts most frequently in the past 30 days.
+  - If multiple products have the same count, the one most recently added should be listed first.
+  - The response must include the product name, the number of times it was added, and the most recent added time.
+- Retrieve Members Who Added Items to Their Cart in the Last 7 Days
+  - Returns a list of members who added at least one product to their cart in the past 7 days.
+  - Each member should appear only once, even if they added multiple products.
+  - The response must include the member ID, name, and email.
+- (Optional) Restrict access to those stat API so that only users with the `ADMIN` role can access it.
+
+Ranking
+- For "Top 5 Most Added Products":
+  - Use SQL features such as `WHERE`, `DATE`, `GROUP BY`, `ORDER BY`, and `LIMIT`.
+- For "Recently Active Members":
+  - Use SQL features such as `EXISTS`, `DISTINCT`, and `JOIN`.
+
+(Optional) Authorization
+- Only members with the `ADMIN` role should be allowed to access APIs starting with `/admin`.
+- Use a `HandlerInterceptor` to check the user's role, and if the user does not have the required permission.
+
+```kotlin
+class AuthInterceptor : HandlerInterceptor {
+    override fun preHandle(request: HttpServletRequest, response: HttpServletResponse, handler: Any): Boolean {
+        // ... 
+
+        if (member == null || member.role != "ADMIN") {
+            response.status = 401
+            return false
+        }
+
+        return true
+    }
+}
+```
 
 ### Step 2.3 - Cart
 
