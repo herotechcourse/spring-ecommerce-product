@@ -30,9 +30,9 @@ HTTP API that allows users to retrieve, add, update, and delete products.
 - [x] create a member controller
   - [x] create a register method to save users as members POST
   - [x] create a GET method to retrieve member
-- [ ] create a login method
-- [ ] implement the Authentication and Authorization methods
-- [ ] implement response to authentication
+- [x] create a login method
+- [x] implement the Authentication and Authorization methods
+- [x] implement response to authentication
 
 ### Test: Product Controller
 - [x] test CRUD methods
@@ -44,5 +44,5 @@ HTTP API that allows users to retrieve, add, update, and delete products.
 - [x] test updateById, deleteById, count list of products and findById
 
 ### Test: Authentication and Authorization
-- [ ] test if user was able to register
-- [ ] test if user has authorization to login
+- [x] test if user was able to register
+- [x] test if user has authorization to login
