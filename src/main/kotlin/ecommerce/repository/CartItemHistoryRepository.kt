@@ -40,7 +40,7 @@ class CartItemHistoryRepository(private val jdbc: JdbcTemplate) {
             TopProductStat(
                 productName = rs.getString("product_name"),
                 addCount = rs.getInt("add_count"),
-                latestAddedAt = rs.getTimestamp("latest_added_at").toString()
+                latestAddedAt = rs.getTimestamp("latest_added_at").toString(),
             )
         }
     }

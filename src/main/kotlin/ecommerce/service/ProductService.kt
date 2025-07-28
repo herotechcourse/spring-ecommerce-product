@@ -9,7 +9,7 @@ import org.springframework.web.server.ResponseStatusException
 
 @Service
 class ProductService(private val productRepository: ProductRepository) {
-    fun validateUniqueName(name: String) {
+    private fun validateUniqueName(name: String) {
         if (productRepository.existsByName(name)) {
             throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Product name must be unique.")
         }
