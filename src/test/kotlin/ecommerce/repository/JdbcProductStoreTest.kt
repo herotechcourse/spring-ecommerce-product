@@ -2,6 +2,7 @@ package ecommerce.repository
 
 import ecommerce.model.Product
 import org.assertj.core.api.Assertions
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -43,8 +44,25 @@ class JdbcProductStoreTest {
     }
 
     @Test
+    fun `existsByName returns true when product is present`() {
+        jdbcTemplate.update(
+            "INSERT INTO PRODUCTS(product_name, price, image_url) VALUES (?,?,?)",
+            "Tablet",
+            299.99,
+            "http://image/tablet.jpg",
+        )
+
+        assertThat(productStore.existsByName("Tablet")).isTrue
+    }
+
+    @Test
+    fun `existsByName returns false when product is absent`() {
+        assertThat(productStore.existsByName("NonExistent")).isFalse
+    }
+
+    @Test
     fun `should save a new product`() {
-        val newProduct = Product(name = "Tablet", price = 299.99, imageUrl = "tablet.jpg")
+        val newProduct = Product(name = "Tablet", price = 299.99, imageUrl = "http://tablet.jpg")
         productStore.save(newProduct) // no return value
 
         val savedProducts = productStore.findAll()
@@ -53,13 +71,13 @@ class JdbcProductStoreTest {
 
     @Test
     fun `should update existing product`() {
-        val updatedProduct = Product(name = "Updated Phone", price = 499.99, imageUrl = "updated_phone.jpg")
+        val updatedProduct = Product(name = "Updated Phone", price = 499.99, imageUrl = "http://updated_phone.jpg")
         productStore.update(1L, updatedProduct)
 
         val product = productStore.findById(1L)
         Assertions.assertThat(product.name).isEqualTo("Updated Phone")
         Assertions.assertThat(product.price).isEqualTo(499.99)
-        Assertions.assertThat(product.imageUrl).isEqualTo("updated_phone.jpg")
+        Assertions.assertThat(product.imageUrl).isEqualTo("http://updated_phone.jpg")
     }
 
     @Test

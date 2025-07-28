@@ -2,6 +2,7 @@ package ecommerce.repository
 
 import ecommerce.model.Product
 import org.assertj.core.api.Assertions
+import org.assertj.core.api.AssertionsForInterfaceTypes.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
@@ -12,8 +13,8 @@ class CollectionProductStoreTest {
     fun setUp() {
         val products =
             mutableListOf(
-                Product(id = 1L, name = "Phone", price = 500.0, imageUrl = "phone.jpg"),
-                Product(id = 2L, name = "Laptop", price = 1500.0, imageUrl = "laptop.jpg"),
+                Product(id = 1L, name = "Phone", price = 500.0, imageUrl = "http://phone.jpg"),
+                Product(id = 2L, name = "Laptop", price = 1500.0, imageUrl = "http://laptop.jpg"),
             )
         productStore = CollectionProductStore(products)
     }
@@ -44,8 +45,18 @@ class CollectionProductStoreTest {
     }
 
     @Test
+    fun `existsByName returns true when product is present`() {
+        assertThat(productStore.existsByName("Phone")).isTrue
+    }
+
+    @Test
+    fun `existsByName returns false when product is absent`() {
+        assertThat(productStore.existsByName("Tablet")).isFalse
+    }
+
+    @Test
     fun `should save a new product`() {
-        val newProduct = Product(id = 3L, name = "Tablet", price = 300.0, imageUrl = "tablet.jpg")
+        val newProduct = Product(id = 3L, name = "Tablet", price = 300.0, imageUrl = "http://tablet.jpg")
         productStore.save(newProduct)
 
         val saved = productStore.findById(3L)
@@ -55,7 +66,7 @@ class CollectionProductStoreTest {
 
     @Test
     fun `should update existing product`() {
-        val updated = Product(id = 1L, name = "Smartphone", price = 600.0, imageUrl = "smartphone.jpg")
+        val updated = Product(id = 1L, name = "Smartphone", price = 600.0, imageUrl = "http://smartphone.jpg")
         productStore.update(1L, updated)
 
         val product = productStore.findById(1L)
