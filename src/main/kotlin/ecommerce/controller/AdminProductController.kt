@@ -53,7 +53,7 @@ class AdminProductController(
         @AdminOnly member: MemberDto,
     ): ResponseEntity<Void> {
         productService.updateProduct(id, product)
-        return ResponseEntity.noContent().build()
+        return ResponseEntity.ok().build()
     }
 
     @DeleteMapping("/{id}")

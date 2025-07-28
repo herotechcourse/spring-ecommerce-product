@@ -148,7 +148,7 @@ class AdminControllerTest {
                 .put("/api/admin/products/1")
                 .then().log().all().extract()
 
-        Assertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value())
+        Assertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
 
         val updated =
             RestAssured.given().log().all()
