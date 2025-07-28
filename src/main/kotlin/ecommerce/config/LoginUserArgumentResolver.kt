@@ -1,6 +1,6 @@
 package ecommerce.config
 
-import ecommerce.common.LoginMember
+import ecommerce.common.LoginUser
 import ecommerce.entity.User
 import jakarta.servlet.http.HttpServletRequest
 import org.springframework.core.MethodParameter
@@ -13,9 +13,9 @@ import org.springframework.web.method.support.ModelAndViewContainer
 import org.springframework.web.server.ResponseStatusException
 
 @Component
-class LoginMemberArgumentResolver : HandlerMethodArgumentResolver {
+class LoginUserArgumentResolver : HandlerMethodArgumentResolver {
     override fun supportsParameter(parameter: MethodParameter): Boolean {
-        return parameter.hasParameterAnnotation(LoginMember::class.java) &&
+        return parameter.hasParameterAnnotation(LoginUser::class.java) &&
             parameter.parameterType == User::class.java
     }
 

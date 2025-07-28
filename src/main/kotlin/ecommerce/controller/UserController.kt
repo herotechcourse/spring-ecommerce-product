@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping("/api/members")
-class MemberController(
+@RequestMapping("/api/users")
+class UserController(
     val userService: UserService,
     val jwtService: JwtService,
 ) {

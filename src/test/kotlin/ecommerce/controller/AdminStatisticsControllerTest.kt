@@ -97,7 +97,7 @@ class AdminStatisticsControllerTest(
     }
 
     @Test
-    fun `admin sees recently active members who added to cart in last 7 days`() {
+    fun `admin sees recently active users who added to cart in last 7 days`() {
         register("admin@mail.com", "123456", "ADMIN")
         register("user1@mail.com", "654321", "USER")
         register("user2@mail.com", "654321", "USER")
@@ -115,7 +115,7 @@ class AdminStatisticsControllerTest(
         addToCart(user2Token, productId)
 
         val result =
-            mockMvc.get("/admin/stats/recent-members") {
+            mockMvc.get("/admin/stats/recent-users") {
                 header("Authorization", "Bearer $adminToken")
             }.andExpect {
                 status { isOk() }
@@ -129,7 +129,7 @@ class AdminStatisticsControllerTest(
         val user1Count = emails.count { it == "user1@mail.com" }
         assertThat(user1Count).isEqualTo(1) // user 1 only once listed although 2 adds
 
-        assertThat(json[0]["memberId"].asLong()).isNotNull()
+        assertThat(json[0]["userId"].asLong()).isNotNull()
         assertThat(emails).doesNotContain("user3@mail.com") // ensure inactive user is excluded
     }
 
@@ -140,7 +140,7 @@ class AdminStatisticsControllerTest(
         password: String,
         role: String,
     ) {
-        mockMvc.post("/api/members/register") {
+        mockMvc.post("/api/users/register") {
             contentType = MediaType.APPLICATION_JSON
             content =
                 """
@@ -158,7 +158,7 @@ class AdminStatisticsControllerTest(
         password: String,
     ): String {
         val result =
-            mockMvc.post("/api/members/login") {
+            mockMvc.post("/api/users/login") {
                 contentType = MediaType.APPLICATION_JSON
                 content =
                     """

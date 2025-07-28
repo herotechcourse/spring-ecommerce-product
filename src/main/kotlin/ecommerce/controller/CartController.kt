@@ -1,6 +1,6 @@
 package ecommerce.controller
 
-import ecommerce.common.LoginMember
+import ecommerce.common.LoginUser
 import ecommerce.dto.CartItemRequest
 import ecommerce.dto.CartItemResponse
 import ecommerce.dto.UpdateQuantityRequest
@@ -24,7 +24,7 @@ class CartController(
 ) {
     @PostMapping
     fun addToCart(
-        @LoginMember user: User,
+        @LoginUser user: User,
         @RequestBody request: CartItemRequest,
     ): ResponseEntity<Void> {
         cartService.addItem(user.id!!, request.productId, request.quantity) // <-- pass quantity here
@@ -33,7 +33,7 @@ class CartController(
 
     @GetMapping
     fun getCart(
-        @LoginMember user: User,
+        @LoginUser user: User,
     ): ResponseEntity<List<CartItemResponse>> {
         val items = cartService.getCart(user.id!!)
         val response = items.map { CartItemResponse(it.productId, it.quantity) }
@@ -42,7 +42,7 @@ class CartController(
 
     @DeleteMapping("/{productId}")
     fun removeItem(
-        @LoginMember user: User,
+        @LoginUser user: User,
         @PathVariable productId: Long,
     ): ResponseEntity<Void> {
         cartService.removeItem(user.id!!, productId)
@@ -51,7 +51,7 @@ class CartController(
 
     @PatchMapping("/{productId}")
     fun updateQuantity(
-        @LoginMember user: User,
+        @LoginUser user: User,
         @PathVariable productId: Long,
         @RequestBody request: UpdateQuantityRequest,
     ): ResponseEntity<Void> {

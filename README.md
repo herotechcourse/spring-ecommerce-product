@@ -50,7 +50,7 @@
 #### step 2-2
 
 - [x] user registration
-  - [x] handle `POST /api/members/register` requests
+  - [x] handle `POST /api/users/register` requests
     - [x] receive `email` and `password` in JSON body
     - [x] hash password
     - [x] create user in database
@@ -65,7 +65,7 @@
   - [x] set token expiration time
 
 - [x] user login
-  - [x] handle `POST /api/members/login` requests
+  - [x] handle `POST /api/users/login` requests
     - [x] receive `email` and `password` in JSON body
     - [x] verify credentials against stored users
     - [x] return token when successful login
@@ -108,11 +108,11 @@
       - [x] product name
       - [x] number of times added
       - [x] most recent added time
-  - [x] retrieve recently active members via `GET /admin/stats/recent-members`
-    - [x] returns members who added items to their cart in the last 7 days 
-      - [x] no duplicate members even if multiple items were added 
+  - [x] retrieve recently active users via `GET /admin/stats/recent-users`
+    - [x] returns users who added items to their cart in the last 7 days 
+      - [x] no duplicate users even if multiple items were added 
       - [x] response includes:
-        - [x] member ID 
+        - [x] user ID 
         - [x] name
         - [x] email
 

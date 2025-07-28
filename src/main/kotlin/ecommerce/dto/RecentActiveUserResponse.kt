@@ -1,7 +1,7 @@
 package ecommerce.dto
 
-data class RecentActiveMemberResponse(
-    val memberId: Long,
+data class RecentActiveUserResponse(
+    val userId: Long,
     val name: String,
     val email: String,
 )

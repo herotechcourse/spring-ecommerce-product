@@ -1,6 +1,6 @@
 package ecommerce.controller
 
-import ecommerce.dto.RecentActiveMemberResponse
+import ecommerce.dto.RecentActiveUserResponse
 import ecommerce.dto.TopProductStat
 import ecommerce.service.StatisticsService
 import org.springframework.http.ResponseEntity
@@ -19,9 +19,9 @@ class AdminStatisticsController(
         return ResponseEntity.ok(result)
     }
 
-    @GetMapping("/recent-members")
-    fun getRecentlyActiveMembers(): ResponseEntity<List<RecentActiveMemberResponse>> {
-        val result = statisticsService.getRecentlyActiveMembers()
+    @GetMapping("/recent-users")
+    fun getRecentlyActiveUsers(): ResponseEntity<List<RecentActiveUserResponse>> {
+        val result = statisticsService.getRecentlyActiveUser()
         return ResponseEntity.ok(result)
     }
 }

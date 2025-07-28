@@ -15,7 +15,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 @AutoConfigureMockMvc
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
-class MemberControllerTest {
+class UserControllerTest {
     @Autowired
     lateinit var mockMvc: MockMvc
 
@@ -34,7 +34,7 @@ class MemberControllerTest {
 
         val result =
             mockMvc.perform(
-                MockMvcRequestBuilders.post("/api/members/register")
+                MockMvcRequestBuilders.post("/api/users/register")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(requestBody),
             ).andExpect(MockMvcResultMatchers.status().isOk)
@@ -60,7 +60,7 @@ class MemberControllerTest {
 
         val result =
             mockMvc.perform(
-                MockMvcRequestBuilders.post("/api/members/register")
+                MockMvcRequestBuilders.post("/api/users/register")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(requestBody),
             ).andExpect(MockMvcResultMatchers.status().isBadRequest)
@@ -84,7 +84,7 @@ class MemberControllerTest {
 
         val result =
             mockMvc.perform(
-                MockMvcRequestBuilders.post("/api/members/register")
+                MockMvcRequestBuilders.post("/api/users/register")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(requestBody),
             ).andExpect(MockMvcResultMatchers.status().isBadRequest)
@@ -107,14 +107,14 @@ class MemberControllerTest {
             """.trimIndent()
 
         mockMvc.perform(
-            MockMvcRequestBuilders.post("/api/members/register")
+            MockMvcRequestBuilders.post("/api/users/register")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(requestBody),
         ).andExpect(MockMvcResultMatchers.status().isOk)
 
         val result =
             mockMvc.perform(
-                MockMvcRequestBuilders.post("/api/members/register")
+                MockMvcRequestBuilders.post("/api/users/register")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(requestBody),
             ).andExpect(MockMvcResultMatchers.status().isBadRequest)
@@ -137,7 +137,7 @@ class MemberControllerTest {
             """.trimIndent()
 
         mockMvc.perform(
-            MockMvcRequestBuilders.post("/api/members/register")
+            MockMvcRequestBuilders.post("/api/users/register")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(registerRequest),
         ).andExpect(MockMvcResultMatchers.status().isOk)
@@ -152,7 +152,7 @@ class MemberControllerTest {
 
         val result =
             mockMvc.perform(
-                MockMvcRequestBuilders.post("/api/members/login")
+                MockMvcRequestBuilders.post("/api/users/login")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(loginRequest),
             ).andExpect(MockMvcResultMatchers.status().isOk)
@@ -175,7 +175,7 @@ class MemberControllerTest {
             """.trimIndent()
 
         mockMvc.perform(
-            MockMvcRequestBuilders.post("/api/members/register")
+            MockMvcRequestBuilders.post("/api/users/register")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(registerRequest),
         ).andExpect(MockMvcResultMatchers.status().isOk)
@@ -189,7 +189,7 @@ class MemberControllerTest {
             """.trimIndent()
 
         mockMvc.perform(
-            MockMvcRequestBuilders.post("/api/members/login")
+            MockMvcRequestBuilders.post("/api/users/login")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(loginRequest),
         ).andExpect(MockMvcResultMatchers.status().isForbidden)
@@ -206,7 +206,7 @@ class MemberControllerTest {
             """.trimIndent()
 
         mockMvc.perform(
-            MockMvcRequestBuilders.post("/api/members/login")
+            MockMvcRequestBuilders.post("/api/users/login")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(loginRequest),
         ).andExpect(MockMvcResultMatchers.status().isForbidden)
@@ -223,7 +223,7 @@ class MemberControllerTest {
             """.trimIndent()
 
         mockMvc.perform(
-            MockMvcRequestBuilders.post("/api/members/login")
+            MockMvcRequestBuilders.post("/api/users/login")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(loginRequest),
         ).andExpect(MockMvcResultMatchers.status().isBadRequest)

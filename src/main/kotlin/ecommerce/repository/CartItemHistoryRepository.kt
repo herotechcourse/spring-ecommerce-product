@@ -1,6 +1,6 @@
 package ecommerce.repository
 
-import ecommerce.dto.RecentActiveMemberResponse
+import ecommerce.dto.RecentActiveUserResponse
 import ecommerce.entity.CartItemHistory
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.stereotype.Repository
@@ -38,10 +38,10 @@ class CartItemHistoryRepository(private val jdbc: JdbcTemplate) {
         return jdbc.queryForList(sql)
     }
 
-    fun findRecentlyActiveMembers(): List<RecentActiveMemberResponse> {
+    fun findRecentlyActiveUsers(): List<RecentActiveUserResponse> {
         val sql =
             """
-            SELECT DISTINCT u.id AS member_id, u.email
+            SELECT DISTINCT u.id AS user_id, u.email
             FROM cart_item_history h
             JOIN users u ON h.user_id = u.id
             WHERE h.action = 'ADD'
@@ -51,8 +51,8 @@ class CartItemHistoryRepository(private val jdbc: JdbcTemplate) {
         return jdbc.query(sql) { rs, _ ->
             val email = rs.getString("email")
             val name = email.substringBefore("@")
-            RecentActiveMemberResponse(
-                memberId = rs.getLong("member_id"),
+            RecentActiveUserResponse(
+                userId = rs.getLong("user_id"),
                 name = name,
                 email = rs.getString("email"),
             )
