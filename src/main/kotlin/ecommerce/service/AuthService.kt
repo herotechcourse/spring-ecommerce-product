@@ -46,7 +46,7 @@ class AuthService(
             throw NotFoundException("No account with email exists")
         }
         val member = Member(email = request.email, password = request.password)
-        if (memberRepository.findMember(member) == null) {
+        if (memberRepository.findMemberByEmailAndPassword(member) == null) {
             throw UnauthorizedException("Incorrect Password")
         }
         return createToken(request)

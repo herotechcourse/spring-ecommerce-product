@@ -35,7 +35,7 @@ class MemberRepository(private val jdbcTemplate: JdbcTemplate) {
         return member
     }
 
-    fun findMember(member: Member): Member? {
+    fun findMemberByEmailAndPassword(member: Member): Member? {
         val sql = "SELECT * FROM members WHERE email = ? AND password = ?"
         val member: Member? =
             jdbcTemplate.query(
