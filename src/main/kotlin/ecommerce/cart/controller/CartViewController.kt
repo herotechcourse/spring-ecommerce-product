@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 @Controller
 @RequestMapping("/cart")
 class CartViewController {
-    @GetMapping("/")
+    @GetMapping
     fun displayCart(): String {
         return "cart"
     }

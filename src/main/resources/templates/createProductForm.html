@@ -12,7 +12,7 @@
 <header class="container">
     <nav>
         <ul>
-            <li><strong><a href="/admin/">Home</a></strong></li>
+            <li><strong><a href="/admin">Home</a></strong></li>
         </ul>
         <ul>
             <li><a href="/admin/add/product">add product</a></li>
@@ -78,7 +78,7 @@
             });
             if (response.ok) {
                 // alert("Product created successfully!");
-                window.location.href = "/admin/";
+                window.location.href = "/admin";
             } else {
                 alert("Failed to create product. Status: " + response.status);
             }

@@ -12,7 +12,7 @@
 <header class="container">
     <nav>
         <ul>
-            <li><strong><a href="/admin/">Home</a></strong></li>
+            <li><strong><a href="/admin">Home</a></strong></li>
         </ul>
         <ul>
             <li><a href="/admin/add/product">Add Product</a></li>
@@ -74,7 +74,7 @@
                 body: JSON.stringify(product)
             });
             if (response.ok) {
-                window.location.href = "/admin/";
+                window.location.href = "/admin";
             } else {
                 alert("Failed to update product. Status: " + response.status);
             }

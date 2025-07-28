@@ -24,8 +24,9 @@ class WebMvcConfiguration(
                 "/api/me/token",
                 "/auth/login",
                 "/auth/signup",
-                "/shop/",
-                "/cart/",
+                "/shop",
+                "/cart",
+                "/admin/**",
                 "/api/stats/**",
             )
     }

@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 @Controller
 @RequestMapping("/admin")
 class ProductViewController(private val productService: ProductService) {
-    @GetMapping("/")
+    @GetMapping
     fun displayProducts(model: Model): String {
         val products = productService.findAll()
         model.addAttribute("products", products.map { ProductDTO.from(it) })
