@@ -1,5 +1,6 @@
 package ecommerce.handler
 
+import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.MethodArgumentNotValidException
@@ -12,9 +13,11 @@ data class ValidationErrorResponse(val errors: List<ValidationError>)
 
 @ControllerAdvice
 class GlobalExceptionHandler {
+    private val logger = LoggerFactory.getLogger(GlobalExceptionHandler::class.java)
+
     @ExceptionHandler(NoSuchElementException::class)
     fun handleNoSuchElementException(e: NoSuchElementException): ResponseEntity<Void> {
-        println("NoSuchElementException occurred: ${e.message}")
+        logger.warn("Resource not found: ${e.message}", e)
         return ResponseEntity.notFound().build()
     }
 
