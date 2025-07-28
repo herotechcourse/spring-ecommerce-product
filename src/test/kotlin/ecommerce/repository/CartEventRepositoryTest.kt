@@ -182,13 +182,13 @@ class CartEventRepositoryTest
 
             val expectedMembers =
                 listOf(
-                    MemberCartActivityDto(memberId = member1.userId, userName = member1.userName, email = member1.email),
-                    MemberCartActivityDto(memberId = member2.userId, userName = member2.userName, email = member2.email),
-                ).sortedBy { it.memberId }
+                    MemberCartActivityDto(userId = member1.userId, userName = member1.userName, email = member1.email),
+                    MemberCartActivityDto(userId = member2.userId, userName = member2.userName, email = member2.email),
+                ).sortedBy { it.userId }
 
             val result = cartEventRepository.findMembersWhoAddedItemsInLastDays(now.minusDays(7))
 
             assertThat(result).hasSize(2)
-            assertThat(result.sortedBy { it.memberId }).isEqualTo(expectedMembers)
+            assertThat(result.sortedBy { it.userId }).isEqualTo(expectedMembers)
         }
     }

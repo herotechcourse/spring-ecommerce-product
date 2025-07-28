@@ -26,7 +26,7 @@ class CartEventRepository(private val jdbcTemplate: JdbcTemplate) {
     private val memberCartActivityDTOMapper =
         RowMapper<MemberCartActivityDto> { rs: ResultSet, _ ->
             MemberCartActivityDto(
-                memberId = rs.getLong("memberId"),
+                userId = rs.getLong("memberId"),
                 userName = rs.getString("userName"),
                 email = rs.getString("email"),
             )

@@ -228,9 +228,9 @@ class AdminApiReportControllerTest {
 
         val expectedMembers =
             listOf(
-                MemberCartActivityDto(memberId = member1.userId, userName = member1.userName, email = member1.email),
-                MemberCartActivityDto(memberId = member2.userId, userName = member2.userName, email = member2.email),
-            ).sortedBy { it.memberId }
+                MemberCartActivityDto(userId = member1.userId, userName = member1.userName, email = member1.email),
+                MemberCartActivityDto(userId = member2.userId, userName = member2.userName, email = member2.email),
+            ).sortedBy { it.userId }
 
         val response =
             RestAssured.given().log().all()
@@ -241,7 +241,7 @@ class AdminApiReportControllerTest {
                 .extract().body().jsonPath().getList("", MemberCartActivityDto::class.java)
 
         assertThat(response).hasSize(expectedMembers.size)
-        assertThat(response.sortedBy { it.memberId }).isEqualTo(expectedMembers)
+        assertThat(response.sortedBy { it.userId }).isEqualTo(expectedMembers)
     }
 
     @Test
