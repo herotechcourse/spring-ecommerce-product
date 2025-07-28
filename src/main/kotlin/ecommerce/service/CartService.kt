@@ -1,9 +1,7 @@
 package ecommerce.service
 
 import ecommerce.domain.Cart
-import ecommerce.domain.CartEvent
 import ecommerce.domain.CartItem
-import ecommerce.dto.cart.CartResponse
 import ecommerce.dto.cartItem.CartItemResponse
 import ecommerce.exception.CartOperationException
 import ecommerce.exception.ResourceNotFoundException
@@ -57,7 +55,7 @@ class CartService(
         memberId: Long,
         productId: Long,
         quantity: Int,
-    ): CartResponse {
+    ): Cart {
         require(quantity > 0) { "quantity must be greater than 0" }
 
         val product = productService.getProductById(productId)
@@ -88,26 +86,7 @@ class CartService(
 
             cartItemRepository.create(newCartItem)
         }
-        val cartEvent =
-            CartEvent(
-                memberId = memberId,
-                productId = productId,
-                quantityAdded = quantity,
-                timestamp = LocalDateTime.now(),
-            )
-        cartEventRepository.save(cartEvent)
-        val updatedCartItems = getCartItems(memberId)
-
-        val totalPrice = updatedCartItems.sumOf { it.price * it.quantity }
-        val totalQuantity = updatedCartItems.sumOf { it.quantity }
-
-        return CartResponse(
-            id = cart.id,
-            memberId = memberId,
-            items = updatedCartItems,
-            totalPrice = totalPrice,
-            totalQuantity = totalQuantity,
-        )
+        return cart
     }
 
     fun removeProductFromCart(
