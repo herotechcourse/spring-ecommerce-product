@@ -1,6 +1,6 @@
 package ecommerce.dto.cart
 
-data class CartDTO(
+class CartDTO(
     val id: Long,
     val userId: Long,
 )

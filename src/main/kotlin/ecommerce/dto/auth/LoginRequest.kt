@@ -1,6 +1,6 @@
 package ecommerce.dto.auth
 
-data class LoginRequest(
+class LoginRequest(
     val email: String,
     val password: String,
 )

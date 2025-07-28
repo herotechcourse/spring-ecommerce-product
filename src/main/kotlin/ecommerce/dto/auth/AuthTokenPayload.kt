@@ -1,5 +1,5 @@
 package ecommerce.dto.auth
 
-data class AuthTokenPayload(
+class AuthTokenPayload(
     val email: String,
 )

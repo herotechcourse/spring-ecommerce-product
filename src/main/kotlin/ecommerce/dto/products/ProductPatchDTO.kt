@@ -5,7 +5,7 @@ import jakarta.validation.constraints.Pattern
 import jakarta.validation.constraints.Positive
 import org.hibernate.validator.constraints.Length
 
-data class ProductPatchDTO(
+class ProductPatchDTO(
     @field:Length(min = 1, max = 15, message = "Product name must be no more than 15 characters")
     @field:Pattern(
         regexp = "^[a-zA-Z0-9 ()\\[\\]+\\-&/_]{1,15}$",

@@ -1,6 +1,6 @@
 package ecommerce.dto.cartProduct
 
-data class CartProductResponseDTO(
+class CartProductResponseDTO(
     val productId: Long,
     val name: String,
     val description: String,
