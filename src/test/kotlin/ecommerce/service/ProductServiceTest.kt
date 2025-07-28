@@ -124,6 +124,36 @@ class ProductServiceTest {
     }
 
     @Test
+    fun `updates all fields on patch`() {
+        val id = createProduct("Name1122")
+        val patch =
+            ProductPatchDTO(
+                name = "Name1133",
+                description = "description",
+                price = 10.5,
+                imageUrl = "url.com",
+                quantity = 33,
+            )
+        adminProductService.patchProduct(id, patch)
+        assertThat(adminProductService.getProductById(id).description).isEqualTo("description")
+    }
+
+    @Test
+    fun `updates all fields with same name on patch`() {
+        val id = createProduct("Name1122")
+        val patch =
+            ProductPatchDTO(
+                name = "Name1122",
+                description = "description",
+                price = 10.5,
+                imageUrl = "url.com",
+                quantity = 33,
+            )
+        adminProductService.patchProduct(id, patch)
+        assertThat(adminProductService.getProductById(id).description).isEqualTo("description")
+    }
+
+    @Test
     fun deleteProduct() {
         val id = createProduct("deleteProduct")
         adminProductService.deleteProduct(id)

@@ -27,7 +27,6 @@ dependencies {
     implementation("nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect:3.2.0")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.springframework.boot:spring-boot-starter-validation")
-    implementation("jakarta.validation:jakarta.validation-api:3.1.0")
     implementation("io.jsonwebtoken:jjwt-api:0.12.6")
 
     runtimeOnly("io.jsonwebtoken:jjwt-impl:0.12.6")

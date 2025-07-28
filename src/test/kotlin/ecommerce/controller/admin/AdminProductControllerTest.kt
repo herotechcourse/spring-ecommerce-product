@@ -66,6 +66,26 @@ class AdminProductControllerTest {
     }
 
     @Test
+    fun `throws error if validation fails create`() {
+        val product =
+            ProductDTO(
+                name = "ControllerCreControllerCreate",
+                price = 10.0,
+                imageUrl = "http://localhost:8080/image/upload/product1.jpg",
+                description = "Product 1",
+            )
+        val response =
+            RestAssured
+                .given().log().all()
+                .body(product)
+                .header("Authorization", token)
+                .contentType(ContentType.JSON)
+                .`when`().post("/api/admin/products")
+                .then().log().all().extract()
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value())
+    }
+
+    @Test
     fun `Returns Products`() {
         val response =
             RestAssured
