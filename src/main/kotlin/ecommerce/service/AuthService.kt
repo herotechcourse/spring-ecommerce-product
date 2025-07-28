@@ -19,9 +19,7 @@ class AuthService(
         val member = memberRepository.findByEmail(payload)
         if (member == null) {
             throw NotFoundException("Member not found")
-            // or is it better to return 500?
         }
-        // TODO check other options for retrieval of member id when it is null
         return MemberDto(member.id!!, member.email, member.role)
     }
 
@@ -42,13 +40,9 @@ class AuthService(
     }
 
     fun login(request: TokenRequest): TokenResponse {
-        if (!memberRepository.existsByEmail(request.email)) {
-            throw NotFoundException("No account with email exists")
-        }
-        val member = Member(email = request.email, password = request.password)
-        if (memberRepository.findMemberByEmailAndPassword(member) == null) {
-            throw UnauthorizedException("Incorrect Password")
-        }
+        val member = memberRepository.findByEmail(request.email)
+            ?: throw UnauthorizedException("No account with email exists")
+        member.validatePassword(request.password)
         return createToken(request)
     }
 

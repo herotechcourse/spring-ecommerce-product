@@ -34,16 +34,4 @@ class MemberRepository(private val jdbcTemplate: JdbcTemplate) {
         val member = jdbcTemplate.queryForObject(sql, memberRowMapper, email)
         return member
     }
-
-    fun findMemberByEmailAndPassword(member: Member): Member? {
-        val sql = "SELECT * FROM members WHERE email = ? AND password = ?"
-        val member: Member? =
-            jdbcTemplate.query(
-                sql,
-                memberRowMapper,
-                member.email,
-                member.password,
-            ).firstOrNull()
-        return member
-    }
 }
