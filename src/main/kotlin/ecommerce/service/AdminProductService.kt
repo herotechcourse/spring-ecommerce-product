@@ -4,6 +4,7 @@ import ecommerce.dto.products.ProductDTO
 import ecommerce.dto.products.ProductPatchDTO
 import ecommerce.exception.DuplicateProductNameException
 import ecommerce.exception.EntityNotFoundException
+import ecommerce.mapper.toDto
 import ecommerce.repository.ProductRepository
 import org.springframework.stereotype.Service
 import java.net.URI
@@ -11,12 +12,15 @@ import java.net.URI
 @Service
 class AdminProductService(private val productRepository: ProductRepository) {
     fun getAllProducts(): List<ProductDTO> {
-        return productRepository.findAll()
+        val products = productRepository.findAll()
+        return products.map { it.toDto() }
     }
 
     fun getProductById(id: Long): ProductDTO {
-        return productRepository.findById(id)
-            ?: throw EntityNotFoundException("Product with id: $id not found")
+        val product =
+            productRepository.findById(id)
+                ?: throw EntityNotFoundException("Product with id: $id not found")
+        return product.toDto()
     }
 
     fun createProduct(product: ProductDTO): URI {
@@ -60,11 +64,12 @@ class AdminProductService(private val productRepository: ProductRepository) {
                 quantity = patch.quantity ?: existing.quantity,
             )
 
-        productRepository.update(id, updatedProduct)
+        productRepository.update(id, updatedProduct.toDto())
     }
 
     fun deleteProduct(id: Long) {
         if (productRepository.deleteById(id) == 0) {
+            productRepository.deleteById(id)
             throw EntityNotFoundException("Product with id: $id not found")
         }
     }

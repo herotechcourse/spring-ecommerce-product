@@ -1,6 +1,7 @@
 package ecommerce.repository
 
 import ecommerce.dto.products.ProductDTO
+import ecommerce.entity.Product
 import ecommerce.mapper.ProductRowMapper
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert
@@ -11,18 +12,18 @@ class ProductRepository(
     private val jdbcTemplate: JdbcTemplate,
     private val productRowMapper: ProductRowMapper,
 ) {
-    fun findAll(): List<ProductDTO> {
+    fun findAll(): List<Product> {
         val sql = "select * from products"
         return jdbcTemplate.query(sql, productRowMapper)
     }
 
-    fun findById(id: Long): ProductDTO? {
+    fun findById(id: Long): Product? {
         val sql = "select * from products where id = ?"
         val res = jdbcTemplate.query(sql, productRowMapper, id)
         return res.firstOrNull()
     }
 
-    fun findByName(name: String): ProductDTO? {
+    fun findByName(name: String): Product? {
         val sql = "select * from products where name = ?"
         val res = jdbcTemplate.query(sql, productRowMapper, name)
         return res.firstOrNull()

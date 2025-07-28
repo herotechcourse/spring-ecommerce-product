@@ -33,19 +33,20 @@ class ProductRepositoryTest {
     @Test
     fun update() {
         val id = createProduct("update")
-        val row =
-            productRepository.update(
-                id,
-                ProductDTO(name = "Product 2", price = 10.5, imageUrl = "url.com", description = "description"),
-            )
-        assertThat(row).isEqualTo(1)
+        productRepository.update(
+            id,
+            ProductDTO(name = "Product 2", price = 10.5, imageUrl = "url.com", description = "description"),
+        )
+        val product = productRepository.findById(id)
+        assertThat(product?.name).isEqualTo("Product 2")
     }
 
     @Test
     fun deleteById() {
         val id = createProduct("delete")
-        val row = productRepository.deleteById(id)
-        assertThat(row).isEqualTo(1)
+        productRepository.deleteById(id)
+        val product = productRepository.findById(id)
+        assertThat(product).isNull()
     }
 
     private fun createProduct(name: String): Long {

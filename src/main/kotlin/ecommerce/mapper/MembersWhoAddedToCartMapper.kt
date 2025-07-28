@@ -1,6 +1,5 @@
 package ecommerce.mapper
 
-import ecommerce.dto.cartStatistics.MembersWhoAddedToCartDTO
 import ecommerce.entity.MembersWhoAddedToCart
 import org.springframework.jdbc.core.RowMapper
 import org.springframework.stereotype.Component
@@ -18,12 +17,4 @@ class MembersWhoAddedToCartMapper : RowMapper<MembersWhoAddedToCart> {
             email = rs.getString("email"),
         )
     }
-}
-
-fun MembersWhoAddedToCart.toDTO(): MembersWhoAddedToCartDTO {
-    return MembersWhoAddedToCartDTO(
-        id = this.id,
-        name = this.name,
-        email = this.email,
-    )
 }
