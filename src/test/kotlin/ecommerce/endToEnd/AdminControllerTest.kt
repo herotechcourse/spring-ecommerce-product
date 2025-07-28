@@ -1,7 +1,7 @@
 package ecommerce.endToEnd
 
+import ecommerce.dto.LoginRequest
 import ecommerce.dto.ProductRequest
-import ecommerce.dto.RegistrationRequest
 import io.restassured.RestAssured
 import io.restassured.http.ContentType
 import org.assertj.core.api.Assertions
@@ -42,8 +42,7 @@ class AdminControllerTest {
         jdbcTemplate.execute(sql)
 
         val loginRequest =
-            RegistrationRequest(
-                "adminTest",
+            LoginRequest(
                 "admin@test.com",
                 "12345678",
             )
