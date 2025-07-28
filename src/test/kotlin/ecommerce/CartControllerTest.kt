@@ -14,20 +14,16 @@ import org.springframework.http.HttpStatus
 import org.springframework.jdbc.core.JdbcTemplate
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
-class WishControllerTest {
+class CartControllerTest {
     @Autowired
     private lateinit var jdbcTemplate: JdbcTemplate
 
+    @Autowired
     private lateinit var jwtProvider: JwtProvider
     private lateinit var validToken: String
 
     @BeforeEach
     fun setUp() {
-        jwtProvider =
-            JwtProvider(
-                secret = "3GXmjHcKG7ww13vbHu3aMdz+Q25wKxiGAeV43Tc3qsA=",
-                validityInMilliseconds = 3600000,
-            )
         validToken = jwtProvider.createToken("test@example.com")
 
         jdbcTemplate.execute("DROP TABLE CART_ITEMS IF EXISTS")
