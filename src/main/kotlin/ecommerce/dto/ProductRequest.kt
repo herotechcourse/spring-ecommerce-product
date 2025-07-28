@@ -9,7 +9,7 @@ data class ProductRequest(
     @field:NotBlank(message = "Name must not be blank")
     @field:Size(max = 15, message = "Name must be at most 15 characters long")
     @field:Pattern(
-        regexp = "^[\\w\\s\\(\\)\\[\\]\\+\\-\\&/_]*\$",
+        regexp = "^[\\w\\s()\\[\\]+\\-&/_]*$",
         message = "Invalid characters in name. Allowed: letters, numbers, spaces, (, ), [, ], +, -, &, /, _",
     )
     val name: String,
