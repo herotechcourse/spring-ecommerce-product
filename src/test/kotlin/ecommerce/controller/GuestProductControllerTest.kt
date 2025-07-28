@@ -42,6 +42,9 @@ class GuestProductControllerTest {
                 .response()
 
         assertThat(response.statusCode).isEqualTo(HttpStatus.OK.value())
+        val products = response.body().jsonPath().getList<String>("")
+        assertThat(products).isNotEmpty()
+        assertThat(products.size).isEqualTo(1)
     }
 
     @Test
@@ -56,5 +59,7 @@ class GuestProductControllerTest {
                 .response()
 
         assertThat(response.statusCode).isEqualTo(HttpStatus.OK.value())
+        val productName = response.body().jsonPath().getString("name")
+        assertThat(productName).isEqualTo("Espresso")
     }
 }
