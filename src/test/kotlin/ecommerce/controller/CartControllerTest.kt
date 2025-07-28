@@ -4,8 +4,11 @@ import ecommerce.auth.JwtTokenProvider
 import ecommerce.controller.api.CartController
 import ecommerce.dao.JdbcCartDAO
 import ecommerce.dao.JdbcMemberDAO
+import ecommerce.dto.AuthResponse
 import ecommerce.dto.CartForm
+import ecommerce.dto.LoginForm
 import ecommerce.exception.NotFoundException
+import ecommerce.model.Member
 import ecommerce.service.AuthService
 import io.restassured.RestAssured
 import io.restassured.http.ContentType
@@ -16,6 +19,7 @@ import org.junit.jupiter.api.assertThrows
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.HttpStatus
+import org.springframework.http.MediaType
 import org.springframework.jdbc.core.JdbcTemplate
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
@@ -87,7 +91,7 @@ class CartControllerTest {
             """
         jdbcTemplate.batchUpdate(query)
 
-        controller = CartController(jdbcCartDAO, authService)
+        controller = CartController(jdbcCartDAO)
     }
 
     @Test
@@ -96,9 +100,71 @@ class CartControllerTest {
         val quantity = 1
         val form = CartForm(productId, quantity)
         val expected = CartController.MESSAGE_ADD_SUCCESS
-        val response = controller.addToCart(form)
+        val response = controller.addToCart(form, LOGIN_MEMBER)
         assertThat(response.statusCode).isEqualTo(HttpStatus.OK)
         assertThat(response.body).isEqualTo(expected)
+    }
+
+    @Test
+    fun `addToCart() - return 200 OK when credential is valid`() {
+        val productId = PRODUCT_ID
+        val quantity = 1
+
+        val accessToken =
+            RestAssured
+                .given().log().all()
+                .body(LoginForm(LOGIN_EMAIL, LOGIN_PASSWORD))
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .`when`().post("/api/members/login")
+                .then().log().all().extract().`as`(AuthResponse::class.java).accessToken
+
+        val response =
+            RestAssured
+                .given().log().all()
+                .header("Authorization", "Bearer $accessToken")
+                .body(CartForm(productId, quantity))
+                .contentType(ContentType.JSON)
+                .`when`().post("/api/cart")
+                .then().log().all().extract()
+
+        val targets = CartController.MESSAGE_ADD_SUCCESS
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
+        assertThat(response.asString()).isIn(targets)
+    }
+
+    @Test
+    fun `addToCart() - return 401 Unauthorized when credential is invalid`() {
+        val productId = PRODUCT_ID
+        val quantity = 1
+
+        val accessToken =
+            RestAssured
+                .given().log().all()
+                .body(LoginForm(LOGIN_EMAIL, LOGIN_PASSWORD))
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .`when`().post("/api/members/login")
+                .then().log().all().extract().`as`(AuthResponse::class.java).accessToken
+
+        val contaminatedToken = accessToken + 123
+        val response =
+            RestAssured
+                .given().log().all()
+                .header("Authorization", "Bearer $contaminatedToken")
+                .body(CartForm(productId, quantity))
+                .contentType(ContentType.JSON)
+                .`when`().post("/api/cart")
+                .then().log().all().extract()
+
+        val targets =
+            listOf(
+                "Invalid token",
+            )
+        val resBody = response.jsonPath().getMap<String, String>("errors")
+        val actual = resBody["authorization"]
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value())
+        assertThat(actual).isIn(targets)
     }
 
     @Test
@@ -148,7 +214,7 @@ class CartControllerTest {
     @Test
     fun `viewCart() - empty cart`() {
         val expected = 0
-        val response = controller.viewCart()
+        val response = controller.viewCart(LOGIN_MEMBER)
         assertThat(response.statusCode).isEqualTo(HttpStatus.OK)
         assertThat(response.body?.size).isEqualTo(expected)
     }
@@ -157,7 +223,7 @@ class CartControllerTest {
     fun `viewCart() - 1 item in cart`() {
         addToCart()
         val expected = 1
-        val response = controller.viewCart()
+        val response = controller.viewCart(LOGIN_MEMBER)
         assertThat(response.statusCode).isEqualTo(HttpStatus.OK)
         assertThat(response.body?.size).isEqualTo(expected)
     }
@@ -167,7 +233,7 @@ class CartControllerTest {
         addToCart()
         val productId = PRODUCT_ID
         val expected = CartController.MESSAGE_REMOVE_SUCCESS
-        val response = controller.removeFromCart(productId)
+        val response = controller.removeFromCart(productId, LOGIN_MEMBER)
         assertThat(response.statusCode).isEqualTo(HttpStatus.OK)
         assertThat(response.body).isEqualTo(expected)
     }
@@ -175,7 +241,7 @@ class CartControllerTest {
     @Test
     fun `removeFromCart() - throws exception when nothing to remove`() {
         val productId = PRODUCT_ID
-        assertThrows<NotFoundException> { controller.removeFromCart(productId) }
+        assertThrows<NotFoundException> { controller.removeFromCart(productId, LOGIN_MEMBER) }
     }
 
     @Test
@@ -185,7 +251,7 @@ class CartControllerTest {
         val quantity = 10
         val form = CartForm(productId, quantity)
         val expected = CartController.MESSAGE_UPDATE_SUCCESS
-        val response = controller.updateQuantity(productId, form)
+        val response = controller.updateQuantity(productId, form, LOGIN_MEMBER)
         assertThat(response.statusCode).isEqualTo(HttpStatus.OK)
         assertThat(response.body).isEqualTo(expected)
     }
@@ -195,10 +261,13 @@ class CartControllerTest {
         val productId = PRODUCT_ID
         val quantity = 10
         val form = CartForm(productId, quantity)
-        assertThrows<NotFoundException> { controller.updateQuantity(productId, form) }
+        assertThrows<NotFoundException> { controller.updateQuantity(productId, form, LOGIN_MEMBER) }
     }
 
     companion object {
         private const val PRODUCT_ID = 1L
+        private const val LOGIN_EMAIL = "san@htc.com"
+        private const val LOGIN_PASSWORD = "san1234"
+        private val LOGIN_MEMBER = Member(1L, LOGIN_EMAIL, LOGIN_PASSWORD)
     }
 }
