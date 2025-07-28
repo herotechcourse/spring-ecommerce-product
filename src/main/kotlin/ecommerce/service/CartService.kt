@@ -4,6 +4,7 @@ import ecommerce.dto.CartRequest
 import ecommerce.dto.CartResponse
 import ecommerce.dto.mapper.CartMapper
 import ecommerce.entity.CartItem
+import ecommerce.exception.NotFoundException
 import ecommerce.exception.RetrievalFailedException
 import ecommerce.repository.CartRepository
 import org.springframework.stereotype.Service
@@ -45,10 +46,7 @@ class CartService(private val repository: CartRepository) {
     ) {
         val deletedRows = repository.deleteByMemberIdAndProductId(memberId, productId)
         if (deletedRows == 0) {
-            throw RetrievalFailedException("No item found to delete for product $productId")
-        }
-        if (deletedRows > 1) {
-            throw RetrievalFailedException("Multiple items deleted unexpectedly")
+            throw NotFoundException("No item found to delete for product $productId")
         }
     }
 }

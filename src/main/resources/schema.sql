@@ -14,11 +14,13 @@ CREATE TABLE members
 );
 
 DROP TABLE IF EXISTS cart_items;
+
 CREATE TABLE cart_items (
     id          BIGINT PRIMARY KEY AUTO_INCREMENT,
     member_id   VARCHAR(255) NOT NULL,
     product_id  VARCHAR(255) NOT NULL,
     quantity    INT NOT NULL,
     created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    updated_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT unique_member_product UNIQUE (member_id, product_id)
 );

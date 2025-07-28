@@ -75,15 +75,11 @@ HTTP API that allows users to retrieve, add, update, and delete products.
   - failure
     -[x] duplicated email: 409 Conflict
     -[x] duplicated id: 422 Unprocessable Entity ->?
-    -[x] can not find data with id: 424 Failed Dependency ->?
+    -[x] cannot find data with id: 424 Failed Dependency ->?
 - [x] implement `login`
   - success: 200 ok
   - failure
-    -[x] Invalid email or password → 401 Unauthorized 
-    -[ ] Account isn't activated or suspended → 403 Forbidden
-      - MemberStatus
-      - MemberRole
-    -[ ] Too many failed attempts → 429 Too Many Requests
+    -[x] Invalid email or password → 401 Unauthorized
 
 ---
 
@@ -117,8 +113,7 @@ HTTP API that allows users to retrieve, add, update, and delete products.
 -[x] Create `@LoginMember` annotation
 -[x] Implement `WebConfig`
 -[x] Implement `LoginMemberArgumentResolver`
--[ ] Implement `AuthInterceptor` to validate tokens globally
+-[ ] Implement `AuthInterceptor` to validate tokens globally -> step 2-4?
 -[x] Register resolver and interceptor in `WebConfig`
 #### Exception Handling
 -[x] Define UnauthorizedException for missing or invalid tokens
--[ ] Add global exception handler to return proper HTTP status codes
