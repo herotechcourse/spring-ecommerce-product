@@ -53,12 +53,11 @@ class CartService(
             cartProductRepository.findCartProduct(cart.id, productID)
                 ?: throw EntityNotFoundException("Product not in cart")
 
-        val rows =
-            if (cartProduct.quantity == 1) {
-                cartProductRepository.removeProduct(cart.id, productID)
-            } else {
-                cartProductRepository.updateProductQuantity(cartProduct.id, cartProduct.quantity - 1)
-            }
+        if (cartProduct.quantity == 1) {
+            cartProductRepository.removeProduct(cart.id, productID)
+        } else {
+            cartProductRepository.updateProductQuantity(cartProduct.id, cartProduct.quantity - 1)
+        }
         cartStatisticsRepository.create(userID, productID, CartAction.DELETE)
     }
 
