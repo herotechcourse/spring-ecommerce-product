@@ -36,6 +36,6 @@ class MemberAuthService(
     }
 
     fun logIn(loginRequest: LoginRequest): String {
-        return loginService.signIn(loginRequest)
+        return loginService.login(loginRequest)
     }
 }

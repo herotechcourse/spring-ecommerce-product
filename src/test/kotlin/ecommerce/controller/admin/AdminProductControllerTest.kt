@@ -37,7 +37,7 @@ class AdminProductControllerTest {
         val sql = "select * from users where role = 'ADMIN'"
         val result = jdbcTemplate.query(sql, userRowMapper).first()
         token =
-            adminAuthService.signIn(
+            adminAuthService.login(
                 LoginRequest(
                     result.email, result.password,
                 ),

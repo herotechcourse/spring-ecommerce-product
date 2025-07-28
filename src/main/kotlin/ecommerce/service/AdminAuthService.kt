@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service
 class AdminAuthService(
     private val loginService: LoginService,
 ) {
-    fun signIn(loginRequest: LoginRequest): String {
-        return loginService.signIn(loginRequest, UserRole.ADMIN)
+    fun login(loginRequest: LoginRequest): String {
+        return loginService.login(loginRequest, UserRole.ADMIN)
     }
 }

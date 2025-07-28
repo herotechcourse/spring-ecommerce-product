@@ -9,17 +9,17 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping("/api/admin/cart_statistics")
+@RequestMapping("/api/admin/cart-statistics")
 class AdminCartStatisticsController(
     private val adminStatisticsService: AdminStatisticsService,
 ) {
-    @GetMapping("/top_products")
+    @GetMapping("/top-products")
     fun getTopAddedProducts(): ResponseEntity<List<TopAddedProductsDTO>> {
         val res = adminStatisticsService.getTopAddedProducts()
         return ResponseEntity.ok().body(res)
     }
 
-    @GetMapping("/members_added_cart")
+    @GetMapping("/members-added-cart")
     fun getMembersWhoAddedToCart(): ResponseEntity<List<MembersWhoAddedToCartDTO>> {
         val res = adminStatisticsService.getMembersWhoAddedToCart()
         return ResponseEntity.ok().body(res)

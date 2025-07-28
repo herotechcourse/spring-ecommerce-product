@@ -31,7 +31,7 @@ class AdminCartStatisticsControllerTest {
         val sql = "select * from users where role = 'ADMIN'"
         val result = jdbcTemplate.query(sql, userRowMapper).first()
         token =
-            adminAuthService.signIn(
+            adminAuthService.login(
                 LoginRequest(
                     result.email, result.password,
                 ),
@@ -45,7 +45,7 @@ class AdminCartStatisticsControllerTest {
                 .given().log().all()
                 .header("Authorization", token)
                 .contentType(ContentType.JSON)
-                .`when`().get("/api/admin/cart_statistics/top_products")
+                .`when`().get("/api/admin/cart-statistics/top-products")
                 .then().log().all().extract()
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
@@ -58,7 +58,7 @@ class AdminCartStatisticsControllerTest {
                 .given().log().all()
                 .header("Authorization", token)
                 .contentType(ContentType.JSON)
-                .`when`().get("/api/admin/cart_statistics/members_added_cart")
+                .`when`().get("/api/admin/cart-statistics/members-added-cart")
                 .then().log().all().extract()
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())

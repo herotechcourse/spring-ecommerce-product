@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController
 class MemberAuthController(
     val memberAuthService: MemberAuthService,
 ) {
-    @PostMapping("/signUp")
+    @PostMapping("/sign-up")
     fun signUp(
         @RequestBody @Valid userDTO: UserRequestDTO,
     ): ResponseEntity<TokenResponse> {
@@ -25,8 +25,8 @@ class MemberAuthController(
             .body(TokenResponse(userCreateResponse.token))
     }
 
-    @PostMapping("/signIn")
-    fun signIn(
+    @PostMapping("/login")
+    fun login(
         @RequestBody @Valid loginRequest: LoginRequest,
     ): ResponseEntity<TokenResponse> {
         val token = memberAuthService.logIn(loginRequest)

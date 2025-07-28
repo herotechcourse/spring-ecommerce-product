@@ -13,7 +13,7 @@ class LoginService(
     private val userRepository: UserRepository,
     private val jwtProvider: JwtProvider,
 ) {
-    fun signIn(
+    fun login(
         loginRequest: LoginRequest,
         expectedRole: UserRole = UserRole.USER,
     ): String {

@@ -29,7 +29,7 @@ class MemberAuthControllerTest {
                 .given().log().all()
                 .body(user)
                 .contentType(ContentType.JSON)
-                .`when`().post("api/member/auth/signUp")
+                .`when`().post("api/member/auth/sign-up")
                 .then().log().all().extract()
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value())
         assertThat(response.body().jsonPath().get<String>("token")).isNotEmpty
@@ -54,7 +54,7 @@ class MemberAuthControllerTest {
                 .given().log().all()
                 .body(loginRequest)
                 .contentType(ContentType.JSON)
-                .`when`().post("api/member/auth/signIn")
+                .`when`().post("api/member/auth/login")
                 .then().log().all().extract()
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())

@@ -15,11 +15,11 @@ import org.springframework.web.bind.annotation.RestController
 class AdminAuthController(
     private val adminAuthService: AdminAuthService,
 ) {
-    @PostMapping("/signIn")
+    @PostMapping("/login")
     fun signIn(
         @RequestBody @Valid loginRequest: LoginRequest,
     ): ResponseEntity<TokenResponse> {
-        val token = adminAuthService.signIn(loginRequest)
+        val token = adminAuthService.login(loginRequest)
         return ResponseEntity.ok().body(TokenResponse(token))
     }
 }
