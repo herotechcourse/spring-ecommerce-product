@@ -26,6 +26,8 @@ class CartE2ETest {
     @Autowired
     private lateinit var jdbcTemplate: JdbcTemplate
 
+    private lateinit var userToken: String
+
     @BeforeEach
     fun setUp() {
         productRepository = ProductRepository(jdbcTemplate)
@@ -35,8 +37,20 @@ class CartE2ETest {
         jdbcTemplate.execute("DROP TABLE IF EXISTS products")
         jdbcTemplate.execute("DROP TABLE members IF EXISTS")
 
-        createMembersTable()
-        createProductsTable()
+        createTables()
+        insertDataIntoTables()
+
+        userToken = loginUser()
+
+    }
+
+    private fun createTables() {
+        jdbcTemplate.execute(
+            "CREATE TABLE members(" + " id SERIAL, email VARCHAR(20) UNIQUE, password VARCHAR(50), role VARCHAR(10))",
+        )
+        jdbcTemplate.execute(
+            "CREATE TABLE products(" + "id SERIAL, name VARCHAR(100), price DECIMAL(10,2), image_url VARCHAR(500))",
+        )
         jdbcTemplate.execute(
             "CREATE TABLE carts(" + " cart_id SERIAL, user_id INT UNIQUE)",
         )
@@ -45,24 +59,8 @@ class CartE2ETest {
         )
     }
 
-    private fun createMembersTable() {
-        jdbcTemplate.execute(
-            "CREATE TABLE members(" + " id SERIAL, email VARCHAR(20) UNIQUE, password VARCHAR(50), role VARCHAR(10))",
-        )
-
-        val splitUpAttributes: List<Array<String>> =
-            listOf(
-                "sandra@email.com MyPassword user",
-                "simon@email.com Hello1234 user",
-                "sara@email.com 1234567! user",
-            ).map { name -> name.split(" ").toTypedArray() }.toList()
-        jdbcTemplate.batchUpdate("INSERT INTO members(email, password, role) VALUES (?,?,?)", splitUpAttributes)
-    }
-
-    private fun createProductsTable() {
-        jdbcTemplate.execute(
-            "CREATE TABLE products(" + "id SERIAL, name VARCHAR(100), price DECIMAL(10,2), image_url VARCHAR(500))",
-        )
+    private fun insertDataIntoTables() {
+        jdbcTemplate.update("INSERT INTO members(email, password, role) VALUES (?,?,?)", "sandra@email.com", "MyPassword", "user" )
 
         val splitUpAttributes: List<Array<String>> =
             listOf(
@@ -74,8 +72,8 @@ class CartE2ETest {
 
     }
 
-    private fun login(email: String, password: String): String {
-        val loginRequest = TokenRequest(email, password)
+    private fun loginUser(): String {
+        val loginRequest = TokenRequest("sandra@email.com", "MyPassword")
         val loginResponse =
             RestAssured.given().log().all().body(loginRequest).contentType(ContentType.JSON).`when`()
                 .post("/api/members/login").then().log().all().extract()
@@ -109,12 +107,8 @@ class CartE2ETest {
 
     @Test
     fun `test adding multiple valid products to cart`() {
-        // login
-        val token = login("sandra@email.com", "MyPassword")
-
-        // request add product to cart
         val cartRequest = CartItemRequest(2, 3)
-        val cartResponse = addProductRequest(cartRequest, token)
+        val cartResponse = addProductRequest(cartRequest, userToken)
 
         assertThat(cartResponse.statusCode()).isEqualTo(HttpStatus.CREATED.value())
         assertThat(cartResponse.body().jsonPath().getString("quantity")).isEqualTo("3")
@@ -122,58 +116,40 @@ class CartE2ETest {
     }
 
     @Test
-    fun `test adding invalid product to cart`() {
-        // login
-        val token = login("simon@email.com", "Hello1234")
-
-        // request add product to cart
+    fun `test adding an invalid product to cart`() {
         val cartRequest = CartItemRequest(10, 3)
-        val cartResponse = addProductRequest(cartRequest, token)
+        val cartResponse = addProductRequest(cartRequest, userToken)
 
         assertThat(cartResponse.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value())
     }
 
     @Test
-    fun `test deleting one item from several cart`() {
-        // login
-        val token = login("simon@email.com", "Hello1234")
-
-        // add products
+    fun `test deleting one item from several items from inside a cart`() {
         val addRequest = CartItemRequest(2, 3)
-        addProductRequest(addRequest, token)
+        addProductRequest(addRequest, userToken)
 
-        // delete products
         val deleteOneRequest = CartItemRequest(2, 1)
-        val deleteOneResponse = deleteProductRequest(deleteOneRequest, token)
+        val deleteOneResponse = deleteProductRequest(deleteOneRequest, userToken)
 
         assertThat(deleteOneResponse.statusCode()).isEqualTo(HttpStatus.OK.value())
         assertThat(deleteOneResponse.body().jsonPath().getString("quantity")).isEqualTo("2")
     }
 
     @Test
-    fun `test deleting all items from several in cart`() {
-        // login
-        val token = login("simon@email.com", "Hello1234")
-
-        // add products
+    fun `test deleting all items from a cart`() {
         val addRequest = CartItemRequest(2, 3)
-        addProductRequest(addRequest, token)
+        addProductRequest(addRequest, userToken)
 
-        // delete products
         val deleteAllRequest = CartItemRequest(2, 3)
-        val deleteAllResponse = deleteProductRequest(deleteAllRequest, token)
+        val deleteAllResponse = deleteProductRequest(deleteAllRequest, userToken)
 
         assertThat(deleteAllResponse.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value())
     }
 
     @Test
     fun `test deleting nonexistent item from cart`() {
-        // login
-        val token = login("simon@email.com", "Hello1234")
-
-        // delete products
         val deleteNonexistentRequest = CartItemRequest(2, 2)
-        val deleteNonExistentResponse = deleteProductRequest(deleteNonexistentRequest, token)
+        val deleteNonExistentResponse = deleteProductRequest(deleteNonexistentRequest, userToken)
 
         assertThat(deleteNonExistentResponse.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value())
     }
@@ -193,20 +169,16 @@ class CartE2ETest {
     }
 
     @Test
-    fun `test retrieving products`() {
-        // login
-        val token = login("simon@email.com", "Hello1234")
-
-        // add multiple products
+    fun `test retrieving all products`() {
         val product1 = CartItemRequest(1, 3)
         val product2 = CartItemRequest(2, 3)
         val product3 = CartItemRequest(3, 3)
-        addProductRequest(product1, token)
-        addProductRequest(product2, token)
-        addProductRequest(product3, token)
+        addProductRequest(product1, userToken)
+        addProductRequest(product2, userToken)
+        addProductRequest(product3, userToken)
 
         val  cartResponse = RestAssured.given().log().all()
-            .header("Authorization", "Bearer $token")
+            .header("Authorization", "Bearer $userToken")
             .`when`()
             .get("/api/cart")
             .then().log().all()
@@ -228,21 +200,9 @@ class CartE2ETest {
 
     @Test
     fun `test cart request without 'Authorization' header`() {
-        val loginRequest = TokenRequest(email = "sara@email.com", password = "1234567!")
-        val loginResponse =
-            RestAssured.given().log().all()
-                .body(loginRequest).contentType(ContentType.JSON)
-                .`when`()
-                .post("/api/members/login")
-                .then().log().all()
-                .extract()
-
-        assertThat(loginResponse.statusCode()).isEqualTo(HttpStatus.OK.value())
-
-        val token = loginResponse.body().jsonPath().getString("token")
         val tokenResponse =
             RestAssured.given().log().all()
-                .header("Location", "Bearer $token")
+                .header("Location", "Bearer $userToken")
                 .`when`()
                 .get("/api/cart")
                 .then().log().all()
