@@ -28,18 +28,14 @@ class GlobalExceptionHandler {
         return ResponseEntity(errorMessage, HttpStatus.BAD_REQUEST)
     }
 
-    @ExceptionHandler(ProductCreationException::class)
-    fun handleUserNotFound(ex: ProductCreationException): ResponseEntity<ErrorMessageModel> {
-        val errorMessage =
-            ErrorMessageModel(
-                HttpStatus.INTERNAL_SERVER_ERROR.value(),
-                ex.message,
-            )
-        return ResponseEntity(errorMessage, HttpStatus.INTERNAL_SERVER_ERROR)
-    }
-
-    @ExceptionHandler(ProductUpdateException::class)
-    fun handleUpdateException(ex: ProductUpdateException): ResponseEntity<ErrorMessageModel> {
+    @ExceptionHandler(
+        value = [
+            ProductCreationException::class,
+            ProductUpdateException::class,
+            ElementNotFoundException::class,
+        ],
+    )
+    fun handleUserNotFound(ex: RuntimeException): ResponseEntity<ErrorMessageModel> {
         val errorMessage =
             ErrorMessageModel(
                 HttpStatus.INTERNAL_SERVER_ERROR.value(),
@@ -57,8 +53,13 @@ class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(errors)
     }
 
-    @ExceptionHandler(ProductAlreadyInDBException::class)
-    fun handleProductAlreadyInDBException(ex: ProductAlreadyInDBException): ResponseEntity<ErrorMessageModel> {
+    @ExceptionHandler(
+        value = [
+            ProductAlreadyInDBException::class,
+            MemberEmailAlreadyExistsException::class,
+        ],
+    )
+    fun handleProductAlreadyInDBException(ex: RuntimeException): ResponseEntity<ErrorMessageModel> {
         val errorMessage =
             ErrorMessageModel(
                 HttpStatus.CONFLICT.value(),
@@ -67,18 +68,13 @@ class GlobalExceptionHandler {
         return ResponseEntity(errorMessage, HttpStatus.CONFLICT)
     }
 
-    @ExceptionHandler(MemberEmailAlreadyExistsException::class)
-    fun handleEmailAlreadyExistsException(ex: MemberEmailAlreadyExistsException): ResponseEntity<ErrorMessageModel> {
-        val errorMessage =
-            ErrorMessageModel(
-                HttpStatus.CONFLICT.value(),
-                ex.message,
-            )
-        return ResponseEntity(errorMessage, HttpStatus.CONFLICT)
-    }
-
-    @ExceptionHandler(EmailOrPasswordIncorrectException::class)
-    fun handleEmailOrPasswordIncorrectException(ex: EmailOrPasswordIncorrectException): ResponseEntity<ErrorMessageModel> {
+    @ExceptionHandler(
+        value = [
+            EmailOrPasswordIncorrectException::class,
+            ForbiddenException::class,
+        ],
+    )
+    fun handleEmailOrPasswordIncorrectException(ex: RuntimeException): ResponseEntity<ErrorMessageModel> {
         val errorMessage =
             ErrorMessageModel(
                 HttpStatus.FORBIDDEN.value(),
@@ -97,16 +93,6 @@ class GlobalExceptionHandler {
         return ResponseEntity(errorMessage, HttpStatus.UNAUTHORIZED)
     }
 
-    @ExceptionHandler(ElementNotFoundException::class)
-    fun handleElementNotFoundException(ex: ElementNotFoundException): ResponseEntity<ErrorMessageModel> {
-        val errorMessage =
-            ErrorMessageModel(
-                HttpStatus.INTERNAL_SERVER_ERROR.value(),
-                ex.message,
-            )
-        return ResponseEntity(errorMessage, HttpStatus.INTERNAL_SERVER_ERROR)
-    }
-
     @ExceptionHandler(IllegalArgumentException::class)
     fun handleIllegalArgumentException(ex: IllegalArgumentException): ResponseEntity<ErrorMessageModel> {
         val errorMessage =
@@ -115,15 +101,5 @@ class GlobalExceptionHandler {
                 ex.message,
             )
         return ResponseEntity(errorMessage, HttpStatus.BAD_REQUEST)
-    }
-
-    @ExceptionHandler(ForbiddenException::class)
-    fun handleForbiddenException(ex: ForbiddenException): ResponseEntity<ErrorMessageModel> {
-        val errorMessage =
-            ErrorMessageModel(
-                HttpStatus.FORBIDDEN.value(),
-                ex.message,
-            )
-        return ResponseEntity(errorMessage, HttpStatus.FORBIDDEN)
     }
 }
