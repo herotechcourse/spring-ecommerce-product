@@ -6,6 +6,7 @@ import ecommerce.cart.dto.CartResponse
 import ecommerce.cart.service.CartService
 import ecommerce.member.domain.Member
 import jakarta.validation.Valid
+import jakarta.validation.ValidationException
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -26,7 +27,8 @@ class CartController(
         @Valid @RequestBody request: CartRequest,
         @LoginMember member: Member,
     ): ResponseEntity<CartResponse> {
-        val response = cartService.addToCart(member, request)
+        val memberId = member.id ?: throw ValidationException("Member ID must not be null")
+        val response = cartService.addToCart(memberId, request)
         return ResponseEntity.status(HttpStatus.CREATED).body(response)
     }
 
@@ -34,7 +36,8 @@ class CartController(
     fun getCartItems(
         @LoginMember member: Member,
     ): ResponseEntity<List<CartResponse>> {
-        val cartItems = cartService.getCartItems(member)
+        val memberId = member.id ?: throw ValidationException("Member ID must not be null")
+        val cartItems = cartService.getCartItems(memberId)
         return ResponseEntity.ok(cartItems)
     }
 
@@ -43,7 +46,8 @@ class CartController(
         @PathVariable productId: Long,
         @LoginMember member: Member,
     ): ResponseEntity<Unit> {
-        cartService.removeFromCart(member, productId)
+        val memberId = member.id ?: throw ValidationException("Member ID must not be null")
+        cartService.removeFromCart(memberId, productId)
         return ResponseEntity.noContent().build()
     }
 }

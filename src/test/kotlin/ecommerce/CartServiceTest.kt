@@ -48,7 +48,7 @@ class CartServiceTest {
 
     @Test
     fun `addToCart should add product successfully`() {
-        val response = cartService.addToCart(member, CartRequest(productId = product.id))
+        val response = cartService.addToCart(member.id!!, CartRequest(productId = product.id))
 
         assertThat(response.id).isNotNull()
         assertThat(response.product.name).isEqualTo("TestProduct")
@@ -56,8 +56,8 @@ class CartServiceTest {
 
     @Test
     fun `getCartItems should return all items`() {
-        cartService.addToCart(member, CartRequest(productId = product.id))
-        val items = cartService.getCartItems(member)
+        cartService.addToCart(member.id!!, CartRequest(productId = product.id))
+        val items = cartService.getCartItems(member.id!!)
 
         assertThat(items).hasSize(1)
         assertThat(items[0].product.id).isEqualTo(product.id)
@@ -65,19 +65,19 @@ class CartServiceTest {
 
     @Test
     fun `removeFromCart should remove item successfully`() {
-        cartService.addToCart(member, CartRequest(productId = product.id))
-        cartService.removeFromCart(member, product.id!!)
+        cartService.addToCart(member.id!!, CartRequest(productId = product.id))
+        cartService.removeFromCart(member.id!!, product.id!!)
 
-        val items = cartService.getCartItems(member)
+        val items = cartService.getCartItems(member.id!!)
         assertThat(items).isEmpty()
     }
 
     @Test
     fun `addToCart should throw for duplicate product`() {
-        cartService.addToCart(member, CartRequest(productId = product.id))
+        cartService.addToCart(member.id!!, CartRequest(productId = product.id))
 
         assertThatThrownBy {
-            cartService.addToCart(member, CartRequest(productId = product.id))
+            cartService.addToCart(member.id!!, CartRequest(productId = product.id))
         }.isInstanceOf(ValidationException::class.java)
             .hasMessage("Product is already in the cart")
     }
@@ -85,7 +85,7 @@ class CartServiceTest {
     @Test
     fun `removeFromCart should throw if product not in cart`() {
         assertThatThrownBy {
-            cartService.removeFromCart(member, product.id!!)
+            cartService.removeFromCart(member.id!!, product.id!!)
         }.isInstanceOf(ValidationException::class.java)
             .hasMessage("Product not found in cart")
     }

@@ -15,7 +15,7 @@ class CartService(
     private val productRepository: ProductRepository,
 ) {
     fun addToCart(
-        member: Member,
+        memberId: Long,
         request: CartRequest,
     ): CartResponse {
         val productId = request.productId ?: throw ValidationException("Product ID must not be null")
@@ -24,15 +24,14 @@ class CartService(
                 ?: throw ValidationException("Product not found")
         val cartItem =
             CartItem(
-                memberId = member.id!!,
+                memberId = memberId,
                 productId = productId,
             )
         cartRepository.insert(cartItem)
         return CartResponse(cartItem.id!!, product)
     }
 
-    fun getCartItems(member: Member): List<CartResponse> {
-        val memberId = member.id!!
+    fun getCartItems(memberId: Long): List<CartResponse> {
         val cartItems = cartRepository.findByMemberId(memberId)
         return cartItems.map { cartItem ->
             val product =
@@ -43,10 +42,9 @@ class CartService(
     }
 
     fun removeFromCart(
-        member: Member,
+        memberId: Long,
         productId: Long,
     ) {
-        val memberId = member.id!!
         if (!cartRepository.existsByMemberIdAndProductId(memberId, productId)) {
             throw ValidationException("Product not found in cart")
         }
