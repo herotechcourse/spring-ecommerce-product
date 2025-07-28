@@ -17,11 +17,9 @@ import org.springframework.http.HttpStatus
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.test.annotation.DirtiesContext
 
-
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 class StatisticsE2ETest {
-
     @Autowired
     private lateinit var jdbcTemplate: JdbcTemplate
 
@@ -38,7 +36,7 @@ class StatisticsE2ETest {
         createCartItemsTable()
 
         addItemsToCartWithDelayForUser(
-            loginAS(USER1_MAIL,USER1_PASSWORD)
+            loginAS(USER1_MAIL, USER1_PASSWORD),
         )
     }
 
@@ -60,15 +58,17 @@ class StatisticsE2ETest {
     }
 
     private fun createCartItemsTable() {
-        jdbcTemplate.execute("""
-        CREATE TABLE cart_items (
-            cart_id INT,
-            product_id INT,
-            quantity INT DEFAULT 1,
-            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            PRIMARY KEY (cart_id, product_id)
+        jdbcTemplate.execute(
+            """
+            CREATE TABLE cart_items (
+                cart_id INT,
+                product_id INT,
+                quantity INT DEFAULT 1,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                PRIMARY KEY (cart_id, product_id)
+            )
+            """.trimIndent(),
         )
-        """.trimIndent())
     }
 
     private fun createMembersTable() {
@@ -101,10 +101,12 @@ class StatisticsE2ETest {
                 "soda 2.0 http//coffee",
             ).map { name -> name.split(" ").toTypedArray() }.toList()
         jdbcTemplate.batchUpdate("INSERT INTO products(name, price, image_url) VALUES (?,?,?)", splitUpAttributes)
-
     }
 
-    private fun loginAS(email: String, password: String): String {
+    private fun loginAS(
+        email: String,
+        password: String,
+    ): String {
         val loginRequest = TokenRequest(email, password)
         val loginResponse =
             RestAssured.given().log().all().body(loginRequest).contentType(ContentType.JSON).`when`()
@@ -113,17 +115,24 @@ class StatisticsE2ETest {
         return token
     }
 
-    private fun addProductToCart(cartRequest: CartItemRequest, token: String) {
-            RestAssured.given()
-                .header("Authorization", "Bearer $token")
-                .body(cartRequest).contentType(ContentType.JSON)
-                .`when`()
-                .post("/api/cart")
-                .then()
-                .extract()
+    private fun addProductToCart(
+        cartRequest: CartItemRequest,
+        token: String,
+    ) {
+        RestAssured.given()
+            .header("Authorization", "Bearer $token")
+            .body(cartRequest).contentType(ContentType.JSON)
+            .`when`()
+            .post("/api/cart")
+            .then()
+            .extract()
     }
 
-    private fun getStatistics(token: String, path: String): ExtractableResponse<Response> = RestAssured.given()
+    private fun getStatistics(
+        token: String,
+        path: String,
+    ): ExtractableResponse<Response> =
+        RestAssured.given()
             .log().all()
             .header("Authorization", "Bearer $token")
             .get(path)
@@ -132,7 +141,7 @@ class StatisticsE2ETest {
 
     @Test
     fun `should return top 5 most added products in the past 30 days for admin`() {
-        val token = loginAS(ADMIN_MAIL,ADMIN_PASSWORD)
+        val token = loginAS(ADMIN_MAIL, ADMIN_PASSWORD)
 
         val stats = getStatistics(token, "/admin/statistics/top-products")
 
@@ -144,7 +153,7 @@ class StatisticsE2ETest {
 
     @Test
     fun `should return active members in the past 7 days for admin`() {
-        val token = loginAS("admin@email.com","AdminPassword")
+        val token = loginAS("admin@email.com", "AdminPassword")
 
         val stats = getStatistics(token, "/admin/statistics/active-members")
 
@@ -157,7 +166,7 @@ class StatisticsE2ETest {
     @ParameterizedTest
     @ValueSource(strings = ["/admin/statistics/top-products", "/admin/statistics/active-members"])
     fun `should not return statistics for user`(path: String) {
-        val token = loginAS(USER1_MAIL,USER1_PASSWORD)
+        val token = loginAS(USER1_MAIL, USER1_PASSWORD)
 
         val stats = getStatistics(token, path)
 

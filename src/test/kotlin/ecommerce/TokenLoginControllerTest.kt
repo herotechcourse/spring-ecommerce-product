@@ -64,21 +64,23 @@ class TokenLoginControllerTest {
         jdbcTemplate.batchUpdate("INSERT INTO members(email, password, role) VALUES (?,?,?)", splitUpAttributes)
     }
 
-    private fun loginRequest(body: TokenRequest): ExtractableResponse<Response> = RestAssured
-        .given().log().all()
-        .body(body).contentType(ContentType.JSON)
-        .`when`()
-        .post("/api/members/login")
-        .then().log().all()
-        .extract()
+    private fun loginRequest(body: TokenRequest): ExtractableResponse<Response> =
+        RestAssured
+            .given().log().all()
+            .body(body).contentType(ContentType.JSON)
+            .`when`()
+            .post("/api/members/login")
+            .then().log().all()
+            .extract()
 
-    private fun registerRequest(body: TokenRequest): ExtractableResponse<Response> = RestAssured
-        .given().log().all()
-        .body(body).contentType(ContentType.JSON)
-        .`when`()
-        .post("/api/members/register")
-        .then().log().all()
-        .extract()
+    private fun registerRequest(body: TokenRequest): ExtractableResponse<Response> =
+        RestAssured
+            .given().log().all()
+            .body(body).contentType(ContentType.JSON)
+            .`when`()
+            .post("/api/members/register")
+            .then().log().all()
+            .extract()
 
     @Test
     fun `test registering valid member`() {

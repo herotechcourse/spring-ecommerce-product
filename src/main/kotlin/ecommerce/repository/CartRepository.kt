@@ -12,28 +12,32 @@ class CartRepository(private val jdbcClient: JdbcClient) {
         productQuantity: Long,
         cartId: Long,
     ): CartItemDto {
-        val updateSql = """
-        UPDATE cart_items
-        SET quantity = quantity + ?, created_at = CURRENT_TIMESTAMP
-        WHERE product_id = ? AND cart_id = ?
-    """.trimIndent()
+        val updateSql =
+            """
+            UPDATE cart_items
+            SET quantity = quantity + ?, created_at = CURRENT_TIMESTAMP
+            WHERE product_id = ? AND cart_id = ?
+            """.trimIndent()
 
-        val insertSql = """
-        INSERT INTO cart_items (cart_id, product_id, quantity)
-        VALUES (?, ?, ?)
-    """.trimIndent()
+        val insertSql =
+            """
+            INSERT INTO cart_items (cart_id, product_id, quantity)
+            VALUES (?, ?, ?)
+            """.trimIndent()
 
-        val rowsUpdated = jdbcClient
-            .sql(updateSql)
-            .params( productQuantity, productId, cartId)
-            .update()
+        val rowsUpdated =
+            jdbcClient
+                .sql(updateSql)
+                .params(productQuantity, productId, cartId)
+                .update()
 
         if (rowsUpdated == 0) {
             // No existing row, insert new one
-            val rowsInserted = jdbcClient
-                .sql(insertSql)
-                .params(cartId, productId, productQuantity)
-                .update()
+            val rowsInserted =
+                jdbcClient
+                    .sql(insertSql)
+                    .params(cartId, productId, productQuantity)
+                    .update()
 
             if (rowsInserted == 0) {
                 throw NotFoundException("Failed to add: Product $productId not found")
@@ -51,8 +55,9 @@ class CartRepository(private val jdbcClient: JdbcClient) {
     ): CartItemDto? {
         val currentQuantity = quantityInCart(productId, cartId)
         var updateQuantity: Long = quantity
-        if (currentQuantity - updateQuantity < 0)
+        if (currentQuantity - updateQuantity < 0) {
             updateQuantity = -1 * currentQuantity
+        }
 
         if (currentQuantity > updateQuantity) {
             decreaseItemQuantity(productId, updateQuantity, cartId)
@@ -125,7 +130,6 @@ class CartRepository(private val jdbcClient: JdbcClient) {
     }
 
     fun findOrCreateCartId(userId: Long): Long {
-
         val sql = "SELECT cart_id FROM carts WHERE user_id = ?"
         val foundId: Long? =
             jdbcClient
@@ -143,11 +147,12 @@ class CartRepository(private val jdbcClient: JdbcClient) {
             .param(1, userId)
             .update()
 
-        val cartId = jdbcClient
-            .sql("SELECT cart_id FROM carts WHERE user_id = ?")
-            .param(1, userId)
-            .query(Long::class.java)
-            .single()
+        val cartId =
+            jdbcClient
+                .sql("SELECT cart_id FROM carts WHERE user_id = ?")
+                .param(1, userId)
+                .query(Long::class.java)
+                .single()
 
         return cartId
     }

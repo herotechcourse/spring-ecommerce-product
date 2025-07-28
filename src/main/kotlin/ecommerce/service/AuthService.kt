@@ -40,8 +40,9 @@ class AuthService(
     }
 
     fun login(request: TokenRequest): TokenResponse {
-        val member = memberRepository.findByEmail(request.email)
-            ?: throw UnauthorizedException("No account with email exists")
+        val member =
+            memberRepository.findByEmail(request.email)
+                ?: throw UnauthorizedException("No account with email exists")
         member.validatePassword(request.password)
         return createToken(request)
     }

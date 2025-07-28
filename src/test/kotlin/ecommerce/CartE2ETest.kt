@@ -16,7 +16,6 @@ import org.springframework.http.HttpStatus
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.test.annotation.DirtiesContext
 
-
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 class CartE2ETest {
@@ -41,7 +40,6 @@ class CartE2ETest {
         insertDataIntoTables()
 
         userToken = loginUser()
-
     }
 
     private fun createTables() {
@@ -54,19 +52,21 @@ class CartE2ETest {
         jdbcTemplate.execute(
             "CREATE TABLE carts(" + " cart_id SERIAL, user_id INT UNIQUE)",
         )
-        jdbcTemplate.execute("""
-        CREATE TABLE cart_items (
-            cart_id INT,
-            product_id INT,
-            quantity INT DEFAULT 1,
-            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            PRIMARY KEY (cart_id, product_id)
+        jdbcTemplate.execute(
+            """
+            CREATE TABLE cart_items (
+                cart_id INT,
+                product_id INT,
+                quantity INT DEFAULT 1,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                PRIMARY KEY (cart_id, product_id)
+            )
+            """.trimIndent(),
         )
-        """.trimIndent())
     }
 
     private fun insertDataIntoTables() {
-        jdbcTemplate.update("INSERT INTO members(email, password, role) VALUES (?,?,?)", "sandra@email.com", "MyPassword", "user" )
+        jdbcTemplate.update("INSERT INTO members(email, password, role) VALUES (?,?,?)", "sandra@email.com", "MyPassword", "user")
 
         val splitUpAttributes: List<Array<String>> =
             listOf(
@@ -75,7 +75,6 @@ class CartE2ETest {
                 "coffee 4 http//coffee",
             ).map { name -> name.split(" ").toTypedArray() }.toList()
         jdbcTemplate.batchUpdate("INSERT INTO products(name, price, image_url) VALUES (?,?,?)", splitUpAttributes)
-
     }
 
     private fun loginUser(): String {
@@ -87,7 +86,10 @@ class CartE2ETest {
         return token
     }
 
-    private fun addProductRequest(cartRequest: CartItemRequest, token: String): ExtractableResponse<Response> {
+    private fun addProductRequest(
+        cartRequest: CartItemRequest,
+        token: String,
+    ): ExtractableResponse<Response> {
         val cartResponse =
             RestAssured.given().log().all()
                 .header("Authorization", "Bearer $token")
@@ -99,7 +101,10 @@ class CartE2ETest {
         return cartResponse
     }
 
-    private fun deleteProductRequest(cartRequest: CartItemRequest, token: String): ExtractableResponse<Response> {
+    private fun deleteProductRequest(
+        cartRequest: CartItemRequest,
+        token: String,
+    ): ExtractableResponse<Response> {
         val cartResponse =
             RestAssured.given().log().all()
                 .header("Authorization", "Bearer $token")
@@ -183,12 +188,13 @@ class CartE2ETest {
         addProductRequest(product2, userToken)
         addProductRequest(product3, userToken)
 
-        val  cartResponse = RestAssured.given().log().all()
-            .header("Authorization", "Bearer $userToken")
-            .`when`()
-            .get("/api/cart")
-            .then().log().all()
-            .extract()
+        val cartResponse =
+            RestAssured.given().log().all()
+                .header("Authorization", "Bearer $userToken")
+                .`when`()
+                .get("/api/cart")
+                .then().log().all()
+                .extract()
 
         assertThat(cartResponse.statusCode()).isEqualTo(HttpStatus.OK.value())
         val jsonPath = cartResponse.body().jsonPath()
@@ -217,4 +223,3 @@ class CartE2ETest {
         assertThat(tokenResponse.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value())
     }
 }
-

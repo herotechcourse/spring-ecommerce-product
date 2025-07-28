@@ -26,7 +26,7 @@ class StatRepository(private val jdbcTemplate: JdbcTemplate) {
             MemberStatsDto(
                 memberId = rs.getLong("member_id"),
                 email = rs.getString("email"),
-                name = ""
+                name = "",
             )
         }
     }
@@ -55,7 +55,7 @@ class StatRepository(private val jdbcTemplate: JdbcTemplate) {
             ProductStatsDto(
                 productName = rs.getString("product_name"),
                 productQuantity = rs.getLong("product_quantity"),
-                mostRecent = rs.getTimestamp("most_recent").toLocalDateTime()
+                mostRecent = rs.getTimestamp("most_recent").toLocalDateTime(),
             )
         }
     }
