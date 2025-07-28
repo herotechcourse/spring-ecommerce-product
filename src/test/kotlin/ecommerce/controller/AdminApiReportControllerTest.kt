@@ -5,11 +5,11 @@ import ecommerce.domain.Member
 import ecommerce.domain.Product
 import ecommerce.dto.member.AuthResponse
 import ecommerce.dto.member.MemberLoginRequest
-import ecommerce.dto.report.MemberCartActivityDto
-import ecommerce.dto.report.ProductCartCountDto
 import ecommerce.repository.CartEventRepository
 import ecommerce.repository.MemberRepository
 import ecommerce.repository.ProductRepository
+import ecommerce.repository.reportDTO.MemberCartActivityDto
+import ecommerce.repository.reportDTO.ProductCartCountDto
 import ecommerce.service.AuthService
 import io.restassured.RestAssured
 import io.restassured.http.ContentType
@@ -27,7 +27,7 @@ import java.time.temporal.ChronoUnit
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DisplayName("Admin Report Controller Integration Tests")
-class AdminReportControllerTest {
+class AdminApiReportControllerTest {
     @LocalServerPort
     private var port: Int = 0
 
@@ -129,7 +129,7 @@ class AdminReportControllerTest {
         adminToken = registerAndLogin("admin", adminEmail, adminPassword, "ADMIN")
     }
 
-    @DisplayName("Integration Tests for Top 5 Most Added Products Report (GET /api/admin/reports/top-products-30-days)")
+    @DisplayName("Integration Tests for Top 5 Most Added Products Report (GET /api/admin/reports/top-products?days=30)")
     @Test
     fun `Should return 200 OK and correct data with a valid ADMIN token`() {
         val adminMember = memberRepository.findByEmail(adminEmail)!!
@@ -139,6 +139,7 @@ class AdminReportControllerTest {
         val product4 = createTestProduct("mask", 15.0, 75)
         val product5 = createTestProduct("shampoo", 10.0, 90)
         val product6 = createTestProduct("conditioner", 12.0, 40)
+        val days = 30
 
         val now = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS)
 
@@ -154,7 +155,7 @@ class AdminReportControllerTest {
         val response =
             RestAssured.given().log().all()
                 .header("Authorization", "Bearer $adminToken")
-                .`when`().get("/api/admin/reports/top-products-30-days")
+                .`when`().get("/api/admin/reports/top-products?days=$days")
                 .then().log().all()
                 .assertThat().statusCode(HttpStatus.OK.value())
                 .extract().body().jsonPath().getList("", ProductCartCountDto::class.java)
@@ -174,27 +175,30 @@ class AdminReportControllerTest {
 
     @Test
     fun `Should return 403 Forbidden for GET top-products-30-days with a valid USER token`() {
+        val days = 30
         RestAssured.given().log().all()
             .header("Authorization", "Bearer $userToken")
-            .`when`().get("/api/admin/reports/top-products-30-days")
+            .`when`().get("/api/admin/reports/top-products?days=$days")
             .then().log().all()
             .assertThat().statusCode(HttpStatus.FORBIDDEN.value())
     }
 
     @Test
     fun `Should return 401 Unauthorized for GET top-products-30-days with no token`() {
+        val days = 30
         RestAssured.given().log().all()
-            .`when`().get("/api/admin/reports/top-products-30-days")
+            .`when`().get("/api/admin/reports/top-products?days=$days")
             .then().log().all()
             .assertThat().statusCode(HttpStatus.UNAUTHORIZED.value())
     }
 
     @Test
     fun `Should return 200 OK and an empty list if no relevant events exist`() {
+        val days = 30
         val response =
             RestAssured.given().log().all()
                 .header("Authorization", "Bearer $adminToken")
-                .`when`().get("/api/admin/reports/top-products-30-days")
+                .`when`().get("/api/admin/reports/top-products?days=$days")
                 .then().log().all()
                 .assertThat().statusCode(HttpStatus.OK.value())
                 .extract().body().jsonPath().getList("", ProductCartCountDto::class.java)
@@ -213,6 +217,7 @@ class AdminReportControllerTest {
         val product2 = createTestProduct("spf", 10.0, 70)
 
         val now = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS)
+        val days = 7
 
         createTestCartEvent(member1.userId, product1.id, 1, now.minusDays(1))
         createTestCartEvent(member1.userId, product2.id, 1, now.minusDays(2))
@@ -230,7 +235,7 @@ class AdminReportControllerTest {
         val response =
             RestAssured.given().log().all()
                 .header("Authorization", "Bearer $adminToken")
-                .`when`().get("/api/admin/reports/members-added-to-cart-7-days")
+                .`when`().get("/api/admin/reports/members-added-to-cart?days=$days")
                 .then().log().all()
                 .assertThat().statusCode(HttpStatus.OK.value())
                 .extract().body().jsonPath().getList("", MemberCartActivityDto::class.java)
@@ -241,17 +246,19 @@ class AdminReportControllerTest {
 
     @Test
     fun `Should return 403 Forbidden for GET members-added-to-cart-7-days with a valid USER token`() {
+        val days = 30
         RestAssured.given().log().all()
             .header("Authorization", "Bearer $userToken")
-            .`when`().get("/api/admin/reports/top-products-30-days")
+            .`when`().get("/api/admin/reports/top-products?days=$days")
             .then().log().all()
             .assertThat().statusCode(HttpStatus.FORBIDDEN.value())
     }
 
     @Test
     fun `Should return 401 Unauthorized for GET members-added-to-cart-7-days with no token`() {
+        val days = 30
         RestAssured.given().log().all()
-            .`when`().get("/api/admin/reports/top-products-30-days")
+            .`when`().get("/api/admin/reports/top-products?days=$days")
             .then().log().all()
             .assertThat().statusCode(HttpStatus.UNAUTHORIZED.value())
     }

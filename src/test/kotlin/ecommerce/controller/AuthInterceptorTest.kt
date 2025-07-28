@@ -91,7 +91,8 @@ class AuthInterceptorTest {
         val authorizationHeader = "Bearer $token"
         val memberId = 1L
         val userMember = mockMember(memberId, "bo@gmail.com", "USER")
-        request = mockRequest("/api/admin/reports/top-products-30-days", authorizationHeader)
+        val days = 30
+        request = mockRequest("/api/admin/reports/top-products?days=$days", authorizationHeader)
 
         `when`(jwtTokenProvider.validateToken(token)).thenReturn(true)
         `when`(jwtTokenProvider.getSubjectFromToken(token)).thenReturn(memberId.toString())
@@ -128,7 +129,8 @@ class AuthInterceptorTest {
         val authorizationHeader = "Bearer $token"
         val memberId = 2L
         val adminMember = mockMember(memberId, "admin@gmail.com", "ADMIN")
-        request = mockRequest("/api/admin/reports/top-products-30-days", authorizationHeader)
+        val days = 30
+        request = mockRequest("/api/admin/reports/top-products?days=$days", authorizationHeader)
 
         `when`(jwtTokenProvider.validateToken(token)).thenReturn(true)
         `when`(jwtTokenProvider.getSubjectFromToken(token)).thenReturn(memberId.toString())
@@ -144,9 +146,10 @@ class AuthInterceptorTest {
         val token = "some.token"
         val authorizationHeader = "Bearer $token"
         val memberId = 4L
+        val days = 30
 
         val adminMember = mockMember(memberId, "admin@gmail.com", "ADMIN")
-        request = mockRequest("/api/admin/reports/top-products-30-days", authorizationHeader)
+        request = mockRequest("/api/admin/reports/top-products?days=$days", authorizationHeader)
         `when`(jwtTokenProvider.validateToken(token)).thenReturn(true)
         `when`(jwtTokenProvider.getSubjectFromToken(token)).thenReturn(memberId.toString())
         `when`(authService.getMemberById(memberId)).thenReturn(adminMember)
@@ -157,7 +160,7 @@ class AuthInterceptorTest {
             adminMember,
         )
 
-        val request2 = mockRequest("/api/admin/reports/top-products-30-days", authorizationHeader)
+        val request2 = mockRequest("/api/admin/reports/top-products?days=$days", authorizationHeader)
         val userMember = mockMember(memberId, "bo@gmail.com", "USER")
 
         reset(jwtTokenProvider, authService)
