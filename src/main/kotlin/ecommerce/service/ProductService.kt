@@ -15,8 +15,15 @@ class ProductService(private val productRepository: ProductRepository) {
         }
     }
 
+    private fun validatePrice(price: Double) {
+        if (price < 0.01) {
+            throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Price must be greater than 0.")
+        }
+    }
+
     fun createProduct(request: ProductRequest): Long {
         validateUniqueName(request.name)
+        validatePrice(request.price)
         return productRepository.create(request.toEntity())
     }
 
@@ -29,6 +36,7 @@ class ProductService(private val productRepository: ProductRepository) {
         request: ProductRequest,
     ) {
         validateUniqueName(request.name)
+        validatePrice(request.price)
         val updated = productRepository.update(id, request.toEntity(id))
         if (!updated) throw ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found.")
     }
