@@ -1,5 +1,6 @@
 package ecommerce.controller
 
+import ecommerce.dto.LoginRequest
 import ecommerce.dto.RegistrationRequest
 import ecommerce.dto.TokenResponse
 import ecommerce.service.AuthenticationService
@@ -35,7 +36,7 @@ class AuthenticationController(private val authenticationService: Authentication
 
     @PostMapping("/login")
     fun login(
-        @RequestBody request: RegistrationRequest,
+        @RequestBody request: LoginRequest,
     ): ResponseEntity<TokenResponse> {
         val token = authenticationService.logIn(request)
         return ResponseEntity.ok(token)

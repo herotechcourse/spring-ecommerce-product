@@ -2,6 +2,7 @@ package ecommerce.service
 
 import ecommerce.configuration.JwtTokenProvider
 import ecommerce.configuration.PasswordEncoder
+import ecommerce.dto.LoginRequest
 import ecommerce.dto.RegistrationRequest
 import ecommerce.dto.TokenResponse
 import ecommerce.exception.EmailOrPasswordIncorrectException
@@ -38,7 +39,7 @@ class AuthenticationService(
         return TokenResponse(token)
     }
 
-    fun logIn(request: RegistrationRequest): TokenResponse {
+    fun logIn(request: LoginRequest): TokenResponse {
         val member = memberRepository.findByEmail(request.email) ?: throw EmailOrPasswordIncorrectException("Invalid password for email")
 
         if (!passwordEncoder.matches(request.password, member.password)) {
