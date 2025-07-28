@@ -128,34 +128,28 @@ HTTP API that allows users to retrieve, add, update, and delete products.
   -[ ] Add proper foreign key constraints if needed
 
 ### Create Statistics DTOs
--[ ] Create `TopProductStatsResponse`
-  -[ ] Fields: productName, addCount, lastAddedAt
--[ ] Create `ActiveMemberResponse`
-  -[ ] Fields: memberId, memberName, email
+-[x] Create `ProductStatsResponse`
+  -[x] Fields: productId, addCount, lastAddedAt
+-[x] Create `MemberStatsResponse`
+  -[x] Fields: memberId, email
 
 ### Implement Statistics Repository
--[ ] Add statistics methods to `CartRepository` or create new `AdminRepository`
-  -[ ] `findTopProductsInLast30Days()` - Top 5 most added products
-    -[ ] Use `GROUP BY`, `ORDER BY`, `LIMIT`
-    -[ ] Handle tiebreaking by the most recent added time
-  -[ ] `findActiveMembersInLast7Days()` - Members who added items in last 7 days
-    -[ ] Use `DISTINCT`, `EXISTS`, or `JOIN`
-    -[ ] Each member appears only once
+-[x] Add statistics methods to `CartRepository` or create new `AdminRepository`
 
 ### Create Statistics Service
--[ ] Create `AdminService` or `StatsService`
-  -[ ] `getTopProducts()` - business logic for top products
-  -[ ] `getActiveMembers()` - business logic for active members
+-[x] Create `AdminService`
+  -[x] `getTopProducts()` - business logic for top products
+  -[x] `getActiveMembers()` - business logic for active members
 
 ### Create Admin Controller
--[ ] Create `AdminController`, `@RequestMapping("/api/admin")`
-  -[ ] `GET /stats/products/top` - retrieve top 5 products
-  -[ ] `GET /stats/members/active` - retrieve active members
+-[x] Create `AdminController`, `@RequestMapping("/api/admin")`
+  -[x] `GET /stats/products/top` - retrieve top 5 products
+  -[x] `GET /stats/members/active` - retrieve active members
 
 ### Add SQL Constants
--[ ] Create `AdminConstsSQL` or add to existing SQL constants
-  -[ ] Top products query (30 days, with tie-breaking)
-  -[ ] Active members query (7 days, distinct)
+-[x] Create `AdminConstsSQL` or add to existing SQL constants
+  -[x] Top products query (30 days, with tie-breaking)
+  -[x] Active members query (7 days, distinct)
 
 ### (Optional) Admin Role Authorization
 -[ ] Add `role` field to `Member` entity and database
@@ -166,9 +160,9 @@ HTTP API that allows users to retrieve, add, update, and delete products.
 -[ ] Update `LoginMemberArgumentResolver` to handle role-based access
 
 ### Testing & Validation
--[ ] Test top products endpoint with sample data
--[ ] Test active members endpoint with sample data
--[ ] Verify correct ordering and tie-breaking logic
+-[x] Test top products endpoint with sample data
+-[x] Test active members endpoint with sample data
+-[x] Verify correct ordering and tie-breaking logic
 -[ ] Test admin role restrictions (if implemented)
 
 ---
