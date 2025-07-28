@@ -1,6 +1,7 @@
 package ecommerce.controller.member
 
 import ecommerce.dto.auth.LoginRequest
+import ecommerce.dto.response.TokenResponse
 import ecommerce.dto.user.UserRequestDTO
 import ecommerce.service.MemberAuthService
 import jakarta.validation.Valid
@@ -18,17 +19,17 @@ class MemberAuthController(
     @PostMapping("/signUp")
     fun signUp(
         @RequestBody @Valid userDTO: UserRequestDTO,
-    ): ResponseEntity<Map<String, String>> {
+    ): ResponseEntity<TokenResponse> {
         val userCreateResponse = memberAuthService.signUp(userDTO)
         return ResponseEntity.created(userCreateResponse.uri)
-            .body(mapOf("token" to userCreateResponse.token))
+            .body(TokenResponse(userCreateResponse.token))
     }
 
     @PostMapping("/signIn")
     fun signIn(
         @RequestBody @Valid loginRequest: LoginRequest,
-    ): ResponseEntity<Map<String, String>> {
+    ): ResponseEntity<TokenResponse> {
         val token = memberAuthService.logIn(loginRequest)
-        return ResponseEntity.ok().body(mapOf("token" to token))
+        return ResponseEntity.ok().body(TokenResponse(token))
     }
 }

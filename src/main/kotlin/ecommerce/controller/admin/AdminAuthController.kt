@@ -1,6 +1,7 @@
 package ecommerce.controller.admin
 
 import ecommerce.dto.auth.LoginRequest
+import ecommerce.dto.response.TokenResponse
 import ecommerce.service.AdminAuthService
 import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
@@ -17,8 +18,8 @@ class AdminAuthController(
     @PostMapping("/signIn")
     fun signIn(
         @RequestBody @Valid loginRequest: LoginRequest,
-    ): ResponseEntity<Map<String, String>> {
+    ): ResponseEntity<TokenResponse> {
         val token = adminAuthService.signIn(loginRequest)
-        return ResponseEntity.ok().body(mapOf("token" to token))
+        return ResponseEntity.ok().body(TokenResponse(token))
     }
 }
