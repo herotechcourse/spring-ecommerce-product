@@ -5,6 +5,7 @@ import ecommerce.dto.ProductRequest
 import io.restassured.RestAssured
 import io.restassured.http.ContentType
 import org.assertj.core.api.Assertions
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
@@ -148,7 +149,7 @@ class AdminControllerTest {
                 .put("/api/admin/products/1")
                 .then().log().all().extract()
 
-        Assertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
 
         val updated =
             RestAssured.given().log().all()
@@ -158,7 +159,7 @@ class AdminControllerTest {
                 .then().log().all().extract()
 
         val productName = updated.body().jsonPath().getString("name")
-        Assertions.assertThat(productName).isEqualTo("updatedTest")
+        assertThat(productName).isEqualTo("updatedTest")
     }
 
     @Test
@@ -171,7 +172,7 @@ class AdminControllerTest {
                 .delete("/api/admin/products/1")
                 .then().log().all().extract()
 
-        Assertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value())
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value())
 
         val deleted =
             RestAssured.given().log().all()
@@ -180,6 +181,6 @@ class AdminControllerTest {
                 .`when`().get("/api/admin/products/1")
                 .then().log().all().extract()
 
-        Assertions.assertThat(deleted.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value())
+        assertThat(deleted.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value())
     }
 }
