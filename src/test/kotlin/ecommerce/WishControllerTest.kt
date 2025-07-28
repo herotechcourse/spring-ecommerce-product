@@ -1,6 +1,6 @@
 package ecommerce
 
-import ecommerce.auth.security.JwtTokenProvider
+import ecommerce.auth.security.JwtProvider
 import ecommerce.cart.dto.CartRequest
 import io.restassured.RestAssured
 import io.restassured.http.ContentType
@@ -18,17 +18,17 @@ class WishControllerTest {
     @Autowired
     private lateinit var jdbcTemplate: JdbcTemplate
 
-    private lateinit var jwtTokenProvider: JwtTokenProvider
+    private lateinit var jwtProvider: JwtProvider
     private lateinit var validToken: String
 
     @BeforeEach
     fun setUp() {
-        jwtTokenProvider =
-            JwtTokenProvider(
+        jwtProvider =
+            JwtProvider(
                 secret = "3GXmjHcKG7ww13vbHu3aMdz+Q25wKxiGAeV43Tc3qsA=",
                 validityInMilliseconds = 3600000,
             )
-        validToken = jwtTokenProvider.createToken("test@example.com")
+        validToken = jwtProvider.createToken("test@example.com")
 
         jdbcTemplate.execute("DROP TABLE CART_ITEMS IF EXISTS")
         jdbcTemplate.execute("DROP TABLE PRODUCTS IF EXISTS")

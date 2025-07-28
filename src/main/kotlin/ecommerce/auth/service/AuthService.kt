@@ -1,7 +1,7 @@
 package ecommerce.auth.service
 
 import ecommerce.auth.exception.AuthorizationException
-import ecommerce.auth.security.JwtTokenProvider
+import ecommerce.auth.security.JwtProvider
 import ecommerce.member.domain.Member
 import ecommerce.member.dto.MemberResponse
 import ecommerce.member.dto.TokenRequest
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service
 
 @Service
 class AuthService(
-    private val jwtTokenProvider: JwtTokenProvider,
+    private val jwtProvider: JwtProvider,
     private val memberRepository: MemberRepository,
 ) {
     fun createToken(tokenRequest: TokenRequest): TokenResponse {
@@ -21,7 +21,7 @@ class AuthService(
         if (member.password != tokenRequest.password) {
             throw AuthorizationException("Invalid password for email: ${tokenRequest.email}")
         }
-        val accessToken = jwtTokenProvider.createToken(member.email)
+        val accessToken = jwtProvider.createToken(member.email)
         return TokenResponse(accessToken)
     }
 
@@ -33,15 +33,15 @@ class AuthService(
                 role = if (tokenRequest.email == "admin@example.com") "ADMIN" else "USER",
             )
         memberRepository.insert(member)
-        val accessToken = jwtTokenProvider.createToken(member.email)
+        val accessToken = jwtProvider.createToken(member.email)
         return TokenResponse(accessToken)
     }
 
     fun findMemberByToken(token: String): MemberResponse {
-        if (!jwtTokenProvider.validateToken(token)) {
+        if (!jwtProvider.validateToken(token)) {
             throw AuthorizationException("Invalid or expired JWT token")
         }
-        val email = jwtTokenProvider.getPayload(token)
+        val email = jwtProvider.getPayload(token)
         val member =
             memberRepository.findByEmail(email)
                 ?: throw AuthorizationException("Member not found with email: $email")
@@ -49,10 +49,10 @@ class AuthService(
     }
 
     fun findMemberEntityByToken(token: String): Member {
-        if (!jwtTokenProvider.validateToken(token)) {
+        if (!jwtProvider.validateToken(token)) {
             throw AuthorizationException("Invalid or expired JWT token")
         }
-        val email = jwtTokenProvider.getPayload(token)
+        val email = jwtProvider.getPayload(token)
         return memberRepository.findByEmail(email)
             ?: throw AuthorizationException("Member not found with email: $email")
     }
