@@ -1,7 +1,7 @@
 package ecommerce.auth.interceptor
 
 import ecommerce.auth.exception.AuthorizationException
-import ecommerce.auth.extractor.AuthorizationExtractor
+import ecommerce.auth.extractor.BearerAuthorizationExtractor
 import ecommerce.auth.service.AuthService
 import ecommerce.member.repository.MemberRepository
 import jakarta.servlet.http.HttpServletRequest
@@ -12,7 +12,7 @@ import org.springframework.web.servlet.HandlerInterceptor
 @Component
 class CheckLoginInterceptor(
     private val authService: AuthService,
-    private val authorizationExtractor: AuthorizationExtractor<String>,
+    private val authorizationExtractor: BearerAuthorizationExtractor,
     private val memberRepository: MemberRepository,
 ) : HandlerInterceptor {
     override fun preHandle(
