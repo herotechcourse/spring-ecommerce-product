@@ -159,11 +159,11 @@
   - [x] Should throw exception if the required claim is missing/invalid.
 
 ## Global Exception Handler Tests
-- [ ] Unit Tests for Exception Mapping
-  - [ ] Should map UnauthorizedException to 401 Unauthorized.
-  - [ ] Should map ForbiddenException to 403 Forbidden.
-  - [ ] Should map NoSuchElementException to 404 Not Found.
-  - [ ] Should map IllegalArgumentException to 400 Bad Request.
-  - [ ] Should map MethodArgumentNotValidException to 400 Bad Request with field errors.
-  - [ ] Should map MethodArgumentTypeMismatchException to 400 Bad Request.
-  - [ ] Should map generic Exception to 500 Internal Server Error.
+- [x] Unit Tests for Exception Mapping
+  - [x] Should map UnauthorizedException to 401 Unauthorized.
+  - [x] Should map ForbiddenException to 403 Forbidden.
+  - [x] Should map NoSuchElementException to 404 Not Found.
+  - [x] Should map IllegalArgumentException to 400 Bad Request.
+  - [x] Should map MethodArgumentNotValidException to 400 Bad Request with field errors.
+  - [x] Should map MethodArgumentTypeMismatchException to 400 Bad Request.
+  - [x] Should map generic Exception to 500 Internal Server Error.
