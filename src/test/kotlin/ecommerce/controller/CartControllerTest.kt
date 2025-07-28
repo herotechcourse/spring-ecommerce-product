@@ -1,18 +1,27 @@
 package ecommerce.controller
 
+import ecommerce.dto.CartResponse
 import ecommerce.entity.CartItem
 import ecommerce.entity.Member
+import ecommerce.exception.NotFoundException
+import ecommerce.exception.UnauthorizedException
 import ecommerce.helper.MemberTestFixture
 import ecommerce.service.AuthService
 import ecommerce.service.CartService
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.mockito.kotlin.any
+import org.mockito.kotlin.eq
 import org.mockito.kotlin.whenever
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
+import org.springframework.http.MediaType
 import org.springframework.test.context.bean.override.mockito.MockitoBean
 import org.springframework.test.web.servlet.MockMvc
+import org.springframework.test.web.servlet.delete
 import org.springframework.test.web.servlet.get
+import org.springframework.test.web.servlet.post
+import org.springframework.test.web.servlet.put
 import java.time.LocalDateTime
 
 @WebMvcTest(CartController::class)
@@ -63,6 +72,98 @@ class CartControllerTest
                     status { isOk() }
                     jsonPath("$[0].productId") { value(101) }
                     jsonPath("$[0].quantity") { value(2) }
+                }
+        }
+
+        @Test
+        fun `should return 401 if no token provided`() {
+            whenever(authService.findMemberByToken("invalid-token"))
+                .thenThrow(UnauthorizedException("Invalid token"))
+
+            mockMvc.get("/api/cart") {
+                header("Authorization", "Bearer invalid-token")
+            }
+                .andExpect {
+                    status { isUnauthorized() }
+                }
+        }
+
+        @Test
+        fun `should add single item to cart`() {
+            val memberId = 1L
+            val productId = 101L
+            val mockResponse = CartResponse(id = 1L, productId = productId, quantity = 2, updatedAt = LocalDateTime.now())
+
+            whenever(cartService.upsertCartItem(memberId, productId, 2))
+                .thenReturn(mockResponse)
+
+            mockMvc.post("/api/cart/items/$productId") {
+                header("Authorization", "Bearer fake-token")
+                contentType = MediaType.APPLICATION_JSON
+                content = """{"quantity": 2}"""
+            }
+                .andExpect {
+                    status { isCreated() }
+                    jsonPath("$.productId") { value(101) }
+                    jsonPath("$.quantity") { value(2) }
+                }
+        }
+
+        @Test
+        fun `should update multiple cart items`() {
+            val memberId = 1L
+            val mockResponses =
+                listOf(
+                    CartResponse(id = 1L, productId = 101, quantity = 2, updatedAt = LocalDateTime.now()),
+                    CartResponse(id = 2L, productId = 102, quantity = 3, updatedAt = LocalDateTime.now()),
+                )
+
+            whenever(cartService.upsertCartItems(eq(memberId), any()))
+                .thenReturn(mockResponses)
+
+            mockMvc.put("/api/cart/items") {
+                header("Authorization", "Bearer fake-token")
+                contentType = MediaType.APPLICATION_JSON
+                content = """
+            [
+                {"productId": 101, "quantity": 2},
+                {"productId": 102, "quantity": 3}
+            ]
+        """
+            }
+                .andExpect {
+                    status { isOk() }
+                    jsonPath("$[0].productId") { value(101) }
+                    jsonPath("$[1].quantity") { value(3) }
+                }
+        }
+
+        @Test
+        fun `should delete cart item`() {
+            val memberId = 1L
+            val productId = 101L
+
+            mockMvc.delete("/api/cart/items/$productId") {
+                header("Authorization", "Bearer fake-token")
+            }
+                .andExpect {
+                    status { isNoContent() }
+                }
+        }
+
+        @Test
+        fun `should return 404 when deleting non-existing item`() {
+            val memberId = 1L
+            val productId = 999L
+
+            whenever(cartService.deleteBy(memberId, productId))
+                .thenThrow(NotFoundException("not found"))
+
+            mockMvc.delete("/api/cart/items/$productId") {
+                header("Authorization", "Bearer fake-token")
+            }
+                .andExpect {
+                    status { isNotFound() }
                 }
         }
     }
