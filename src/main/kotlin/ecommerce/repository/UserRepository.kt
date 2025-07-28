@@ -43,7 +43,8 @@ class UserRepository(
     }
 
     fun existsByEmail(email: String): Boolean {
-        val sql = "select count(*) from users where email = ?"
-        return jdbcTemplate.queryForObject(sql, Int::class.java, email)!! > 0
+        val sql = "select exists(select 1 from users where email = ?)"
+        return jdbcTemplate.queryForObject(sql, Int::class.java, email)
+            ?.let { it > 0 } ?: false
     }
 }
