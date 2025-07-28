@@ -41,7 +41,6 @@ class ProductRestController(
     fun create(
         @RequestBody @Valid request: ProductRequest,
     ): ResponseEntity<Any> {
-        val existing = productRepository.getAll().any { it.name == request.name }
         if (productRepository.existsByName(request.name)) {
             val error =
                 ErrorResponse(
@@ -54,8 +53,8 @@ class ProductRestController(
         val product = request.toEntity()
         productRepository.createProduct(product)
 
-        val saved = productRepository.getAll().last()
-        return ResponseEntity.ok(saved)
+        // val saved = productRepository.getAll().last()
+        return ResponseEntity.ok().body(product)
     }
 
     @PutMapping("/{id}")
@@ -94,9 +93,9 @@ class ProductRestController(
     fun delete(
         @PathVariable id: Long,
     ): ResponseEntity<Unit> {
-        val existingProduct =
-            productRepository.findById(id)
-                ?: return ResponseEntity.notFound().build()
+//        val existingProduct =
+//            productRepository.findById(id)
+//                ?: return ResponseEntity.notFound().build()
 
         productRepository.deleteProduct(id)
         return ResponseEntity.ok().build()
