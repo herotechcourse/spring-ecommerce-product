@@ -6,8 +6,8 @@ INSERT INTO product (name, price, imageUrl) VALUES ('Full Metal Alchemist', 1000
 INSERT INTO product (name, price, imageUrl) VALUES ('Batman', 1000, 'https://alexnsan.comics/imageurl/6');
 ;
 
-INSERT INTO member (email, password) VALUES ( 'san@htc.com', 'san1234');
-INSERT INTO member (email, password) VALUES ( 'dan@htc.com', 'dan1234');
+INSERT INTO member (email, password, role) VALUES ( 'san@htc.com', 'san1234', 'admin');
+INSERT INTO member (email, password, role) VALUES ( 'dan@htc.com', 'dan1234', 'admin');
 INSERT INTO member (email, password) VALUES ( 'ann@htc.com', 'ann1234');
 INSERT INTO member (email, password) VALUES ( 'min@htc.com', 'min1234');
 ;
