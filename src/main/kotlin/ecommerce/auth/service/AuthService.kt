@@ -47,4 +47,13 @@ class AuthService(
                 ?: throw AuthorizationException("Member not found with email: $email")
         return MemberResponse(member.id!!, member.email)
     }
+
+    fun findMemberEntityByToken(token: String): Member {
+        if (!jwtTokenProvider.validateToken(token)) {
+            throw AuthorizationException("Invalid or expired JWT token")
+        }
+        val email = jwtTokenProvider.getPayload(token)
+        return memberRepository.findByEmail(email)
+            ?: throw AuthorizationException("Member not found with email: $email")
+    }
 }
