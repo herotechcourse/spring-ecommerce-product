@@ -65,7 +65,6 @@ class AuthInterceptor(
             if (requiredRolesForPath.isNotEmpty() && !requiredRolesForPath.contains(member.role)) {
                 throw ForbiddenException("User role '${member.role}' is not authorized to access this resource.")
             }
-        } else {
         }
 
         return true
