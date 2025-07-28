@@ -2,7 +2,7 @@ package ecommerce.config
 
 import ecommerce.config.argumentResolver.LoginMemberArgumentResolver
 import ecommerce.config.interceptor.AdminInterceptor
-import ecommerce.config.interceptor.AuthInterceptor
+import ecommerce.config.interceptor.MemberInterceptor
 import ecommerce.repository.UserRepository
 import org.springframework.context.annotation.Configuration
 import org.springframework.web.method.support.HandlerMethodArgumentResolver
@@ -12,7 +12,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 @Configuration
 class WebConfig(
     private val adminInterceptor: AdminInterceptor,
-    private val authInterceptor: AuthInterceptor,
+    private val authInterceptor: MemberInterceptor,
     private val userRepository: UserRepository,
 ) : WebMvcConfigurer {
     override fun addInterceptors(registry: InterceptorRegistry) {

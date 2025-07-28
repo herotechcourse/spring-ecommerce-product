@@ -17,8 +17,8 @@ class AdminAuthController(
     @PostMapping("/signIn")
     fun signIn(
         @RequestBody @Valid loginRequest: LoginRequest,
-    ): ResponseEntity<String> {
+    ): ResponseEntity<Map<String, String>> {
         val token = adminAuthService.signIn(loginRequest)
-        return ResponseEntity.ok().header("Authorization", token).build()
+        return ResponseEntity.ok().body(mapOf("token" to token))
     }
 }

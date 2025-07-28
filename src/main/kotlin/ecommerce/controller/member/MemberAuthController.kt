@@ -18,18 +18,17 @@ class MemberAuthController(
     @PostMapping("/signUp")
     fun signUp(
         @RequestBody @Valid userDTO: UserRequestDTO,
-    ): ResponseEntity<Void> {
+    ): ResponseEntity<Map<String, String>> {
         val userCreateResponse = memberAuthService.signUp(userDTO)
         return ResponseEntity.created(userCreateResponse.uri)
-            .header("Authorization", userCreateResponse.token)
-            .build()
+            .body(mapOf("token" to userCreateResponse.token))
     }
 
     @PostMapping("/signIn")
     fun signIn(
         @RequestBody @Valid loginRequest: LoginRequest,
-    ): ResponseEntity<Void> {
+    ): ResponseEntity<Map<String, String>> {
         val token = memberAuthService.logIn(loginRequest)
-        return ResponseEntity.ok().header("Authorization", token).build()
+        return ResponseEntity.ok().body(mapOf("token" to token))
     }
 }

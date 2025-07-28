@@ -5,7 +5,7 @@ import ecommerce.dto.user.UserRequestDTO
 import ecommerce.service.MemberAuthService
 import io.restassured.RestAssured
 import io.restassured.http.ContentType
-import org.assertj.core.api.Assertions
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
@@ -31,8 +31,8 @@ class MemberAuthControllerTest {
                 .contentType(ContentType.JSON)
                 .`when`().post("api/member/auth/signUp")
                 .then().log().all().extract()
-        Assertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value())
-        Assertions.assertThat(response.header("Authorization")).isNotNull
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value())
+        assertThat(response.body().jsonPath().get<String>("token")).isNotEmpty
     }
 
     @Test
@@ -57,7 +57,7 @@ class MemberAuthControllerTest {
                 .`when`().post("api/member/auth/signIn")
                 .then().log().all().extract()
 
-        Assertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
-        Assertions.assertThat(response.header("Authorization")).isNotEmpty
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
+        assertThat(response.body().jsonPath().get<String>("token")).isNotEmpty
     }
 }

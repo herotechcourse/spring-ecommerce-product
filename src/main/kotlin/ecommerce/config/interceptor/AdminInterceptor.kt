@@ -1,5 +1,6 @@
 package ecommerce.config.interceptor
 
+import ecommerce.dto.user.UserDTO
 import ecommerce.enums.UserRole
 import ecommerce.exception.UnauthorisedUserException
 import ecommerce.infrastructure.JwtProvider
@@ -10,19 +11,15 @@ import org.springframework.stereotype.Component
 
 @Component
 class AdminInterceptor(
-    val userRepository: UserRepository,
+    userRepository: UserRepository,
     jwtProvider: JwtProvider,
-) : BaseAuthInterceptor(jwtProvider) {
+) : BaseAuthInterceptor(jwtProvider, userRepository) {
     override fun handleAuthenticatedRequest(
         request: HttpServletRequest,
         response: HttpServletResponse,
         handler: Any,
-        email: String,
+        user: UserDTO,
     ): Boolean {
-        val user =
-            userRepository.findByEmail(email)
-                ?: throw UnauthorisedUserException("User not found")
-
         if (user.role != UserRole.ADMIN) {
             throw UnauthorisedUserException("User role not admin")
         }
