@@ -18,6 +18,10 @@ abstract class BaseAuthInterceptor(
         handler: Any,
     ): Boolean {
         val bearer = request.getHeader("Authorization") ?: throw UnauthorisedUserException()
+        if (!bearer.startsWith("Bearer ")) {
+            throw UnauthorisedUserException("Invalid Authorization header format")
+        }
+
         val token = bearer.removePrefix("Bearer ").trim()
         jwtProvider.validateToken(token)
 
