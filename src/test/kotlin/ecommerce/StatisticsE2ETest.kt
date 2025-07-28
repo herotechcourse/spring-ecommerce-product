@@ -32,12 +32,8 @@ class StatisticsE2ETest {
 
         createMembersTable()
         createProductsTable()
-        jdbcTemplate.execute(
-            "CREATE TABLE carts(" + " cart_id SERIAL, user_id INT UNIQUE)",
-        )
-        jdbcTemplate.execute(
-            "CREATE TABLE cart_items(cart_id INT, product_id INT, quantity INT )",
-        )
+        createCartTable()
+        createCartItemsTable()
 
         val token = login("user@email.com","UserPassword")
         val item1 = CartItemRequest(1, 1)
@@ -55,6 +51,24 @@ class StatisticsE2ETest {
         addProductRequest(item5, token)
         addProductRequest(item6, token)
         addProductRequest(item7, token)
+    }
+
+    private fun createCartTable() {
+        jdbcTemplate.execute(
+            "CREATE TABLE carts(" + " cart_id SERIAL, user_id INT UNIQUE)",
+        )
+    }
+
+    private fun createCartItemsTable() {
+        jdbcTemplate.execute("""
+        CREATE TABLE cart_items (
+            cart_id INT,
+            product_id INT,
+            quantity INT DEFAULT 1,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            PRIMARY KEY (cart_id, product_id)
+        )
+        """.trimIndent())
     }
 
     private fun createMembersTable() {
