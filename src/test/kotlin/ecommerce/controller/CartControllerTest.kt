@@ -68,6 +68,7 @@ class CartControllerTest {
                 id       LONG         NOT NULL AUTO_INCREMENT,
                 email    VARCHAR(255) NOT NULL UNIQUE,
                 password VARCHAR(255) NOT NULL,
+                role     VARCHAR(255),
                 PRIMARY KEY (id)
             );""",
         )
@@ -93,9 +94,13 @@ class CartControllerTest {
             INSERT INTO product (name, price, imageUrl) VALUES ('Superman', 1000, 'https://alexnsan.comics/imageurl/3');
             INSERT INTO product (name, price, imageUrl) VALUES ('Naruto', 1000, 'https://alexnsan.comics/imageurl/4');
             INSERT INTO product (name, price, imageUrl) VALUES ('Full Metal Alchemist', 1000, 'https://alexnsan.comics/imageurl/5');
+            INSERT INTO product (name, price, imageUrl) VALUES ('Batman', 1000, 'https://alexnsan.comics/imageurl/6');
+            ;
             
-            INSERT INTO member (email, password) VALUES ( 'san@htc.com', 'san1234');
-            INSERT INTO member (email, password) VALUES ( 'dan@htc.com', 'dan1234');
+            INSERT INTO member (email, password, role) VALUES ( 'san@htc.com', 'san1234', 'admin');
+            INSERT INTO member (email, password, role) VALUES ( 'dan@htc.com', 'dan1234', 'admin');
+            INSERT INTO member (email, password) VALUES ( 'ann@htc.com', 'ann1234');
+            INSERT INTO member (email, password) VALUES ( 'min@htc.com', 'min1234');
             """
         jdbcTemplate.batchUpdate(query)
 
@@ -272,10 +277,56 @@ class CartControllerTest {
         assertThrows<NotFoundException> { controller.updateQuantity(productId, form, LOGIN_MEMBER) }
     }
 
+    @Test
+    fun `Interceptor - allow admin user to access admin endpoint`() {
+        val accessToken =
+            RestAssured
+                .given().log().all()
+                .body(LoginForm(LOGIN_EMAIL, LOGIN_PASSWORD))
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .`when`().post("/api/members/login")
+                .then().log().all().extract().`as`(AuthResponse::class.java).accessToken
+
+        val response =
+            RestAssured
+                .given().log().all()
+                .header("Authorization", "Bearer $accessToken")
+                .contentType(ContentType.JSON)
+                .`when`().get("/api/admin/cart-stats/top5-products")
+                .then().log().all().extract()
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
+    }
+
+    @Test
+    fun `Interceptor - block non-admin user to access admin endpoint`() {
+        val accessToken =
+            RestAssured
+                .given().log().all()
+                .body(LoginForm(NON_ADMIN_EMAIL, NON_ADMIN_PASSWORD))
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .`when`().post("/api/members/login")
+                .then().log().all().extract().`as`(AuthResponse::class.java).accessToken
+
+        val response =
+            RestAssured
+                .given().log().all()
+                .header("Authorization", "Bearer $accessToken")
+                .contentType(ContentType.JSON)
+                .`when`().get("/api/admin/cart-stats/top5-products")
+                .then().log().all().extract()
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value())
+    }
+
     companion object {
         private const val PRODUCT_ID = 1L
         private const val LOGIN_EMAIL = "san@htc.com"
         private const val LOGIN_PASSWORD = "san1234"
+        private const val NON_ADMIN_EMAIL = "min@htc.com"
+        private const val NON_ADMIN_PASSWORD = "min1234"
         private val LOGIN_MEMBER = Member(1L, LOGIN_EMAIL, LOGIN_PASSWORD)
     }
 }

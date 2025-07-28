@@ -15,17 +15,19 @@ class JdbcMemberDAO(private val db: JdbcTemplate) : MemberDAO {
                 rs.getLong("id"),
                 rs.getString("email"),
                 rs.getString("password"),
+                rs.getString("role"),
             )
         }
 
     override fun insert(member: Member): Long {
-        val sql = "INSERT INTO member (email, password) VALUES (?, ?)"
+        val sql = "INSERT INTO member (email, password, role) VALUES (?, ?, ?)"
         val keyHolder = GeneratedKeyHolder()
 
         db.update({ connection ->
             connection.prepareStatement(sql, arrayOf("id")).apply {
                 setString(1, member.email)
                 setString(2, member.password)
+                setString(3, member.role)
             }
         }, keyHolder)
         return keyHolder.key?.toLong() ?: throw IllegalStateException("insert - Failed to retrieve ID")
@@ -34,7 +36,7 @@ class JdbcMemberDAO(private val db: JdbcTemplate) : MemberDAO {
     override fun findByEmail(email: String): Member? {
         try {
             return db.queryForObject(
-                "SELECT id, email, password FROM member WHERE email = ?",
+                "SELECT id, email, password, role FROM member WHERE email = ?",
                 memberRowMapper,
                 email,
             )
@@ -47,7 +49,7 @@ class JdbcMemberDAO(private val db: JdbcTemplate) : MemberDAO {
     override fun findById(id: Long): Member? {
         try {
             return db.queryForObject(
-                "SELECT id, email, password FROM member WHERE id = ?",
+                "SELECT id, email, password, role FROM member WHERE id = ?",
                 memberRowMapper,
                 id,
             )

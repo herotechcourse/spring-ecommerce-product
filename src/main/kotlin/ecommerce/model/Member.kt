@@ -9,6 +9,7 @@ data class Member(
     var id: Long? = null,
     var email: String,
     var password: String,
+    var role: String? = null,
 ) {
     companion object {
         fun toEntity(
