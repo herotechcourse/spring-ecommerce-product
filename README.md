@@ -111,10 +111,10 @@
 
 #### CartService
 
-- [ ] `getCart()`
-- [ ] `addToCart()`
-- [ ] `removeFromCart()`
-- [ ] `updateQuantity()`
+- [x] `getCart()`
+- [x] `addToCart()`
+- [x] `removeFromCart()`
+- [x] `updateQuantity()`
 
 #### AuthService
 

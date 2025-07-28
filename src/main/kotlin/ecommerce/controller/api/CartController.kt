@@ -1,12 +1,12 @@
 package ecommerce.controller.api
 
-import ecommerce.dao.JdbcCartDAO
 import ecommerce.dto.CartAddItemForm
 import ecommerce.dto.CartUpdateQuantityForm
 import ecommerce.exception.InternalServerErrorException
 import ecommerce.exception.NotFoundException
 import ecommerce.model.CartItem
 import ecommerce.model.Member
+import ecommerce.service.CartService
 import ecommerce.ui.LoginMember
 import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
@@ -22,14 +22,14 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/api/cart")
 class CartController(
-    private val jdbcCartDAO: JdbcCartDAO,
+    private val cartService: CartService,
 ) {
     @GetMapping
     fun viewCart(
         @LoginMember member: Member,
     ): ResponseEntity<List<CartItem>> {
         val memberId = member.id ?: throw InternalServerErrorException("auth failed")
-        val cartItems = jdbcCartDAO.getCartItemsByMemberId(memberId)
+        val cartItems = cartService.getCart(memberId)
         return ResponseEntity.ok(cartItems)
     }
 
@@ -39,7 +39,7 @@ class CartController(
         @LoginMember member: Member,
     ): ResponseEntity<String> {
         val memberId = member.id ?: throw InternalServerErrorException("auth failed")
-        jdbcCartDAO.addItemToCart(memberId, cartForm.productId, cartForm.quantity)
+        cartService.addToCart(memberId, cartForm.productId, cartForm.quantity)
         return ResponseEntity.ok(MESSAGE_ADD_SUCCESS)
     }
 
@@ -49,7 +49,7 @@ class CartController(
         @LoginMember member: Member,
     ): ResponseEntity<String> {
         val memberId = member.id ?: throw InternalServerErrorException("auth failed")
-        val affectedRows = jdbcCartDAO.removeItemFromCart(memberId, productId)
+        val affectedRows = cartService.removeFromCart(memberId, productId)
         when (affectedRows) {
             1 -> return ResponseEntity.ok().body(MESSAGE_REMOVE_SUCCESS)
             0 -> throw NotFoundException("Product not found in the cart - Product ID: $productId")
@@ -64,7 +64,7 @@ class CartController(
         @LoginMember member: Member,
     ): ResponseEntity<String> {
         val memberId = member.id ?: throw InternalServerErrorException("auth failed")
-        val affectedRows = jdbcCartDAO.updateItemQuantityInCart(memberId, productId, cartForm.quantity)
+        val affectedRows = cartService.updateQuantity(memberId, productId, cartForm.quantity)
         when (affectedRows) {
             1 -> return ResponseEntity.ok().body(MESSAGE_UPDATE_SUCCESS)
             0 -> throw NotFoundException("Product not found in the cart - Product ID: $productId")

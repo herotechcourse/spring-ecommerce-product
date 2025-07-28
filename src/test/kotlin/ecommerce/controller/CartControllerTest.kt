@@ -4,6 +4,7 @@ import ecommerce.auth.JwtTokenProvider
 import ecommerce.controller.api.CartController
 import ecommerce.dao.JdbcCartDAO
 import ecommerce.dao.JdbcMemberDAO
+import ecommerce.dao.JdbcProductDAO
 import ecommerce.dto.AuthResponse
 import ecommerce.dto.CartAddItemForm
 import ecommerce.dto.CartUpdateQuantityForm
@@ -11,6 +12,7 @@ import ecommerce.dto.LoginForm
 import ecommerce.exception.NotFoundException
 import ecommerce.model.Member
 import ecommerce.service.AuthService
+import ecommerce.service.CartService
 import io.restassured.RestAssured
 import io.restassured.http.ContentType
 import org.assertj.core.api.Assertions.assertThat
@@ -32,7 +34,10 @@ class CartControllerTest {
     @Autowired private lateinit var jwtTokenProvider: JwtTokenProvider
     private lateinit var authService: AuthService
 
+    @Autowired private lateinit var jdbcProductDAO: JdbcProductDAO
+
     @Autowired private lateinit var jdbcCartDAO: JdbcCartDAO
+    private lateinit var cartService: CartService
     private lateinit var controller: CartController
 
     @BeforeEach
@@ -40,7 +45,9 @@ class CartControllerTest {
         jdbcMemberDAO = JdbcMemberDAO(jdbcTemplate)
         jwtTokenProvider = JwtTokenProvider()
         authService = AuthService(jdbcMemberDAO, jwtTokenProvider)
+        jdbcProductDAO = JdbcProductDAO(jdbcTemplate)
         jdbcCartDAO = JdbcCartDAO(jdbcTemplate)
+        cartService = CartService(jdbcCartDAO, jdbcProductDAO)
 
         jdbcTemplate.execute("DROP TABLE product CASCADE")
         jdbcTemplate.execute(
@@ -92,7 +99,7 @@ class CartControllerTest {
             """
         jdbcTemplate.batchUpdate(query)
 
-        controller = CartController(jdbcCartDAO)
+        controller = CartController(cartService)
     }
 
     @Test
