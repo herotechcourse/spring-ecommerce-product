@@ -1,6 +1,7 @@
 package ecommerce.repository
 
 import ecommerce.dto.RecentActiveUserResponse
+import ecommerce.dto.TopProductStat
 import ecommerce.entity.CartItemHistory
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.stereotype.Repository
@@ -20,7 +21,7 @@ class CartItemHistoryRepository(private val jdbc: JdbcTemplate) {
         )
     }
 
-    fun findTop5MostAddedProducts(): List<Map<String, Any>> {
+    fun findTop5MostAddedProducts(): List<TopProductStat> {
         val sql =
             """
             SELECT p.name AS product_name,
@@ -35,7 +36,13 @@ class CartItemHistoryRepository(private val jdbc: JdbcTemplate) {
             LIMIT 5
             """.trimIndent()
 
-        return jdbc.queryForList(sql)
+        return jdbc.query(sql) { rs, _ ->
+            TopProductStat(
+                productName = rs.getString("product_name"),
+                addCount = rs.getInt("add_count"),
+                latestAddedAt = rs.getTimestamp("latest_added_at").toString()
+            )
+        }
     }
 
     fun findRecentlyActiveUsers(): List<RecentActiveUserResponse> {
