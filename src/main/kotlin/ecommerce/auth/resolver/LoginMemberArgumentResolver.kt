@@ -34,4 +34,3 @@ class LoginMemberArgumentResolver(
         return authService.findMemberEntityByToken(token)
     }
 }
-

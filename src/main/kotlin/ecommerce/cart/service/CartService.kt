@@ -4,7 +4,6 @@ import ecommerce.cart.domain.CartItem
 import ecommerce.cart.dto.CartRequest
 import ecommerce.cart.dto.CartResponse
 import ecommerce.cart.repository.CartRepository
-import ecommerce.member.domain.Member
 import ecommerce.product.repository.ProductRepository
 import jakarta.validation.ValidationException
 import org.springframework.stereotype.Service

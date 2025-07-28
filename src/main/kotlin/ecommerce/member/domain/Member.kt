@@ -2,6 +2,7 @@ package ecommerce.member.domain
 
 import jakarta.validation.constraints.Email
 import jakarta.validation.constraints.NotBlank
+import jakarta.validation.constraints.Pattern
 import jakarta.validation.constraints.Size
 
 data class Member(
@@ -12,5 +13,6 @@ data class Member(
     @field:NotBlank(message = "Password cannot be blank")
     @field:Size(min = 8, message = "Password must be at least 8 characters long")
     val password: String,
-    val role: String = "",
+    @field:Pattern(regexp = "USER|ADMIN|SUPER_ADMIN", message = "Role must be either USER, ADMIN, or SUPER_ADMIN")
+    val role: String = "USER",
 )

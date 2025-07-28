@@ -35,7 +35,7 @@ class AuthService(
             Member(
                 email = tokenRequest.email,
                 password = tokenRequest.password,
-                role = if (tokenRequest.email == "admin@example.com") "ADMIN" else "USER",
+                role = tokenRequest.role,
             )
         memberRepository.insert(member)
         val accessToken = jwtProvider.createToken(member.email)

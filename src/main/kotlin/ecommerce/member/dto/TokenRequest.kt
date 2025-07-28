@@ -11,4 +11,5 @@ class TokenRequest(
     @field:NotBlank(message = "Password cannot be blank")
     @field:Size(min = 8, message = "Password must be at least 8 characters long")
     val password: String,
+    val role: String = "USER",
 )
