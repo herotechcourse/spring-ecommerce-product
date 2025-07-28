@@ -37,22 +37,20 @@ class StatisticsE2ETest {
         createCartTable()
         createCartItemsTable()
 
-        val user1 = login("user@email.com","UserPassword")
-        val item1 = CartItemRequest(1, 1)
-        val item2 = CartItemRequest(2, 1)
-        val item3 = CartItemRequest(3, 1)
-        val item4 = CartItemRequest(4, 1)
-        val item5 = CartItemRequest(5, 1)
-        val item6 = CartItemRequest(6, 1)
-        val item7 = CartItemRequest(7, 1)
-        addProductRequest(item1, user1)
-        addProductRequest(item2, user1)
+        addItemsToCartWithDelayForUser(
+            loginAS("user@email.com","UserPassword")
+        )
+    }
+
+    private fun addItemsToCartWithDelayForUser(userToken: String) {
+        val productIds = (1L..7L).toList()
+        productIds.take(2).forEach {
+            addProductToCart(CartItemRequest(it, 1), userToken)
+        }
         Thread.sleep(2000)
-        addProductRequest(item3, user1)
-        addProductRequest(item4, user1)
-        addProductRequest(item5, user1)
-        addProductRequest(item6, user1)
-        addProductRequest(item7, user1)
+        productIds.drop(2).forEach {
+            addProductToCart(CartItemRequest(it, 1), userToken)
+        }
     }
 
     private fun createCartTable() {
@@ -106,7 +104,7 @@ class StatisticsE2ETest {
 
     }
 
-    private fun login(email: String, password: String): String {
+    private fun loginAS(email: String, password: String): String {
         val loginRequest = TokenRequest(email, password)
         val loginResponse =
             RestAssured.given().log().all().body(loginRequest).contentType(ContentType.JSON).`when`()
@@ -115,67 +113,54 @@ class StatisticsE2ETest {
         return token
     }
 
-    private fun addProductRequest(cartRequest: CartItemRequest, token: String): ExtractableResponse<Response> {
-        val cartResponse =
-            RestAssured.given().log().all()
+    private fun addProductToCart(cartRequest: CartItemRequest, token: String) {
+            RestAssured.given()
                 .header("Authorization", "Bearer $token")
                 .body(cartRequest).contentType(ContentType.JSON)
                 .`when`()
                 .post("/api/cart")
-                .then().log().all()
+                .then()
                 .extract()
-        return cartResponse
     }
 
-    @Test
-    fun `should return top 5 most added products in the past 30 days for admin`() {
-        // login
-        val token = login("admin@email.com","AdminPassword")
-
-        val statisticsResponse = RestAssured.given().log().all()
+    private fun getStatistics(token: String, path: String): ExtractableResponse<Response> = RestAssured.given()
+            .log().all()
             .header("Authorization", "Bearer $token")
-            .`when`()
-            .get("/admin/statistics/top-products")
+            .get(path)
             .then().log().all()
             .extract()
 
-        assertThat(statisticsResponse.statusCode()).isEqualTo(HttpStatus.OK.value())
-        val json = statisticsResponse.body().jsonPath()
+    @Test
+    fun `should return top 5 most added products in the past 30 days for admin`() {
+        val token = loginAS("admin@email.com","AdminPassword")
+
+        val stats = getStatistics(token, "/admin/statistics/top-products")
+
+        assertThat(stats.statusCode()).isEqualTo(HttpStatus.OK.value())
+        val json = stats.body().jsonPath()
         val productNames = json.getList<String>("productName")
         assertThat(productNames).containsExactly("soda", "water", "milk", "tea", "coffee")
     }
 
     @Test
     fun `should return active members in the past 7 days for admin`() {
-        // login
-        val token = login("admin@email.com","AdminPassword")
+        val token = loginAS("admin@email.com","AdminPassword")
 
-        val statisticsResponse = RestAssured.given().log().all()
-            .header("Authorization", "Bearer $token")
-            .`when`()
-            .get("/admin/statistics/active-members")
-            .then().log().all()
-            .extract()
+        val stats = getStatistics(token, "/admin/statistics/active-members")
 
-        assertThat(statisticsResponse.statusCode()).isEqualTo(HttpStatus.OK.value())
-        val json = statisticsResponse.body().jsonPath()
-        val productNames = json.getList<String>("email")
-        assertThat(productNames).containsExactly("user@email.com")
+        assertThat(stats.statusCode()).isEqualTo(HttpStatus.OK.value())
+        val json = stats.body().jsonPath()
+        val emails = json.getList<String>("email")
+        assertThat(emails).containsExactly("user@email.com")
     }
 
     @ParameterizedTest
     @ValueSource(strings = ["/admin/statistics/top-products", "/admin/statistics/active-members"])
-    fun `should not return statistics for user`() {
-        // login
-        val token = login("user@email.com","UserPassword")
+    fun `should not return statistics for user`(path: String) {
+        val token = loginAS("user@email.com","UserPassword")
 
-        val statisticsResponse = RestAssured.given().log().all()
-            .header("Authorization", "Bearer $token")
-            .`when`()
-            .get("/admin/statistics/top-products")
-            .then().log().all()
-            .extract()
+        val stats = getStatistics(token, path)
 
-        assertThat(statisticsResponse.statusCode()).isEqualTo(HttpStatus.FORBIDDEN.value())
+        assertThat(stats.statusCode()).isEqualTo(HttpStatus.FORBIDDEN.value())
     }
 }
