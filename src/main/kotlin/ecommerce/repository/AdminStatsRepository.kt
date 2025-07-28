@@ -74,9 +74,9 @@ class AdminStatsRepository(
             """
             SELECT DISTINCT m.ID, m.NAME, m.EMAIL FROM MEMBERS m
             JOIN CARTS c ON m.id = c.MEMBER_ID
-            RIGHT JOIN CART_HISTORY ch ON ch.CART_ID = c.ID
+            JOIN CART_HISTORY ch ON ch.CART_ID = c.ID
             WHERE ch.CREATED_AT >= CURRENT_DATE - INTERVAL '7' DAY
-            LIMIT 5
+            ORDER BY m.ID
             """.trimIndent()
         return jdbcTemplate.query(sql, activeUsers)
     }
