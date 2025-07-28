@@ -6,12 +6,11 @@ import ecommerce.dto.AuthResponse
 import ecommerce.dto.LoginForm
 import ecommerce.dto.MemberResponse
 import ecommerce.dto.RegisterForm
-import ecommerce.exception.AuthorizationException
 import ecommerce.exception.MemberEmailAlreadyExistsException
+import ecommerce.model.Member
 import ecommerce.service.AuthService
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.validation.Valid
-import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.GetMapping
@@ -50,15 +49,8 @@ class AuthController(
     fun findMyInformation(request: HttpServletRequest): ResponseEntity<MemberResponse> {
         val token = authorizationExtractor.extract(request)
         val member = authService.findMemberByToken(token)
-        return ResponseEntity.ok().body(member)
-    }
-
-    @ExceptionHandler(AuthorizationException::class)
-    fun handleAuthorizationException(e: AuthorizationException): ResponseEntity<Map<String, Any>> {
-        val error = mapOf("authorization" to e.message)
-        val errorBody = mapOf("errors" to error)
-        println("AuthorizationException occurred: $errorBody")
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorBody)
+        val response = Member.toResponse(member)
+        return ResponseEntity.ok().body(response)
     }
 
     @ExceptionHandler(MemberEmailAlreadyExistsException::class)

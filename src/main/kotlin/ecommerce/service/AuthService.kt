@@ -4,7 +4,6 @@ import ecommerce.auth.JwtTokenProvider
 import ecommerce.dao.JdbcMemberDAO
 import ecommerce.dto.AuthResponse
 import ecommerce.dto.LoginForm
-import ecommerce.dto.MemberResponse
 import ecommerce.dto.RegisterForm
 import ecommerce.exception.AuthorizationException
 import ecommerce.exception.InternalServerErrorException
@@ -36,13 +35,13 @@ class AuthService(
 
     fun findMemberByEmail(email: String): Member? = jdbcMemberDAO.findByEmail(email)
 
-    fun findMemberByToken(token: String): MemberResponse {
+    fun findMemberByToken(token: String): Member {
         if (!jwtTokenProvider.validateToken(token)) {
             throw AuthorizationException("Invalid token")
         }
         val email = jwtTokenProvider.getPayload(token)
         val member = jdbcMemberDAO.findByEmail(email) ?: throw AuthorizationException("Invalid email")
-        return Member.toResponse(member)
+        return member
     }
 
     private fun checkMemberEmailExists(

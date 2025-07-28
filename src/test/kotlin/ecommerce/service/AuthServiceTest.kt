@@ -6,6 +6,7 @@ import ecommerce.dto.LoginForm
 import ecommerce.dto.RegisterForm
 import ecommerce.exception.AuthorizationException
 import ecommerce.exception.MemberEmailAlreadyExistsException
+import ecommerce.model.Member
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -13,6 +14,7 @@ import org.junit.jupiter.api.assertThrows
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.jdbc.core.JdbcTemplate
+import kotlin.math.E
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 class AuthServiceTest {
@@ -89,5 +91,17 @@ class AuthServiceTest {
         val loginForm = LoginForm(email, password)
         val authResponse = authService.loginMember(loginForm)
         assertThat(authResponse.accessToken).isNotNull()
+    }
+
+    @Test
+    fun `findMemberByToken() - should return a member with id when token is valid`() {
+        val token = jwtTokenProvider.createToken(EMAIL)
+        val member = authService.findMemberByToken(token)
+        assertThat(member).isInstanceOf(Member::class.java)
+        assertThat(member.id).isNotNull()
+    }
+
+    companion object {
+        private const val EMAIL = "san@htc.com"
     }
 }

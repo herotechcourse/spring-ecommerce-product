@@ -135,7 +135,6 @@
 
 #### CartController
 
-- [x] `getMemberId()`
 - HTTP Methods
 - [x] GET "/api/cart" - `viewCart()`
 - [x] POST "/api/cart" - `addToCart(@RequestBody)`
@@ -167,6 +166,7 @@
         "password": "password"
     }
     ```
+- [x] `findMyInformation()`
 
 #### ProductController
 
@@ -226,6 +226,7 @@
 - [x] has `handleDataAccessException()`
 - [x] has `handlerIllegalStateException()`
 - [x] has `handleValidationException()`
+- [x] has `handleAuthorizationException()`
 
 - [x] NotFoundException
 
@@ -248,6 +249,26 @@
 - [x] has a method `createToken(): String` to generate and return an access token
 - [x] has a method `getPayLoad(): String` to decrypt token into payload
 - [x] has a method `validateToken(): Boolean` to decrypt and validate token
+
+### UI
+
+#### LoginMemberArgumentResolver
+
+- [x] is an `HandleMethodArgumentResolver` as `@Component` to handle `@LoginMember` annotation
+- [x] override `supportsParameter()` to add annotation for `LoginMember`
+- [x] override `resolveArgument()` to handle access token and return the member
+
+#### LoginMember
+
+- [x] is an annotation class for authorization of member, using argument resolver 
+
+### Config
+
+#### WebMvcConfiguration
+
+- [x] is an `WebMvcConfigurer`
+- [x] has private property as input `LoginMemberArgumentResolver`
+- [x] override `addArgumentResolvers()` to add `LoginMemberArgumentResolver` component
 
 ### etc.
 
