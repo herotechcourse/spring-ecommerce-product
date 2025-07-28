@@ -16,7 +16,7 @@ class UserService(
         password: String,
         role: String?,
     ): Long {
-        if (userRepository.existsByEmail(email)) throw IllegalArgumentException("Email already in use.")
+        if (userRepository.existsByEmail(email)) throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Email already in use.")
 
         val user = User(email = email, password = password, role = role ?: "USER")
         return userRepository.create(user)

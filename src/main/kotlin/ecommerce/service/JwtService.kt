@@ -23,7 +23,7 @@ class JwtService(
     fun generateToken(email: String): String {
         val user =
             userRepository.getByEmail(email)
-                ?: throw IllegalArgumentException("User not found")
+                ?: throw ResponseStatusException(HttpStatus.UNAUTHORIZED, "User not found.")
 
         val now = Date()
         val expiry = Date(now.time + expirationMillis)
@@ -48,7 +48,7 @@ class JwtService(
 
             return claimsJws.payload.subject
         } catch (e: Exception) {
-            throw ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid or expired token")
+            throw ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid or expired token.")
         }
     }
 }

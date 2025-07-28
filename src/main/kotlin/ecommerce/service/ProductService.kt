@@ -35,6 +35,6 @@ class ProductService(private val productRepository: ProductRepository) {
 
     fun deleteProduct(id: Long) {
         val deleted = productRepository.delete(id)
-        if (!deleted) throw RuntimeException("Product not found.")
+        if (!deleted) throw ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found.")
     }
 }

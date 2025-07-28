@@ -192,6 +192,6 @@ class CRUDTest {
                 .`when`().delete("/api/products/4")
                 .then().log().all().extract()
 
-        Assertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value())
+        Assertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value())
     }
 }
