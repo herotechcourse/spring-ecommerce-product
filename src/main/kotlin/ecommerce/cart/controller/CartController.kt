@@ -19,14 +19,6 @@ import org.springframework.web.bind.annotation.RestController
 class CartController(
     private val cartService: CartService,
 ) {
-    @GetMapping("/")
-    fun getCart(
-        @LoggedMember member: Member,
-    ): ResponseEntity<Cart> {
-        val cart = cartService.getOrCreateCart(member.id!!)
-        return ResponseEntity.ok(cart)
-    }
-
     @GetMapping("/mycart")
     fun getCartDto(
         @LoggedMember member: Member,
