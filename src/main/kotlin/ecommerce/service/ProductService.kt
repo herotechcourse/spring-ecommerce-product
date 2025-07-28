@@ -23,12 +23,10 @@ class ProductService(private val productRepository: ProductRepository) {
     }
 
     fun createProduct(productRequest: ProductRequest): Boolean {
-        if (productRepository.existsByName(
-                productRequest.name,
-            )
-        ) {
+        if (productRepository.existsByName(productRequest.name)) {
             throw ProductAlreadyInDBException("Product already exists with name: ${productRequest.name}")
         }
+
         val created = productRepository.createProduct(productRequest)
         return if (created) {
             true
