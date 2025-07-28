@@ -9,6 +9,8 @@ import io.restassured.response.Response
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.ValueSource
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.HttpStatus
@@ -35,7 +37,7 @@ class StatisticsE2ETest {
         createCartTable()
         createCartItemsTable()
 
-        val token = login("user@email.com","UserPassword")
+        val user1 = login("user@email.com","UserPassword")
         val item1 = CartItemRequest(1, 1)
         val item2 = CartItemRequest(2, 1)
         val item3 = CartItemRequest(3, 1)
@@ -43,14 +45,14 @@ class StatisticsE2ETest {
         val item5 = CartItemRequest(5, 1)
         val item6 = CartItemRequest(6, 1)
         val item7 = CartItemRequest(7, 1)
-        addProductRequest(item1, token)
-        addProductRequest(item2, token)
+        addProductRequest(item1, user1)
+        addProductRequest(item2, user1)
         Thread.sleep(2000)
-        addProductRequest(item3, token)
-        addProductRequest(item4, token)
-        addProductRequest(item5, token)
-        addProductRequest(item6, token)
-        addProductRequest(item7, token)
+        addProductRequest(item3, user1)
+        addProductRequest(item4, user1)
+        addProductRequest(item5, user1)
+        addProductRequest(item6, user1)
+        addProductRequest(item7, user1)
     }
 
     private fun createCartTable() {
@@ -138,7 +140,42 @@ class StatisticsE2ETest {
             .extract()
 
         assertThat(statisticsResponse.statusCode()).isEqualTo(HttpStatus.OK.value())
-//        assertThat(statisticsResponse.body().jsonPath().getString("productName")).isEqualTo("")
-//        assertThat(statisticsResponse.body().jsonPath().getString("productQuantity")).isEqualTo("2")
+        val json = statisticsResponse.body().jsonPath()
+        val productNames = json.getList<String>("productName")
+        assertThat(productNames).containsExactly("soda", "water", "milk", "tea", "coffee")
+    }
+
+    @Test
+    fun `should return active members in the past 7 days for admin`() {
+        // login
+        val token = login("admin@email.com","AdminPassword")
+
+        val statisticsResponse = RestAssured.given().log().all()
+            .header("Authorization", "Bearer $token")
+            .`when`()
+            .get("/admin/statistics/active-members")
+            .then().log().all()
+            .extract()
+
+        assertThat(statisticsResponse.statusCode()).isEqualTo(HttpStatus.OK.value())
+        val json = statisticsResponse.body().jsonPath()
+        val productNames = json.getList<String>("email")
+        assertThat(productNames).containsExactly("user@email.com")
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = ["/admin/statistics/top-products", "/admin/statistics/active-members"])
+    fun `should not return statistics for user`() {
+        // login
+        val token = login("user@email.com","UserPassword")
+
+        val statisticsResponse = RestAssured.given().log().all()
+            .header("Authorization", "Bearer $token")
+            .`when`()
+            .get("/admin/statistics/top-products")
+            .then().log().all()
+            .extract()
+
+        assertThat(statisticsResponse.statusCode()).isEqualTo(HttpStatus.FORBIDDEN.value())
     }
 }
