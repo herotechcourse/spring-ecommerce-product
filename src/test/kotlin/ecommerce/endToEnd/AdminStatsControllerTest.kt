@@ -3,7 +3,7 @@ package ecommerce.endToEnd
 import ecommerce.dto.LoginRequest
 import io.restassured.RestAssured
 import io.restassured.http.ContentType
-import org.assertj.core.api.Assertions
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -74,12 +74,12 @@ class AdminStatsControllerTest {
                 .`when`().get("/api/admin/stats/top-products")
                 .then().log().all().extract()
 
-        Assertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
         val products = response.body().jsonPath().getList<String>("productName")
-        Assertions.assertThat(products).isNotEmpty()
-        Assertions.assertThat(products.size).isEqualTo(2)
-        Assertions.assertThat(products).contains("test1")
-        Assertions.assertThat(products).contains("test2")
+        assertThat(products).isNotEmpty()
+        assertThat(products.size).isEqualTo(2)
+        assertThat(products).contains("test1")
+        assertThat(products).contains("test2")
     }
 
     @Test
@@ -91,10 +91,10 @@ class AdminStatsControllerTest {
                 .`when`().get("/api/admin/stats/active-users")
                 .then().log().all().extract()
 
-        Assertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
         val users = response.body().jsonPath()
-        Assertions.assertThat(users.getList<Int>("memberId")).contains(1)
-        Assertions.assertThat(users.getList<String>("memberEmail")).contains("admin@test.com")
-        Assertions.assertThat(users.getList<String>("memberName")).contains("Admin")
+        assertThat(users.getList<Int>("memberId")).contains(1)
+        assertThat(users.getList<String>("memberEmail")).contains("admin@test.com")
+        assertThat(users.getList<String>("memberName")).contains("Admin")
     }
 }
