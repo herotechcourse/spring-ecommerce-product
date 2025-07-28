@@ -50,8 +50,8 @@ class ProductController(private val productService: ProductService) {
         @PathVariable id: Long,
         @RequestBody @Valid productForm: ProductForm,
     ): ResponseEntity<Product> {
-        val result = productService.update(productForm, id)
-        when (result) {
+        val affectedRows = productService.update(productForm, id)
+        when (affectedRows) {
             1 -> {
                 val target =
                     productService.findById(id) ?: throw InternalServerErrorException("Product not found - ID: $id")
@@ -67,8 +67,12 @@ class ProductController(private val productService: ProductService) {
         @PathVariable id: Long,
     ): ResponseEntity<Void> {
         productService.findById(id) ?: throw NotFoundException("Product not found - ID: $id")
-        productService.delete(id)
-        return ResponseEntity.noContent().build()
+        val affectedRows = productService.delete(id)
+        when (affectedRows) {
+            1 -> return ResponseEntity.noContent().build()
+            0 -> throw NotFoundException("Product not found - ID: $id")
+            else -> throw InternalServerErrorException("Unexpected delete on Product - ID: $id")
+        }
     }
 
     @ExceptionHandler(ProductNameAlreadyExistsException::class)
