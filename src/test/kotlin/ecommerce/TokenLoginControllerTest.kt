@@ -4,6 +4,8 @@ import ecommerce.dto.TokenRequest
 import ecommerce.repository.ProductRepository
 import io.restassured.RestAssured
 import io.restassured.http.ContentType
+import io.restassured.response.ExtractableResponse
+import io.restassured.response.Response
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -62,62 +64,62 @@ class TokenLoginControllerTest {
         jdbcTemplate.batchUpdate("INSERT INTO members(email, password, role) VALUES (?,?,?)", splitUpAttributes)
     }
 
+    private fun loginRequest(body: TokenRequest): ExtractableResponse<Response> = RestAssured
+        .given().log().all()
+        .body(body).contentType(ContentType.JSON)
+        .`when`()
+        .post("/api/members/login")
+        .then().log().all()
+        .extract()
+
+    private fun registerRequest(body: TokenRequest): ExtractableResponse<Response> = RestAssured
+        .given().log().all()
+        .body(body).contentType(ContentType.JSON)
+        .`when`()
+        .post("/api/members/register")
+        .then().log().all()
+        .extract()
+
     @Test
     fun `test registering valid member`() {
-        val request = TokenRequest(email = "newmember@gmail.com", password = "abcdef1234")
-        val response =
-            RestAssured.given().log().all().body(request).contentType(ContentType.JSON).`when`()
-                .post("/api/members/register").then().log().all().extract()
+        val body = TokenRequest(email = "newmember@gmail.com", password = "abcdef1234")
+        val response = registerRequest(body)
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value())
     }
 
     @ParameterizedTest
     @MethodSource("invalidRegisterRequests")
-    fun `test registering invalid members`(request: TokenRequest) {
-        val response =
-            RestAssured.given().log().all().body(request).contentType(ContentType.JSON).`when`()
-                .post("/api/members/register").then().log().all().extract()
+    fun `test registering invalid members`(body: TokenRequest) {
+        val response = registerRequest(body)
         assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value())
     }
 
     @Test
     fun `test valid logins`() {
-        val request = TokenRequest(email = "simon@email.com", password = "Hello1234")
-        val response =
-            RestAssured.given().log().all().body(request).contentType(ContentType.JSON).`when`()
-                .post("/api/members/login").then().log().all().extract()
+        val body = TokenRequest(email = "simon@email.com", password = "Hello1234")
+        val response = loginRequest(body)
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
     }
 
     @Test
     fun `test login with non-registered member`() {
-        val request = TokenRequest(email = "member@email.com", password = "MyPassword#")
-        val response =
-            RestAssured.given().log().all().body(request).contentType(ContentType.JSON).`when`()
-                .post("/api/members/login").then().log().all().extract()
+        val body = TokenRequest(email = "member@email.com", password = "MyPassword#")
+        val response = loginRequest(body)
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value())
         assertThat(response.body().asString()).contains("No account with email exists")
     }
 
     @Test
     fun `test login with incorrect password`() {
-        val request = TokenRequest(email = "sam@email.com", password = "MyPassword#")
-        val response =
-            RestAssured.given().log().all().body(request).contentType(ContentType.JSON).`when`()
-                .post("/api/members/login").then().log().all().extract()
+        val body = TokenRequest(email = "sam@email.com", password = "MyPassword#")
+        val response = loginRequest(body)
         assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value())
     }
 
     @Test
     fun `test request with valid token`() {
-        val loginRequest = TokenRequest(email = "sam@email.com", password = "abcdefghijkl")
-        val loginResponse =
-            RestAssured.given().log().all()
-                .body(loginRequest).contentType(ContentType.JSON)
-                .`when`()
-                .post("/api/members/login")
-                .then().log().all()
-                .extract()
+        val body = TokenRequest(email = "sam@email.com", password = "abcdefghijkl")
+        val loginResponse = loginRequest(body)
 
         assertThat(loginResponse.statusCode()).isEqualTo(HttpStatus.OK.value())
 
@@ -136,7 +138,7 @@ class TokenLoginControllerTest {
     @Test
     fun `test request with invalid token`() {
         val token = "ndwndwoljdwpfkwkdsq.DNlwfk3wld'wamclwfjkepojfo3jf"
-        val tokenResponse =
+        val response =
             RestAssured.given().log().all()
                 .header("Authorization", "Bearer $token")
                 .`when`()
@@ -144,19 +146,13 @@ class TokenLoginControllerTest {
                 .then().log().all()
                 .extract()
 
-        assertThat(tokenResponse.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value())
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value())
     }
 
     @Test
     fun `test request without 'Authorization' header`() {
-        val loginRequest = TokenRequest(email = "sam@email.com", password = "abcdefghijkl")
-        val loginResponse =
-            RestAssured.given().log().all()
-                .body(loginRequest).contentType(ContentType.JSON)
-                .`when`()
-                .post("/api/members/login")
-                .then().log().all()
-                .extract()
+        val body = TokenRequest(email = "sam@email.com", password = "abcdefghijkl")
+        val loginResponse = loginRequest(body)
 
         assertThat(loginResponse.statusCode()).isEqualTo(HttpStatus.OK.value())
 
