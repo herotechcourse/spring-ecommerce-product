@@ -33,4 +33,16 @@ CREATE TABLE cart_item
     FOREIGN KEY (product_id) REFERENCES product (id)
 );
 
+CREATE TABLE cart_item_event
+(
+    id         LONG AUTO_INCREMENT,
+    member_id  LONG NOT NULL,
+    product_id LONG NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (id),
+
+    FOREIGN KEY (member_id) REFERENCES member (id),
+    FOREIGN KEY (product_id) REFERENCES product (id)
+);
+
 // check for how to creat index!
