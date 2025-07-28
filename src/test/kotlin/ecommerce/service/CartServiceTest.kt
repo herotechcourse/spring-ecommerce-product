@@ -11,7 +11,6 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.test.annotation.DirtiesContext
 import org.springframework.test.annotation.Rollback
-import org.springframework.test.context.ActiveProfiles
 import org.springframework.transaction.annotation.Transactional
 
 @SpringBootTest
@@ -21,7 +20,6 @@ import org.springframework.transaction.annotation.Transactional
 class CartServiceTest(
     @Autowired private val cartService: CartService,
     @Autowired private val cartRepository: CartRepository,
-
 ) {
     @Autowired
     private lateinit var jdbcTemplate: JdbcTemplate
