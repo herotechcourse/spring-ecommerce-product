@@ -5,8 +5,8 @@ import ecommerce.domain.Member
 import ecommerce.domain.Product
 import ecommerce.dto.member.AuthResponse
 import ecommerce.dto.member.MemberLoginRequest
-import ecommerce.dto.report.MemberCartActivityDTO
-import ecommerce.dto.report.ProductCartCountDTO
+import ecommerce.dto.report.MemberCartActivityDto
+import ecommerce.dto.report.ProductCartCountDto
 import ecommerce.repository.CartEventRepository
 import ecommerce.repository.MemberRepository
 import ecommerce.repository.ProductRepository
@@ -157,7 +157,7 @@ class AdminReportControllerTest {
                 .`when`().get("/api/admin/reports/top-products-30-days")
                 .then().log().all()
                 .assertThat().statusCode(HttpStatus.OK.value())
-                .extract().body().jsonPath().getList("", ProductCartCountDTO::class.java)
+                .extract().body().jsonPath().getList("", ProductCartCountDto::class.java)
 
         assertThat(response).hasSize(5)
         assertThat(response[0].productName).isEqualTo(product1.name)
@@ -197,7 +197,7 @@ class AdminReportControllerTest {
                 .`when`().get("/api/admin/reports/top-products-30-days")
                 .then().log().all()
                 .assertThat().statusCode(HttpStatus.OK.value())
-                .extract().body().jsonPath().getList("", ProductCartCountDTO::class.java)
+                .extract().body().jsonPath().getList("", ProductCartCountDto::class.java)
 
         assertThat(response).isEmpty()
     }
@@ -223,8 +223,8 @@ class AdminReportControllerTest {
 
         val expectedMembers =
             listOf(
-                MemberCartActivityDTO(memberId = member1.userId, userName = member1.userName, email = member1.email),
-                MemberCartActivityDTO(memberId = member2.userId, userName = member2.userName, email = member2.email),
+                MemberCartActivityDto(memberId = member1.userId, userName = member1.userName, email = member1.email),
+                MemberCartActivityDto(memberId = member2.userId, userName = member2.userName, email = member2.email),
             ).sortedBy { it.memberId }
 
         val response =
@@ -233,7 +233,7 @@ class AdminReportControllerTest {
                 .`when`().get("/api/admin/reports/members-added-to-cart-7-days")
                 .then().log().all()
                 .assertThat().statusCode(HttpStatus.OK.value())
-                .extract().body().jsonPath().getList("", MemberCartActivityDTO::class.java)
+                .extract().body().jsonPath().getList("", MemberCartActivityDto::class.java)
 
         assertThat(response).hasSize(expectedMembers.size)
         assertThat(response.sortedBy { it.memberId }).isEqualTo(expectedMembers)

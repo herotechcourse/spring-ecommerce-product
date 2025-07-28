@@ -3,7 +3,7 @@ package ecommerce.repository
 import ecommerce.domain.CartEvent
 import ecommerce.domain.Member
 import ecommerce.domain.Product
-import ecommerce.dto.report.MemberCartActivityDTO
+import ecommerce.dto.report.MemberCartActivityDto
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
@@ -182,8 +182,8 @@ class CartEventRepositoryTest
 
             val expectedMembers =
                 listOf(
-                    MemberCartActivityDTO(memberId = member1.userId, userName = member1.userName, email = member1.email),
-                    MemberCartActivityDTO(memberId = member2.userId, userName = member2.userName, email = member2.email),
+                    MemberCartActivityDto(memberId = member1.userId, userName = member1.userName, email = member1.email),
+                    MemberCartActivityDto(memberId = member2.userId, userName = member2.userName, email = member2.email),
                 ).sortedBy { it.memberId }
 
             val result = cartEventRepository.findMembersWhoAddedItemsInLastDays(now.minusDays(7))

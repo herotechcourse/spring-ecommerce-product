@@ -1,8 +1,8 @@
 package ecommerce.repository
 
 import ecommerce.domain.CartEvent
-import ecommerce.dto.report.MemberCartActivityDTO
-import ecommerce.dto.report.ProductCartCountDTO
+import ecommerce.dto.report.MemberCartActivityDto
+import ecommerce.dto.report.ProductCartCountDto
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.jdbc.core.RowMapper
 import org.springframework.jdbc.support.GeneratedKeyHolder
@@ -14,8 +14,8 @@ import java.time.LocalDateTime
 @Repository
 class CartEventRepository(private val jdbcTemplate: JdbcTemplate) {
     private val cartItemMapper =
-        RowMapper<ProductCartCountDTO> { rs: ResultSet, _ ->
-            ProductCartCountDTO(
+        RowMapper<ProductCartCountDto> { rs: ResultSet, _ ->
+            ProductCartCountDto(
                 productId = rs.getLong("productId"),
                 productName = rs.getString("productName"),
                 addedCount = rs.getLong("addedCount"),
@@ -24,8 +24,8 @@ class CartEventRepository(private val jdbcTemplate: JdbcTemplate) {
         }
 
     private val memberCartActivityDTOMapper =
-        RowMapper<MemberCartActivityDTO> { rs: ResultSet, _ ->
-            MemberCartActivityDTO(
+        RowMapper<MemberCartActivityDto> { rs: ResultSet, _ ->
+            MemberCartActivityDto(
                 memberId = rs.getLong("memberId"),
                 userName = rs.getString("userName"),
                 email = rs.getString("email"),
@@ -50,7 +50,7 @@ class CartEventRepository(private val jdbcTemplate: JdbcTemplate) {
         return cartEvent
     }
 
-    fun findTop5MostAddedProductsInLast30Days(startDate: LocalDateTime): List<ProductCartCountDTO> {
+    fun findTop5MostAddedProductsInLast30Days(startDate: LocalDateTime): List<ProductCartCountDto> {
         val sql = """
             SELECT
                 ce.product_id AS productId,
@@ -73,7 +73,7 @@ class CartEventRepository(private val jdbcTemplate: JdbcTemplate) {
         return jdbcTemplate.query(sql, cartItemMapper, startDate)
     }
 
-    fun findMembersWhoAddedItemsInLastDays(startDate: LocalDateTime): List<MemberCartActivityDTO> {
+    fun findMembersWhoAddedItemsInLastDays(startDate: LocalDateTime): List<MemberCartActivityDto> {
         val sql = """
             SELECT DISTINCT
                 m.user_id AS memberId,
@@ -86,7 +86,7 @@ class CartEventRepository(private val jdbcTemplate: JdbcTemplate) {
             WHERE
                 ce.timestamp >= ?
             ORDER BY
-                m.user_id ASC -- Order for consistent results
+                m.user_id ASC
         """
         return jdbcTemplate.query(sql, memberCartActivityDTOMapper, startDate)
     }

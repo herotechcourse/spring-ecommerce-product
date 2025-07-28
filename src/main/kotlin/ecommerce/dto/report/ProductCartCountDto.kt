@@ -2,7 +2,7 @@ package ecommerce.dto.report
 
 import java.time.LocalDateTime
 
-data class ProductCartCountDTO(
+data class ProductCartCountDto(
     val productId: Long,
     val productName: String,
     val addedCount: Long,
