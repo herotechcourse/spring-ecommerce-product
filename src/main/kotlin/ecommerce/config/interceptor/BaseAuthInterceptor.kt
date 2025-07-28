@@ -19,7 +19,7 @@ abstract class BaseAuthInterceptor(
     ): Boolean {
         val bearer = request.getHeader("Authorization") ?: throw UnauthorisedUserException()
         val token = bearer.removePrefix("Bearer ").trim()
-        if (!jwtProvider.validateToken(token)) throw UnauthorisedUserException("Token not valid")
+        jwtProvider.validateToken(token)
 
         val payload = jwtProvider.getPayload(token)
         request.setAttribute("email", payload.email)

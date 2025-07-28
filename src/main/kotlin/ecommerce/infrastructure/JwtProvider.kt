@@ -1,6 +1,7 @@
 package ecommerce.infrastructure
 
 import ecommerce.dto.auth.AuthTokenPayload
+import ecommerce.exception.UnauthorisedUserException
 import io.jsonwebtoken.JwtException
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.security.Keys
@@ -43,18 +44,18 @@ class JwtProvider(
         return AuthTokenPayload(email)
     }
 
-    fun validateToken(token: String): Boolean {
-        return try {
+    fun validateToken(token: String) {
+        try {
             val claims =
                 Jwts.parser()
                     .verifyWith(secretKey)
                     .build()
                     .parseSignedClaims(token)
-            !claims.payload.expiration.before(Date())
+            claims.payload.expiration.before(Date())
         } catch (_: JwtException) {
-            false
+            throw UnauthorisedUserException("Token not valid")
         } catch (_: IllegalArgumentException) {
-            false
+            throw IllegalArgumentException("Invalid JWT token")
         }
     }
 }
