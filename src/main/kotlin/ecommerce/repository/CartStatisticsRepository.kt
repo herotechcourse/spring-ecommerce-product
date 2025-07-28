@@ -1,7 +1,7 @@
 package ecommerce.repository
 
-import ecommerce.dto.cartStatistics.MembersWhoAddedToCartDTO
-import ecommerce.dto.cartStatistics.TopAddedProductsDTO
+import ecommerce.entity.MembersWhoAddedToCart
+import ecommerce.entity.TopAddedProducts
 import ecommerce.enums.CartAction
 import ecommerce.mapper.MembersWhoAddedToCartMapper
 import ecommerce.mapper.TopAddedProductsMapper
@@ -34,7 +34,7 @@ class CartStatisticsRepository(
         return insert.executeAndReturnKey(parameters).toLong()
     }
 
-    fun getTopAddedProducts(limit: Int = 5): List<TopAddedProductsDTO> {
+    fun getTopAddedProducts(limit: Int = 5): List<TopAddedProducts> {
         val sql =
             """
             select 
@@ -53,7 +53,7 @@ class CartStatisticsRepository(
         return jdbcTemplate.query(sql, topAddedProductsMapper, CartAction.ADD.name, limit)
     }
 
-    fun getMembersWhoAddedToCart(days: Int = 7): List<MembersWhoAddedToCartDTO> {
+    fun getMembersWhoAddedToCart(days: Int = 7): List<MembersWhoAddedToCart> {
         val sql =
             """
             select

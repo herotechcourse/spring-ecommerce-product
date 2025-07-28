@@ -2,6 +2,7 @@ package ecommerce.service
 
 import ecommerce.dto.cartProduct.CartProductResponseDTO
 import ecommerce.entity.Cart
+import ecommerce.entity.CartProductResponse
 import ecommerce.enums.CartAction
 import ecommerce.exception.CartOperationException
 import ecommerce.exception.EntityNotFoundException
@@ -22,16 +23,7 @@ class CartService(
     fun getCartProducts(userID: Long?): List<CartProductResponseDTO> {
         val cart = getUserCart(userID)
         val products = cartProductRepository.getCartProducts(cart.id)
-        return products.map {
-            CartProductResponseDTO(
-                productId = it.productId,
-                name = it.name,
-                description = it.description,
-                price = it.price,
-                imageUrl = it.imageUrl,
-                quantity = it.quantity,
-            )
-        }
+        return products.map { it.toDTO() }
     }
 
     fun addProductToCart(
@@ -90,5 +82,16 @@ class CartService(
 
     private fun checkValidProduct(productID: Long) {
         productRepository.findById(productID) ?: throw EntityNotFoundException("Product not found")
+    }
+
+    private fun CartProductResponse.toDTO(): CartProductResponseDTO {
+        return CartProductResponseDTO(
+            this.productId,
+            this.name,
+            this.description,
+            this.price,
+            this.imageUrl,
+            this.quantity,
+        )
     }
 }
