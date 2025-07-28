@@ -4,7 +4,6 @@ import ecommerce.dto.LoginRequest
 import ecommerce.dto.ProductRequest
 import io.restassured.RestAssured
 import io.restassured.http.ContentType
-import org.assertj.core.api.Assertions
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -80,10 +79,10 @@ class AdminControllerTest {
                 .`when`().get("/api/admin/products")
                 .then().log().all().extract()
 
-        Assertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
         val names = response.body().jsonPath().getList<String>("")
-        Assertions.assertThat(names).isNotEmpty()
-        Assertions.assertThat(names.size).isEqualTo(2)
+        assertThat(names).isNotEmpty()
+        assertThat(names.size).isEqualTo(2)
     }
 
     @Test
@@ -95,9 +94,9 @@ class AdminControllerTest {
                 .`when`().get("/api/admin/products/1")
                 .then().log().all().extract()
 
-        Assertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
         val productName = response.body().jsonPath().getString("name")
-        Assertions.assertThat(productName).isEqualTo("test")
+        assertThat(productName).isEqualTo("test")
     }
 
     @Test
@@ -118,7 +117,7 @@ class AdminControllerTest {
                 .post("/api/admin/products")
                 .then().log().all().extract()
 
-        Assertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value())
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value())
 
         val productId3 =
             RestAssured.given().log().all()
@@ -128,7 +127,7 @@ class AdminControllerTest {
                 .then().log().all().extract()
 
         val productName = productId3.body().jsonPath().getString("name")
-        Assertions.assertThat(productName).isEqualTo("newProductTest")
+        assertThat(productName).isEqualTo("newProductTest")
     }
 
     @Test
