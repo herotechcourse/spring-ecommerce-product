@@ -27,9 +27,7 @@ class CheckLoginInterceptor(
         val member = authService.findMemberEntityByToken(token)
 
         if (request.requestURI.startsWith("/admin/") && member.role != "ADMIN") {
-            response.status = HttpServletResponse.SC_UNAUTHORIZED
-            response.writer.write("""{"error":"Unauthorized: Admin role required"}""")
-            return false
+            throw AuthorizationException("Unauthorized: Admin role required")
         }
         request.setAttribute("member", member)
         return true
