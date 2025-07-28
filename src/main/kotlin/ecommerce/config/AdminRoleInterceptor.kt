@@ -35,7 +35,7 @@ class AdminRoleInterceptor(
                 ?: throw ResponseStatusException(HttpStatus.UNAUTHORIZED, "User not found")
 
         if (user.role != "ADMIN") {
-            throw ResponseStatusException(HttpStatus.UNAUTHORIZED, "Access denied: ADMIN role required")
+            throw ResponseStatusException(HttpStatus.FORBIDDEN, "Access denied: ADMIN role required")
         }
 
         request.setAttribute("authenticatedUser", user)
