@@ -13,11 +13,11 @@ import java.math.BigDecimal
 class ProductRepositoryTest {
     @Autowired
     lateinit var jdbcTemplate: JdbcTemplate
-    private lateinit var repository: ProductStore
+    private lateinit var repository: ProductRepository
 
     @BeforeEach
     fun setUp() {
-        repository = ProductStore(jdbcTemplate)
+        repository = ProductRepository(jdbcTemplate)
     }
 
     @Test
@@ -63,23 +63,17 @@ class ProductRepositoryTest {
 
     @Test
     fun `count should return correct number of products`() {
-        val product1 = Product(1, "Espresso", BigDecimal.valueOf(3.00), "url1")
-        val product2 = Product(2, "Espresso", BigDecimal.valueOf(4.50), "url2")
-        repository.insert(product1)
-        repository.insert(product2)
+        // data.sql already has 3 products
 
-        assertThat(repository.count()).isEqualTo(2)
+        assertThat(repository.count()).isEqualTo(3)
     }
 
     @Test
     fun `findByName should return the product with the provided name`() {
-        val product1 = Product(1, "Espresso 1", BigDecimal.valueOf(3.00), "url1")
-        val product2 = Product(2, "Espresso 2", BigDecimal.valueOf(4.50), "url2")
-        repository.insert(product1)
-        repository.insert(product2)
+        // data.sql already have 3 products
 
-        val result = repository.findByName("Espresso 2")
+        val result = repository.findByName("Coffee Filter")
         assertThat(result).isNotNull()
-        assertThat(result?.id).isEqualTo(2)
+        assertThat(result?.id).isEqualTo(3)
     }
 }

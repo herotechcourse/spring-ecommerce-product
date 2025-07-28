@@ -1,7 +1,5 @@
 package ecommerce.controller
 
-import ecommerce.MemberMock.MEMBER_1
-import ecommerce.MemberMock.createMember
 import io.restassured.RestAssured
 import io.restassured.http.ContentType
 import org.assertj.core.api.Assertions.assertThat
@@ -19,6 +17,7 @@ class MemberControllerTest {
         val requestBody = mapOf(
             "email" to "memberTeste@test.com",
             "password" to "12345",
+            "role" to "USER"
         )
         val response =
             RestAssured
@@ -33,7 +32,6 @@ class MemberControllerTest {
 
     @Test
     fun `get() should be able to get a member and return 'ok 200' response`() {
-        createMember(MEMBER_1)
 
         val response =
             RestAssured
@@ -42,8 +40,9 @@ class MemberControllerTest {
                 .`when`().get("/api/members/1")
                 .then().log().all().extract()
 
+        val member = response.`as`(Member::class.java)
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
-        assertThat(response.jsonPath().getList("", Member::class.java)).hasSize(1)
+        assertThat(member.id).isEqualTo(1L)
     }
 
 }
