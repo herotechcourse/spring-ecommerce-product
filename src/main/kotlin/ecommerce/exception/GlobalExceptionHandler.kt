@@ -33,4 +33,9 @@ class GlobalExceptionHandler {
     fun handleInternalError(e: InternalServerErrorException): ResponseEntity<String> {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.message)
     }
+
+    @ExceptionHandler(ForbiddenException::class)
+    fun handleInternalError(e: ForbiddenException): ResponseEntity<String> {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.message)
+    }
 }
