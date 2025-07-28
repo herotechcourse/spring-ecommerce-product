@@ -4,9 +4,9 @@ import ecommerce.dto.MemberRequest
 import ecommerce.dto.TokenResponse
 import ecommerce.dto.mapper.MemberMapper
 import ecommerce.entity.Member
-import ecommerce.exception.MemberInsertFailedException
 import ecommerce.exception.LoginFailedException
 import ecommerce.exception.MemberAlreadyExistsException
+import ecommerce.exception.MemberInsertFailedException
 import ecommerce.exception.RetrievalFailedException
 import ecommerce.repository.MemberRepository
 import org.springframework.stereotype.Service

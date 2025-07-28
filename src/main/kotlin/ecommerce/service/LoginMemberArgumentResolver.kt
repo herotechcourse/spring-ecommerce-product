@@ -24,7 +24,6 @@ class LoginMemberArgumentResolver(
         binderFactory: WebDataBinderFactory?,
     ): Any {
         val token = extractToken(webRequest)
-
         return authService.findMemberByToken(token)
     }
 
