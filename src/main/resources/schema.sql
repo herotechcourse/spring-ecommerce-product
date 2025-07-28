@@ -19,7 +19,7 @@ CREATE TABLE IF NOT EXISTS carts (
     id           BIGINT     PRIMARY KEY    AUTO_INCREMENT,
     member_id     BIGINT     NOT NULL UNIQUE,
     created_at    TIMESTAMP  NOT NULL,
-    FOREIGN KEY (member_id) REFERENCES members(user_id)
+    FOREIGN KEY (member_id) REFERENCES members(user_id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS cart_items (
@@ -27,8 +27,8 @@ CREATE TABLE IF NOT EXISTS cart_items (
     cart_id BIGINT NOT NULL,
     product_id BIGINT NOT NULL,
     quantity INT NOT NULL,
-    FOREIGN KEY (cart_id) REFERENCES carts(id),
-    FOREIGN KEY (product_id) REFERENCES products(id)
+    FOREIGN KEY (cart_id) REFERENCES carts(id) ON DELETE CASCADE,
+    FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS cart_events (
@@ -37,6 +37,6 @@ CREATE TABLE IF NOT EXISTS cart_events (
     product_id BIGINT NOT NULL,
     quantity_added INT NOT NULL,
     timestamp TIMESTAMP NOT NULL,
-    FOREIGN KEY (member_id) REFERENCES members(user_id),
-    FOREIGN KEY (product_id) REFERENCES products(id)
+    FOREIGN KEY (member_id) REFERENCES members(user_id) ON DELETE CASCADE,
+    FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE
 )
