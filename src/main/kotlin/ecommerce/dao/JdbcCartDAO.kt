@@ -1,5 +1,7 @@
 package ecommerce.dao
 
+import ecommerce.dto.ActiveMemberInfo
+import ecommerce.dto.TopProductStats
 import ecommerce.model.CartItem
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.jdbc.core.RowMapper
@@ -72,6 +74,11 @@ class JdbcCartDAO(private val db: JdbcTemplate) : CartDAO {
             },
             keyHolder,
         )
+        db.update(
+            "INSERT INTO cart_item_event (member_id, product_id) VALUES (?, ?)",
+            memberId,
+            productId,
+        )
         return keyHolder.key?.toLong() ?: throw IllegalStateException("insert - Failed to retrieve ID")
     }
 
@@ -104,5 +111,46 @@ class JdbcCartDAO(private val db: JdbcTemplate) : CartDAO {
         val sql = "SELECT COUNT(*) FROM cart_item WHERE member_id = ? AND product_id = ?"
         val count = db.queryForObject(sql, Long::class.java, memberId, productId)
         return count != null && count > 0
+    }
+
+    fun getTop5AddedProductsInLast30Days(): List<TopProductStats> {
+        val sql =
+            """
+            SELECT p.name, COUNT(e.id) AS add_count, MAX(e.created_at) AS last_added_at
+            FROM cart_item_event e
+            JOIN product p ON e.product_id = p.id
+            WHERE e.created_at >= NOW() - INTERVAL '30' DAY
+            GROUP BY p.id, p.name
+            ORDER BY add_count DESC, last_added_at DESC
+            LIMIT 5
+            """.trimIndent()
+
+        return db.query(sql) { rs, _ ->
+            TopProductStats(
+                name = rs.getString("name"),
+                addCount = rs.getInt("add_count"),
+                lastAddedAt = rs.getTimestamp("last_added_at").toLocalDateTime(),
+            )
+        }
+    }
+
+    fun getActiveMembersInLast7Days(): List<ActiveMemberInfo> {
+        val sql =
+            """
+            SELECT DISTINCT m.id, m.email
+            FROM member m
+            WHERE EXISTS (
+                SELECT 1 FROM cart_item_event e
+                WHERE e.member_id = m.id
+                    AND e.created_at >= NOW() - INTERVAL '7' DAY
+            )
+            """.trimIndent()
+
+        return db.query(sql) { rs, _ ->
+            ActiveMemberInfo(
+                id = rs.getLong("id"),
+                email = rs.getString("email"),
+            )
+        }
     }
 }
