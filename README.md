@@ -38,7 +38,7 @@ HTTP API that allows users to retrieve, add, update, and delete products.
 
 ## Step 2
 
-### Validate
+### 2-1 Validate 
 #### Product
 -[x] Validate `ProductRequest.name`
   -[x] Must be **no more than 15 characters**, including spaces.
@@ -83,7 +83,7 @@ HTTP API that allows users to retrieve, add, update, and delete products.
 
 ---
 
-### Cart
+### 2-2, 2-3 Cart 
 #### Create Entity
 -[x] Implement `CartItem entity`
   -[x] Fields: id, memberId, productId, quantity, createdAt, updatedAt
@@ -117,3 +117,58 @@ HTTP API that allows users to retrieve, add, update, and delete products.
 -[x] Register resolver and interceptor in `WebConfig`
 #### Exception Handling
 -[x] Define UnauthorizedException for missing or invalid tokens
+
+---
+
+### 2-4- Admin Statistics
+### Database Schema Updates
+-[x] Fix `cart_items` table schema in `schema.sql`
+  -[x] Change `member_id` from `VARCHAR(255)` to `BIGINT`
+  -[x] Change `product_id` from `VARCHAR(255)` to `BIGINT`
+  -[ ] Add proper foreign key constraints if needed
+
+### Create Statistics DTOs
+-[ ] Create `TopProductStatsResponse`
+  -[ ] Fields: productName, addCount, lastAddedAt
+-[ ] Create `ActiveMemberResponse`
+  -[ ] Fields: memberId, memberName, email
+
+### Implement Statistics Repository
+-[ ] Add statistics methods to `CartRepository` or create new `AdminRepository`
+  -[ ] `findTopProductsInLast30Days()` - Top 5 most added products
+    -[ ] Use `GROUP BY`, `ORDER BY`, `LIMIT`
+    -[ ] Handle tiebreaking by the most recent added time
+  -[ ] `findActiveMembersInLast7Days()` - Members who added items in last 7 days
+    -[ ] Use `DISTINCT`, `EXISTS`, or `JOIN`
+    -[ ] Each member appears only once
+
+### Create Statistics Service
+-[ ] Create `AdminService` or `StatsService`
+  -[ ] `getTopProducts()` - business logic for top products
+  -[ ] `getActiveMembers()` - business logic for active members
+
+### Create Admin Controller
+-[ ] Create `AdminController`, `@RequestMapping("/api/admin")`
+  -[ ] `GET /stats/products/top` - retrieve top 5 products
+  -[ ] `GET /stats/members/active` - retrieve active members
+
+### Add SQL Constants
+-[ ] Create `AdminConstsSQL` or add to existing SQL constants
+  -[ ] Top products query (30 days, with tie-breaking)
+  -[ ] Active members query (7 days, distinct)
+
+### (Optional) Admin Role Authorization
+-[ ] Add `role` field to `Member` entity and database
+-[ ] Implement `LoginInterceptor` (currently TODO in `WebConfig`)
+  -[ ] Apply to `/api/admin/**` endpoints
+  -[ ] Check for `ADMIN` role in JWT token or member data
+-[ ] Update JWT token creation to include role information
+-[ ] Update `LoginMemberArgumentResolver` to handle role-based access
+
+### Testing & Validation
+-[ ] Test top products endpoint with sample data
+-[ ] Test active members endpoint with sample data
+-[ ] Verify correct ordering and tie-breaking logic
+-[ ] Test admin role restrictions (if implemented)
+
+---
