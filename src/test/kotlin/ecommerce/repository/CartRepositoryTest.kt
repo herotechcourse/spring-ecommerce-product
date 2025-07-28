@@ -4,13 +4,22 @@ import ecommerce.dto.CartRequest
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.context.annotation.Import
+import org.springframework.jdbc.core.JdbcTemplate
+import org.springframework.test.context.ActiveProfiles
 import org.springframework.transaction.annotation.Transactional
+
 
 @SpringBootTest
 @Transactional
-class CartRepositoryTest(
-    @Autowired private val cartRepository: CartRepository,
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.ANY)
+@ActiveProfiles("test")
+class CartRepositoryTest
+    @Autowired constructor(
+        private val cartRepository: CartRepository,
 ) {
     @Test
     fun `should insert cart item`() {

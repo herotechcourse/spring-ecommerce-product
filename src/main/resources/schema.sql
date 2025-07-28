@@ -14,7 +14,6 @@ CREATE TABLE members
 );
 
 DROP TABLE IF EXISTS cart_items;
-
 CREATE TABLE cart_items (
     id          BIGINT PRIMARY KEY AUTO_INCREMENT,
     member_id   BIGINT NOT NULL,

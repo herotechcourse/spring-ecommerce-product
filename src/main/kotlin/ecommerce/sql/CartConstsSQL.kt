@@ -3,8 +3,7 @@ package ecommerce.sql
 object CartConstsSQL {
     const val INSERT = """
         INSERT INTO cart_items (member_id, product_id, quantity)
-        VALUES (?, ?, ?)
-        RETURNING id, member_id, product_id, quantity, created_at, updated_at;
+        VALUES (?, ?, ?);
         """
 
     const val SELECT_BY_MEMBER = """
