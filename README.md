@@ -112,12 +112,13 @@ HTTP API that allows users to retrieve, add, update, and delete products.
   -[ ] `GET /api/cart` → get cart items
   -[ ] `POST /api/cart` → add/update item
   -[ ] `DELETE /api/cart/{productId}` → remove item
-  -[ ] Use `@LoginMember` to inject the authenticated Member. 
+  -[x] Use `@LoginMember` to inject the authenticated Member. 
 #### Authentication Setup
--[ ] Create `@LoginMember` annotation
--[ ] Implement `LoginMemberArgumentResolver`
+-[x] Create `@LoginMember` annotation
+-[x] Implement `WebConfig`
+-[x] Implement `LoginMemberArgumentResolver`
 -[ ] Implement `AuthInterceptor` to validate tokens globally
--[ ] Register resolver and interceptor in `WebConfig`
+-[x] Register resolver and interceptor in `WebConfig`
 #### Exception Handling
--[ ] Define UnauthorizedException for missing or invalid tokens
+-[x] Define UnauthorizedException for missing or invalid tokens
 -[ ] Add global exception handler to return proper HTTP status codes
