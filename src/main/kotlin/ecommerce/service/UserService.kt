@@ -2,7 +2,9 @@ package ecommerce.service
 
 import ecommerce.entity.User
 import ecommerce.repository.UserRepository
+import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
+import org.springframework.web.server.ResponseStatusException
 
 @Service
 class UserService(
@@ -23,10 +25,12 @@ class UserService(
         return userRepository.getByEmail(email)
     }
 
-    fun checkPassword(
-        user: User,
-        rawPassword: String,
-    ): Boolean {
-        return rawPassword == user.password
+    fun login(
+        email: String,
+        providedPassword: String,
+    ): User {
+        val user = getByEmail(email) ?: throw ResponseStatusException(HttpStatus.FORBIDDEN, "Invalid credentials.")
+        if (!user.checkPassword(providedPassword)) throw ResponseStatusException(HttpStatus.FORBIDDEN, "Invalid credentials.")
+        return user
     }
 }

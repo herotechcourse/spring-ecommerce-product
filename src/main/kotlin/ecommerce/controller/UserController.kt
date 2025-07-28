@@ -23,7 +23,6 @@ class UserController(
     fun register(
         @Valid @RequestBody request: RegisterRequest,
     ): ResponseEntity<RegisterResponse> {
-
         userService.register(request.email, request.password, request.role)
         val token = jwtService.generateToken(request.email)
         val response = RegisterResponse(token)
@@ -34,13 +33,7 @@ class UserController(
     fun login(
         @Valid @RequestBody request: LoginRequest,
     ): ResponseEntity<LoginResponse> {
-        val user =
-            userService.getByEmail(request.email)
-                ?: return ResponseEntity.status(403).build()
-
-        val passwordMatches = userService.checkPassword(user, request.password)
-        if (!passwordMatches) return ResponseEntity.status(403).build()
-
+        val user = userService.login(request.email, request.password)
         val token = jwtService.generateToken(user.email)
         return ResponseEntity.ok(LoginResponse(token))
     }

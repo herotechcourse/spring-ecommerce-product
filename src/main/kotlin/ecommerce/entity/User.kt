@@ -6,6 +6,10 @@ class User(
     var password: String,
     var role: String? = null,
 ) {
+    fun checkPassword(providedPassword: String): Boolean {
+        return providedPassword == password
+    }
+
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
