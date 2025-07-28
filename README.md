@@ -68,6 +68,14 @@
 - [x] is a data class, as a DTO to send access token as response
 - [x] has property `accessToken: String`
 
+#### CartForm
+
+- [x] is a data class, as a DTO to validate form for add and update item in cart
+- [x] has a property `productId: Long`
+  - [x] validate 'Min'
+- [x] has a property `quantity: Int`
+  - [x] validate 'Min'
+
 ### DAO (Data Access Object)
 
 #### Interface CartDAO
@@ -127,12 +135,12 @@
 
 #### CartController
 
-- [ ] `getMemberId()`
+- [x] `getMemberId()`
 - HTTP Methods
-- [ ] GET "/api/cart" - `viewCart()`
-- [ ] POST "/api/cart" - `addToCart(@RequestBody)`
-- [ ] DELETE "/api/cart/{id}" - `removeFromCart(@PathVariable)`
-- [ ] PUT "/api/cart/{id}" - `updateQuantity(@PathVariable, @RequestBody)`
+- [x] GET "/api/cart" - `viewCart()`
+- [x] POST "/api/cart" - `addToCart(@RequestBody)`
+- [x] DELETE "/api/cart/{id}" - `removeFromCart(@PathVariable)`
+- [x] PUT "/api/cart/{id}" - `updateQuantity(@PathVariable, @RequestBody)`
 
 #### AuthController
 
