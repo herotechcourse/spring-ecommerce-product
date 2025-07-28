@@ -1,5 +1,6 @@
 package ecommerce.service
 
+import ecommerce.dto.LoggedInUser
 import ecommerce.entity.User
 import ecommerce.repository.UserRepository
 import org.springframework.http.HttpStatus
@@ -28,9 +29,9 @@ class UserService(
     fun login(
         email: String,
         providedPassword: String,
-    ): User {
+    ): LoggedInUser {
         val user = getByEmail(email) ?: throw ResponseStatusException(HttpStatus.FORBIDDEN, "Invalid credentials.")
         if (!user.checkPassword(providedPassword)) throw ResponseStatusException(HttpStatus.FORBIDDEN, "Invalid credentials.")
-        return user
+        return user.toLoggedInUser()
     }
 }

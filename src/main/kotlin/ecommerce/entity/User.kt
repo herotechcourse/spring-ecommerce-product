@@ -1,5 +1,7 @@
 package ecommerce.entity
 
+import ecommerce.dto.LoggedInUser
+
 class User(
     var id: Long? = null,
     var email: String,
@@ -21,5 +23,13 @@ class User(
 
     override fun hashCode(): Int {
         return id?.hashCode() ?: 0
+    }
+
+    fun toLoggedInUser(): LoggedInUser {
+        return LoggedInUser(
+            id = this.id!!,
+            email = this.email,
+            role = this.role!!,
+        )
     }
 }

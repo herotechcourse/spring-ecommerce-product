@@ -3,8 +3,8 @@ package ecommerce.controller
 import ecommerce.common.LoginUser
 import ecommerce.dto.CartItemRequest
 import ecommerce.dto.CartItemResponse
+import ecommerce.dto.LoggedInUser
 import ecommerce.dto.UpdateQuantityRequest
-import ecommerce.entity.User
 import ecommerce.service.CartService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -24,38 +24,38 @@ class CartController(
 ) {
     @PostMapping
     fun addToCart(
-        @LoginUser user: User,
+        @LoginUser user: LoggedInUser,
         @RequestBody request: CartItemRequest,
     ): ResponseEntity<Void> {
-        cartService.addItem(user.id!!, request.productId, request.quantity) // <-- pass quantity here
+        cartService.addItem(user.id, request.productId, request.quantity) // <-- pass quantity here
         return ResponseEntity.status(HttpStatus.CREATED).build()
     }
 
     @GetMapping
     fun getCart(
-        @LoginUser user: User,
+        @LoginUser user: LoggedInUser,
     ): ResponseEntity<List<CartItemResponse>> {
-        val items = cartService.getCart(user.id!!)
+        val items = cartService.getCart(user.id)
         val response = items.map { CartItemResponse(it.productId, it.quantity) }
         return ResponseEntity.ok(response)
     }
 
     @DeleteMapping("/{productId}")
     fun removeItem(
-        @LoginUser user: User,
+        @LoginUser user: LoggedInUser,
         @PathVariable productId: Long,
     ): ResponseEntity<Void> {
-        cartService.removeItem(user.id!!, productId)
+        cartService.removeItem(user.id, productId)
         return ResponseEntity.noContent().build()
     }
 
     @PatchMapping("/{productId}")
     fun updateQuantity(
-        @LoginUser user: User,
+        @LoginUser user: LoggedInUser,
         @PathVariable productId: Long,
         @RequestBody request: UpdateQuantityRequest,
     ): ResponseEntity<Void> {
-        cartService.updateQuantity(user.id!!, productId, request.quantity)
+        cartService.updateQuantity(user.id, productId, request.quantity)
 
         return if (request.quantity == 0) {
             ResponseEntity.noContent().build()

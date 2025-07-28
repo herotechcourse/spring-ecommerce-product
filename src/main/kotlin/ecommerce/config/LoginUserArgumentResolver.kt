@@ -1,6 +1,7 @@
 package ecommerce.config
 
 import ecommerce.common.LoginUser
+import ecommerce.dto.LoggedInUser
 import ecommerce.entity.User
 import jakarta.servlet.http.HttpServletRequest
 import org.springframework.core.MethodParameter
@@ -16,7 +17,7 @@ import org.springframework.web.server.ResponseStatusException
 class LoginUserArgumentResolver : HandlerMethodArgumentResolver {
     override fun supportsParameter(parameter: MethodParameter): Boolean {
         return parameter.hasParameterAnnotation(LoginUser::class.java) &&
-            parameter.parameterType == User::class.java
+            parameter.parameterType == LoggedInUser::class.java
     }
 
     override fun resolveArgument(
@@ -30,6 +31,6 @@ class LoginUserArgumentResolver : HandlerMethodArgumentResolver {
             request.getAttribute("authenticatedUser") as? User
                 ?: throw ResponseStatusException(HttpStatus.UNAUTHORIZED, "User not authenticated")
 
-        return user
+        return LoggedInUser(user.id!!, user.email, user.role!!)
     }
 }
