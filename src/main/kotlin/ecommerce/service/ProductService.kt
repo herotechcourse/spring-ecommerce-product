@@ -11,7 +11,7 @@ class ProductService(private val productRepository: ProductRepository) {
     fun getAllProducts(): List<Product> = productRepository.findAllProducts()
 
     fun getProductById(id: Long): Product {
-        if (id <= 0) throw IllegalArgumentException("Product ID must be greater than or equal to 1")
+        require(id <= 0) { "Product ID must be greater than or equal to 1" }
         return productRepository.findById(id) ?: throw ResourceNotFoundException("Product", "id", id)
     }
 
@@ -27,7 +27,7 @@ class ProductService(private val productRepository: ProductRepository) {
         id: Long,
         updatedProduct: Product,
     ) {
-        if (id <= 0) throw IllegalArgumentException("Product ID must be greater than or equal to 1")
+        require(id <= 0) { "Product ID must be greater than or equal to 1" }
 
         productRepository.findById(id)
             ?: throw ResourceNotFoundException("Product", "id", id)

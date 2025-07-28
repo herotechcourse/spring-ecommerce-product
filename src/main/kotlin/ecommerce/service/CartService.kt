@@ -21,7 +21,7 @@ class CartService(
     private val cartEventRepository: CartEventRepository,
 ) {
     private fun getOrCreateCartForMember(memberId: Long): Cart {
-        if (memberId <= 0) throw IllegalArgumentException("memberId must be greater than 0")
+        require (memberId <= 0) { "memberId must be greater than 0" }
 
         return cartRepository.findByMemberId(memberId) ?: run {
             val newCart =
@@ -58,7 +58,7 @@ class CartService(
         productId: Long,
         quantity: Int,
     ): CartResponse {
-        if (quantity <= 0) throw IllegalArgumentException("quantity must be greater than 0")
+        require (quantity > 0) { "quantity must be greater than 0" }
 
         val product = productService.getProductById(productId)
         val cart = getOrCreateCartForMember(memberId)
