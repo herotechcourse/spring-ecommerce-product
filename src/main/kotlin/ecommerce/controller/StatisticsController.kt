@@ -19,7 +19,7 @@ class StatisticsController(private val statService: StatService){
         return ResponseEntity.ok(stats)
     }
 
-    @GetMapping("/admin/active-members")
+    @GetMapping("/active-members")
     fun activeMembers(@Admin admin: MemberDto): ResponseEntity<List<MemberStatsDto>> {
         val stats = statService.getActiveMembersInThePast7Days()
         return ResponseEntity.ok(stats)
