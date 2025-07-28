@@ -14,7 +14,7 @@ import org.springframework.test.annotation.DirtiesContext
 import org.springframework.test.util.AssertionErrors.assertNotNull
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 class AuthControllerTest() {
     @LocalServerPort
     private var port: Int = 0
@@ -27,7 +27,7 @@ class AuthControllerTest() {
     @Test
     fun `register with valid data should return 201 Created`() {
         val registerRequest =
-            RegisterRequest("valid@example.com", "SecureP@ss1", "name")
+            RegisterRequest("valid2@example.com", "SecureP@ss1", "User1")
         val response =
             RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
@@ -84,7 +84,7 @@ class AuthControllerTest() {
 
     @Test
     fun `register with weak password should return 400 Bad Request`() {
-        val weakPasswordRequest = RegisterRequest("valid@example.com", "weakpassword", "name")
+        val weakPasswordRequest = RegisterRequest("valid4@example.com", "weakpassword", "name")
         val response =
             RestAssured.given().log().all()
                 .contentType(ContentType.JSON)

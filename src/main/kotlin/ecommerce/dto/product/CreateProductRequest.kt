@@ -9,7 +9,7 @@ data class CreateProductRequest(
     @field:NotNull(message = "Name must not be blank")
     @field:Size(max = 15, message = "Name must be at most 15 characters")
     @field:Pattern(
-        regexp = "^[a-zA-Z0-9 ()\\[\\]+\\-&/_]{1,15}$",
+        regexp = "^[a-zA-Z0-9 ()\\[\\]+\\-&/_]{1,100}$",
         message =
             "Name must be 1–15 characters and only include letters, digits, spaces, " +
                 "and allowed special characters:( ), [ ], +, -, &, /, _",

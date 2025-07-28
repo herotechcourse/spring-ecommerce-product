@@ -18,7 +18,7 @@ import org.springframework.test.annotation.DirtiesContext
 import org.springframework.web.servlet.function.RequestPredicates.contentType
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 class ProductControllerTest {
     @LocalServerPort
     private var port: Int = 0
@@ -27,7 +27,7 @@ class ProductControllerTest {
     @BeforeEach
     fun setupAuthentication() {
         RestAssured.port = port
-        val registerRequest = RegisterRequest("validEmail@email.com", "SecureP@ss1", "name")
+        val registerRequest = RegisterRequest("validEmail5@email.com", "SecureP@ss1", "name")
         RestAssured.given()
             .contentType(ContentType.JSON)
             .body(registerRequest)
@@ -36,7 +36,7 @@ class ProductControllerTest {
             .statusCode(HttpStatus.CREATED.value())
             .extract()
 
-        val loginRequest = LoginRequest("validEmail@email.com", "SecureP@ss1")
+        val loginRequest = LoginRequest("validEmail5@email.com", "SecureP@ss1")
         val response =
             RestAssured.given()
                 .contentType(ContentType.JSON)
@@ -83,7 +83,7 @@ class ProductControllerTest {
 
     @Test
     fun `createProduct should return 201`() {
-        val createRequest = CreateProductRequest("Test Product", 10.0, "http://example_img", 2)
+        val createRequest = CreateProductRequest("Test Product10", 10.0, "http://example_img", 2)
         val response =
             RestAssured
                 .given().log().all()
@@ -98,8 +98,8 @@ class ProductControllerTest {
 
     @Test
     fun `getProducts should return 200 OK`() {
-        createProductWithAuth(101, "ProductA", 10.0, "https://example.com/imgA", 5)
-        createProductWithAuth(102, "ProductB", 20.0, "https://example.com/imgB", 3)
+        createProductWithAuth(210, "ProductK", 10.0, "https://example.com/imgA", 5)
+        createProductWithAuth(212, "ProductL", 20.0, "https://example.com/imgB", 3)
         val response =
             RestAssured
                 .given().log().all()
@@ -114,7 +114,7 @@ class ProductControllerTest {
 
     @Test
     fun `updateProduct should return 200 OK`() {
-        val createdProduct = createProductWithAuth(100, "original", 20.0, "https://example.com/original", 5)
+        val createdProduct = createProductWithAuth(900, "original", 20.0, "https://example.com/original", 5)
         val productIdToUpdate = createdProduct.id
         val updateRequest = UpdateProductRequest("updated", 30.0, "https://example.com/original", 5)
         val response =
@@ -134,7 +134,7 @@ class ProductControllerTest {
 
     @Test
     fun `deleteProduct should return 204 No Content with authentication`() {
-        val createdProduct = createProductWithAuth(101, "productToDelete", 20.0, "https://example.com/original", 5)
+        val createdProduct = createProductWithAuth(800, "productToDelete", 20.0, "https://example.com/original", 5)
         val productToDeleteId = createdProduct.id
 
         val response =

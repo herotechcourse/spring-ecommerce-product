@@ -27,7 +27,7 @@ class ProductExceptionTest {
     fun setupAuthentication() {
         RestAssured.port = port
         RestAssured.baseURI = "http://localhost"
-        val registerRequest = RegisterRequest("validEmail@email.com", "SecureP@ss1", "name")
+        val registerRequest = RegisterRequest("validEmail12@email.com", "SecureP@ss1", "name")
         RestAssured.given()
             .contentType(ContentType.JSON)
             .body(registerRequest)
@@ -36,7 +36,7 @@ class ProductExceptionTest {
             .statusCode(HttpStatus.CREATED.value())
             .extract()
 
-        val loginRequest = LoginRequest("validEmail@email.com", "SecureP@ss1")
+        val loginRequest = LoginRequest("validEmail12@email.com", "SecureP@ss1")
         val response =
             RestAssured.given()
                 .contentType(ContentType.JSON)
@@ -101,7 +101,7 @@ class ProductExceptionTest {
                 .statusCode(HttpStatus.BAD_REQUEST.value()).extract()
 
         val errorMessage = response.jsonPath().getString("errors.name")
-        assertThat(errorMessage).contains("Name must be 1–15 characters")
+        assertThat(errorMessage).contains("Name must be at most 15 characters")
     }
 
     @Test
@@ -125,7 +125,7 @@ class ProductExceptionTest {
     fun `invalid price returns 400(less than 0)`() {
         val createRequest =
             CreateProductRequest(
-                name = "ValidName",
+                name = "ValidProductA",
                 price = 0.0,
                 img = "https://valid_image_url.com/img.jpg",
                 quantity = 10,
@@ -148,7 +148,7 @@ class ProductExceptionTest {
     fun `invalid image url returns 400(does not start with http or https)`() {
         val createRequest =
             CreateProductRequest(
-                name = "ValidName",
+                name = "ValidProductB",
                 price = 0.0,
                 img = "invalidImage.jpg",
                 quantity = 10,
@@ -169,11 +169,11 @@ class ProductExceptionTest {
 
     @Test
     fun `duplicate product name`() {
-        val productName = "ProductName"
+        val productName = "ProductNameC"
         createProductWithAuth(10, productName, 10.0, "https://valid_image_url.com/img1.jpg", 10)
         val duplicateProductRequest =
             CreateProductRequest(
-                name = "ProductName",
+                name = "ProductNameC",
                 price = 10.0,
                 img = "https://valid_image_url.com/img1.jpg",
                 quantity = 10,
@@ -190,7 +190,7 @@ class ProductExceptionTest {
 
         val errorMessage = response.jsonPath().getString("error")
         assertThat(HttpStatus.CONFLICT.value().isEqualTo(response.statusCode()))
-        assertThat(errorMessage).contains("Product name ProductName already exists.")
+        assertThat(errorMessage).contains("Product name ProductNameC already exists.")
     }
 
     @Test

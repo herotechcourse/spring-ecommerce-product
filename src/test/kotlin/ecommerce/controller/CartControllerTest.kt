@@ -17,7 +17,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.test.annotation.DirtiesContext
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 class CartControllerTest {
     @LocalServerPort
     private var port: Int = 0
@@ -26,7 +26,7 @@ class CartControllerTest {
     @BeforeEach
     fun setupAuthentication() {
         RestAssured.port = port
-        val registerRequest = RegisterRequest("validEmail@email.com", "SecureP@ss1", "name")
+        val registerRequest = RegisterRequest("validEmail3@email.com", "SecureP@ss1", "name")
         RestAssured.given()
             .contentType(ContentType.JSON)
             .body(registerRequest)
@@ -35,7 +35,7 @@ class CartControllerTest {
             .statusCode(HttpStatus.CREATED.value())
             .extract()
 
-        val loginRequest = LoginRequest("validEmail@email.com", "SecureP@ss1")
+        val loginRequest = LoginRequest("validEmail3@email.com", "SecureP@ss1")
         val response =
             RestAssured.given()
                 .contentType(ContentType.JSON)
@@ -100,7 +100,7 @@ class CartControllerTest {
         val productId =
             createProductWithAuth(
                 CreateProductRequest(
-                    "ProductA",
+                    "ProductZ",
                     10.0,
                     "http://productA_img.jpg",
                     20,
@@ -134,7 +134,7 @@ class CartControllerTest {
         assertThat(updateResponse.statusCode()).isEqualTo(HttpStatus.OK.value())
         assertThat(cartItemResponse.productId).isEqualTo(productId)
         assertThat(cartItemResponse.quantity).isEqualTo(addCartItemRequest.quantity + updateCartItemRequest.quantity)
-        assertThat(cartItemResponse.productName).isEqualTo("ProductA")
+        assertThat(cartItemResponse.productName).isEqualTo("ProductZ")
         assertThat(cartItemResponse.productPrice).isEqualTo(10.0)
     }
 
@@ -181,7 +181,7 @@ class CartControllerTest {
         val productId =
             createProductWithAuth(
                 CreateProductRequest(
-                    "ProductB",
+                    "ProductY",
                     productPrice,
                     "http://productB_img.jpg",
                     25,
