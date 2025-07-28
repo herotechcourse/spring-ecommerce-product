@@ -50,16 +50,18 @@ HTTP API that allows users to retrieve, add, update, and delete products.
 -[x] Validate `ProductRequest.imageUrl`
   -[x] Must start with **http://** or **https://**
 
+---
+
 #### Member
--[ ] Validate `ProductRequest.email`
+-[x] Validate `ProductRequest.email`
   -[x] Must be Email format
   -[x] Must be **unique** across all members.
   -[x] Not black
--[ ] Validate `ProductRequest.password`
+-[x] Validate `ProductRequest.password`
   -[x] Basic size check
   -[ ] more?
 
-### Refactor
+#### Refactor
 -[x] The application is now structured into Controller, Service, and Repository layers in Member.
   - Business logic is handled in the Service layer, which throws specific custom exceptions depending on the condition.
   Repository methods are allowed to return null, and the responsibility for interpreting the result lies in the Service.
@@ -67,14 +69,14 @@ HTTP API that allows users to retrieve, add, update, and delete products.
 -[x] The application is now structured into Controller, Service, and Repository layers in Product.
 
 
-### Member controller
+#### Member controller
 - [x] implement `register`
   - success: 201 created
   - failure
     -[x] duplicated email: 409 Conflict
     -[x] duplicated id: 422 Unprocessable Entity ->?
     -[x] can not find data with id: 424 Failed Dependency ->?
-- [ ] implement `login`
+- [x] implement `login`
   - success: 200 ok
   - failure
     -[x] Invalid email or password → 401 Unauthorized 
@@ -82,3 +84,40 @@ HTTP API that allows users to retrieve, add, update, and delete products.
       - MemberStatus
       - MemberRole
     -[ ] Too many failed attempts → 429 Too Many Requests
+
+---
+
+### Cart
+#### Create Entity
+-[ ] Implement `CartItem entity`
+  -[ ] Fields: id, memberId, productId, quantity, createdAt, updatedAt
+  -[ ] Ensure updatedAt is automatically updated in DB using `ON UPDATE`
+#### Create Request / Response DTOs
+-[ ] `CartRequest` (fields: productId, quantity)
+-[ ] `CartResponse` (fields: productId, quantity, createdAt, updatedAt)
+#### Update Schema SQL
+-[ ] Add `cart_items` table to schema.sql
+#### Implement Repository
+-[ ] Create `repository` methods for:
+  -[ ] Find all cart items by member ID
+  -[ ] Add or update a cart item
+  -[ ] Remove a cart item
+#### Implement Service
+-[ ] `CartService` methods:
+  -[ ] `findByMemberId(memberId: Long): List<CartItem>`
+  -[ ] `addOrUpdateCart(memberId: Long, productId: Long, quantity: Int)`
+  -[ ] `removeFromCart(memberId: Long, productId: Long)`
+#### Create Controller
+-[ ] CartController endpoints:
+  -[ ] `GET /api/cart` → get cart items
+  -[ ] `POST /api/cart` → add/update item
+  -[ ] `DELETE /api/cart/{productId}` → remove item
+  -[ ] Use `@LoginMember` to inject the authenticated Member. 
+#### Authentication Setup
+-[ ] Create `@LoginMember` annotation
+-[ ] Implement `LoginMemberArgumentResolver`
+-[ ] Implement `AuthInterceptor` to validate tokens globally
+-[ ] Register resolver and interceptor in `WebConfig`
+#### Exception Handling
+-[ ] Define UnauthorizedException for missing or invalid tokens
+-[ ] Add global exception handler to return proper HTTP status codes
