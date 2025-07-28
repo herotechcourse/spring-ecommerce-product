@@ -89,14 +89,14 @@ HTTP API that allows users to retrieve, add, update, and delete products.
 
 ### Cart
 #### Create Entity
--[ ] Implement `CartItem entity`
-  -[ ] Fields: id, memberId, productId, quantity, createdAt, updatedAt
-  -[ ] Ensure updatedAt is automatically updated in DB using `ON UPDATE`
+-[x] Implement `CartItem entity`
+  -[x] Fields: id, memberId, productId, quantity, createdAt, updatedAt
+  -[x] Ensure updatedAt is automatically updated in DB using `ON UPDATE`
 #### Create Request / Response DTOs
--[ ] `CartRequest` (fields: productId, quantity)
--[ ] `CartResponse` (fields: productId, quantity, createdAt, updatedAt)
+-[x] `CartRequest` (fields: productId, quantity)
+-[x] `CartResponse` (fields: id, productId, quantity, updatedAt)
 #### Update Schema SQL
--[ ] Add `cart_items` table to schema.sql
+-[x] Add `cart_items` table to schema.sql
 #### Implement Repository
 -[ ] Create `repository` methods for:
   -[ ] Find all cart items by member ID

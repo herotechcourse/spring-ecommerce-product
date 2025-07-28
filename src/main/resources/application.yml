@@ -2,6 +2,10 @@ spring:
   application:
     name: spring-ecommerce
 
+  sql:
+    init:
+      mode: always
+
   h2:
     console:
       enabled: true
@@ -15,7 +19,7 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: none
     show-sql: true
     properties:
       hibernate:
