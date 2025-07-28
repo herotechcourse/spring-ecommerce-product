@@ -54,9 +54,12 @@ class CartRepository(
         memberId: Long,
         productId: Long,
     ): Boolean {
-        val sql = "SELECT COUNT(*) FROM CART_ITEMS WHERE member_id = ? AND product_id = ?"
-        val count = jdbcTemplate.queryForObject(sql, Int::class.java, memberId, productId) ?: 0
-        return count > 0
+        val sql = """
+            SELECT EXISTS (
+                SELECT 1 FROM CART_ITEMS WHERE member_id = ? AND product_id = ?
+            )
+        """
+        return jdbcTemplate.queryForObject(sql, Boolean::class.java, memberId, productId) ?: false
     }
 
     fun findTopProductsInLast30Days(): List<TopProductResponse> {

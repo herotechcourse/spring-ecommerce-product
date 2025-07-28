@@ -41,20 +41,11 @@ class MemberRepository(
     }
 
     fun existsByEmail(email: String): Boolean {
-        val sql = "SELECT COUNT(*) FROM MEMBERS WHERE email = ?"
-        val count = jdbcTemplate.queryForObject(sql, Int::class.java, email) ?: 0
-        return count > 0
-    }
-
-    fun findById(id: Long): Member? {
-        val sql = "SELECT * FROM MEMBERS WHERE id = ?"
-        return jdbcTemplate.query(sql, { rs, _ ->
-            Member(
-                id = rs.getLong("id"),
-                email = rs.getString("email"),
-                password = rs.getString("password"),
-                role = rs.getString("role"),
+        val sql = """
+            SELECT EXISTS (
+                SELECT 1 FROM MEMBERS WHERE email = ?
             )
-        }, id).firstOrNull()
+        """
+        return jdbcTemplate.queryForObject(sql, Boolean::class.java, email) ?: false
     }
 }

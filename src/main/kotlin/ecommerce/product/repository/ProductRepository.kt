@@ -30,9 +30,12 @@ class ProductRepository(private val jdbcTemplate: JdbcTemplate) {
         name: String,
         excludeId: Long? = null,
     ): Boolean {
-        val sql = "SELECT COUNT(*) FROM products WHERE name = ? AND (? IS NULL OR id != ?)"
-        val count = jdbcTemplate.queryForObject(sql, Int::class.java, name, excludeId, excludeId) ?: 0
-        return count > 0
+        val sql = """
+            SELECT EXISTS (
+                SELECT 1 FROM PRODUCTS WHERE name = ? AND (? IS NULL OR id != ?)
+            )
+        """
+        return jdbcTemplate.queryForObject(sql, Boolean::class.java, name, excludeId, excludeId) ?: false
     }
 
     fun insert(product: Product) {
