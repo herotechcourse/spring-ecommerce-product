@@ -1,15 +1,19 @@
 package ecommerce.infrastructure
 
 import jakarta.servlet.http.HttpServletRequest
+import org.springframework.http.HttpHeaders
 
 class BearerAuthorizationExtractor : AuthorizationExtractor<String> {
     override fun extract(request: HttpServletRequest): String {
-        val headers = request.getHeaders(AuthorizationExtractor.AUTHORIZATION)
+        val headers = request.getHeaders(HttpHeaders.AUTHORIZATION)
+
         while (headers.hasMoreElements()) {
             val value = headers.nextElement()
-            if (value.lowercase().startsWith(BEARER_TYPE.lowercase())) {
+            if (value.startsWith(BEARER_TYPE, ignoreCase = true)) {
                 var authHeaderValue = value.substring(BEARER_TYPE.length).trim()
-                request.setAttribute(ACCESS_TOKEN_TYPE, value.substring(0, BEARER_TYPE.length).trim())
+
+                request.setAttribute(ACCESS_TOKEN_TYPE, BEARER_TYPE)
+
                 val commaIndex = authHeaderValue.indexOf(',')
                 if (commaIndex > 0) {
                     authHeaderValue = authHeaderValue.substring(0, commaIndex)
@@ -17,7 +21,6 @@ class BearerAuthorizationExtractor : AuthorizationExtractor<String> {
                 return authHeaderValue
             }
         }
-
         return ""
     }
 
