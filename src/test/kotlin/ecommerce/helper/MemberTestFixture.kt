@@ -14,6 +14,12 @@ object MemberTestFixture {
                 email = "admin@email.com",
                 password = "password",
             )
+
+        val VALID_MEMBER =
+            MemberRequest(
+                email = "guri@email.com",
+                password = "very_cute_dog",
+            )
     }
 
     object ValidationCase {
