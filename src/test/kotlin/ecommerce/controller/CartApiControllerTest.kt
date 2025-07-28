@@ -5,6 +5,7 @@ import ecommerce.domain.Member
 import ecommerce.domain.Product
 import ecommerce.dto.cart.AddToCartRequest
 import ecommerce.dto.cart.CartResponse
+import ecommerce.dto.cartItem.CartItemResponse
 import ecommerce.dto.member.AuthResponse
 import ecommerce.dto.member.MemberLoginRequest
 import ecommerce.repository.CartEventRepository
@@ -16,6 +17,8 @@ import ecommerce.service.AuthService
 import io.restassured.RestAssured
 import io.restassured.http.ContentType
 import org.assertj.core.api.Assertions.assertThat
+import org.hamcrest.CoreMatchers.equalTo
+import org.hamcrest.Matchers.hasSize
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
@@ -135,18 +138,16 @@ class CartApiControllerTest {
     @DisplayName("Integration Tests for Cart Retrieval (GET /api/cart)")
     @Test
     fun `Should return 200 OK with no cart contents for a valid USER token`() {
-        val response =
-            RestAssured.given().log().all()
-                .header("Authorization", "Bearer $userToken")
-                .`when`().get("/api/cart")
-                .then().log().all()
-                .assertThat().statusCode(HttpStatus.OK.value())
-                .extract().`as`(CartResponse::class.java)
-
-        assertThat(response.memberId).isEqualTo(userMember.userId)
-        assertThat(response.items).isEmpty()
-        assertThat(response.totalPrice).isEqualTo(0.0)
-        assertThat(response.totalQuantity).isEqualTo(0)
+        RestAssured
+            .given().log().all()
+            .header("Authorization", "Bearer $userToken")
+            .`when`().get("/api/cart")
+            .then().log().all()
+            .assertThat().statusCode(HttpStatus.OK.value())
+            .body("memberId", equalTo(userMember.userId.toInt()))
+            .body("items", hasSize<Array<CartItemResponse>>(0))
+            .body("totalPrice", equalTo(0.0f))
+            .body("totalQuantity", equalTo(0))
     }
 
     @Test
@@ -164,12 +165,11 @@ class CartApiControllerTest {
                 .`when`().get("/api/cart")
                 .then().log().all()
                 .assertThat().statusCode(HttpStatus.OK.value())
+                .body("memberId", equalTo(userMember.userId.toInt()))
+                .body("items", hasSize<Array<CartItemResponse>>(2))
+                .body("totalPrice", equalTo(30.0f))
+                .body("totalQuantity", equalTo(3))
                 .extract().`as`(CartResponse::class.java)
-
-        assertThat(response.memberId).isEqualTo(userMember.userId)
-        assertThat(response.items).hasSize(2)
-        assertThat(response.totalPrice).isEqualTo(30.0)
-        assertThat(response.totalQuantity).isEqualTo(3)
 
         val item1 = response.items.find { it.productId == product1.id }
         assertThat(item1?.productName).isEqualTo(product1.name)
@@ -202,21 +202,18 @@ class CartApiControllerTest {
         val product = createTestProduct("lotion", 20.0, 20)
         val requestBody = AddToCartRequest(productId = product.id, quantity = 5)
 
-        val response =
-            RestAssured.given().log().all()
-                .header("Authorization", "Bearer $userToken")
-                .contentType(ContentType.JSON)
-                .body(requestBody)
-                .`when`().post("/api/cart")
-                .then().log().all()
-                .assertThat().statusCode(HttpStatus.OK.value())
-                .extract().`as`(CartResponse::class.java)
-
-        assertThat(response.memberId).isEqualTo(userMember.userId)
-        assertThat(response.items).hasSize(1)
-        assertThat(response.items[0].productId).isEqualTo(product.id)
-        assertThat(response.items[0].quantity).isEqualTo(5)
-        assertThat(response.totalPrice).isEqualTo(100.0)
+        RestAssured.given().log().all()
+            .header("Authorization", "Bearer $userToken")
+            .contentType(ContentType.JSON)
+            .body(requestBody)
+            .`when`().post("/api/cart")
+            .then().log().all()
+            .assertThat().statusCode(HttpStatus.OK.value())
+            .body("memberId", equalTo(userMember.userId.toInt()))
+            .body("items", hasSize<Array<CartItemResponse>>(1))
+            .body("items[0].productId", equalTo(product.id.toInt()))
+            .body("items[0].quantity", equalTo(5))
+            .body("totalPrice", equalTo(100.0f))
     }
 
     @DisplayName("Integration Tests for Adding Products to Cart (POST /api/cart/items)")
@@ -228,21 +225,18 @@ class CartApiControllerTest {
 
         val requestBody = AddToCartRequest(productId = product.id, quantity = 5)
 
-        val response =
-            RestAssured.given().log().all()
-                .header("Authorization", "Bearer $userToken")
-                .contentType(ContentType.JSON)
-                .body(requestBody)
-                .`when`().post("/api/cart")
-                .then().log().all()
-                .assertThat().statusCode(HttpStatus.OK.value())
-                .extract().`as`(CartResponse::class.java)
-
-        assertThat(response.memberId).isEqualTo(userMember.userId)
-        assertThat(response.items).hasSize(1)
-        assertThat(response.items[0].productId).isEqualTo(product.id)
-        assertThat(response.items[0].quantity).isEqualTo(8)
-        assertThat(response.totalPrice).isEqualTo(160.0)
+        RestAssured.given().log().all()
+            .header("Authorization", "Bearer $userToken")
+            .contentType(ContentType.JSON)
+            .body(requestBody)
+            .`when`().post("/api/cart")
+            .then().log().all()
+            .assertThat().statusCode(HttpStatus.OK.value())
+            .body("memberId", equalTo(userMember.userId.toInt()))
+            .body("items", hasSize<Array<CartItemResponse>>(1))
+            .body("items[0].productId", equalTo(product.id.toInt()))
+            .body("items[0].quantity", equalTo(8))
+            .body("totalPrice", equalTo(160.0f))
     }
 
     @Test
