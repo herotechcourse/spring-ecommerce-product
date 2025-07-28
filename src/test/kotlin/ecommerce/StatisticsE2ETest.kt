@@ -38,7 +38,7 @@ class StatisticsE2ETest {
         createCartItemsTable()
 
         addItemsToCartWithDelayForUser(
-            loginAS("user@email.com","UserPassword")
+            loginAS(USER1_MAIL,USER1_PASSWORD)
         )
     }
 
@@ -78,9 +78,9 @@ class StatisticsE2ETest {
 
         val splitUpAttributes: List<Array<String>> =
             listOf(
-                "user@email.com UserPassword user",
-                "user2@email.com User2Password user",
-                "admin@email.com AdminPassword admin",
+                "$USER1_MAIL $USER1_PASSWORD $USER",
+                "$USER2_MAIL $USER2_PASSWORD $USER",
+                "$ADMIN_MAIL $ADMIN_PASSWORD $ADMIN",
             ).map { name -> name.split(" ").toTypedArray() }.toList()
         jdbcTemplate.batchUpdate("INSERT INTO members(email, password, role) VALUES (?,?,?)", splitUpAttributes)
     }
@@ -132,7 +132,7 @@ class StatisticsE2ETest {
 
     @Test
     fun `should return top 5 most added products in the past 30 days for admin`() {
-        val token = loginAS("admin@email.com","AdminPassword")
+        val token = loginAS(ADMIN_MAIL,ADMIN_PASSWORD)
 
         val stats = getStatistics(token, "/admin/statistics/top-products")
 
@@ -151,16 +151,27 @@ class StatisticsE2ETest {
         assertThat(stats.statusCode()).isEqualTo(HttpStatus.OK.value())
         val json = stats.body().jsonPath()
         val emails = json.getList<String>("email")
-        assertThat(emails).containsExactly("user@email.com")
+        assertThat(emails).containsExactly(USER1_MAIL)
     }
 
     @ParameterizedTest
     @ValueSource(strings = ["/admin/statistics/top-products", "/admin/statistics/active-members"])
     fun `should not return statistics for user`(path: String) {
-        val token = loginAS("user@email.com","UserPassword")
+        val token = loginAS(USER1_MAIL,USER1_PASSWORD)
 
         val stats = getStatistics(token, path)
 
         assertThat(stats.statusCode()).isEqualTo(HttpStatus.FORBIDDEN.value())
+    }
+
+    companion object {
+        private const val USER1_MAIL = "user@email.com"
+        private const val USER1_PASSWORD = "User1Password"
+        private const val USER2_MAIL = "user2@email.com"
+        private const val USER2_PASSWORD = "User2Password"
+        private const val ADMIN_MAIL = "admin@email.com"
+        private const val ADMIN_PASSWORD = "AdminPassword"
+        private const val ADMIN = "admin"
+        private const val USER = "user"
     }
 }
