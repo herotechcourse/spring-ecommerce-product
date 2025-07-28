@@ -25,6 +25,7 @@ class AdminStatsRepository(
         RowMapper<ActiveUsersResponse> { rs, _ ->
             ActiveUsersResponse(
                 rs.getLong("id"),
+                rs.getString("name"),
                 rs.getString("email"),
             )
         }
@@ -71,7 +72,7 @@ class AdminStatsRepository(
     fun getTop5ActiveUsers(): List<ActiveUsersResponse> {
         val sql =
             """
-            SELECT DISTINCT m.ID, m.EMAIL FROM MEMBERS m
+            SELECT DISTINCT m.ID, m.NAME, m.EMAIL FROM MEMBERS m
             JOIN CARTS c ON m.id = c.MEMBER_ID
             RIGHT JOIN CART_HISTORY ch ON ch.CART_ID = c.ID
             WHERE ch.CREATED_AT >= CURRENT_DATE - INTERVAL '7' DAY
