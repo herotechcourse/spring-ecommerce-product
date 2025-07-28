@@ -1,8 +1,8 @@
 package ecommerce
 
+import ecommerce.auth.exception.DuplicateMemberEmailException
 import ecommerce.member.domain.Member
 import ecommerce.member.repository.MemberRepository
-import jakarta.validation.ValidationException
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -69,7 +69,7 @@ class MemberRepositoryTest {
                 role = "USER",
             )
 
-        assertFailsWith<ValidationException> {
+        assertFailsWith<DuplicateMemberEmailException> {
             repository.insert(member2)
         }
     }

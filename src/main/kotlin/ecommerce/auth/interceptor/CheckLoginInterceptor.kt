@@ -3,6 +3,7 @@ package ecommerce.auth.interceptor
 import ecommerce.auth.exception.AuthorizationException
 import ecommerce.auth.extractor.BearerAuthorizationExtractor
 import ecommerce.auth.service.AuthService
+import ecommerce.exception.ForbiddenException
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.stereotype.Component
@@ -27,7 +28,7 @@ class CheckLoginInterceptor(
         val member = authService.findMemberEntityByToken(token)
 
         if (request.requestURI.startsWith("/admin/") && member.role != "ADMIN") {
-            throw AuthorizationException("Unauthorized: Admin role required")
+            throw ForbiddenException("Unauthorized: Admin role required")
         }
         request.setAttribute("member", member)
         return true

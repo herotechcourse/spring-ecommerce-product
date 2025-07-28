@@ -1,7 +1,9 @@
 package ecommerce.auth.service
 
 import ecommerce.auth.exception.AuthorizationException
+import ecommerce.auth.exception.DuplicateMemberEmailException
 import ecommerce.auth.security.JwtProvider
+import ecommerce.exception.ForbiddenException
 import ecommerce.member.domain.Member
 import ecommerce.member.dto.MemberResponse
 import ecommerce.member.dto.TokenRequest
@@ -17,15 +19,18 @@ class AuthService(
     fun createToken(tokenRequest: TokenRequest): TokenResponse {
         val member =
             memberRepository.findByEmail(tokenRequest.email)
-                ?: throw AuthorizationException("Member not found with email: ${tokenRequest.email}")
+                ?: throw ForbiddenException("Member not found with email: ${tokenRequest.email}")
         if (member.password != tokenRequest.password) {
-            throw AuthorizationException("Invalid password for email: ${tokenRequest.email}")
+            throw ForbiddenException("Invalid password for email: ${tokenRequest.email}")
         }
         val accessToken = jwtProvider.createToken(member.email)
         return TokenResponse(accessToken)
     }
 
     fun register(tokenRequest: TokenRequest): TokenResponse {
+        if (memberRepository.existsByEmail(tokenRequest.email)) {
+            throw DuplicateMemberEmailException("Email is already registered")
+        }
         val member =
             Member(
                 email = tokenRequest.email,

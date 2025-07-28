@@ -148,7 +148,7 @@ class ProductControllerTest {
                 .extract()
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value())
-        assertThat(response.jsonPath().getString("name")).isEqualTo("Product name must be 15 characters or less")
+        assertThat(response.jsonPath().getString("details.name")).isEqualTo("Product name must be 15 characters or less")
     }
 
     @Test
@@ -165,7 +165,7 @@ class ProductControllerTest {
                 .extract()
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value())
-        assertThat(response.jsonPath().getString("name")).isEqualTo(
+        assertThat(response.jsonPath().getString("details.name")).isEqualTo(
             "Product name can only contain letters, numbers, spaces, and allowed special characters: (), [], +, -, &, /, _",
         )
     }
@@ -201,7 +201,7 @@ class ProductControllerTest {
                 .extract()
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value())
-        assertThat(response.jsonPath().getString("price")).isEqualTo("Price must be greater than 0")
+        assertThat(response.jsonPath().getString("details.price")).isEqualTo("Price must be greater than 0")
     }
 
     @Test
@@ -218,7 +218,7 @@ class ProductControllerTest {
                 .extract()
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value())
-        assertThat(response.jsonPath().getString("imageUrl")).isEqualTo("Image URL must start with http:// or https://")
+        assertThat(response.jsonPath().getString("details.imageUrl")).isEqualTo("Image URL must start with http:// or https://")
     }
 
     @Test

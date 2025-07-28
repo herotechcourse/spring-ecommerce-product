@@ -1,6 +1,5 @@
 package ecommerce.auth.controller
 
-import ecommerce.auth.exception.AuthorizationException
 import ecommerce.auth.extractor.BearerAuthorizationExtractor
 import ecommerce.auth.service.AuthService
 import ecommerce.member.dto.MemberResponse
@@ -8,10 +7,8 @@ import ecommerce.member.dto.TokenRequest
 import ecommerce.member.dto.TokenResponse
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.validation.Valid
-import jakarta.validation.ValidationException
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -46,15 +43,5 @@ class AuthController(
         val token = authorizationExtractor.extract(request)
         val member = authService.findMemberByToken(token)
         return ResponseEntity.ok().body(member)
-    }
-
-    @ExceptionHandler(ValidationException::class)
-    fun handleValidationException(ex: ValidationException): ResponseEntity<Map<String, String>> {
-        return ResponseEntity(mapOf("error" to (ex.message ?: "Validation error")), HttpStatus.FORBIDDEN)
-    }
-
-    @ExceptionHandler(AuthorizationException::class)
-    fun handleAuthorizationException(ex: AuthorizationException): ResponseEntity<Map<String, String>> {
-        return ResponseEntity(mapOf("error" to "Unauthorized"), HttpStatus.UNAUTHORIZED)
     }
 }

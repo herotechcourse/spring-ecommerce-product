@@ -1,7 +1,6 @@
 package ecommerce.cart.controller
 
 import ecommerce.auth.annotation.LoginMember
-import ecommerce.auth.exception.AuthorizationException
 import ecommerce.cart.dto.CartRequest
 import ecommerce.cart.dto.CartResponse
 import ecommerce.cart.service.CartService
@@ -27,7 +26,7 @@ class WishController(
         @Valid @RequestBody request: CartRequest,
         @LoginMember member: Member,
     ): ResponseEntity<CartResponse> {
-        if (member.id == null) throw AuthorizationException("Member ID cannot be null")
+        if (member.id == null) throw IllegalStateException("Member ID cannot be null")
         val response = cartService.addToCart(member, request)
         return ResponseEntity.status(HttpStatus.CREATED).body(response)
     }
@@ -36,7 +35,7 @@ class WishController(
     fun getCartItems(
         @LoginMember member: Member,
     ): ResponseEntity<List<CartResponse>> {
-        if (member.id == null) throw AuthorizationException("Member ID cannot be null")
+        if (member.id == null) throw IllegalStateException("Member ID cannot be null")
         val cartItems = cartService.getCartItems(member)
         return ResponseEntity.ok(cartItems)
     }
@@ -46,7 +45,7 @@ class WishController(
         @PathVariable productId: Long,
         @LoginMember member: Member,
     ): ResponseEntity<Unit> {
-        if (member.id == null) throw AuthorizationException("Member ID cannot be null")
+        if (member.id == null) throw IllegalStateException("Member ID cannot be null")
         cartService.removeFromCart(member, productId)
         return ResponseEntity.noContent().build()
     }

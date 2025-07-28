@@ -35,7 +35,7 @@ class AuthControllerTest {
             )
             """,
         )
-        memberRepository.insert(Member(email = "example@email.com", password = "password123qwerty"))
+        memberRepository.insert(Member(email = "example@email.com", password = "password123qwerty", role = "USER"))
     }
 
     @Test
@@ -69,7 +69,7 @@ class AuthControllerTest {
                 .extract()
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value())
-        assertThat(response.jsonPath().getString("email")).isEqualTo("Email must be a valid email address")
+        assertThat(response.jsonPath().getString("details.email")).isEqualTo("Email must be a valid email address")
     }
 
     @Test
@@ -86,7 +86,7 @@ class AuthControllerTest {
                 .extract()
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value())
-        assertThat(response.jsonPath().getString("email")).isEqualTo("Email cannot be blank")
+        assertThat(response.jsonPath().getString("details.email")).isEqualTo("Email cannot be blank")
     }
 
     @Test
@@ -103,11 +103,11 @@ class AuthControllerTest {
                 .extract()
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value())
-        assertThat(response.jsonPath().getString("password")).isEqualTo("Password must be at least 8 characters long")
+        assertThat(response.jsonPath().getString("details.password")).isEqualTo("Password must be at least 8 characters long")
     }
 
     @Test
-    fun `register with existing email should return 403`() {
+    fun `register with existing email should return 409`() {
         val response =
             RestAssured.given()
                 .log().all()
@@ -119,7 +119,7 @@ class AuthControllerTest {
                 .log().all()
                 .extract()
 
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.FORBIDDEN.value())
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.CONFLICT.value())
         assertThat(response.jsonPath().getString("error")).isEqualTo("Email is already registered")
     }
 
@@ -141,7 +141,7 @@ class AuthControllerTest {
     }
 
     @Test
-    fun `login with invalid email should return 401`() {
+    fun `login with invalid email should return 403`() {
         val response =
             RestAssured.given()
                 .log().all()
@@ -153,25 +153,25 @@ class AuthControllerTest {
                 .log().all()
                 .extract()
 
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value())
-        assertThat(response.jsonPath().getString("error")).isEqualTo("Unauthorized")
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.FORBIDDEN.value())
+        assertThat(response.jsonPath().getString("error")).isEqualTo("Member not found with email: nonexistent@email.com")
     }
 
     @Test
-    fun `login with invalid password should return 401`() {
+    fun `login with invalid password should return 403`() {
         val response =
             RestAssured.given()
                 .log().all()
                 .contentType(ContentType.JSON)
-                .body(TokenRequest(email = "existing@email.com", password = "wrongpassword"))
+                .body(TokenRequest(email = "example@email.com", password = "wrongpassword"))
                 .`when`()
                 .post("/api/members/login")
                 .then()
                 .log().all()
                 .extract()
 
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value())
-        assertThat(response.jsonPath().getString("error")).isEqualTo("Unauthorized")
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.FORBIDDEN.value())
+        assertThat(response.jsonPath().getString("error")).isEqualTo("Invalid password for email: example@email.com")
     }
 
     @Test
@@ -214,7 +214,7 @@ class AuthControllerTest {
                 .extract()
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value())
-        assertThat(response.jsonPath().getString("error")).isEqualTo("Unauthorized")
+        assertThat(response.jsonPath().getString("error")).isEqualTo("Unauthorized: Invalid or expired JWT token")
     }
 
     @Test
@@ -229,6 +229,6 @@ class AuthControllerTest {
                 .extract()
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value())
-        assertThat(response.jsonPath().getString("error")).isEqualTo("Unauthorized")
+        assertThat(response.jsonPath().getString("error")).isEqualTo("Unauthorized: Missing Authorization header")
     }
 }

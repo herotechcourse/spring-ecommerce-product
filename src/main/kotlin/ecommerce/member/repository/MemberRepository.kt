@@ -1,7 +1,7 @@
 package ecommerce.member.repository
 
+import ecommerce.auth.exception.DuplicateMemberEmailException
 import ecommerce.member.domain.Member
-import jakarta.validation.ValidationException
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert
 import org.springframework.stereotype.Repository
@@ -12,7 +12,7 @@ class MemberRepository(
 ) {
     fun insert(member: Member) {
         if (existsByEmail(member.email)) {
-            throw ValidationException("Email is already registered")
+            throw DuplicateMemberEmailException("Email is already registered")
         }
         val simpleJdbcInsert =
             SimpleJdbcInsert(jdbcTemplate)
