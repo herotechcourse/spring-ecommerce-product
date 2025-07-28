@@ -3,6 +3,7 @@ package ecommerce.repository
 import ecommerce.model.Product
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.jdbc.core.RowMapper
+import org.springframework.jdbc.support.GeneratedKeyHolder
 import org.springframework.stereotype.Repository
 import java.sql.ResultSet
 
@@ -39,9 +40,34 @@ class JdbcProductStore(private val jdbcTemplate: JdbcTemplate) : ProductStore {
         return jdbcTemplate.query(sql, productRowMapper, name).firstOrNull()
     }
 
-    override fun save(product: Product) {
-        val sql = "insert into products(product_name,price,image_url) values (?,?,?)"
-        jdbcTemplate.update(sql, product.name, product.price, product.imageUrl)
+    override fun existsByName(name: String): Boolean {
+        val sql = "SELECT COUNT(*) FROM PRODUCTS WHERE product_name = ?"
+        val count = jdbcTemplate.queryForObject(sql, Long::class.java, name)
+        return count != null && count > 0
+    }
+
+    override fun save(product: Product): Product {
+        val sql = "INSERT INTO products(product_name, price, image_url) VALUES (?, ?, ?)"
+        val keyHolder = GeneratedKeyHolder()
+
+        jdbcTemplate.update({ connection ->
+            val ps = connection.prepareStatement(sql, arrayOf("id"))
+            ps.setString(1, product.name)
+            ps.setDouble(2, product.price)
+            ps.setString(3, product.imageUrl)
+            ps
+        }, keyHolder)
+
+        val generatedId =
+            keyHolder.key?.toLong()
+                ?: throw IllegalStateException("Failed to retrieve generated product ID")
+
+        return Product(
+            id = generatedId,
+            name = product.name,
+            price = product.price,
+            imageUrl = product.imageUrl,
+        )
     }
 
     override fun update(

@@ -22,9 +22,14 @@ class CollectionProductStore(val products: MutableList<Product>) : ProductStore 
             ?: throw NoSuchElementException("Product with name $name not found")
     }
 
-    override fun save(product: Product) {
+    override fun existsByName(name: String): Boolean {
+        return products.any { it.name == name }
+    }
+
+    override fun save(product: Product): Product {
         val newProduct = Product(product.id, product.name, price = product.price, imageUrl = product.imageUrl)
         products.add(newProduct)
+        return newProduct
     }
 
     override fun update(

@@ -11,7 +11,9 @@ interface ProductStore {
 
     fun findByName(name: String): Product?
 
-    fun save(product: Product)
+    fun existsByName(name: String): Boolean
+
+    fun save(product: Product): Product
 
     fun update(
         id: Long,
