@@ -4,14 +4,14 @@ import ecommerce.dto.auth.AuthTokenPayload
 import ecommerce.dto.auth.LoginRequest
 import ecommerce.enums.UserRole
 import ecommerce.exception.UserCredentialException
-import ecommerce.infrastructure.JwtTokenProvider
+import ecommerce.infrastructure.JwtProvider
 import ecommerce.repository.UserRepository
 import org.springframework.stereotype.Service
 
 @Service
 class LoginService(
     private val userRepository: UserRepository,
-    private val jwtTokenProvider: JwtTokenProvider,
+    private val jwtProvider: JwtProvider,
 ) {
     fun signIn(
         loginRequest: LoginRequest,
@@ -27,7 +27,7 @@ class LoginService(
         }
 
         val token =
-            jwtTokenProvider.createToken(
+            jwtProvider.createToken(
                 AuthTokenPayload(user.email),
             )
         return "Bearer $token"

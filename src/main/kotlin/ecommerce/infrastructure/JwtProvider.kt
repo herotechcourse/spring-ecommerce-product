@@ -11,7 +11,7 @@ import java.util.Date
 import javax.crypto.SecretKey
 
 @Component
-class JwtTokenProvider(
+class JwtProvider(
     @Value("\${security.jwt.token.secret-key}")
     private val secret: String,
     @Value("\${security.jwt.token.expire-length}")

@@ -1,13 +1,13 @@
 package ecommerce.config.interceptor
 
 import ecommerce.exception.UnauthorisedUserException
-import ecommerce.infrastructure.JwtTokenProvider
+import ecommerce.infrastructure.JwtProvider
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.web.servlet.HandlerInterceptor
 
 abstract class BaseAuthInterceptor(
-    val jwtTokenProvider: JwtTokenProvider,
+    val jwtProvider: JwtProvider,
 ) : HandlerInterceptor {
     override fun preHandle(
         request: HttpServletRequest,
@@ -16,9 +16,9 @@ abstract class BaseAuthInterceptor(
     ): Boolean {
         val bearer = request.getHeader("Authorization") ?: throw UnauthorisedUserException()
         val token = bearer.removePrefix("Bearer ").trim()
-        if (!jwtTokenProvider.validateToken(token)) throw UnauthorisedUserException("Token not valid")
+        if (!jwtProvider.validateToken(token)) throw UnauthorisedUserException("Token not valid")
 
-        val payload = jwtTokenProvider.getPayload(token)
+        val payload = jwtProvider.getPayload(token)
         request.setAttribute("email", payload.email)
 
         return handleAuthenticatedRequest(request, response, handler, payload.email)
