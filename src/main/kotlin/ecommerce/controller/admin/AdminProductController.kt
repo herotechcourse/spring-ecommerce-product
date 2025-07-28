@@ -2,6 +2,7 @@ package ecommerce.controller.admin
 
 import ecommerce.dto.products.ProductDTO
 import ecommerce.dto.products.ProductPatchDTO
+import ecommerce.dto.response.MessageResponse
 import ecommerce.service.AdminProductService
 import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
@@ -33,27 +34,27 @@ class AdminProductController(private val adminProductService: AdminProductServic
     @PostMapping("")
     fun create(
         @RequestBody @Valid product: ProductDTO,
-    ): ResponseEntity<String> {
+    ): ResponseEntity<MessageResponse> {
         val uri = adminProductService.createProduct(product)
-        return ResponseEntity.created(uri).body("Product created")
+        return ResponseEntity.created(uri).body(MessageResponse("Product created"))
     }
 
     @PutMapping("/{id}")
     fun update(
         @PathVariable("id") id: Long,
         @RequestBody @Valid newProduct: ProductDTO,
-    ): ResponseEntity<String> {
+    ): ResponseEntity<MessageResponse> {
         adminProductService.updateProduct(id, newProduct)
-        return ResponseEntity.ok().body("Product updated")
+        return ResponseEntity.ok().body(MessageResponse("Product updated"))
     }
 
     @PatchMapping("/{id}")
     fun edit(
         @PathVariable("id") id: Long,
         @RequestBody @Valid patchProduct: ProductPatchDTO,
-    ): ResponseEntity<String> {
+    ): ResponseEntity<MessageResponse> {
         adminProductService.patchProduct(id, patchProduct)
-        return ResponseEntity.ok().body("Product updated")
+        return ResponseEntity.ok().body(MessageResponse("Product updated"))
     }
 
     @DeleteMapping("/{id}")

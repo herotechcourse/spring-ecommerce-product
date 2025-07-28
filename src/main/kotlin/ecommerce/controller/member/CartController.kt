@@ -2,6 +2,7 @@ package ecommerce.controller.member
 
 import ecommerce.annotations.LoginMember
 import ecommerce.dto.cartProduct.CartProductResponseDTO
+import ecommerce.dto.response.MessageResponse
 import ecommerce.dto.user.UserDTO
 import ecommerce.service.CartService
 import org.springframework.http.ResponseEntity
@@ -30,9 +31,9 @@ class CartController(
     fun addProduct(
         @LoginMember user: UserDTO,
         @PathVariable("id") productID: Long,
-    ): ResponseEntity<String> {
+    ): ResponseEntity<MessageResponse> {
         val id = cartService.addProductToCart(user.id, productID)
-        return ResponseEntity.created(URI.create("/cart/$id")).body("Product added to cart")
+        return ResponseEntity.created(URI.create("/cart/$id")).body(MessageResponse("Product added to cart"))
     }
 
     @DeleteMapping("/{id}")
