@@ -94,7 +94,7 @@ class AuthControllerTest {
         `when`(authService.findMemberByToken("mocked-jwt-token")).thenReturn(memberResponse)
 
         mockMvc.perform(
-            get("/auth/findmember")
+            get("/auth/find-member")
                 .header("Authorization", "Bearer mocked-jwt-token"),
         )
             .andExpect(status().isOk)
@@ -107,7 +107,7 @@ class AuthControllerTest {
         `when`(authService.findMemberByToken("invalid-token")).thenThrow(AuthorizationException("Invalid or expired JWT token"))
 
         mockMvc.perform(
-            get("/auth/findmember")
+            get("/auth/find-member")
                 .header("Authorization", "Bearer invalid-token"),
         )
             .andExpect(status().isUnauthorized)

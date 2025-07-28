@@ -33,7 +33,7 @@ class AuthController(
         return ResponseEntity.ok(tokenResponse)
     }
 
-    @GetMapping("/findmember")
+    @GetMapping("/find-member")
     fun findMember(
         @RequestHeader("Authorization") authHeader: String,
     ): ResponseEntity<MemberResponse> {

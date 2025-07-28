@@ -58,7 +58,7 @@ class AdminControllerTest {
         `when`(authService.findMemberByToken(token)).thenReturn(memberResponse)
 
         mockMvc.perform(
-            get("/admin/topproducts")
+            get("/admin/top-products")
                 .header("Authorization", "Bearer $token"),
         ).andExpect {
             status().isOk
@@ -81,7 +81,7 @@ class AdminControllerTest {
         `when`(authService.findMemberByToken(token)).thenReturn(memberResponse)
 
         mockMvc.perform(
-            get("/admin/topproducts")
+            get("/admin/top-products")
                 .header("Authorization", "Bearer $token"),
         ).andExpect {
             status().isUnauthorized
@@ -102,7 +102,7 @@ class AdminControllerTest {
         `when`(cartService.findMembersWithCartActivityInLast7Days()).thenReturn(activeMembers)
 
         mockMvc.perform(
-            get("/admin/cartactivity")
+            get("/admin/cart-activity")
                 .header("Authorization", "Bearer $token"),
         ).andExpect {
             status().isOk
@@ -122,7 +122,7 @@ class AdminControllerTest {
         `when`(authService.findMemberByToken(token)).thenReturn(memberResponse)
 
         mockMvc.perform(
-            get("/admin/cartactivity")
+            get("/admin/cart-activity")
                 .header("Authorization", "Bearer $token"),
         ).andExpect {
             status().isUnauthorized

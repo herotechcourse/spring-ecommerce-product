@@ -13,13 +13,13 @@ import org.springframework.web.bind.annotation.RestController
 class AdminController(
     private val cartService: CartService,
 ) {
-    @GetMapping("/topproducts")
+    @GetMapping("/top-products")
     fun findTop5ProductsInLast30Days(): ResponseEntity<List<TopProductStatResponse>> {
         val topProducts = cartService.findTop5ProductsInLast30Days()
         return ResponseEntity.ok(topProducts)
     }
 
-    @GetMapping("/cartactivity")
+    @GetMapping("/cart-activity")
     fun findMembersWithCartActivityInLast7Days(): ResponseEntity<List<MemberResponse>> {
         val activeMembers = cartService.findMembersWithCartActivityInLast7Days()
         return ResponseEntity.ok(activeMembers)
