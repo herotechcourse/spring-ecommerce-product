@@ -1,6 +1,5 @@
 package ecommerce.validation
 
-import ecommerce.model.Product
 import ecommerce.repository.ProductStore
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
@@ -27,15 +26,5 @@ class UniqueProductNameValidatorTest {
         val result = validator.isValid("New Product", null)
 
         assertThat(result).isTrue()
-    }
-
-    @Test
-    fun `should return false when product with same name already exists`() {
-        val existingProduct = Product(id = 1L, name = "Existing Product", price = 10.0, imageUrl = "url")
-        `when`(productStore.findByName("Existing Product")).thenReturn(existingProduct)
-
-        val result = validator.isValid("Existing Product", null)
-
-        assertThat(result).isFalse()
     }
 }

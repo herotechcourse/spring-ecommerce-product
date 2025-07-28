@@ -1,6 +1,7 @@
 package ecommerce.controller
 
 import ecommerce.dto.ProductRequest
+import ecommerce.model.Product
 import io.restassured.RestAssured
 import io.restassured.http.ContentType
 import org.assertj.core.api.Assertions
@@ -45,23 +46,57 @@ class ProductControllerTest {
     }
 
     @Test
-    fun `returns all products`() {
+    fun `returns a product after creation`() {
+        val productRequest =
+            ProductRequest(
+                name = "Mini Laptop",
+                price = 299.99,
+                imageUrl = "http://localhost:$port/image/upload/tablet.jpg",
+            )
+        RestAssured.given()
+            .log().all()
+            .contentType(ContentType.JSON)
+            .body(productRequest)
+            .post("/products")
+            .then()
+            .log().all()
+            .statusCode(HttpStatus.CREATED.value())
+
         val response =
             RestAssured.given()
-                .`when`().get("/products")
+                .log().all()
+                .get("/products")
                 .then()
+                .log().all()
                 .extract()
-
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
-        assertThat(response.asString()).contains("Tablet")
+        val products: List<Product> =
+            response.body().jsonPath().getList("", Product::class.java)
+        assertThat(products).anyMatch { it.name == "Mini Laptop" }
     }
 
     @Test
     fun `update a product`() {
+        val createRequest =
+            ProductRequest(
+                name = "Product",
+                price = 10.0,
+                imageUrl = "http://localhost:$port/image/upload/product1.jpg",
+            )
+
+        // Create product first
+        RestAssured.given()
+            .contentType(ContentType.JSON)
+            .body(createRequest)
+            .post("/products")
+            .then()
+            .statusCode(HttpStatus.CREATED.value())
+
+        // Then update it
         val productId = 1L
         val updatedProduct =
             ProductRequest(
-                name = "Product 2",
+                name = "Updated Product",
                 price = 20.0,
                 imageUrl = "http://localhost:$port/image/upload/product2.jpg",
             )
@@ -83,19 +118,21 @@ class ProductControllerTest {
             ProductRequest(
                 name = "Product 10",
                 price = 10.0,
-                imageUrl = "http://localhost:8080/image/upload/product1.jpg",
+                imageUrl = "http://localhost:$port/image/upload/product1.jpg",
             )
 
+        // Create the product
         RestAssured.given()
             .contentType(ContentType.JSON)
             .body(productRequest)
             .post("/products")
             .then()
-            .extract()
+            .statusCode(HttpStatus.CREATED.value())
 
+        // Delete it
         val response =
             RestAssured.given()
-                .`when`().delete("/products/10")
+                .delete("/products/1") // use 1 if you're sure this is the first insert
                 .then()
                 .extract()
 
