@@ -14,25 +14,25 @@ class CartRepository(private val jdbcClient: JdbcClient) {
     ): CartItemDto {
         val updateSql = """
         UPDATE cart_items
-        SET quantity = quantity + ?
+        SET quantity = quantity + ?, created_at = CURRENT_TIMESTAMP
         WHERE product_id = ? AND cart_id = ?
     """.trimIndent()
 
         val insertSql = """
-        INSERT INTO cart_items (product_id, cart_id, quantity)
+        INSERT INTO cart_items (cart_id, product_id, quantity)
         VALUES (?, ?, ?)
     """.trimIndent()
 
         val rowsUpdated = jdbcClient
             .sql(updateSql)
-            .params(productQuantity, productId, cartId)
+            .params( productQuantity, productId, cartId)
             .update()
 
         if (rowsUpdated == 0) {
             // No existing row, insert new one
             val rowsInserted = jdbcClient
                 .sql(insertSql)
-                .params(productId, cartId, productQuantity)
+                .params(cartId, productId, productQuantity)
                 .update()
 
             if (rowsInserted == 0) {
@@ -44,22 +44,22 @@ class CartRepository(private val jdbcClient: JdbcClient) {
             ?: throw NotFoundException("Failed to add: Product $productId not found in cart")
     }
 
-
     fun removeItemFromCart(
         productId: Long,
         quantity: Long,
         cartId: Long,
     ): CartItemDto? {
         val currentQuantity = quantityInCart(productId, cartId)
+        var updateQuantity: Long = quantity
+        if (currentQuantity - updateQuantity < 0)
+            updateQuantity = -1 * currentQuantity
 
-        if (currentQuantity == 0L) {
-            throw NotFoundException("Failed to delete: Product $productId not found in cart $cartId")
-        } else if (currentQuantity > quantity) {
-            decreaseItemQuantity(productId, quantity, cartId)
+        if (currentQuantity > updateQuantity) {
+            decreaseItemQuantity(productId, updateQuantity, cartId)
             return showItem(cartId, productId)
                 ?: throw NotFoundException("Failed to delete: Product $productId not found in cart $cartId")
         } else {
-            deleteItemRow(productId, cartId)
+            decreaseItemQuantity(productId, updateQuantity, cartId)
             return null
         }
     }

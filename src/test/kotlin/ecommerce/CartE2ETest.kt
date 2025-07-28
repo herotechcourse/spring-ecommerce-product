@@ -54,9 +54,15 @@ class CartE2ETest {
         jdbcTemplate.execute(
             "CREATE TABLE carts(" + " cart_id SERIAL, user_id INT UNIQUE)",
         )
-        jdbcTemplate.execute(
-            "CREATE TABLE cart_items(cart_id INT, product_id INT, quantity INT )",
+        jdbcTemplate.execute("""
+        CREATE TABLE cart_items (
+            cart_id INT,
+            product_id INT,
+            quantity INT DEFAULT 1,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            PRIMARY KEY (cart_id, product_id)
         )
+        """.trimIndent())
     }
 
     private fun insertDataIntoTables() {
