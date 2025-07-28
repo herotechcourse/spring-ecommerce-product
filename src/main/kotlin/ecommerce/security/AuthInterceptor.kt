@@ -1,10 +1,12 @@
 package ecommerce.security
 
+import ecommerce.advice.GlobalExceptionHandler
 import ecommerce.exception.ForbiddenException
 import ecommerce.exception.UnauthorizedException
 import ecommerce.service.AuthService
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
+import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
 import org.springframework.web.servlet.HandlerInterceptor
 
@@ -13,15 +15,17 @@ class AuthInterceptor(
     private val jwtTokenProvider: JwtTokenProvider,
     private val authService: AuthService,
 ) : HandlerInterceptor {
+    private val logger = LoggerFactory.getLogger(GlobalExceptionHandler::class.java)
+
     companion object {
         const val AUTHENTICATED_MEMBER = "authenticatedMember"
 
         private val PATH_ROLE_REQUIREMENTS =
             mapOf(
-                "/api/admin/products" to listOf("ADMIN"),
-                "/api/admin/reports" to listOf("ADMIN"),
-                "/api/products" to listOf("USER", "ADMIN"),
-                "/api/cart" to listOf("USER", "ADMIN"),
+                "/api/admin/products/" to listOf("ADMIN"),
+                "/api/admin/reports/" to listOf("ADMIN"),
+                "/api/products/" to listOf("USER", "ADMIN"),
+                "/api/cart/" to listOf("USER", "ADMIN"),
             )
     }
 
@@ -33,23 +37,29 @@ class AuthInterceptor(
         val authorizationHeader = request.getHeader("Authorization")
 
         if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
-            throw UnauthorizedException("Authorization header is missing or malformed.")
+            logger.warn("Authorization header is missing or malformed.")
+            throw UnauthorizedException("Unauthorized.")
         }
 
         val token = authorizationHeader.removePrefix("Bearer ")
 
         if (!jwtTokenProvider.validateToken(token)) {
-            throw UnauthorizedException("Invalid or expired access token.")
+            logger.warn("Invalid or expired access token.")
+            throw UnauthorizedException("Unauthorized.")
         }
 
         val memberIdString = jwtTokenProvider.getSubjectFromToken(token)
-        val memberId =
-            memberIdString.toLongOrNull()
-                ?: throw UnauthorizedException("Invalid token subject (member ID).")
+        val memberId = memberIdString.toLongOrNull()
+        if (memberId == null) {
+            logger.warn("Invalid or expired access token.")
+            throw UnauthorizedException("Unauthorized.")
+        }
 
-        val member =
-            authService.getMemberById(memberId)
-                ?: throw UnauthorizedException("Authenticated member not found in database.")
+        val member = authService.getMemberById(memberId)
+        if (member == null) {
+            logger.warn("Authenticated member not found in database.")
+            throw UnauthorizedException("Unauthorized")
+        }
 
         request.setAttribute(AUTHENTICATED_MEMBER, member)
 
@@ -63,7 +73,8 @@ class AuthInterceptor(
 
         if (requiredRolesForPath != null) {
             if (requiredRolesForPath.isNotEmpty() && !requiredRolesForPath.contains(member.role)) {
-                throw ForbiddenException("User role '${member.role}' is not authorized to access this resource.")
+                logger.warn("User role '${member.role}' is not authorized to access this resource.")
+                throw ForbiddenException("Forbidden.")
             }
         }
 

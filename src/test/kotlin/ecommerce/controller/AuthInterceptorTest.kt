@@ -63,11 +63,11 @@ class AuthInterceptorTest {
 
     @Test
     fun `Should throw UnauthorizedException for missing token`() {
-        request = mockRequest("/api/products")
+        request = mockRequest("/api/products/")
         assertThrows<UnauthorizedException> {
             authInterceptor.preHandle(request, response, Any())
         }.also { e ->
-            assertThat(e.message).contains("Authorization header is missing")
+            assertThat(e.message).contains("Unauthorized")
         }
         verifyNoInteractions(jwtTokenProvider)
         verifyNoInteractions(authService)
@@ -75,11 +75,11 @@ class AuthInterceptorTest {
 
     @Test
     fun `Should throw UnauthorizedException for malformed token header`() {
-        request = mockRequest("/api/products", "WrongToken")
+        request = mockRequest("/api/products/", "WrongToken")
         assertThrows<UnauthorizedException> {
             authInterceptor.preHandle(request, response, Any())
         }.also { e ->
-            assertThat(e.message).contains("Authorization header is missing or malformed.")
+            assertThat(e.message).contains("Unauthorized.")
         }
         verifyNoInteractions(jwtTokenProvider)
         verifyNoInteractions(authService)
@@ -101,7 +101,7 @@ class AuthInterceptorTest {
         assertThrows<ForbiddenException> {
             authInterceptor.preHandle(request, response, Any())
         }.also { e ->
-            assertThat(e.message).contains("User role 'USER' is not authorized to access this resource.")
+            assertThat(e.message).contains("Forbidden.")
         }
         verify(request).setAttribute(AuthInterceptor.AUTHENTICATED_MEMBER, userMember)
     }
@@ -172,7 +172,7 @@ class AuthInterceptorTest {
         assertThrows<ForbiddenException> {
             authInterceptor.preHandle(request2, response, Any())
         }.also { e ->
-            assertThat(e.message).contains("User role 'USER' is not authorized to access this resource.")
+            assertThat(e.message).contains("Forbidden.")
         }
         verify(request2).setAttribute(AuthInterceptor.AUTHENTICATED_MEMBER, userMember)
     }
