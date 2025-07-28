@@ -5,7 +5,8 @@ import ecommerce.controller.api.CartController
 import ecommerce.dao.JdbcCartDAO
 import ecommerce.dao.JdbcMemberDAO
 import ecommerce.dto.AuthResponse
-import ecommerce.dto.CartForm
+import ecommerce.dto.CartAddItemForm
+import ecommerce.dto.CartUpdateQuantityForm
 import ecommerce.dto.LoginForm
 import ecommerce.exception.NotFoundException
 import ecommerce.model.Member
@@ -98,7 +99,7 @@ class CartControllerTest {
     fun addToCart() {
         val productId = PRODUCT_ID
         val quantity = 1
-        val form = CartForm(productId, quantity)
+        val form = CartAddItemForm(productId, quantity)
         val expected = CartController.MESSAGE_ADD_SUCCESS
         val response = controller.addToCart(form, LOGIN_MEMBER)
         assertThat(response.statusCode).isEqualTo(HttpStatus.OK)
@@ -123,7 +124,7 @@ class CartControllerTest {
             RestAssured
                 .given().log().all()
                 .header("Authorization", "Bearer $accessToken")
-                .body(CartForm(productId, quantity))
+                .body(CartAddItemForm(productId, quantity))
                 .contentType(ContentType.JSON)
                 .`when`().post("/api/cart")
                 .then().log().all().extract()
@@ -152,7 +153,7 @@ class CartControllerTest {
             RestAssured
                 .given().log().all()
                 .header("Authorization", "Bearer $contaminatedToken")
-                .body(CartForm(productId, quantity))
+                .body(CartAddItemForm(productId, quantity))
                 .contentType(ContentType.JSON)
                 .`when`().post("/api/cart")
                 .then().log().all().extract()
@@ -174,7 +175,7 @@ class CartControllerTest {
         val response =
             RestAssured
                 .given().log().all()
-                .body(CartForm(productId, quantity))
+                .body(CartAddItemForm(productId, quantity))
                 .contentType(ContentType.JSON)
                 .`when`().post("/api/cart")
                 .then().log().all().extract()
@@ -196,7 +197,7 @@ class CartControllerTest {
         val response =
             RestAssured
                 .given().log().all()
-                .body(CartForm(productId, quantity))
+                .body(CartAddItemForm(productId, quantity))
                 .contentType(ContentType.JSON)
                 .`when`().post("/api/cart")
                 .then().log().all().extract()
@@ -249,7 +250,7 @@ class CartControllerTest {
         addToCart()
         val productId = PRODUCT_ID
         val quantity = 10
-        val form = CartForm(productId, quantity)
+        val form = CartUpdateQuantityForm(quantity)
         val expected = CartController.MESSAGE_UPDATE_SUCCESS
         val response = controller.updateQuantity(productId, form, LOGIN_MEMBER)
         assertThat(response.statusCode).isEqualTo(HttpStatus.OK)
@@ -260,7 +261,7 @@ class CartControllerTest {
     fun `updateQuantity() - throws exception when nothing to update`() {
         val productId = PRODUCT_ID
         val quantity = 10
-        val form = CartForm(productId, quantity)
+        val form = CartUpdateQuantityForm(quantity)
         assertThrows<NotFoundException> { controller.updateQuantity(productId, form, LOGIN_MEMBER) }
     }
 

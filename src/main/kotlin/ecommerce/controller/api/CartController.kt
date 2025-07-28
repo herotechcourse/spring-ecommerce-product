@@ -1,7 +1,8 @@
 package ecommerce.controller.api
 
 import ecommerce.dao.JdbcCartDAO
-import ecommerce.dto.CartForm
+import ecommerce.dto.CartAddItemForm
+import ecommerce.dto.CartUpdateQuantityForm
 import ecommerce.exception.InternalServerErrorException
 import ecommerce.exception.NotFoundException
 import ecommerce.model.CartItem
@@ -34,7 +35,7 @@ class CartController(
 
     @PostMapping
     fun addToCart(
-        @RequestBody @Valid cartForm: CartForm,
+        @RequestBody @Valid cartForm: CartAddItemForm,
         @LoginMember member: Member,
     ): ResponseEntity<String> {
         val memberId = member.id ?: throw InternalServerErrorException("auth failed")
@@ -59,7 +60,7 @@ class CartController(
     @PutMapping("/{productId}")
     fun updateQuantity(
         @PathVariable productId: Long,
-        @RequestBody @Valid cartForm: CartForm,
+        @RequestBody @Valid cartForm: CartUpdateQuantityForm,
         @LoginMember member: Member,
     ): ResponseEntity<String> {
         val memberId = member.id ?: throw InternalServerErrorException("auth failed")
