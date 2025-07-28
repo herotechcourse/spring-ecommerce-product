@@ -12,13 +12,13 @@ class JWTProvider {
     @Value("\${security.jwt.token.secret-key}")
     private lateinit var secretKey: String
 
-    @Value("\${security.jwt.token.expire-length}")
-    private var validityInMilliseconds: Long = 0
+    @Value("\${security.jwt.token.expire-time-millis}") // <-- new key
+    private var validityInMillis: Long = 0
 
     fun createToken(payload: String): String {
         val claims = Jwts.claims().setSubject(payload)
         val now = Date()
-        val validity = Date(now.time + validityInMilliseconds)
+        val validity = Date(now.time + validityInMillis)
 
         return Jwts.builder()
             .setClaims(claims)
