@@ -3,7 +3,7 @@ package ecommerce.repository
 import ecommerce.domain.CartEvent
 import ecommerce.domain.Member
 import ecommerce.domain.Product
-import ecommerce.dto.report.MemberCartActivityDto
+import ecommerce.repository.reportDTO.MemberCartActivityDto
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName

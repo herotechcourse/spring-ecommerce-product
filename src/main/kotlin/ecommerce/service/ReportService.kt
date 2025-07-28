@@ -1,21 +1,23 @@
 package ecommerce.service
 
-import ecommerce.dto.report.MemberCartActivityDto
-import ecommerce.dto.report.ProductCartCountDto
 import ecommerce.repository.CartEventRepository
+import ecommerce.repository.reportDTO.MemberCartActivityDto
+import ecommerce.repository.reportDTO.ProductCartCountDto
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime
 import java.time.temporal.ChronoUnit
 
 @Service
 class ReportService(private val cartEventRepository: CartEventRepository) {
-    fun findTop5MostAddedProductsInLast30Days(): List<ProductCartCountDto> {
-        val startDate = LocalDateTime.now().minus(30, ChronoUnit.DAYS)
+    fun findTop5MostAddedProductsInLast30Days(days: Int): List<ProductCartCountDto> {
+        require(days > 0) { "days must be greater than 0" }
+        val startDate = LocalDateTime.now().minus(days.toLong(), ChronoUnit.DAYS)
         return cartEventRepository.findTop5MostAddedProductsInLast30Days(startDate)
     }
 
-    fun getMembersWhoAddedItemsInLast7Days(): List<MemberCartActivityDto> {
-        val startDate = LocalDateTime.now().minus(7, ChronoUnit.DAYS)
+    fun getMembersWhoAddedItemsInLast7Days(days: Int): List<MemberCartActivityDto> {
+        require(days > 0) { "days must be greater than 0" }
+        val startDate = LocalDateTime.now().minus(days.toLong(), ChronoUnit.DAYS)
         return cartEventRepository.findMembersWhoAddedItemsInLastDays(startDate)
     }
 }

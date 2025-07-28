@@ -1,4 +1,4 @@
-package ecommerce.dto.report
+package ecommerce.repository.reportDTO
 
 import java.time.LocalDateTime
 
