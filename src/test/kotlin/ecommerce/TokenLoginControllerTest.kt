@@ -105,7 +105,7 @@ class TokenLoginControllerTest {
     fun `test login with non-registered member`() {
         val body = TokenRequest(email = "member@email.com", password = "MyPassword#")
         val response = loginRequest(body)
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value())
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value())
         assertThat(response.body().asString()).contains("No account with email exists")
     }
 
