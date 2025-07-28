@@ -10,10 +10,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 class WebConfig(
     private val loginMemberArgumentResolver: LoginMemberArgumentResolver,
 ) : WebMvcConfigurer {
-    override fun addInterceptors(registry: InterceptorRegistry) {
-        // TODO: Apply LoginInterceptor to all requests matching "/admin/**"
-    }
-
     override fun addArgumentResolvers(resolvers: MutableList<HandlerMethodArgumentResolver>) {
         resolvers.add(loginMemberArgumentResolver)
     }
