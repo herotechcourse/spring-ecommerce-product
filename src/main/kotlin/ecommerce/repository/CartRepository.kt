@@ -1,6 +1,6 @@
 package ecommerce.repository
 
-import ecommerce.dto.cart.CartDTO
+import ecommerce.entity.Cart
 import ecommerce.mapper.CartRowMapper
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.stereotype.Repository
@@ -15,7 +15,7 @@ class CartRepository(
         jdbcTemplate.update(sql, userId)
     }
 
-    fun findMembersCart(userId: Long?): CartDTO? {
+    fun findMembersCart(userId: Long?): Cart? {
         val sql = "select * from cart where user_id = ?"
         val res = jdbcTemplate.query(sql, cartRowMapper, userId)
         return res.firstOrNull()

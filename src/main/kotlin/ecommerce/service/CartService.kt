@@ -1,7 +1,7 @@
 package ecommerce.service
 
-import ecommerce.dto.cart.CartDTO
 import ecommerce.dto.cartProduct.CartProductResponseDTO
+import ecommerce.entity.Cart
 import ecommerce.enums.CartAction
 import ecommerce.exception.CartOperationException
 import ecommerce.exception.EntityNotFoundException
@@ -10,6 +10,7 @@ import ecommerce.repository.CartRepository
 import ecommerce.repository.CartStatisticsRepository
 import ecommerce.repository.ProductRepository
 import org.springframework.stereotype.Service
+import kotlin.Long
 
 @Service
 class CartService(
@@ -20,7 +21,17 @@ class CartService(
 ) {
     fun getCartProducts(userID: Long?): List<CartProductResponseDTO> {
         val cart = getUserCart(userID)
-        return cartProductRepository.getCartProducts(cart.id)
+        val products = cartProductRepository.getCartProducts(cart.id)
+        return products.map {
+            CartProductResponseDTO(
+                productId = it.productId,
+                name = it.name,
+                description = it.description,
+                price = it.price,
+                imageUrl = it.imageUrl,
+                quantity = it.quantity,
+            )
+        }
     }
 
     fun addProductToCart(
@@ -72,7 +83,7 @@ class CartService(
         cartStatisticsRepository.create(userID, productID, CartAction.DELETE)
     }
 
-    private fun getUserCart(userID: Long?): CartDTO {
+    private fun getUserCart(userID: Long?): Cart {
         return cartRepository.findMembersCart(userID)
             ?: throw EntityNotFoundException("Cart not found")
     }

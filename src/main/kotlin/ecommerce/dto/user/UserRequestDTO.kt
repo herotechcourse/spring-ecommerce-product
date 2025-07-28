@@ -4,7 +4,7 @@ import jakarta.validation.constraints.Email
 import jakarta.validation.constraints.NotBlank
 import org.hibernate.validator.constraints.Length
 
-data class UserRequestDTO(
+class UserRequestDTO(
     @field:NotBlank(message = "Email cannot be blank")
     @field:Email(message = "Should be a valid email address")
     val email: String,

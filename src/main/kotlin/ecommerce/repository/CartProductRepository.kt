@@ -1,7 +1,7 @@
 package ecommerce.repository
 
-import ecommerce.dto.cartProduct.CartProductDTO
-import ecommerce.dto.cartProduct.CartProductResponseDTO
+import ecommerce.entity.CartProduct
+import ecommerce.entity.CartProductResponse
 import ecommerce.mapper.CartProductMapper
 import ecommerce.mapper.CartProductResponseMapper
 import org.springframework.jdbc.core.JdbcTemplate
@@ -14,7 +14,7 @@ class CartProductRepository(
     private val cartProductMapper: CartProductMapper,
     private val cartProductResponseMapper: CartProductResponseMapper,
 ) {
-    fun getCartProducts(cartID: Long): List<CartProductResponseDTO> {
+    fun getCartProducts(cartID: Long): List<CartProductResponse> {
         val sql =
             """
             select 
@@ -34,7 +34,7 @@ class CartProductRepository(
     fun findCartProduct(
         cartID: Long,
         productID: Long,
-    ): CartProductDTO? {
+    ): CartProduct? {
         val sql = "select * from cart_products where cart_id = ? and product_id = ?"
         val res = jdbcTemplate.query(sql, cartProductMapper, cartID, productID)
         return res.firstOrNull()

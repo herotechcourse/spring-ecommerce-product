@@ -2,7 +2,7 @@ package ecommerce.dto.user
 
 import ecommerce.enums.UserRole
 
-data class UserDTO(
+class UserDTO(
     val id: Long? = null,
     val email: String,
     val password: String,

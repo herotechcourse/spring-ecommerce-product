@@ -1,17 +1,17 @@
 package ecommerce.mapper
 
-import ecommerce.dto.cartProduct.CartProductDTO
+import ecommerce.entity.CartProduct
 import org.springframework.jdbc.core.RowMapper
 import org.springframework.stereotype.Component
 import java.sql.ResultSet
 
 @Component
-class CartProductMapper : RowMapper<CartProductDTO> {
+class CartProductMapper : RowMapper<CartProduct> {
     override fun mapRow(
         rs: ResultSet,
         rowNum: Int,
-    ): CartProductDTO {
-        return CartProductDTO(
+    ): CartProduct {
+        return CartProduct(
             id = rs.getLong("id"),
             cartId = rs.getLong("cart_id"),
             productID = rs.getLong("product_id"),
