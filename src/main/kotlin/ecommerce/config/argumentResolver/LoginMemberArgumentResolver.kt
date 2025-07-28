@@ -1,7 +1,7 @@
 package ecommerce.config.argumentResolver
 
 import ecommerce.annotations.LoginMember
-import ecommerce.dto.user.UserDTO
+import ecommerce.dto.user.MemberUser
 import ecommerce.enums.UserRole
 import ecommerce.exception.UnauthorisedUserException
 import ecommerce.repository.UserRepository
@@ -24,7 +24,7 @@ class LoginMemberArgumentResolver(
         mavContainer: ModelAndViewContainer?,
         webRequest: NativeWebRequest,
         binderFactory: WebDataBinderFactory?,
-    ): UserDTO {
+    ): MemberUser {
         val request = (webRequest as ServletWebRequest).request
         val email = request.getAttribute("email") as String
 
@@ -36,6 +36,10 @@ class LoginMemberArgumentResolver(
             throw UnauthorisedUserException("User role not valid")
         }
 
-        return user
+        return MemberUser(
+            user.id,
+            user.email,
+            user.name,
+        )
     }
 }

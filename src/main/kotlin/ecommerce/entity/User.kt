@@ -1,11 +1,11 @@
-package ecommerce.dto.user
+package ecommerce.entity
 
 import ecommerce.enums.UserRole
 
-class UserDTO(
+class User(
     val id: Long? = null,
     val email: String,
     val password: String,
     val name: String,
-    val role: UserRole = UserRole.USER,
+    val role: UserRole,
 )

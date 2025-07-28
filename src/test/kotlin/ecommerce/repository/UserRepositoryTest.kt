@@ -1,6 +1,7 @@
 package ecommerce.repository
 
-import ecommerce.dto.user.UserDTO
+import ecommerce.entity.User
+import ecommerce.enums.UserRole
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -13,10 +14,11 @@ class UserRepositoryTest {
 
     @Test fun existsByEmail() {
         val user =
-            UserDTO(
+            User(
                 name = "test",
                 password = "test123",
                 email = "existsByEmail@test.com",
+                role = UserRole.USER,
             )
         userRepository.create(user)
         val existsByEmail = userRepository.existsByEmail("existsByEmail@test.com")
@@ -31,10 +33,11 @@ class UserRepositoryTest {
     @Test
     fun create() {
         val user =
-            UserDTO(
+            User(
                 name = "test",
                 password = "test123",
                 email = "create@test.com",
+                role = UserRole.USER,
             )
         userRepository.create(user)
         val existsByEmail = userRepository.existsByEmail("create@test.com")
@@ -43,29 +46,31 @@ class UserRepositoryTest {
 
     @Test
     fun findByEmailAndPassword() {
-        val userDTO =
-            UserDTO(
+        val memberUser =
+            User(
                 name = "test",
                 password = "test123",
                 email = "findByEmailAndPassword@test.com",
+                role = UserRole.USER,
             )
-        userRepository.create(userDTO)
+        userRepository.create(memberUser)
 
-        val user = userRepository.findByEmailAndPassword(userDTO.email, userDTO.password)
+        val user = userRepository.findByEmailAndPassword(memberUser.email, memberUser.password)
         assertThat(user).isNotNull
     }
 
     @Test
     fun `returns null for findByEmailAndPassword`() {
-        val userDTO =
-            UserDTO(
+        val memberUser =
+            User(
                 name = "test",
                 password = "test123",
                 email = "findByEmailAndPasswordFalse@test.com",
+                role = UserRole.USER,
             )
-        userRepository.create(userDTO)
+        userRepository.create(memberUser)
 
-        val user = userRepository.findByEmailAndPassword(userDTO.email, "")
+        val user = userRepository.findByEmailAndPassword(memberUser.email, "")
         assertThat(user).isNull()
     }
 }

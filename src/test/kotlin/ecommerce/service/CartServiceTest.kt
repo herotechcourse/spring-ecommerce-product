@@ -1,8 +1,9 @@
 package ecommerce.service
 
 import ecommerce.dto.products.ProductDTO
-import ecommerce.dto.user.UserDTO
 import ecommerce.dto.user.UserRequestDTO
+import ecommerce.entity.User
+import ecommerce.enums.UserRole
 import ecommerce.exception.EntityNotFoundException
 import ecommerce.repository.ProductRepository
 import ecommerce.repository.UserRepository
@@ -126,10 +127,11 @@ class CartServiceTest {
 
     @Test fun `throw error if no cart found`() {
         val member =
-            UserDTO(
+            User(
                 email = "addProductToCart@test.com",
                 name = "test",
                 password = "test123",
+                role = UserRole.USER,
             )
         userRepository.create(member)
 

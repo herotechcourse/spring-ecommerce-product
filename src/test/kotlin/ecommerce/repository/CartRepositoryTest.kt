@@ -1,6 +1,7 @@
 package ecommerce.repository
 
-import ecommerce.dto.user.UserDTO
+import ecommerce.entity.User
+import ecommerce.enums.UserRole
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -16,13 +17,14 @@ class CartRepositoryTest {
 
     @Test
     fun findMembersCart() {
-        val userRequestDTO =
-            UserDTO(
+        val member =
+            User(
                 email = "findMembersCart@test.com",
                 password = "test123",
                 name = "test",
+                role = UserRole.USER,
             )
-        val userID = userRepository.create(userRequestDTO)
+        val userID = userRepository.create(member)
         cartRepository.createCartForUser(userID)
 
         val cartID = cartRepository.findMembersCart(userID)

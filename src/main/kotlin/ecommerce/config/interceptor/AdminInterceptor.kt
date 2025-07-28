@@ -1,6 +1,6 @@
 package ecommerce.config.interceptor
 
-import ecommerce.dto.user.UserDTO
+import ecommerce.entity.User
 import ecommerce.enums.UserRole
 import ecommerce.exception.UnauthorisedUserException
 import ecommerce.infrastructure.JwtProvider
@@ -18,7 +18,7 @@ class AdminInterceptor(
         request: HttpServletRequest,
         response: HttpServletResponse,
         handler: Any,
-        user: UserDTO,
+        user: User,
     ): Boolean {
         if (user.role != UserRole.ADMIN) {
             throw UnauthorisedUserException("User role not admin")

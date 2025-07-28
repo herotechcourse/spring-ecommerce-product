@@ -1,8 +1,9 @@
 package ecommerce.service
 
 import ecommerce.dto.auth.LoginRequest
-import ecommerce.dto.user.UserDTO
 import ecommerce.dto.user.UserRequestDTO
+import ecommerce.entity.User
+import ecommerce.enums.UserRole
 import ecommerce.exception.UserAlreadyExistsException
 import ecommerce.exception.UserCredentialException
 import ecommerce.repository.UserRepository
@@ -29,10 +30,11 @@ class MemberAuthServiceTest {
                 email = "signUpError@test.com",
             )
         val member =
-            UserDTO(
+            User(
                 email = userDTO.email,
                 password = userDTO.password,
                 name = userDTO.name,
+                role = UserRole.USER,
             )
         userRepository.create(member)
         assertThrows<UserAlreadyExistsException> { memberAuthService.signUp(userDTO) }
@@ -63,16 +65,17 @@ class MemberAuthServiceTest {
 
     @Test
     fun `No user found at signIn with wrong password`() {
-        val userDTO =
-            UserDTO(
+        val memberUser =
+            User(
                 name = "test",
                 password = "test123",
                 email = "signInErrorPassword@test.com",
+                role = UserRole.USER,
             )
-        userRepository.create(userDTO)
+        userRepository.create(memberUser)
         val loginRequest =
             LoginRequest(
-                email = userDTO.email,
+                email = memberUser.email,
                 password = "test123456",
             )
         assertThrows<UserCredentialException> { memberAuthService.logIn(loginRequest) }
@@ -80,17 +83,18 @@ class MemberAuthServiceTest {
 
     @Test
     fun signIn() {
-        val userDTO =
-            UserDTO(
+        val memberUser =
+            User(
                 name = "test",
                 password = "test123",
                 email = "signInError@test.com",
+                role = UserRole.USER,
             )
-        userRepository.create(userDTO)
+        userRepository.create(memberUser)
         val loginRequest =
             LoginRequest(
-                userDTO.email,
-                userDTO.password,
+                memberUser.email,
+                memberUser.password,
             )
         assertThat(memberAuthService.logIn(loginRequest)).isNotEmpty
     }

@@ -1,6 +1,6 @@
 package ecommerce.config.interceptor
 
-import ecommerce.dto.user.UserDTO
+import ecommerce.entity.User
 import ecommerce.exception.UnauthorisedUserException
 import ecommerce.infrastructure.JwtProvider
 import ecommerce.repository.UserRepository
@@ -39,6 +39,6 @@ abstract class BaseAuthInterceptor(
         request: HttpServletRequest,
         response: HttpServletResponse,
         handler: Any,
-        user: UserDTO,
+        user: User,
     ): Boolean
 }
