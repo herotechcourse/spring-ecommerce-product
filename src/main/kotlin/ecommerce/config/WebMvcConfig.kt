@@ -7,12 +7,12 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 
 @Configuration
 class WebMvcConfig(
-    private val jwtAuthInterceptor: JwtAuthInterceptor,
+    private val userRoleInterceptor: UserRoleInterceptor,
     private val loginUserArgumentResolver: LoginUserArgumentResolver,
     private val adminRoleInterceptor: AdminRoleInterceptor,
 ) : WebMvcConfigurer {
     override fun addInterceptors(registry: InterceptorRegistry) {
-        registry.addInterceptor(jwtAuthInterceptor)
+        registry.addInterceptor(userRoleInterceptor)
             .addPathPatterns("/api/**")
             .excludePathPatterns(
                 "/api/products",

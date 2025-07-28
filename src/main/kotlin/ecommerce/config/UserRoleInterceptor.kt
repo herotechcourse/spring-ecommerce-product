@@ -10,7 +10,7 @@ import org.springframework.web.server.ResponseStatusException
 import org.springframework.web.servlet.HandlerInterceptor
 
 @Component
-class JwtAuthInterceptor(
+class UserRoleInterceptor(
     private val jwtService: JwtService,
     private val userService: UserService,
 ) : HandlerInterceptor {
