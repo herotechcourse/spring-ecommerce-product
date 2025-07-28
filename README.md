@@ -114,10 +114,10 @@ updateProductForm.html
 
 ## Features 2.4
 
-- [ ] Retrieve the Top 5 Most Added Products to Cart in the Last 30 Days.
-    - [ ] If multiple products have same count, the most recent added comes first.
-    - [ ] Response must include the product name, the number of times it was added, and the most recent added time.
+- [x] Retrieve the Top 5 Most Added Products to Cart in the Last 30 Days.
+    - [x] If multiple products have same count, the most recent added comes first.
+    - [x] Response must include the product name, the number of times it was added, and the most recent added time.
 
-- [ ] Retrieve Members Who Added Items to Their Cart in the Last 7 Days.
-    - [ ] Each member should appear only once.
-    - [ ] The response must include the member ID, name, and email.
+- [x] Retrieve Members Who Added Items to Their Cart in the Last 7 Days.
+    - [x] Each member should appear only once.
+    - [x] The response must include the member ID, name, and email.
