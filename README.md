@@ -18,6 +18,7 @@
 - [x] has property `id: Long?`
 - [x] has property `email: String`
 - [x] has property `password: String`
+- [x] has property `role: String? = null`
 - companion object
   - [x] `toEntity()`
   - [x] `from(loginForm: LoginForm)`
@@ -32,6 +33,17 @@
 - [x] has property `quantity: Int`
 
 ### DTO (Data Transfer Object)
+
+#### TopProductStats
+
+- [x] has a property `name: String`
+- [x] has a property `addCount: Int`
+- [x] has a property `lastAddedAt: LocalDateTime`
+
+#### ActiveMemberInfo
+- [x] has a property `id: Long`
+- [x] has a property `email: String`
+- [x] has a property `name: String? = null`
 
 #### ProductForm
 
@@ -68,11 +80,17 @@
 - [x] is a data class, as a DTO to send access token as response
 - [x] has property `accessToken: String`
 
-#### CartForm
+#### CartAddItemForm
 
-- [x] is a data class, as a DTO to validate form for add and update item in cart
+- [x] is a data class, as a DTO to validate form for adding item in cart
 - [x] has a property `productId: Long`
   - [x] validate 'Min'
+- [x] has a property `quantity: Int`
+  - [x] validate 'Min'
+
+#### CartUpdateQuantityformForm
+
+- [x] is a data class, as a DTO to validate form for updating item in cart
 - [x] has a property `quantity: Int`
   - [x] validate 'Min'
 
@@ -259,6 +277,10 @@
 - [x] has a method `getPayLoad(): String` to decrypt token into payload
 - [x] has a method `validateToken(): Boolean` to decrypt and validate token
 
+#### interface AuthorizationExtractor
+
+#### BearerAuthorizationExtractor
+
 ### UI
 
 #### LoginMemberArgumentResolver
@@ -271,12 +293,19 @@
 
 - [x] is an annotation class for authorization of member, using argument resolver 
 
+#### CheckAdminInterceptor
+
+- [x] has private property as input `AuthService`
+- [x] override `preHandle()` to intercept and process admin member filtering
+
 ### Config
 
 #### WebMvcConfiguration
 
 - [x] is an `WebMvcConfigurer`
 - [x] has private property as input `LoginMemberArgumentResolver`
+- [x] has private property as input `AuthService`
+- [x] override `addInterceptors()` to add `CheckAdminInterceptor(AuthService)`
 - [x] override `addArgumentResolvers()` to add `LoginMemberArgumentResolver` component
 
 ### etc.
