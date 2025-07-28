@@ -42,7 +42,8 @@ class ProductControllerTest {
                 .then().extract().jsonPath().getLong("id")
 
         val response =
-            RestAssured.get("/api/products/$id")
+            RestAssured.given()
+                .get("/api/products/$id")
                 .then().log().all().extract()
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
@@ -53,7 +54,8 @@ class ProductControllerTest {
     @Test
     fun getProduct_notFound() {
         val response =
-            RestAssured.get("/api/products/999999")
+            RestAssured.given()
+                .get("/api/products/999999")
                 .then().log().all().extract()
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value())
@@ -153,13 +155,15 @@ class ProductControllerTest {
                 .then().extract().jsonPath().getLong("id")
 
         val deleteResponse =
-            RestAssured.delete("/api/products/$id")
+            RestAssured.given()
+                .delete("/api/products/$id")
                 .then().log().all().extract()
 
         assertThat(deleteResponse.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value())
 
         val getResponse =
-            RestAssured.get("/api/products/$id")
+            RestAssured.given()
+                .get("/api/products/$id")
                 .then().log().all().extract()
 
         assertThat(getResponse.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value())

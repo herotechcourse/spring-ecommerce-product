@@ -1,5 +1,4 @@
 package ecommerce.controller
-
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
@@ -18,6 +17,12 @@ class ProductControllerIntegrationTest {
     @Autowired
     private lateinit var testRestTemplate: TestRestTemplate
 
+    private fun createHeaders(): HttpHeaders {
+        return HttpHeaders().apply {
+            contentType = MediaType.APPLICATION_JSON
+        }
+    }
+
     @ParameterizedTest
     @ValueSource(strings = ["j", " j", "j ", "j j", " j j "])
     fun `should accept - valid names`(validName: String) {
@@ -26,11 +31,11 @@ class ProductControllerIntegrationTest {
             "price" : 1.0,
             "imageUrl" : "http://google.com"
         }"""
-        val header = HttpHeaders().apply { contentType = MediaType.APPLICATION_JSON }
+        val headers = createHeaders()
         val response =
             testRestTemplate.postForEntity(
                 "/api/products",
-                HttpEntity(validRequest, header),
+                HttpEntity(validRequest, headers),
                 String::class.java,
             )
         assertThat(response.statusCode).isEqualTo(HttpStatus.CREATED)
@@ -44,11 +49,11 @@ class ProductControllerIntegrationTest {
             "price" : 1.0,
             "imageUrl" : "http://google.com"
             }"""
-        val header = HttpHeaders().apply { contentType = MediaType.APPLICATION_JSON }
+        val headers = createHeaders()
         val response =
             testRestTemplate.postForEntity(
                 "/api/products",
-                HttpEntity(request, header),
+                HttpEntity(request, headers),
                 String::class.java,
             )
         assertThat(response.statusCode).isEqualTo(HttpStatus.CREATED)
@@ -62,11 +67,11 @@ class ProductControllerIntegrationTest {
             "price" : 1.0,
             "imageUrl" : "http://google.com"
             }"""
-        val header = HttpHeaders().apply { contentType = MediaType.APPLICATION_JSON }
+        val headers = createHeaders()
         val response =
             testRestTemplate.postForEntity(
                 "/api/products",
-                HttpEntity(request, header),
+                HttpEntity(request, headers),
                 String::class.java,
             )
         assertThat(response.statusCode).isEqualTo(HttpStatus.BAD_REQUEST)
@@ -76,15 +81,15 @@ class ProductControllerIntegrationTest {
     @ValueSource(strings = ["1234567890123456", " ()[]+-&/_aaaabbb "])
     fun `should throw - invalid too long names`(invalidName: String) {
         val request = """{
-            "name" = "$invalidName"
-            "price" = 1.0
-            "imageUrl" = "http://google.com"
+            "name": "$invalidName",
+            "price": 1.0,
+            "imageUrl": "http://google.com"
         }"""
-        val header = HttpHeaders().apply { contentType = MediaType.APPLICATION_JSON }
+        val headers = createHeaders()
         val response =
             testRestTemplate.postForEntity(
                 "/api/products",
-                HttpEntity(request, header),
+                HttpEntity(request, headers),
                 String::class.java,
             )
         assertThat(response.statusCode).isEqualTo(HttpStatus.BAD_REQUEST)
@@ -94,15 +99,15 @@ class ProductControllerIntegrationTest {
     @ValueSource(strings = ["hi!", "percent%", "back\\slash", "curly{}", "hi@", "hi#", "tilda~", "emoji🙂", "korean한글", "comm,a"])
     fun `should throw - invalid names with not allowed special characters`(invalidName: String) {
         val request = """{
-            "name" = "$invalidName"
-            "price" = 1.0
-            "imageUrl" = "http://google.com"
+            "name": "$invalidName",
+            "price": 1.0,
+            "imageUrl": "http://google.com"
         }"""
-        val header = HttpHeaders().apply { contentType = MediaType.APPLICATION_JSON }
+        val headers = createHeaders()
         val response =
             testRestTemplate.postForEntity(
                 "/api/products",
-                HttpEntity(request, header),
+                HttpEntity(request, headers),
                 String::class.java,
             )
         assertThat(response.statusCode).isEqualTo(HttpStatus.BAD_REQUEST)
