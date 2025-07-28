@@ -55,7 +55,7 @@ class MemberApiController(private val authService: AuthService) {
                 success = true,
                 message = "Successfully logged in",
                 token = accessToken,
-                member.userName,
+                userName = member.userName,
             )
         return ResponseEntity.ok().body(authResponse)
     }
