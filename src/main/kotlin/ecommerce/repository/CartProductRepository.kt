@@ -43,17 +43,17 @@ class CartProductRepository(
     fun updateProductQuantity(
         cartProductId: Long,
         quantity: Int,
-    ): Int {
+    ) {
         val sql = "update cart_products set quantity = ? where id = ?"
-        return jdbcTemplate.update(sql, quantity, cartProductId)
+        jdbcTemplate.update(sql, quantity, cartProductId)
     }
 
     fun removeProduct(
         cartID: Long,
         productID: Long,
-    ): Int {
+    ) {
         val sql = "DELETE FROM cart_products WHERE product_id = ? AND cart_id = ?"
-        return jdbcTemplate.update(sql, productID, cartID)
+        jdbcTemplate.update(sql, productID, cartID)
     }
 
     fun addProduct(

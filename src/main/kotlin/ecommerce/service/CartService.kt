@@ -3,6 +3,7 @@ package ecommerce.service
 import ecommerce.dto.cart.CartDTO
 import ecommerce.dto.cartProduct.CartProductResponseDTO
 import ecommerce.enums.CartAction
+import ecommerce.exception.CartOperationException
 import ecommerce.exception.EntityNotFoundException
 import ecommerce.repository.CartProductRepository
 import ecommerce.repository.CartRepository
@@ -31,15 +32,21 @@ class CartService(
 
         val cartProduct = cartProductRepository.findCartProduct(cart.id, productID)
 
-        val id =
-            if (cartProduct == null) {
-                cartProductRepository.addProduct(cart.id, productID)
-            } else {
-                cartProductRepository.updateProductQuantity(cartProduct.id, cartProduct.quantity + 1)
-                cartProduct.id
-            }
-        cartStatisticsRepository.create(userID, productID, CartAction.ADD)
-        return id
+        return try {
+            val id =
+                if (cartProduct == null) {
+                    cartProductRepository.addProduct(cart.id, productID)
+                } else {
+                    cartProductRepository.updateProductQuantity(cartProduct.id, cartProduct.quantity + 1)
+                    cartProduct.id
+                }
+
+            cartStatisticsRepository.create(userID, productID, CartAction.ADD)
+
+            id
+        } catch (_: Exception) {
+            throw CartOperationException("Failed to add product to cart")
+        }
     }
 
     fun removeProductFromCart(
@@ -53,10 +60,14 @@ class CartService(
             cartProductRepository.findCartProduct(cart.id, productID)
                 ?: throw EntityNotFoundException("Product not in cart")
 
-        if (cartProduct.quantity == 1) {
-            cartProductRepository.removeProduct(cart.id, productID)
-        } else {
-            cartProductRepository.updateProductQuantity(cartProduct.id, cartProduct.quantity - 1)
+        try {
+            if (cartProduct.quantity == 1) {
+                cartProductRepository.removeProduct(cart.id, productID)
+            } else {
+                cartProductRepository.updateProductQuantity(cartProduct.id, cartProduct.quantity - 1)
+            }
+        } catch (_: Exception) {
+            throw CartOperationException("Failed to remove product from cart")
         }
         cartStatisticsRepository.create(userID, productID, CartAction.DELETE)
     }

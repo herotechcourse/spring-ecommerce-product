@@ -2,6 +2,7 @@ package ecommerce.advice
 
 import com.fasterxml.jackson.databind.exc.MismatchedInputException
 import ecommerce.dto.error.ErrorResponse
+import ecommerce.exception.CartOperationException
 import ecommerce.exception.DuplicateProductNameException
 import ecommerce.exception.EntityNotFoundException
 import ecommerce.exception.UnauthorisedUserException
@@ -81,6 +82,14 @@ class GlobalExceptionHandler {
         request: HttpServletRequest,
     ): ResponseEntity<ErrorResponse> {
         return errorResponse(HttpStatus.UNAUTHORIZED, ex.message ?: "UNAUTHORIZED", request)
+    }
+
+    @ExceptionHandler(CartOperationException::class)
+    fun handleCartOperationException(
+        ex: CartOperationException,
+        request: HttpServletRequest,
+    ): ResponseEntity<ErrorResponse> {
+        return errorResponse(HttpStatus.CONFLICT, ex.message ?: "CONFLICT", request)
     }
 
     private fun errorResponse(
