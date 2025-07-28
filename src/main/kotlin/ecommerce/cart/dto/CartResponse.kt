@@ -2,7 +2,7 @@ package ecommerce.cart.dto
 
 import ecommerce.product.domain.Product
 
-data class CartResponse(
+class CartResponse(
     val id: Long,
     val product: Product,
 )
