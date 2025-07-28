@@ -33,6 +33,7 @@ class ValidationTest {
         jdbcTemplate.execute(createQuery())
         val loginRequest =
             RegistrationRequest(
+                "Admin Test",
                 "admin@test.com",
                 "12345678",
             )

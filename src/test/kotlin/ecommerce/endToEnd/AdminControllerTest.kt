@@ -43,6 +43,7 @@ class AdminControllerTest {
 
         val loginRequest =
             RegistrationRequest(
+                "adminTest",
                 "admin@test.com",
                 "12345678",
             )

@@ -27,6 +27,7 @@ class MemberRepositoryTest {
             """
             CREATE TABLE members (
                 id INT AUTO_INCREMENT PRIMARY KEY, 
+                name VARCHAR(100),
                 email VARCHAR(255) UNIQUE,
                 password VARCHAR(255), 
                 role VARCHAR(100) NOT NULL DEFAULT 'USER'
@@ -38,7 +39,7 @@ class MemberRepositoryTest {
 
     @Test
     fun save() {
-        val user = Member(null, "test@example.com", "test123", "USER")
+        val user = Member(null, "test", "test@example.com", "test123", "USER")
         val id = memberRepository.save(user)
         val count =
             db.sql("SELECT COUNT(*) FROM members")
@@ -51,7 +52,7 @@ class MemberRepositoryTest {
 
     @Test
     fun findByEmail() {
-        val user = Member(null, "test@example.com", "test123", "USER")
+        val user = Member(null, "test", "test@example.com", "test123", "USER")
         memberRepository.save(user)
         db.sql("SELECT COUNT(*) FROM members")
             .query(Int::class.java)

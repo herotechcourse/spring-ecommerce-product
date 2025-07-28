@@ -13,6 +13,7 @@ class MemberRepository(private val db: JdbcClient) {
         RowMapper<Member> { rs: ResultSet, _ ->
             Member(
                 rs.getLong("id"),
+                rs.getString("name"),
                 rs.getString("email"),
                 rs.getString("password"),
                 rs.getString("role"),
@@ -21,10 +22,10 @@ class MemberRepository(private val db: JdbcClient) {
 
     fun save(member: Member): Long? {
         val keyHolder = GeneratedKeyHolder()
-        val sql = "INSERT INTO members (email, password) VALUES (?,?)"
+        val sql = "INSERT INTO members (name, email, password) VALUES (?,?,?)"
 
         db.sql(sql)
-            .params(member.email, member.password)
+            .params(member.name, member.email, member.password)
             .update(keyHolder)
 
         return keyHolder.key?.toLong()
@@ -45,6 +46,7 @@ class MemberRepository(private val db: JdbcClient) {
             .query { rs, _ ->
                 Member(
                     id = rs.getLong("id"),
+                    name = rs.getString("name"),
                     email = rs.getString("email"),
                     password = rs.getString("password"),
                     role = rs.getString("role"),

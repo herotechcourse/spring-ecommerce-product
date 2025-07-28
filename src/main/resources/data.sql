@@ -18,12 +18,11 @@ VALUES ('Espresso', 2.50, 'https://upload.wikimedia.org/wikipedia/commons/4/45/A
        ('Tiramisu', 4.50,
         'https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dGlyYW1pc3V8ZW58MHx8MHx8fDA%3D');
 
-INSERT INTO MEMBERS (EMAIL, PASSWORD, ROLE)
-VALUES ('admin@test.com', '$2a$10$y3rEiacoc/0F1Qh0mVweo.rYAAuyCbOGhuPI/fk3XnC20irt21.nm', 'ADMIN'),
-       ('user1@example.com', '$2a$10$y3rEiacoc/0F1Qh0mVweo.rYAAuyCbOGhuPI/fk3XnC20irt21.nm', 'USER'),
-       ('user2@example.com', '$2a$10$y3rEiacoc/0F1Qh0mVweo.rYAAuyCbOGhuPI/fk3XnC20irt21.nm', 'USER'),
-       ('user3@example.com', '$2a$10$y3rEiacoc/0F1Qh0mVweo.rYAAuyCbOGhuPI/fk3XnC20irt21.nm', 'USER');
-
+INSERT INTO MEMBERS (NAME, EMAIL, PASSWORD, ROLE)
+VALUES ('Admin', 'admin@test.com', '$2a$10$y3rEiacoc/0F1Qh0mVweo.rYAAuyCbOGhuPI/fk3XnC20irt21.nm', 'ADMIN'),
+       ('user1', 'user1@example.com', '$2a$10$y3rEiacoc/0F1Qh0mVweo.rYAAuyCbOGhuPI/fk3XnC20irt21.nm', 'USER'),
+       ('user2', 'user2@example.com', '$2a$10$y3rEiacoc/0F1Qh0mVweo.rYAAuyCbOGhuPI/fk3XnC20irt21.nm', 'USER'),
+       ('user3', 'user3@example.com', '$2a$10$y3rEiacoc/0F1Qh0mVweo.rYAAuyCbOGhuPI/fk3XnC20irt21.nm', 'USER');
 
 INSERT INTO CARTS (MEMBER_ID)
 VALUES (1),

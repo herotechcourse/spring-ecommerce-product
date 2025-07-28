@@ -26,8 +26,9 @@ class CartRepositoryTest {
         jdbcTemplate.execute("DELETE FROM members")
 
         jdbcTemplate.update(
-            "INSERT INTO members (id, email, password, role) VALUES (?, ?, ?, ?)",
+            "INSERT INTO members (id, name, email, password, role) VALUES (?, ?, ?, ?, ?)",
             1L,
+            "test",
             "test@example.com",
             "hashedpassword",
             "USER",
