@@ -42,7 +42,7 @@ class CartService(
         val cart = getOrCreateCartForMember(memberId)
         val cartItems = cartItemRepository.findByCartId(cart.id)
 
-        return cartItems.mapNotNull { cartItem ->
+        return cartItems.map { cartItem ->
             val product = productService.getProductById(cartItem.productId)
             CartItemResponse(
                 productId = product.id,
@@ -117,9 +117,8 @@ class CartService(
         val cart =
             cartRepository.findByMemberId(memberId)
                 ?: throw ResourceNotFoundException("Cart", "memberId", memberId)
-        val cartItem =
-            cartItemRepository.findByCartIdAndProductId(cart.id, productId)
-                ?: throw ResourceNotFoundException("Cart Item", "productId", productId)
+        cartItemRepository.findByCartIdAndProductId(cart.id, productId)
+            ?: throw ResourceNotFoundException("Cart Item", "productId", productId)
 
         cartItemRepository.deleteByCartIdAndProductId(cart.id, productId)
     }

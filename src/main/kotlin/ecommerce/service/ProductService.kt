@@ -29,9 +29,8 @@ class ProductService(private val productRepository: ProductRepository) {
     ) {
         if (id <= 0) throw IllegalArgumentException("Product ID must be greater than or equal to 1")
 
-        val existingProduct =
-            productRepository.findById(id)
-                ?: throw ResourceNotFoundException("Product", "id", id)
+        productRepository.findById(id)
+            ?: throw ResourceNotFoundException("Product", "id", id)
 
         productRepository.update(id, updatedProduct)
     }
