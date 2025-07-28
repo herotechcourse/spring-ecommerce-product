@@ -10,8 +10,8 @@ import org.springframework.stereotype.Component
 
 @Component
 class AdminInterceptor(
-    private val userRepository: UserRepository,
-    private val jwtTokenProvider: JwtTokenProvider,
+    val userRepository: UserRepository,
+    jwtTokenProvider: JwtTokenProvider,
 ) : BaseAuthInterceptor(jwtTokenProvider) {
     override fun handleAuthenticatedRequest(
         request: HttpServletRequest,

@@ -7,7 +7,7 @@ import jakarta.servlet.http.HttpServletResponse
 import org.springframework.web.servlet.HandlerInterceptor
 
 abstract class BaseAuthInterceptor(
-    private val jwtTokenProvider: JwtTokenProvider,
+    val jwtTokenProvider: JwtTokenProvider,
 ) : HandlerInterceptor {
     override fun preHandle(
         request: HttpServletRequest,

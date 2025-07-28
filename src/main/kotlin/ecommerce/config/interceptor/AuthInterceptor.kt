@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component
 
 @Component
 class AuthInterceptor(
-    private val jwtTokenProvider: JwtTokenProvider,
+    jwtTokenProvider: JwtTokenProvider,
 ) : BaseAuthInterceptor(jwtTokenProvider) {
     override fun handleAuthenticatedRequest(
         request: HttpServletRequest,
