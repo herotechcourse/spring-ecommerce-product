@@ -67,10 +67,8 @@ class GlobalExceptionHandler {
         ex: MethodArgumentTypeMismatchException,
         request: HttpServletRequest,
     ): ResponseEntity<String> {
-        val errorMessage =
-            "Parameter '${ex.name}' has invalid value: '${ex.value}'. Expected type: ${ex.requiredType?.simpleName}."
-        println("Type mismatch error for request ${request.requestURI}: $errorMessage")
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorMessage)
+        println("Type mismatch error for request ${request.requestURI}: ${ex.message}")
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.message)
     }
 
     @ExceptionHandler(MissingServletRequestParameterException::class)
@@ -78,9 +76,8 @@ class GlobalExceptionHandler {
         ex: MissingServletRequestParameterException,
         request: HttpServletRequest,
     ): ResponseEntity<String> {
-        val errorMessage = "Required request parameter '${ex.parameterName}' is not present."
-        println("Missing request parameter for request ${request.requestURI}: $errorMessage")
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorMessage)
+        println("Missing request parameter for request ${request.requestURI}: ${ex.message}")
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.message)
     }
 
     @ExceptionHandler(MissingPathVariableException::class)
@@ -88,9 +85,8 @@ class GlobalExceptionHandler {
         ex: MissingPathVariableException,
         request: HttpServletRequest,
     ): ResponseEntity<String> {
-        val errorMessage = "Required path variable '${ex.variableName}' is not present."
-        println("Missing path variable for request ${request.requestURI}: $errorMessage")
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorMessage)
+        println("Missing path variable for request ${request.requestURI}: ${ex.message}")
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.message)
     }
 
     @ExceptionHandler(Exception::class)
@@ -98,10 +94,8 @@ class GlobalExceptionHandler {
         ex: Exception,
         request: HttpServletRequest,
     ): ResponseEntity<String> {
-        ex.printStackTrace()
-        System.err.println("An unhandled exception occurred for request ${request.requestURI}: ${ex.message}")
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-            .body("An unexpected error occurred. Please try again later.")
+        println("An unhandled exception occurred for request ${request.requestURI}: ${ex.message}")
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.message)
     }
 
     @ExceptionHandler(AuthenticationException::class)
