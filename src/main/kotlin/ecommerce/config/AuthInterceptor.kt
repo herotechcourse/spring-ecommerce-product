@@ -4,14 +4,15 @@ import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.web.servlet.HandlerInterceptor
 import ecommerce.infrastructure.AuthorizationExtractor
+import ecommerce.infrastructure.JwtTokenProvider
 import ecommerce.service.AuthService
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Component
 
 @Component
-class AdminAuthInterceptor(
+class AuthInterceptor(
     private val authExtractor: AuthorizationExtractor,
-    private val authService: AuthService
+    private val jwtTokenProvider: JwtTokenProvider
 ): HandlerInterceptor {
     override fun preHandle(
         request: HttpServletRequest,
@@ -20,16 +21,15 @@ class AdminAuthInterceptor(
     ): Boolean {
         val token = authExtractor.extract(request)
         if (token.isEmpty()){
-            response.status = HttpStatus.FORBIDDEN.value()
+            response.status = HttpStatus.UNAUTHORIZED.value()
             return false
         }
-
-        val admin = authService.findMemberByToken(token)
-        if (admin.role != "admin")
-        {
-            response.status = HttpStatus.FORBIDDEN.value()
+        if (!jwtTokenProvider.validateToken(token)) {
+            response.status = HttpStatus.UNAUTHORIZED.value()
             return false
         }
+        val email = jwtTokenProvider.getPayload(token)
+        request.setAttribute("email", email)
         return true
     }
 }

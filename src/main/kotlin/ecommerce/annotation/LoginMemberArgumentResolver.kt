@@ -1,7 +1,8 @@
 package ecommerce.annotation
 
+import ecommerce.dto.MemberDto
+import ecommerce.exception.NotFoundException
 import ecommerce.exception.UnauthorizedException
-import ecommerce.infrastructure.AuthorizationExtractor
 import ecommerce.service.AuthService
 import jakarta.servlet.http.HttpServletRequest
 import org.springframework.core.MethodParameter
@@ -12,7 +13,6 @@ import org.springframework.web.method.support.ModelAndViewContainer
 
 class LoginMemberArgumentResolver(
     private val authService: AuthService,
-    private val authExtractor: AuthorizationExtractor,
 ) : HandlerMethodArgumentResolver {
     override fun supportsParameter(parameter: MethodParameter): Boolean {
         return parameter.hasParameterAnnotation(LoginMember::class.java)
@@ -24,13 +24,18 @@ class LoginMemberArgumentResolver(
         webRequest: NativeWebRequest,
         binderFactory: WebDataBinderFactory?,
     ): Any {
+        lateinit var member: MemberDto
         val request =
             webRequest.getNativeRequest(HttpServletRequest::class.java)
                 ?: throw UnauthorizedException()
 
-        val token = authExtractor.extract(request)
-        if (token.isBlank()) throw UnauthorizedException()
+        val email = request.getAttribute("email") ?: throw UnauthorizedException()
+        try {
+            member = authService.findMember(email.toString())
+        } catch (e: NotFoundException) {
+            throw UnauthorizedException()
+        }
 
-        return authService.findMemberByToken(token)
+        return member
     }
 }
