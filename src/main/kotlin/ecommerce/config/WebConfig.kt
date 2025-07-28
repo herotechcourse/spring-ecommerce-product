@@ -1,7 +1,7 @@
 package ecommerce.config
 
-import ecommerce.interceptor.AdminInterceptor
-import ecommerce.interceptor.AuthInterceptor
+import ecommerce.interceptor.AdminRoleCheckInterceptor
+import ecommerce.interceptor.JwtAuthenticationInterceptor
 import ecommerce.resolver.LoginMemberArgumentResolver
 import org.springframework.context.annotation.Configuration
 import org.springframework.web.method.support.HandlerMethodArgumentResolver
@@ -10,15 +10,15 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 
 @Configuration
 class WebConfig(
-    private val authInterceptor: AuthInterceptor,
+    private val jwtAuthenticationInterceptor: JwtAuthenticationInterceptor,
     private val loginMemberArgumentResolver: LoginMemberArgumentResolver,
-    private val adminInterceptor: AdminInterceptor,
+    private val adminRoleCheckInterceptor: AdminRoleCheckInterceptor,
 ) : WebMvcConfigurer {
     override fun addInterceptors(registry: InterceptorRegistry) {
-        registry.addInterceptor(authInterceptor)
+        registry.addInterceptor(jwtAuthenticationInterceptor)
             .addPathPatterns("/api/protected/**")
 
-        registry.addInterceptor(adminInterceptor)
+        registry.addInterceptor(adminRoleCheckInterceptor)
             .addPathPatterns("/admin/**")
     }
 
