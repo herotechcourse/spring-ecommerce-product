@@ -98,10 +98,10 @@ HTTP API that allows users to retrieve, add, update, and delete products.
 #### Update Schema SQL
 -[x] Add `cart_items` table to schema.sql
 #### Implement Repository
--[ ] Create `repository` methods for:
-  -[ ] Find all cart items by member ID
-  -[ ] Add or update a cart item
-  -[ ] Remove a cart item
+-[x] Create `repository` methods for:
+  -[x] Find all cart items by member ID
+  -[x] Add or update a cart item
+  -[x] Remove a cart item
 #### Implement Service
 -[ ] `CartService` methods:
   -[ ] `findByMemberId(memberId: Long): List<CartItem>`

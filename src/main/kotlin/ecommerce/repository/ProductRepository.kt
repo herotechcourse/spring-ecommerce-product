@@ -80,7 +80,7 @@ class ProductRepository(private val jdbcTemplate: JdbcTemplate) {
     fun insertWithKeyholder(request: ProductRequest): Long {
         require(!existsByName(request.name)) { "Product with name ${request.name} already exists" }
         val sql = ProductConstsSQL.INSERT.trimIndent()
-        val id = JdbcHelper.insertAndReturnKey(jdbcTemplate, sql, ::prepareInsertStatement, request)
+        val id = JdbcHelper.insertAndReturnKey(jdbcTemplate, sql, request, ::prepareInsertStatement)
 
         return requireNotNull(id) {
             "Failed to retrieve generated ID after inserting product '${request.name}'. " +

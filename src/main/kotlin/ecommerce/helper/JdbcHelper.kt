@@ -9,8 +9,8 @@ object JdbcHelper {
     fun <Res> insertAndReturnKey(
         jdbcTemplate: JdbcTemplate,
         sql: String,
-        bind: (Connection, String, Res) -> PreparedStatement,
         request: Res,
+        bind: (Connection, String, Res) -> PreparedStatement,
     ): Long? {
         val keyHolder = GeneratedKeyHolder()
         jdbcTemplate.update({ conn ->

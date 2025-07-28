@@ -34,7 +34,7 @@ class MemberRepository(private val jdbcTemplate: JdbcTemplate) {
 
     fun insert(request: MemberRequest): Long? {
         val sql = MemberConstsSQL.INSERT.trimIndent()
-        return JdbcHelper.insertAndReturnKey(jdbcTemplate, sql, ::prepareInsertStatement, request)
+        return JdbcHelper.insertAndReturnKey(jdbcTemplate, sql, request, ::prepareInsertStatement)
     }
 
     private fun prepareInsertStatement(
