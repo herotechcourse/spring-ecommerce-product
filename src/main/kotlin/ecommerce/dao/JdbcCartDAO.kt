@@ -19,43 +19,59 @@ class JdbcCartDAO(private val db: JdbcTemplate) : CartDAO {
             )
         }
 
-    // TODO: code separation is needed
     override fun addItemToCart(
         memberId: Long,
         productId: Long,
         quantity: Int,
     ): Long {
-        val keyHolder = GeneratedKeyHolder()
         val existing = isItemExistInCart(memberId, productId)
-        if (existing) {
-            db.update(
-                { connection ->
-                    connection.prepareStatement(
-                        "UPDATE cart_item SET quantity = quantity + ? WHERE member_id = ? AND product_id = ?",
-                        arrayOf("id"),
-                    ).apply {
-                        setInt(1, quantity)
-                        setLong(2, memberId)
-                        setLong(3, productId)
-                    }
-                },
-                keyHolder,
-            )
-        } else {
-            db.update(
-                { connection ->
-                    connection.prepareStatement(
-                        "INSERT INTO cart_item (member_id, product_id, quantity) VALUES (?, ?, ?)",
-                        arrayOf("id"),
-                    ).apply {
-                        setLong(1, memberId)
-                        setLong(2, productId)
-                        setInt(3, quantity)
-                    }
-                },
-                keyHolder,
-            )
+        return when (existing) {
+            true -> addItemIfExistInCart(memberId, productId, quantity)
+            false -> addItemIfNotExistInCart(memberId, productId, quantity)
         }
+    }
+
+    private fun addItemIfExistInCart(
+        memberId: Long,
+        productId: Long,
+        quantity: Int,
+    ): Long {
+        val keyHolder = GeneratedKeyHolder()
+        db.update(
+            { connection ->
+                connection.prepareStatement(
+                    "UPDATE cart_item SET quantity = quantity + ? WHERE member_id = ? AND product_id = ?",
+                    arrayOf("id"),
+                ).apply {
+                    setInt(1, quantity)
+                    setLong(2, memberId)
+                    setLong(3, productId)
+                }
+            },
+            keyHolder,
+        )
+        return keyHolder.key?.toLong() ?: throw IllegalStateException("insert - Failed to retrieve ID")
+    }
+
+    private fun addItemIfNotExistInCart(
+        memberId: Long,
+        productId: Long,
+        quantity: Int,
+    ): Long {
+        val keyHolder = GeneratedKeyHolder()
+        db.update(
+            { connection ->
+                connection.prepareStatement(
+                    "INSERT INTO cart_item (member_id, product_id, quantity) VALUES (?, ?, ?)",
+                    arrayOf("id"),
+                ).apply {
+                    setLong(1, memberId)
+                    setLong(2, productId)
+                    setInt(3, quantity)
+                }
+            },
+            keyHolder,
+        )
         return keyHolder.key?.toLong() ?: throw IllegalStateException("insert - Failed to retrieve ID")
     }
 

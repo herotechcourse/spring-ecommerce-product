@@ -32,3 +32,5 @@ CREATE TABLE cart_item
     FOREIGN KEY (member_id) REFERENCES member (id),
     FOREIGN KEY (product_id) REFERENCES product (id)
 );
+
+// check for how to creat index!
