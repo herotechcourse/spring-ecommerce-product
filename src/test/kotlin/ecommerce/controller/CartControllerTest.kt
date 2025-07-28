@@ -38,7 +38,7 @@ class CartControllerTest
 
         @BeforeEach
         fun setup() {
-            val mockMember = MemberTestFixture.RequestCases.VALID_MEMBER
+            val mockMember = MemberTestFixture.RequestCases.VALID_MEMBER_GURI
             whenever(authService.findMemberByToken("fake-token"))
                 .thenReturn(
                     Member(

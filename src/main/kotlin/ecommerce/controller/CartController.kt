@@ -3,7 +3,7 @@ package ecommerce.controller
 import ecommerce.dto.CartQuantityRequest
 import ecommerce.dto.CartRequest
 import ecommerce.dto.CartResponse
-import ecommerce.dto.LoginMember
+import ecommerce.dto.annotation.LoginMember
 import ecommerce.dto.mapper.CartMapper
 import ecommerce.entity.Member
 import ecommerce.service.CartService

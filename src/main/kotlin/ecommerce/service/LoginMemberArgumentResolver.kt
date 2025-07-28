@@ -1,6 +1,6 @@
 package ecommerce.service
 
-import ecommerce.dto.LoginMember
+import ecommerce.dto.annotation.LoginMember
 import ecommerce.exception.UnauthorizedException
 import org.springframework.core.MethodParameter
 import org.springframework.stereotype.Component

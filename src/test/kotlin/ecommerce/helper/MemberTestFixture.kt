@@ -15,7 +15,7 @@ object MemberTestFixture {
                 password = "password",
             )
 
-        val VALID_MEMBER =
+        val VALID_MEMBER_GURI =
             MemberRequest(
                 email = "guri@email.com",
                 password = "very_cute_dog",
