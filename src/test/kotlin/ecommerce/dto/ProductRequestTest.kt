@@ -1,11 +1,11 @@
 package ecommerce.dto
 
+import ecommerce.helper.ProductTestFixture.AMERICANO
 import ecommerce.helper.ProductTestFixture.InvalidRequest.INVALID_IMAGE_URL_CHARACTERS
 import ecommerce.helper.ProductTestFixture.InvalidRequest.INVALID_IMAGE_URL_EXCEED
 import ecommerce.helper.ProductTestFixture.InvalidRequest.INVALID_NAME_CHARACTERS
 import ecommerce.helper.ProductTestFixture.InvalidRequest.INVALID_NAME_EXCEED
 import ecommerce.helper.ProductTestFixture.InvalidRequest.INVALID_PRICE_TOO_SMALL
-import ecommerce.helper.ProductTestFixture.ValidRequest.AMERICANO
 import ecommerce.view.ValidationMessages.Invalid.IMAGE_URL_MUST_LENGTH
 import ecommerce.view.ValidationMessages.Invalid.IMAGE_URL_MUST_PATTERN
 import ecommerce.view.ValidationMessages.Invalid.NAME_MUST_LENGTH

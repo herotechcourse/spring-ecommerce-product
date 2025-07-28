@@ -1,8 +1,8 @@
 package ecommerce.controller
 
 import ecommerce.dto.ProductResponse
-import ecommerce.helper.ProductTestFixture.ValidRequest.AMERICANO
-import ecommerce.helper.ProductTestFixture.ValidRequest.FLAT_WHITE
+import ecommerce.helper.ProductTestFixture.AMERICANO
+import ecommerce.helper.ProductTestFixture.FLAT_WHITE
 import ecommerce.helper.ProductTestFixture.postTestProduct
 import io.restassured.RestAssured
 import io.restassured.http.ContentType

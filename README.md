@@ -30,7 +30,8 @@ HTTP API that allows users to retrieve, add, update, and delete products.
 
 - Remove manual ID generation logic from `ProductStore.createAndReturnId()`
   → _this is not ID creator, ask reviewer again_.
--[ ] In `TextFixture.kt`, move `FLAT_WHITE` and `AMERICANO` under the `Dummy` object or remove `Dummy` altogether
+-[x] In `ProductTestFixture.kt`, move `FLAT_WHITE` and `AMERICANO` under the `Dummy` object or remove `Dummy` altogether
+  - Dummy and Request became inconsistent because validation annotations had to be added.
 -[x] Reconsider the placement and responsibility of `AssertTemplate` → Delete
  Decide whether assertion logic should be part of the fixture or separated.
 
@@ -59,7 +60,6 @@ HTTP API that allows users to retrieve, add, update, and delete products.
   -[x] Not black
 -[x] Validate `ProductRequest.password`
   -[x] Basic size check
-  -[ ] more?
 
 #### Refactor
 -[x] The application is now structured into Controller, Service, and Repository layers in Member.
@@ -113,7 +113,6 @@ HTTP API that allows users to retrieve, add, update, and delete products.
 -[x] Create `@LoginMember` annotation
 -[x] Implement `WebConfig`
 -[x] Implement `LoginMemberArgumentResolver`
--[ ] Implement `AuthInterceptor` to validate tokens globally -> step 2-4?
 -[x] Register resolver and interceptor in `WebConfig`
 #### Exception Handling
 -[x] Define UnauthorizedException for missing or invalid tokens
@@ -125,7 +124,6 @@ HTTP API that allows users to retrieve, add, update, and delete products.
 -[x] Fix `cart_items` table schema in `schema.sql`
   -[x] Change `member_id` from `VARCHAR(255)` to `BIGINT`
   -[x] Change `product_id` from `VARCHAR(255)` to `BIGINT`
-  -[ ] Add proper foreign key constraints if needed
 
 ### Create Statistics DTOs
 -[x] Create `ProductStatsResponse`
@@ -148,8 +146,20 @@ HTTP API that allows users to retrieve, add, update, and delete products.
 
 ### Add SQL Constants
 -[x] Create `AdminConstsSQL` or add to existing SQL constants
-  -[x] Top products query (30 days, with tie-breaking)
+  -[x] Top products query (30 days, with tiebreaking)
   -[x] Active members query (7 days, distinct)
+
+### Testing & Validation
+-[x] Test top products endpoint with sample data
+-[x] Test active members endpoint with sample data
+-[x] Verify correct ordering and tiebreaking logic
+
+---
+
+
+### Todo later
+-[ ] Add proper foreign key constraints (if needed)
+-[ ] Implement `AuthInterceptor` to validate tokens globally
 
 ### (Optional) Admin Role Authorization
 -[ ] Add `role` field to `Member` entity and database
@@ -158,11 +168,4 @@ HTTP API that allows users to retrieve, add, update, and delete products.
   -[ ] Check for `ADMIN` role in JWT token or member data
 -[ ] Update JWT token creation to include role information
 -[ ] Update `LoginMemberArgumentResolver` to handle role-based access
-
-### Testing & Validation
--[x] Test top products endpoint with sample data
--[x] Test active members endpoint with sample data
--[x] Verify correct ordering and tie-breaking logic
 -[ ] Test admin role restrictions (if implemented)
-
----

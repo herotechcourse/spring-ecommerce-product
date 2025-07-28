@@ -1,8 +1,8 @@
 package ecommerce.controller
 
 import ecommerce.dto.ProductResponse
-import ecommerce.helper.ProductTestFixture
-import ecommerce.helper.ProductTestFixture.ValidRequest.AMERICANO
+import ecommerce.helper.ProductTestFixture.AMERICANO
+import ecommerce.helper.ProductTestFixture.InvalidRequest
 import ecommerce.helper.ProductTestFixture.postTestProduct
 import io.restassured.RestAssured
 import io.restassured.http.ContentType
@@ -39,7 +39,7 @@ class CreateProductControllerTest {
         val response =
             RestAssured
                 .given().log().all()
-                .body(ProductTestFixture.InvalidDummy.SUPER_LONG_URL)
+                .body(InvalidRequest.SUPER_LONG_URL)
                 .contentType(ContentType.JSON)
                 .`when`().post("/api/products")
                 .then().log().all().extract()
@@ -52,7 +52,7 @@ class CreateProductControllerTest {
         val response =
             RestAssured
                 .given().log().all()
-                .body(ProductTestFixture.InvalidDummy.NO_NAME)
+                .body(InvalidRequest.NO_NAME)
                 .contentType(ContentType.JSON)
                 .`when`().post("/api/products")
                 .then().log().all().extract()
@@ -65,7 +65,7 @@ class CreateProductControllerTest {
         val response =
             RestAssured
                 .given().log().all()
-                .body(ProductTestFixture.InvalidDummy.NO_PRICE)
+                .body(InvalidRequest.NO_PRICE)
                 .contentType(ContentType.JSON)
                 .`when`().post("/api/products")
                 .then().log().all().extract()
@@ -78,7 +78,7 @@ class CreateProductControllerTest {
         val response =
             RestAssured
                 .given().log().all()
-                .body(ProductTestFixture.InvalidDummy.NO_URL)
+                .body(InvalidRequest.NO_URL)
                 .contentType(ContentType.JSON)
                 .`when`().post("/api/products")
                 .then().log().all().extract()

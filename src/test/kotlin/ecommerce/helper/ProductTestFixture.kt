@@ -1,7 +1,7 @@
 package ecommerce.helper
 
 import ecommerce.constants.ConstantsProduct
-import ecommerce.dto.DummyRequest
+import ecommerce.dto.DummyProductRequest
 import ecommerce.dto.ProductRequest
 import io.restassured.RestAssured
 import io.restassured.http.ContentType
@@ -10,23 +10,21 @@ import io.restassured.response.Response
 import java.math.BigDecimal
 
 object ProductTestFixture {
-    object ValidRequest {
-        val FLAT_WHITE =
-            ProductRequest(
-                name = "Flat white",
-                price = BigDecimal("6.50"),
-                imageUrl =
-                    "https://st.kakaocdn.net/product/gift/product/20231010111814_9a667f9eccc943648797925498bdd8a3.jpg",
-            )
+    val FLAT_WHITE =
+        ProductRequest(
+            name = "Flat white",
+            price = BigDecimal("6.50"),
+            imageUrl =
+                "https://st.kakaocdn.net/product/gift/product/20231010111814_9a667f9eccc943648797925498bdd8a3.jpg",
+        )
 
-        val AMERICANO =
-            ProductRequest(
-                name = "Americano",
-                price = BigDecimal("4.50"),
-                imageUrl =
-                    "https://st.kakaocdn.net/product/gift/product/20231010111814_9a667f9eccc943648797925498bdd8a3.jpg",
-            )
-    }
+    val AMERICANO =
+        ProductRequest(
+            name = "Americano",
+            price = BigDecimal("4.50"),
+            imageUrl =
+                "https://st.kakaocdn.net/product/gift/product/20231010111814_9a667f9eccc943648797925498bdd8a3.jpg",
+        )
 
     object InvalidRequest {
         val INVALID_NAME_EXCEED =
@@ -64,34 +62,32 @@ object ProductTestFixture {
                 price = BigDecimal("5.00"),
                 imageUrl = superLongUrl(),
             )
-    }
 
-    object InvalidDummy {
+        val SUPER_LONG_URL =
+            ProductRequest(
+                name = "Flat white",
+                price = BigDecimal("6.50"),
+                imageUrl = superLongUrl(),
+            )
+
         val NO_NAME =
-            DummyRequest(
+            DummyProductRequest(
                 price = BigDecimal("6.50"),
                 imageUrl =
                     "https://st.kakaocdn.net/product/gift/product/20231010111814_9a667f9eccc943648797925498bdd8a3.jpg",
             )
 
         val NO_PRICE =
-            DummyRequest(
+            DummyProductRequest(
                 name = "Flat white",
                 imageUrl =
                     "https://st.kakaocdn.net/product/gift/product/20231010111814_9a667f9eccc943648797925498bdd8a3.jpg",
             )
 
         val NO_URL =
-            DummyRequest(
+            DummyProductRequest(
                 name = "Flat white",
                 price = BigDecimal("6.50"),
-            )
-
-        val SUPER_LONG_URL =
-            DummyRequest(
-                name = "Flat white",
-                price = BigDecimal("6.50"),
-                imageUrl = superLongUrl(),
             )
     }
 
