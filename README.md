@@ -103,15 +103,15 @@ HTTP API that allows users to retrieve, add, update, and delete products.
   -[x] Add or update a cart item
   -[x] Remove a cart item
 #### Implement Service
--[ ] `CartService` methods:
-  -[ ] `findByMemberId(memberId: Long): List<CartItem>`
-  -[ ] `addOrUpdateCart(memberId: Long, productId: Long, quantity: Int)`
-  -[ ] `removeFromCart(memberId: Long, productId: Long)`
+-[x] `CartService` methods:
+  - upsertCartItems
+  - upsertCartItem
+  - deleteBy
 #### Create Controller
--[ ] CartController endpoints:
-  -[ ] `GET /api/cart` → get cart items
-  -[ ] `POST /api/cart` → add/update item
-  -[ ] `DELETE /api/cart/{productId}` → remove item
+-[x] CartController endpoints:
+  -[x] `GET /api/cart` → get cart items
+  -[x] `POST /api/cart` → add/update item
+  -[x] `DELETE /api/cart/{productId}` → remove item
   -[x] Use `@LoginMember` to inject the authenticated Member. 
 #### Authentication Setup
 -[x] Create `@LoginMember` annotation

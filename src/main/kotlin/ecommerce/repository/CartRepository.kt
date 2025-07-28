@@ -40,6 +40,14 @@ class CartRepository(private val jdbcTemplate: JdbcTemplate) {
         return items
     }
 
+    fun deleteByMemberIdAndProductId(
+        memberId: Long,
+        productId: Long,
+    ): Int {
+        val sql = CartConstsSQL.DELETE_BY_MEMBER_AND_PRODUCT.trimIndent()
+        return jdbcTemplate.update(sql, memberId, productId)
+    }
+
     fun insert(
         memberId: Long,
         request: CartRequest,
@@ -56,5 +64,11 @@ class CartRepository(private val jdbcTemplate: JdbcTemplate) {
                 setInt(3, req.quantity)
             }
         }
+    }
+
+    fun findByItemId(id: Long): CartItem? {
+        val sql = CartConstsSQL.SELECT_BY_ID.trimIndent()
+        return jdbcTemplate.query(sql, rowMapper, id)
+            .firstOrNull()
     }
 }
