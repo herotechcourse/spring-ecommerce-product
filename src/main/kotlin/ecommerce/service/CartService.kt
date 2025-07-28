@@ -26,18 +26,18 @@ class CartService(
         userID: Long?,
         productID: Long,
     ): Long {
-        var id: Long
         val cart = getUserCart(userID)
         checkValidProduct(productID)
 
         val cartProduct = cartProductRepository.findCartProduct(cart.id, productID)
 
-        if (cartProduct == null) {
-            id = cartProductRepository.addProduct(cart.id, productID)
-        } else {
-            id = cartProduct.id
-            cartProductRepository.updateProductQuantity(cartProduct.id, cartProduct.quantity + 1)
-        }
+        val id =
+            if (cartProduct == null) {
+                cartProductRepository.addProduct(cart.id, productID)
+            } else {
+                cartProductRepository.updateProductQuantity(cartProduct.id, cartProduct.quantity + 1)
+                cartProduct.id
+            }
         cartStatisticsRepository.create(userID, productID, CartAction.ADD)
         return id
     }
