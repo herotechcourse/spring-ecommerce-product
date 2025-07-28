@@ -1,4 +1,4 @@
-package ecommerce.controller
+package ecommerce.endToEnd
 
 import ecommerce.configuration.JwtTokenProvider
 import ecommerce.dto.LoginRequest
@@ -6,8 +6,7 @@ import ecommerce.dto.RegistrationRequest
 import ecommerce.repository.MemberRepository
 import io.restassured.RestAssured
 import io.restassured.http.ContentType
-import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.Assertions.assertTrue
+import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.springframework.beans.factory.annotation.Autowired
@@ -40,10 +39,10 @@ class AuthenticationControllerTest {
                 .post("/api/members/register")
                 .then().extract().body().jsonPath().getString("token")
 
-        assertThat(token).isNotEmpty
-        assertTrue(jwtTokenProvider.validateToken(token))
+        Assertions.assertThat(token).isNotEmpty
+        org.junit.jupiter.api.Assertions.assertTrue(jwtTokenProvider.validateToken(token))
         val member = memberRepository.findByEmail("test@test.com")
-        assertThat(member?.name).isEqualTo("test")
+        Assertions.assertThat(member?.name).isEqualTo("test")
     }
 
     @Test
@@ -61,7 +60,7 @@ class AuthenticationControllerTest {
                 .post("/api/members/login")
                 .then().extract().body().jsonPath().getString("token")
 
-        assertThat(token).isNotEmpty
-        assertTrue(jwtTokenProvider.validateToken(token))
+        Assertions.assertThat(token).isNotEmpty
+        org.junit.jupiter.api.Assertions.assertTrue(jwtTokenProvider.validateToken(token))
     }
 }

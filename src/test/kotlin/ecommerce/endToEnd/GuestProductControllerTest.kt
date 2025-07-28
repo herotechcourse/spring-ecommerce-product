@@ -1,7 +1,7 @@
-package ecommerce.controller
+package ecommerce.endToEnd
 
 import io.restassured.RestAssured
-import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -41,10 +41,10 @@ class GuestProductControllerTest {
                 .extract()
                 .response()
 
-        assertThat(response.statusCode).isEqualTo(HttpStatus.OK.value())
+        Assertions.assertThat(response.statusCode).isEqualTo(HttpStatus.OK.value())
         val products = response.body().jsonPath().getList<String>("")
-        assertThat(products).isNotEmpty()
-        assertThat(products.size).isEqualTo(1)
+        Assertions.assertThat(products).isNotEmpty()
+        Assertions.assertThat(products.size).isEqualTo(1)
     }
 
     @Test
@@ -58,8 +58,8 @@ class GuestProductControllerTest {
                 .extract()
                 .response()
 
-        assertThat(response.statusCode).isEqualTo(HttpStatus.OK.value())
+        Assertions.assertThat(response.statusCode).isEqualTo(HttpStatus.OK.value())
         val productName = response.body().jsonPath().getString("name")
-        assertThat(productName).isEqualTo("Espresso")
+        Assertions.assertThat(productName).isEqualTo("Espresso")
     }
 }

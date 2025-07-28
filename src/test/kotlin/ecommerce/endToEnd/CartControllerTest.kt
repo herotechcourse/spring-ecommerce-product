@@ -1,11 +1,11 @@
-package ecommerce.controller
+package ecommerce.endToEnd
 
 import ecommerce.dto.CartItemRequest
 import ecommerce.dto.RegistrationRequest
 import ecommerce.repository.CartItemRepository
 import io.restassured.RestAssured
 import io.restassured.http.ContentType
-import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -15,7 +15,7 @@ import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.test.annotation.DirtiesContext
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
-@DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
+@DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
 class CartControllerTest {
     lateinit var token: String
 
@@ -37,7 +37,7 @@ class CartControllerTest {
         val registrationRequest =
             RegistrationRequest(
                 "test",
-                "test@test.com",
+                "test1@test.com",
                 "12345678",
             )
 
@@ -66,6 +66,6 @@ class CartControllerTest {
                 .`when`().post("/api/user/wishes")
                 .then().log().all().extract()
 
-        assertThat(addProduct.statusCode()).isEqualTo(HttpStatus.OK.value())
+        Assertions.assertThat(addProduct.statusCode()).isEqualTo(HttpStatus.OK.value())
     }
 }
