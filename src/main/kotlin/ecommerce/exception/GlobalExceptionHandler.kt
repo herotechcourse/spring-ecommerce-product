@@ -29,13 +29,15 @@ class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.message)
     }
 
-    @ExceptionHandler(InternalServerErrorException::class)
-    fun handleInternalError(e: InternalServerErrorException): ResponseEntity<String> {
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.message)
-    }
-
     @ExceptionHandler(ForbiddenException::class)
     fun handleInternalError(e: ForbiddenException): ResponseEntity<String> {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.message)
     }
+
+    @ExceptionHandler(Exception::class)
+    fun handleGenericException(e: Exception): ResponseEntity<String> {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+            .body("An unexpected error occurred: ${e.localizedMessage ?: "Unknown error"}")
+    }
+
 }
