@@ -1,7 +1,9 @@
 package ecommerce.controller
 
 import ecommerce.dto.ProductRequest
+import ecommerce.model.Product
 import ecommerce.repository.ProductStore
+import ecommerce.service.ProductService
 import jakarta.validation.Valid
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.http.ResponseEntity
@@ -24,6 +26,7 @@ import java.net.URI
 class ProductController(
     @Qualifier("jdbcProductStore")
     private val productStore: ProductStore,
+    private val productService: ProductService,
 ) {
     @PostMapping()
     @ResponseBody
@@ -31,15 +34,14 @@ class ProductController(
         @Valid
         @RequestBody productRequest: ProductRequest,
     ): ResponseEntity<Void> {
-        val product = productRequest.toProduct()
-        val id = productStore.save(product)
-        return ResponseEntity.created(URI.create("/products/$id")).build()
+        val product = productService.createProduct(productRequest)
+        return ResponseEntity.created(URI.create("/products/${product.id}")).build()
     }
 
     @GetMapping()
-    fun read(model: Model): String {
-        model.addAttribute("products", productStore.findAll())
-        return "products"
+    @ResponseBody
+    fun readAll(): List<Product> {
+        return productStore.findAll()
     }
 
     @PutMapping("/{id}")
