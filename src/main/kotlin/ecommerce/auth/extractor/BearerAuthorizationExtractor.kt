@@ -10,13 +10,15 @@ class BearerAuthorizationExtractor {
         val authHeader =
             request.getHeader(AUTHORIZATION)
                 ?: throw AuthorizationException("Missing Authorization header")
-        if (!authHeader.startsWith("Bearer ")) {
+        if (!authHeader.startsWith(BEARER_PREFIX)) {
             throw AuthorizationException("Authorization header must start with 'Bearer '")
         }
-        return authHeader.substring(7)
+        return authHeader.substring(BEARER_PREFIX_LENGTH)
     }
 
     companion object {
         const val AUTHORIZATION = "Authorization"
+        const val BEARER_PREFIX = "Bearer "
+        const val BEARER_PREFIX_LENGTH = 7
     }
 }
