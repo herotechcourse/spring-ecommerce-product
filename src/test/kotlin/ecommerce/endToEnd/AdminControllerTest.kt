@@ -4,12 +4,14 @@ import ecommerce.dto.ProductRequest
 import ecommerce.dto.RegistrationRequest
 import io.restassured.RestAssured
 import io.restassured.http.ContentType
-import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.HttpStatus
+import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.test.annotation.DirtiesContext
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -18,8 +20,27 @@ import org.springframework.test.annotation.DirtiesContext
 class AdminControllerTest {
     lateinit var token: String
 
+    @Autowired
+    private lateinit var jdbcTemplate: JdbcTemplate
+
     @BeforeEach
-    fun loginAndGetToken() {
+    fun setUp() {
+        jdbcTemplate.execute("DROP TABLE CART_HISTORY IF EXISTS")
+        jdbcTemplate.execute("DROP TABLE CART_ITEMS IF EXISTS")
+        jdbcTemplate.execute("DROP TABLE CARTS IF EXISTS")
+        jdbcTemplate.execute("DROP TABLE PRODUCTS IF EXISTS")
+        jdbcTemplate.execute(createProductTable())
+
+        val sql =
+            """
+            INSERT INTO PRODUCTS (name, price, image_url)
+            VALUES
+            ('test', 10.99, 'https://www.test.jpg'),
+            ('test2', 6.99, 'https://www.test.jpg');
+            """.trimIndent()
+
+        jdbcTemplate.execute(sql)
+
         val loginRequest =
             RegistrationRequest(
                 "admin@test.com",
@@ -36,8 +57,21 @@ class AdminControllerTest {
         token = response.body().jsonPath().getString("token")
     }
 
+    private fun createProductTable(): String {
+        return """
+            create table PRODUCTS
+            (
+                ID       int              not null AUTO_INCREMENT,
+                NAME     varchar(100)     not null,
+                PRICE    double not null,
+                IMAGE_URL varchar(500),
+                PRIMARY KEY (ID)
+            )
+            """.trimIndent()
+    }
+
     @Test
-    fun getProducts() {
+    fun getAllProducts() {
         val response =
             RestAssured.given().log().all()
                 .auth().oauth2(token)
@@ -45,113 +79,107 @@ class AdminControllerTest {
                 .`when`().get("/api/admin/products")
                 .then().log().all().extract()
 
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
-        val names = response.body().jsonPath().getList<String>("name")
-        assertThat(names).isNotEmpty()
-        assertThat(names.size).isEqualTo(10)
+        Assertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
+        val names = response.body().jsonPath().getList<String>("")
+        Assertions.assertThat(names).isNotEmpty()
+        Assertions.assertThat(names.size).isEqualTo(2)
     }
 
     @Test
-    fun createAndGetProductById() {
-        val productPayload =
+    fun getProductById() {
+        val response =
+            RestAssured.given().log().all()
+                .auth().oauth2(token)
+                .accept(ContentType.JSON)
+                .`when`().get("/api/admin/products/1")
+                .then().log().all().extract()
+
+        Assertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
+        val productName = response.body().jsonPath().getString("name")
+        Assertions.assertThat(productName).isEqualTo("test")
+    }
+
+    @Test
+    fun createProduct() {
+        val productRequest =
             ProductRequest(
-                name = "TestProduct",
-                price = 19.99,
-                imageUrl = "https://example.com/image.jpg",
+                "newProductTest",
+                2.99,
+                "http://www.newProduct.jpg",
             )
 
-        // Create product
-        RestAssured.given().log().all()
-            .auth().oauth2(token)
-            .contentType(ContentType.JSON)
-            .body(productPayload)
-            .post("/api/admin/products")
-            .then().log().all()
-            .statusCode(HttpStatus.CREATED.value())
-
-        // Get all and extract ID
-        val products =
-            RestAssured.given()
-                .auth().oauth2(token)
-                .get("/api/admin/products")
-                .then().extract().jsonPath().getList("", Map::class.java)
-
-        val createdProductId = products.find { it["name"] == "TestProduct" }?.get("id") as Int
-
-        // Get by ID
         val response =
-            RestAssured.given()
+            RestAssured.given().log().all()
                 .auth().oauth2(token)
-                .get("/api/admin/products/$createdProductId")
-                .then().log().all()
-                .statusCode(HttpStatus.OK.value())
-                .extract().jsonPath()
+                .accept(ContentType.JSON)
+                .contentType(ContentType.JSON)
+                .body(productRequest)
+                .post("/api/admin/products")
+                .then().log().all().extract()
 
-        assertThat(response.getString("name")).isEqualTo("TestProduct")
+        Assertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value())
+
+        val productId3 =
+            RestAssured.given().log().all()
+                .auth().oauth2(token)
+                .accept(ContentType.JSON)
+                .`when`().get("/api/admin/products/3")
+                .then().log().all().extract()
+
+        val productName = productId3.body().jsonPath().getString("name")
+        Assertions.assertThat(productName).isEqualTo("newProductTest")
     }
 
     @Test
     fun updateProduct() {
-        val productPayload = ProductRequest("Original", 10.0, "https://example.com/image.jpg")
+        val productRequest =
+            ProductRequest(
+                "updatedTest",
+                2.99,
+                "http://www.newProduct.jpg",
+            )
 
-        // Create
-        RestAssured.given()
-            .auth().oauth2(token)
-            .contentType(ContentType.JSON)
-            .body(productPayload)
-            .post("/api/admin/products")
-            .then().statusCode(HttpStatus.CREATED.value())
-
-        val id =
-            RestAssured.given()
-                .auth().oauth2(token)
-                .get("/api/admin/products")
-                .then().extract().jsonPath().getList<Map<String, Any>>("")
-                .first { it["name"] == "Original" }["id"]
-
-        // Update
-        val updated = ProductRequest("Updated", 12.5, "https://example.com/updated.jpg")
-        RestAssured.given()
-            .auth().oauth2(token)
-            .contentType(ContentType.JSON)
-            .body(updated)
-            .put("/api/admin/products/$id")
-            .then().statusCode(HttpStatus.NO_CONTENT.value())
-
-        // Verify
         val response =
-            RestAssured.given()
+            RestAssured.given().log().all()
                 .auth().oauth2(token)
-                .get("/api/admin/products/$id")
-                .then().extract().jsonPath()
+                .accept(ContentType.JSON)
+                .contentType(ContentType.JSON)
+                .body(productRequest)
+                .put("/api/admin/products/1")
+                .then().log().all().extract()
 
-        assertThat(response.getString("name")).isEqualTo("Updated")
-        assertThat(response.getFloat("price")).isEqualTo(12.5f)
+        Assertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value())
+
+        val updated =
+            RestAssured.given().log().all()
+                .auth().oauth2(token)
+                .accept(ContentType.JSON)
+                .`when`().get("/api/admin/products/1")
+                .then().log().all().extract()
+
+        val productName = updated.body().jsonPath().getString("name")
+        Assertions.assertThat(productName).isEqualTo("updatedTest")
     }
 
     @Test
     fun deleteProduct() {
-        val productPayload = ProductRequest("ToDelete", 5.0, "https://example.com/delete.jpg")
-
-        // Create
-        RestAssured.given()
-            .auth().oauth2(token)
-            .contentType(ContentType.JSON)
-            .body(productPayload)
-            .post("/api/admin/products")
-            .then().statusCode(HttpStatus.CREATED.value())
-
-        val id =
-            RestAssured.given()
+        val response =
+            RestAssured.given().log().all()
                 .auth().oauth2(token)
-                .get("/api/admin/products")
-                .then().extract().jsonPath().getList<Map<String, Any>>("")
-                .first { it["name"] == "ToDelete" }["id"]
+                .accept(ContentType.JSON)
+                .contentType(ContentType.JSON)
+                .delete("/api/admin/products/1")
+                .then().log().all().extract()
 
-        // Delete
-        RestAssured.given()
-            .auth().oauth2(token)
-            .delete("/api/admin/products/$id")
-            .then().statusCode(HttpStatus.NO_CONTENT.value())
+        Assertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value())
+
+        val deleted =
+            RestAssured.given().log().all()
+                .auth().oauth2(token)
+                .accept(ContentType.JSON)
+                .`when`().get("/api/admin/products/1")
+                .then().log().all().extract()
+
+        Assertions.assertThat(deleted.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value())
     }
 }
