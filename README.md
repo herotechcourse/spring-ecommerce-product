@@ -19,6 +19,7 @@
 - [x] Create a template html with the list of all products
 - [x] Add JS for CRUD request in the frontend.
 - [x] Display image instead of a string on image URL
+
 ### Step 1.3: introduce H2 database and replace product service with *product repository
 #### *contains helper functions for building responses
 - [x] Configure H2 database
