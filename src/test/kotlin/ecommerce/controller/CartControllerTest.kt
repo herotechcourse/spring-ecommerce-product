@@ -16,6 +16,7 @@ import ecommerce.service.CartService
 import io.restassured.RestAssured
 import io.restassured.http.ContentType
 import org.assertj.core.api.Assertions.assertThat
+import org.hamcrest.Matchers.equalTo
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -123,6 +124,7 @@ class CartControllerTest {
     fun `addToCart() - return 200 OK when credential is valid`() {
         val productId = PRODUCT_ID
         val quantity = 1
+        val expected = CartController.MESSAGE_ADD_SUCCESS
 
         val accessToken =
             RestAssured
@@ -140,11 +142,9 @@ class CartControllerTest {
                 .body(CartAddItemForm(productId, quantity))
                 .contentType(ContentType.JSON)
                 .`when`().post("/api/cart")
-                .then().log().all().extract()
-
-        val targets = CartController.MESSAGE_ADD_SUCCESS
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
-        assertThat(response.asString()).isIn(targets)
+                .then().log().all()
+                .assertThat().statusCode(HttpStatus.OK.value())
+                .body(equalTo(expected))
     }
 
     @Test
@@ -162,59 +162,46 @@ class CartControllerTest {
                 .then().log().all().extract().`as`(AuthResponse::class.java).accessToken
 
         val contaminatedToken = accessToken + 123
-        val response =
-            RestAssured
-                .given().log().all()
-                .header("Authorization", "Bearer $contaminatedToken")
-                .body(CartAddItemForm(productId, quantity))
-                .contentType(ContentType.JSON)
-                .`when`().post("/api/cart")
-                .then().log().all().extract()
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value())
+        RestAssured
+            .given().log().all()
+            .header("Authorization", "Bearer $contaminatedToken")
+            .body(CartAddItemForm(productId, quantity))
+            .contentType(ContentType.JSON)
+            .`when`().post("/api/cart")
+            .then().log().all()
+            .assertThat().statusCode(HttpStatus.UNAUTHORIZED.value())
     }
 
     @Test
     fun `Form validation failure when 'productId' is blank`() {
         val productId = 0L
         val quantity = 1
-        val response =
-            RestAssured
-                .given().log().all()
-                .body(CartAddItemForm(productId, quantity))
-                .contentType(ContentType.JSON)
-                .`when`().post("/api/cart")
-                .then().log().all().extract()
-
-        val targets =
-            listOf(
-                "Product ID is missing",
-            )
-        val resBody = response.jsonPath().getMap<String, String>("errors")
-        val actual = resBody["productId"]
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value())
-        assertThat(actual).isIn(targets)
+        val expected = "Product ID is missing"
+        RestAssured
+            .given().log().all()
+            .body(CartAddItemForm(productId, quantity))
+            .contentType(ContentType.JSON)
+            .`when`().post("/api/cart")
+            .then().log().all()
+            .assertThat()
+            .statusCode(HttpStatus.BAD_REQUEST.value())
+            .body("errors.productId", equalTo(expected))
     }
 
     @Test
     fun `Form validation failure when 'quantity' is less than 1`() {
         val productId = PRODUCT_ID
         val quantity = 0
-        val response =
-            RestAssured
-                .given().log().all()
-                .body(CartAddItemForm(productId, quantity))
-                .contentType(ContentType.JSON)
-                .`when`().post("/api/cart")
-                .then().log().all().extract()
-
-        val targets =
-            listOf(
-                "Product quantity is too small",
-            )
-        val resBody = response.jsonPath().getMap<String, String>("errors")
-        val actual = resBody["quantity"]
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value())
-        assertThat(actual).isIn(targets)
+        val expected = "Product quantity is too small"
+        RestAssured
+            .given().log().all()
+            .body(CartAddItemForm(productId, quantity))
+            .contentType(ContentType.JSON)
+            .`when`().post("/api/cart")
+            .then().log().all()
+            .assertThat()
+            .statusCode(HttpStatus.BAD_REQUEST.value())
+            .body("errors.quantity", equalTo(expected))
     }
 
     @Test
@@ -281,15 +268,14 @@ class CartControllerTest {
                 .`when`().post("/api/members/login")
                 .then().log().all().extract().`as`(AuthResponse::class.java).accessToken
 
-        val response =
-            RestAssured
-                .given().log().all()
-                .header("Authorization", "Bearer $accessToken")
-                .contentType(ContentType.JSON)
-                .`when`().get("/api/admin/cart-stats/top5-products")
-                .then().log().all().extract()
-
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
+        RestAssured
+            .given().log().all()
+            .header("Authorization", "Bearer $accessToken")
+            .contentType(ContentType.JSON)
+            .`when`().get("/api/admin/cart-stats/top5-products")
+            .then().log().all()
+            .assertThat()
+            .statusCode(HttpStatus.OK.value())
     }
 
     @Test
@@ -303,15 +289,14 @@ class CartControllerTest {
                 .`when`().post("/api/members/login")
                 .then().log().all().extract().`as`(AuthResponse::class.java).accessToken
 
-        val response =
-            RestAssured
-                .given().log().all()
-                .header("Authorization", "Bearer $accessToken")
-                .contentType(ContentType.JSON)
-                .`when`().get("/api/admin/cart-stats/top5-products")
-                .then().log().all().extract()
-
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value())
+        RestAssured
+            .given().log().all()
+            .header("Authorization", "Bearer $accessToken")
+            .contentType(ContentType.JSON)
+            .`when`().get("/api/admin/cart-stats/top5-products")
+            .then().log().all()
+            .assertThat()
+            .statusCode(HttpStatus.UNAUTHORIZED.value())
     }
 
     companion object {

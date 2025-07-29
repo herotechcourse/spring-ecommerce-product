@@ -9,6 +9,7 @@ import ecommerce.service.ProductService
 import io.restassured.RestAssured
 import io.restassured.http.ContentType
 import org.assertj.core.api.Assertions.assertThat
+import org.hamcrest.CoreMatchers.equalTo
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -60,15 +61,14 @@ class ProductControllerTest {
 
     @Test
     fun `create() - should insert product and return 201 when form is valid`() {
-        val response =
-            RestAssured
-                .given().log().all()
-                .body(Product(name = "product1 [new]", price = 1.5, imageUrl = "https://www.product.com/image/1"))
-                .contentType(ContentType.JSON)
-                .`when`().post("/api/products")
-                .then().log().all().extract()
-
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value())
+        RestAssured
+            .given().log().all()
+            .body(Product(name = "product1 [new]", price = 1.5, imageUrl = "https://www.product.com/image/1"))
+            .contentType(ContentType.JSON)
+            .`when`().post("/api/products")
+            .then().log().all()
+            .assertThat()
+            .statusCode(HttpStatus.CREATED.value())
     }
 
     @Test
@@ -95,59 +95,50 @@ class ProductControllerTest {
 
     @Test
     fun `create() - should return 400 when name is more than 15 characters`() {
-        val response =
-            RestAssured
-                .given().log().all()
-                .body(
-                    Product(
-                        name = "this is very long name",
-                        price = 1.5,
-                        imageUrl = "https://www.product.com/image/1",
-                    ),
-                )
-                .contentType(ContentType.JSON)
-                .`when`().post("/api/products")
-                .then().log().all().extract()
-
         val expected = "Must be no more than 15 characters, including spaces"
-        val resBody = response.jsonPath().getMap<String, String>("errors")
-        val actual = resBody["name"]
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value())
-        assertThat(actual).isEqualTo(expected)
+        RestAssured
+            .given().log().all()
+            .body(
+                Product(
+                    name = "this is very long name",
+                    price = 1.5,
+                    imageUrl = "https://www.product.com/image/1",
+                ),
+            )
+            .contentType(ContentType.JSON)
+            .`when`().post("/api/products")
+            .then().log().all()
+            .assertThat()
+            .statusCode(HttpStatus.BAD_REQUEST.value())
+            .body("errors.name", equalTo(expected))
     }
 
     @Test
     fun `create() - should return 400 when name has unallowed character`() {
-        val response =
-            RestAssured
-                .given().log().all()
-                .body(Product(name = "I am product!", price = 1.5, imageUrl = "https://www.product.com/image/1"))
-                .contentType(ContentType.JSON)
-                .`when`().post("/api/products")
-                .then().log().all().extract()
-
         val expected = "Contains unallowed character"
-        val resBody = response.jsonPath().getMap<String, String>("errors")
-        val actual = resBody["name"]
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value())
-        assertThat(actual).isEqualTo(expected)
+        RestAssured
+            .given().log().all()
+            .body(Product(name = "I am product!", price = 1.5, imageUrl = "https://www.product.com/image/1"))
+            .contentType(ContentType.JSON)
+            .`when`().post("/api/products")
+            .then().log().all()
+            .assertThat()
+            .statusCode(HttpStatus.BAD_REQUEST.value())
+            .body("errors.name", equalTo(expected))
     }
 
     @Test
     fun `create() - should return 400 when price is 0`() {
-        val response =
-            RestAssured
-                .given().log().all()
-                .body(Product(name = "base", price = 0.0, imageUrl = "https://www.product.com/image/1"))
-                .contentType(ContentType.JSON)
-                .`when`().post("/api/products")
-                .then().log().all().extract()
-
         val expected = "Product price must be greater than zero"
-        val resBody = response.jsonPath().getMap<String, String>("errors")
-        val actual = resBody["price"]
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value())
-        assertThat(actual).isEqualTo(expected)
+        RestAssured
+            .given().log().all()
+            .body(Product(name = "base", price = 0.0, imageUrl = "https://www.product.com/image/1"))
+            .contentType(ContentType.JSON)
+            .`when`().post("/api/products")
+            .then().log().all()
+            .assertThat()
+            .statusCode(HttpStatus.BAD_REQUEST.value())
+            .body("errors.price", equalTo(expected))
     }
 
     @Test
@@ -173,37 +164,31 @@ class ProductControllerTest {
 
     @Test
     fun `create() - should return 400 when image URL is not valid`() {
-        val response =
-            RestAssured
-                .given().log().all()
-                .body(Product(name = "base", price = 2.0, imageUrl = "ssh://www.product.com/image/1"))
-                .contentType(ContentType.JSON)
-                .`when`().post("/api/products")
-                .then().log().all().extract()
-
         val expected = "Must start with 'https://'."
-        val resBody = response.jsonPath().getMap<String, String>("errors")
-        val actual = resBody["imageUrl"]
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value())
-        assertThat(actual).isEqualTo(expected)
+        RestAssured
+            .given().log().all()
+            .body(Product(name = "base", price = 2.0, imageUrl = "ssh://www.product.com/image/1"))
+            .contentType(ContentType.JSON)
+            .`when`().post("/api/products")
+            .then().log().all()
+            .assertThat()
+            .statusCode(HttpStatus.BAD_REQUEST.value())
+            .body("errors.imageUrl", equalTo(expected))
     }
 
     @Test
     fun `create() - should return 400 when name of product already exists`() {
         val name = "Iron Man"
-        val response =
-            RestAssured
-                .given().log().all()
-                .body(Product(name = name, price = 2.0, imageUrl = "https://www.product.com/image/1"))
-                .contentType(ContentType.JSON)
-                .`when`().post("/api/products")
-                .then().log().all().extract()
-
         val expected = "Product with name '$name' already exists."
-        val resBody = response.jsonPath().getMap<String, String>("errors")
-        val actual = resBody["name"]
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value())
-        assertThat(actual).isEqualTo(expected)
+        RestAssured
+            .given().log().all()
+            .body(Product(name = name, price = 2.0, imageUrl = "https://www.product.com/image/1"))
+            .contentType(ContentType.JSON)
+            .`when`().post("/api/products")
+            .then().log().all()
+            .assertThat()
+            .statusCode(HttpStatus.BAD_REQUEST.value())
+            .body("errors.name", equalTo(expected))
     }
 
     @Test
@@ -226,14 +211,13 @@ class ProductControllerTest {
     @Test
     fun `readProduct() - but product doesn't exist`() {
         val id = 100
-        val response =
-            RestAssured
-                .given().log().all()
-                .contentType(ContentType.JSON)
-                .`when`().get("/api/products/$id")
-                .then().log().all().extract()
-
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value())
+        RestAssured
+            .given().log().all()
+            .contentType(ContentType.JSON)
+            .`when`().get("/api/products/$id")
+            .then().log().all()
+            .assertThat()
+            .statusCode(HttpStatus.NOT_FOUND.value())
     }
 
     @Test
@@ -283,56 +267,47 @@ class ProductControllerTest {
     @Test
     fun `update() - should return 400 when price is 0`() {
         val targetId = 1L
-        val response =
-            RestAssured
-                .given().log().all()
-                .body(Product(id = targetId, name = "base", price = 0.0, imageUrl = "https://www.product.com/image/1"))
-                .contentType(ContentType.JSON)
-                .`when`().put("/api/products/$targetId")
-                .then().log().all().extract()
-
         val expected = "Product price must be greater than zero"
-        val resBody = response.jsonPath().getMap<String, String>("errors")
-        val actual = resBody["price"]
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value())
-        assertThat(actual).isEqualTo(expected)
+        RestAssured
+            .given().log().all()
+            .body(Product(id = targetId, name = "base", price = 0.0, imageUrl = "https://www.product.com/image/1"))
+            .contentType(ContentType.JSON)
+            .`when`().put("/api/products/$targetId")
+            .then().log().all()
+            .assertThat()
+            .statusCode(HttpStatus.BAD_REQUEST.value())
+            .body("errors.price", equalTo(expected))
     }
 
     @Test
     fun `update() - should return 400 when image URL is not valid`() {
         val targetId = 1L
-        val response =
-            RestAssured
-                .given().log().all()
-                .body(Product(name = "base", price = 2.0, imageUrl = "ssh://www.product.com/image/1"))
-                .contentType(ContentType.JSON)
-                .`when`().put("/api/products/$targetId")
-                .then().log().all().extract()
-
         val expected = "Must start with 'https://'."
-        val resBody = response.jsonPath().getMap<String, String>("errors")
-        val actual = resBody["imageUrl"]
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value())
-        assertThat(actual).isEqualTo(expected)
+        RestAssured
+            .given().log().all()
+            .body(Product(name = "base", price = 2.0, imageUrl = "ssh://www.product.com/image/1"))
+            .contentType(ContentType.JSON)
+            .`when`().put("/api/products/$targetId")
+            .then().log().all()
+            .assertThat()
+            .statusCode(HttpStatus.BAD_REQUEST.value())
+            .body("errors.imageUrl", equalTo(expected))
     }
 
     @Test
     fun `update() - should return 400 when name of product already exists`() {
         val targetId = 2L
         val name = "Iron Man"
-        val response =
-            RestAssured
-                .given().log().all()
-                .body(Product(id = targetId, name = name, price = 2.0, imageUrl = "https://www.product.com/image/1"))
-                .contentType(ContentType.JSON)
-                .`when`().put("/api/products/$targetId")
-                .then().log().all().extract()
-
         val expected = "Product with name '$name' already exists."
-        val resBody = response.jsonPath().getMap<String, String>("errors")
-        val actual = resBody["name"]
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value())
-        assertThat(actual).isEqualTo(expected)
+        RestAssured
+            .given().log().all()
+            .body(Product(id = targetId, name = name, price = 2.0, imageUrl = "https://www.product.com/image/1"))
+            .contentType(ContentType.JSON)
+            .`when`().put("/api/products/$targetId")
+            .then().log().all()
+            .assertThat()
+            .statusCode(HttpStatus.BAD_REQUEST.value())
+            .body("errors.name", equalTo(expected))
     }
 
     @Test
@@ -346,14 +321,13 @@ class ProductControllerTest {
     @Test
     fun `delete() - should return 404 when the product to delete doesn't exist`() {
         val id = 100
-        val response =
-            RestAssured
-                .given().log().all()
-                .contentType(ContentType.JSON)
-                .`when`().delete("/api/products/$id")
-                .then().log().all().extract()
-
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value())
+        RestAssured
+            .given().log().all()
+            .contentType(ContentType.JSON)
+            .`when`().delete("/api/products/$id")
+            .then().log().all()
+            .assertThat()
+            .statusCode(HttpStatus.NOT_FOUND.value())
     }
 
     @Test
