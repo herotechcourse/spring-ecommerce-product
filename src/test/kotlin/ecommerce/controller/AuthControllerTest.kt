@@ -27,8 +27,10 @@ class AuthControllerTest {
     @Autowired private lateinit var jdbcMemberDAO: JdbcMemberDAO
 
     @Autowired private lateinit var jwtTokenProvider: JwtTokenProvider
-    private lateinit var authService: AuthService
-    private lateinit var controller: AuthController
+
+    @Autowired private lateinit var authService: AuthService
+
+    @Autowired private lateinit var controller: AuthController
 
     @BeforeEach
     fun setUp() {

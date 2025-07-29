@@ -19,13 +19,13 @@ import org.springframework.jdbc.core.JdbcTemplate
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 class ProductControllerTest {
-    @Autowired
-    private lateinit var jdbcTemplate: JdbcTemplate
+    @Autowired private lateinit var jdbcTemplate: JdbcTemplate
 
-    @Autowired
-    private lateinit var jdbcProductDao: JdbcProductDAO
-    private lateinit var productService: ProductService
-    private lateinit var controller: ProductController
+    @Autowired private lateinit var jdbcProductDao: JdbcProductDAO
+
+    @Autowired private lateinit var productService: ProductService
+
+    @Autowired private lateinit var controller: ProductController
 
     fun create() {
         val product = Product(name = "product1", price = 1.5, imageUrl = "https://www.product.com/image/1")

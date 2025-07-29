@@ -37,8 +37,10 @@ class CartControllerTest {
     @Autowired private lateinit var jdbcProductDAO: JdbcProductDAO
 
     @Autowired private lateinit var jdbcCartDAO: JdbcCartDAO
-    private lateinit var cartService: CartService
-    private lateinit var controller: CartController
+
+    @Autowired private lateinit var cartService: CartService
+
+    @Autowired private lateinit var controller: CartController
 
     @BeforeEach
     fun setUp() {

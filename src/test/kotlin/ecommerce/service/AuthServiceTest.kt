@@ -23,7 +23,7 @@ class AuthServiceTest {
 
     @Autowired private lateinit var jwtTokenProvider: JwtTokenProvider
 
-    private lateinit var authService: AuthService
+    @Autowired private lateinit var authService: AuthService
 
     @BeforeEach
     fun setUp() {

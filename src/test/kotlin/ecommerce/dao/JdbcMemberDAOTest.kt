@@ -10,10 +10,9 @@ import org.springframework.jdbc.core.JdbcTemplate
 
 @JdbcTest
 class JdbcMemberDAOTest {
-    private lateinit var jdbcMemberDAO: JdbcMemberDAO
+    @Autowired private lateinit var jdbcTemplate: JdbcTemplate
 
-    @Autowired
-    private lateinit var jdbcTemplate: JdbcTemplate
+    private lateinit var jdbcMemberDAO: JdbcMemberDAO
 
     @BeforeEach
     fun setUp() {

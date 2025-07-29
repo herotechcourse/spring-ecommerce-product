@@ -9,10 +9,9 @@ import org.springframework.jdbc.core.JdbcTemplate
 
 @JdbcTest
 class JdbcCartDAOTest {
-    private lateinit var jdbcCartDAO: JdbcCartDAO
+    @Autowired private lateinit var jdbcTemplate: JdbcTemplate
 
-    @Autowired
-    private lateinit var jdbcTemplate: JdbcTemplate
+    private lateinit var jdbcCartDAO: JdbcCartDAO
 
     @BeforeEach
     fun setUp() {

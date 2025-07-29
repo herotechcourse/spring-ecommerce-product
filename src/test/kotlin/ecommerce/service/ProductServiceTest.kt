@@ -13,12 +13,11 @@ import org.springframework.jdbc.core.JdbcTemplate
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 class ProductServiceTest {
-    @Autowired
-    private lateinit var jdbcTemplate: JdbcTemplate
+    @Autowired private lateinit var jdbcTemplate: JdbcTemplate
 
-    @Autowired
-    private lateinit var jdbcProductDao: JdbcProductDAO
-    private lateinit var productService: ProductService
+    @Autowired private lateinit var jdbcProductDao: JdbcProductDAO
+
+    @Autowired private lateinit var productService: ProductService
 
     @BeforeEach
     fun setUp() {

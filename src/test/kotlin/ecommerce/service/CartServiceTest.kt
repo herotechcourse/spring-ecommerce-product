@@ -17,7 +17,8 @@ class CartServiceTest {
     @Autowired private lateinit var jdbcProductDAO: JdbcProductDAO
 
     @Autowired private lateinit var jdbcCartDAO: JdbcCartDAO
-    private lateinit var cartService: CartService
+
+    @Autowired private lateinit var cartService: CartService
 
     @BeforeEach
     fun setUp() {
