@@ -14,4 +14,5 @@ data class RegisterRequest(
     @field:Size(min = 2, max = 30, message = "Name between 2 and 50 characters")
     @field:NotBlank(message = "Name must not be blank")
     val name: String,
+    val role: String = "USER",
 )

@@ -22,7 +22,7 @@ class MemberService(
                 request.email,
                 hashedPassword,
                 request.name,
-                "USER",
+                request.role,
             )
         val savedMember = memberRepository.save(member)
         return tokenService.generateToken(savedMember)
