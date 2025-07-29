@@ -108,9 +108,9 @@ class CartRepository(private val jdbc: JdbcTemplate) {
 
         return jdbc.query(sql) { rs, _ ->
             mapOf(
-                "productName" to rs.getString("productName") as Any,
-                "addedCount" to rs.getInt("addedCount") as Any,
-                "mostRecentAdded" to (rs.getTimestamp("mostRecentAdded")?.toLocalDateTime() ?: "") as Any,
+                "productName" to rs.getString("productName"),
+                "addedCount" to rs.getInt("addedCount"),
+                "mostRecentAdded" to rs.getTimestamp("mostRecentAdded")?.toLocalDateTime(),
             )
         }
     }
@@ -132,9 +132,9 @@ class CartRepository(private val jdbc: JdbcTemplate) {
 
         return jdbc.query(sql) { rs, _ ->
             mapOf(
-                "memberId" to rs.getLong("memberId") as Any,
-                "memberName" to rs.getString("memberName") as Any,
-                "memberEmail" to rs.getString("memberEmail") as Any,
+                "memberId" to rs.getLong("memberId"),
+                "memberName" to rs.getString("memberName"),
+                "memberEmail" to rs.getString("memberEmail"),
             )
         }
     }
