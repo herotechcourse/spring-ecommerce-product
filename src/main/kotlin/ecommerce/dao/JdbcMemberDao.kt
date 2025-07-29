@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository
 import java.sql.ResultSet
 
 @Repository
-class JdbcMemberDAO(private val db: JdbcTemplate) : MemberDAO {
+class JdbcMemberDao(private val db: JdbcTemplate) : MemberDao {
     private val memberRowMapper =
         RowMapper<Member> { rs: ResultSet, _ ->
             Member(

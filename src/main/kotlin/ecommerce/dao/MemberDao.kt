@@ -2,7 +2,7 @@ package ecommerce.dao
 
 import ecommerce.model.Member
 
-interface MemberDAO {
+interface MemberDao {
     fun insert(member: Member): Long
 
     fun findByEmail(email: String): Member?

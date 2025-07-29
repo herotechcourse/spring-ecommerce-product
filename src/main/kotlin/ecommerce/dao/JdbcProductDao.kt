@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository
 import java.sql.ResultSet
 
 @Repository
-class JdbcProductDAO(private val db: JdbcTemplate) : ProductDAO {
+class JdbcProductDao(private val db: JdbcTemplate) : ProductDao {
     private val productRowMapper =
         RowMapper<Product> { rs: ResultSet, _ ->
             Product(

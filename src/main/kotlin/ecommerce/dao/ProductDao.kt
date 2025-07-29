@@ -2,7 +2,7 @@ package ecommerce.dao
 
 import ecommerce.model.Product
 
-interface ProductDAO {
+interface ProductDao {
     fun findAll(): List<Product>
 
     fun findById(id: Long): Product?

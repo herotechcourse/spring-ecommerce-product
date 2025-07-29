@@ -1,6 +1,6 @@
 package ecommerce.service
 
-import ecommerce.dao.JdbcProductDAO
+import ecommerce.dao.JdbcProductDao
 import ecommerce.dto.ProductForm
 import ecommerce.exception.ProductNameAlreadyExistsException
 import org.assertj.core.api.Assertions.assertThat
@@ -15,13 +15,13 @@ import org.springframework.jdbc.core.JdbcTemplate
 class ProductServiceTest {
     @Autowired private lateinit var jdbcTemplate: JdbcTemplate
 
-    @Autowired private lateinit var jdbcProductDao: JdbcProductDAO
+    @Autowired private lateinit var jdbcProductDao: JdbcProductDao
 
     @Autowired private lateinit var productService: ProductService
 
     @BeforeEach
     fun setUp() {
-        jdbcProductDao = JdbcProductDAO(jdbcTemplate)
+        jdbcProductDao = JdbcProductDao(jdbcTemplate)
         productService = ProductService(jdbcProductDao)
 
         jdbcTemplate.execute("DROP TABLE product CASCADE")

@@ -1,15 +1,15 @@
 package ecommerce.service
 
-import ecommerce.dao.JdbcCartDAO
-import ecommerce.dao.JdbcProductDAO
+import ecommerce.dao.JdbcCartDao
+import ecommerce.dao.JdbcProductDao
 import ecommerce.exception.NotFoundException
 import ecommerce.model.CartItem
 import org.springframework.stereotype.Service
 
 @Service
 class CartService(
-    private val jdbcCartDAO: JdbcCartDAO,
-    private val jdbcProductDAO: JdbcProductDAO,
+    private val jdbcCartDAO: JdbcCartDao,
+    private val jdbcProductDAO: JdbcProductDao,
 ) {
     fun getCart(memberId: Long): List<CartItem> {
         return jdbcCartDAO.getCartItemsByMemberId(memberId)

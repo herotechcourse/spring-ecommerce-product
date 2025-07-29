@@ -2,9 +2,9 @@ package ecommerce.controller
 
 import ecommerce.auth.JwtTokenProvider
 import ecommerce.controller.api.CartController
-import ecommerce.dao.JdbcCartDAO
-import ecommerce.dao.JdbcMemberDAO
-import ecommerce.dao.JdbcProductDAO
+import ecommerce.dao.JdbcCartDao
+import ecommerce.dao.JdbcMemberDao
+import ecommerce.dao.JdbcProductDao
 import ecommerce.dto.AuthResponse
 import ecommerce.dto.CartAddItemForm
 import ecommerce.dto.CartUpdateQuantityForm
@@ -30,14 +30,14 @@ import org.springframework.jdbc.core.JdbcTemplate
 class CartControllerTest {
     @Autowired private lateinit var jdbcTemplate: JdbcTemplate
 
-    @Autowired private lateinit var jdbcMemberDAO: JdbcMemberDAO
+    @Autowired private lateinit var jdbcMemberDAO: JdbcMemberDao
 
     @Autowired private lateinit var jwtTokenProvider: JwtTokenProvider
     private lateinit var authService: AuthService
 
-    @Autowired private lateinit var jdbcProductDAO: JdbcProductDAO
+    @Autowired private lateinit var jdbcProductDAO: JdbcProductDao
 
-    @Autowired private lateinit var jdbcCartDAO: JdbcCartDAO
+    @Autowired private lateinit var jdbcCartDAO: JdbcCartDao
 
     @Autowired private lateinit var cartService: CartService
 
@@ -45,10 +45,10 @@ class CartControllerTest {
 
     @BeforeEach
     fun setUp() {
-        jdbcMemberDAO = JdbcMemberDAO(jdbcTemplate)
+        jdbcMemberDAO = JdbcMemberDao(jdbcTemplate)
         authService = AuthService(jdbcMemberDAO, jwtTokenProvider)
-        jdbcProductDAO = JdbcProductDAO(jdbcTemplate)
-        jdbcCartDAO = JdbcCartDAO(jdbcTemplate)
+        jdbcProductDAO = JdbcProductDao(jdbcTemplate)
+        jdbcCartDAO = JdbcCartDao(jdbcTemplate)
         cartService = CartService(jdbcCartDAO, jdbcProductDAO)
 
         jdbcTemplate.execute("DROP TABLE product CASCADE")
@@ -135,16 +135,15 @@ class CartControllerTest {
                 .`when`().post("/api/members/login")
                 .then().log().all().extract().`as`(AuthResponse::class.java).accessToken
 
-        val response =
-            RestAssured
-                .given().log().all()
-                .header("Authorization", "Bearer $accessToken")
-                .body(CartAddItemForm(productId, quantity))
-                .contentType(ContentType.JSON)
-                .`when`().post("/api/cart")
-                .then().log().all()
-                .assertThat().statusCode(HttpStatus.OK.value())
-                .body(equalTo(expected))
+        RestAssured
+            .given().log().all()
+            .header("Authorization", "Bearer $accessToken")
+            .body(CartAddItemForm(productId, quantity))
+            .contentType(ContentType.JSON)
+            .`when`().post("/api/cart")
+            .then().log().all()
+            .assertThat().statusCode(HttpStatus.OK.value())
+            .body(equalTo(expected))
     }
 
     @Test

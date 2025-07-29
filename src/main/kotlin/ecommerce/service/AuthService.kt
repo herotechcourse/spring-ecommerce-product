@@ -1,7 +1,7 @@
 package ecommerce.service
 
 import ecommerce.auth.JwtTokenProvider
-import ecommerce.dao.JdbcMemberDAO
+import ecommerce.dao.JdbcMemberDao
 import ecommerce.dto.AuthResponse
 import ecommerce.dto.LoginForm
 import ecommerce.dto.RegisterForm
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service
 
 @Service
 class AuthService(
-    private val jdbcMemberDAO: JdbcMemberDAO,
+    private val jdbcMemberDAO: JdbcMemberDao,
     private val jwtTokenProvider: JwtTokenProvider,
 ) {
     fun registerMember(form: RegisterForm): Member {

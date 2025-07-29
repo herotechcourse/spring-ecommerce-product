@@ -1,7 +1,7 @@
 package ecommerce.service
 
-import ecommerce.dao.JdbcCartDAO
-import ecommerce.dao.JdbcProductDAO
+import ecommerce.dao.JdbcCartDao
+import ecommerce.dao.JdbcProductDao
 import ecommerce.exception.NotFoundException
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -14,16 +14,16 @@ import org.springframework.jdbc.core.JdbcTemplate
 class CartServiceTest {
     @Autowired private lateinit var jdbcTemplate: JdbcTemplate
 
-    @Autowired private lateinit var jdbcProductDAO: JdbcProductDAO
+    @Autowired private lateinit var jdbcProductDAO: JdbcProductDao
 
-    @Autowired private lateinit var jdbcCartDAO: JdbcCartDAO
+    @Autowired private lateinit var jdbcCartDAO: JdbcCartDao
 
     @Autowired private lateinit var cartService: CartService
 
     @BeforeEach
     fun setUp() {
-        jdbcProductDAO = JdbcProductDAO(jdbcTemplate)
-        jdbcCartDAO = JdbcCartDAO(jdbcTemplate)
+        jdbcProductDAO = JdbcProductDao(jdbcTemplate)
+        jdbcCartDAO = JdbcCartDao(jdbcTemplate)
         cartService = CartService(jdbcCartDAO, jdbcProductDAO)
 
         jdbcTemplate.execute("DROP TABLE product CASCADE")

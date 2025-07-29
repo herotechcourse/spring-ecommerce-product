@@ -1,6 +1,6 @@
 package ecommerce.service
 
-import ecommerce.dao.JdbcProductDAO
+import ecommerce.dao.JdbcProductDao
 import ecommerce.dto.ProductForm
 import ecommerce.exception.InternalServerErrorException
 import ecommerce.exception.ProductNameAlreadyExistsException
@@ -8,7 +8,7 @@ import ecommerce.model.Product
 import org.springframework.stereotype.Service
 
 @Service
-class ProductService(private val jdbcProductDao: JdbcProductDAO) {
+class ProductService(private val jdbcProductDao: JdbcProductDao) {
     fun insert(form: ProductForm): Product {
         checkProductNameExists(form.name)
         val product = ProductForm.toProduct(form)

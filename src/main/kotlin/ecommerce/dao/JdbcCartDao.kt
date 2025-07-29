@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository
 import java.sql.ResultSet
 
 @Repository
-class JdbcCartDAO(private val db: JdbcTemplate) : CartDAO {
+class JdbcCartDao(private val db: JdbcTemplate) : CartDao {
     private val cartItemRowMapper =
         RowMapper<CartItem> { rs: ResultSet, _ ->
             CartItem(

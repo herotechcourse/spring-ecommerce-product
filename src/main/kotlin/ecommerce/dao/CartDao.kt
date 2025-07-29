@@ -2,7 +2,7 @@ package ecommerce.dao
 
 import ecommerce.model.CartItem
 
-interface CartDAO {
+interface CartDao {
     fun addItemToCart(
         memberId: Long,
         productId: Long,

@@ -9,14 +9,14 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest
 import org.springframework.jdbc.core.JdbcTemplate
 
 @JdbcTest
-class JdbcMemberDAOTest {
+class JdbcMemberDaoTest {
     @Autowired private lateinit var jdbcTemplate: JdbcTemplate
 
-    private lateinit var jdbcMemberDAO: JdbcMemberDAO
+    private lateinit var jdbcMemberDAO: JdbcMemberDao
 
     @BeforeEach
     fun setUp() {
-        jdbcMemberDAO = JdbcMemberDAO(jdbcTemplate)
+        jdbcMemberDAO = JdbcMemberDao(jdbcTemplate)
 
         jdbcTemplate.execute("DROP TABLE member CASCADE")
         jdbcTemplate.execute(

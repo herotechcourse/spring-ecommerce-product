@@ -1,7 +1,7 @@
 package ecommerce.service
 
 import ecommerce.auth.JwtTokenProvider
-import ecommerce.dao.JdbcMemberDAO
+import ecommerce.dao.JdbcMemberDao
 import ecommerce.dto.LoginForm
 import ecommerce.dto.RegisterForm
 import ecommerce.exception.AuthorizationException
@@ -19,7 +19,7 @@ import org.springframework.jdbc.core.JdbcTemplate
 class AuthServiceTest {
     @Autowired private lateinit var jdbcTemplate: JdbcTemplate
 
-    @Autowired private lateinit var jdbcMemberDAO: JdbcMemberDAO
+    @Autowired private lateinit var jdbcMemberDAO: JdbcMemberDao
 
     @Autowired private lateinit var jwtTokenProvider: JwtTokenProvider
 
@@ -27,7 +27,7 @@ class AuthServiceTest {
 
     @BeforeEach
     fun setUp() {
-        jdbcMemberDAO = JdbcMemberDAO(jdbcTemplate)
+        jdbcMemberDAO = JdbcMemberDao(jdbcTemplate)
         authService = AuthService(jdbcMemberDAO, jwtTokenProvider)
 
         jdbcTemplate.execute("DROP TABLE member CASCADE")

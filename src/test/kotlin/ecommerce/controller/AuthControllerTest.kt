@@ -2,7 +2,7 @@ package ecommerce.controller
 
 import ecommerce.auth.JwtTokenProvider
 import ecommerce.controller.api.AuthController
-import ecommerce.dao.JdbcMemberDAO
+import ecommerce.dao.JdbcMemberDao
 import ecommerce.dto.AuthResponse
 import ecommerce.dto.LoginForm
 import ecommerce.dto.MemberResponse
@@ -25,7 +25,7 @@ import org.springframework.jdbc.core.JdbcTemplate
 class AuthControllerTest {
     @Autowired private lateinit var jdbcTemplate: JdbcTemplate
 
-    @Autowired private lateinit var jdbcMemberDAO: JdbcMemberDAO
+    @Autowired private lateinit var jdbcMemberDAO: JdbcMemberDao
 
     @Autowired private lateinit var jwtTokenProvider: JwtTokenProvider
 
@@ -35,7 +35,7 @@ class AuthControllerTest {
 
     @BeforeEach
     fun setUp() {
-        jdbcMemberDAO = JdbcMemberDAO(jdbcTemplate)
+        jdbcMemberDAO = JdbcMemberDao(jdbcTemplate)
         authService = AuthService(jdbcMemberDAO, jwtTokenProvider)
 
         jdbcTemplate.execute("DROP TABLE member CASCADE")
@@ -94,8 +94,8 @@ class AuthControllerTest {
             .`when`().post("/api/members/register")
             .then().log().all()
             .assertThat()
-        .statusCode(HttpStatus.BAD_REQUEST.value())
-        .body("errors.email", equalTo(expected))
+            .statusCode(HttpStatus.BAD_REQUEST.value())
+            .body("errors.email", equalTo(expected))
     }
 
     @Test
@@ -182,15 +182,15 @@ class AuthControllerTest {
     @Test
     fun `loginMember() - should return 400 when password is blank`() {
         val expected = "Please enter your password"
-            RestAssured
-                .given().log().all()
-                .body(Member(email = "test@email.com", password = ""))
-                .contentType(ContentType.JSON)
-                .`when`().post("/api/members/login")
-                .then().log().all()
-                .assertThat()
-                .statusCode(HttpStatus.BAD_REQUEST.value())
-                .body("errors.password", equalTo(expected))
+        RestAssured
+            .given().log().all()
+            .body(Member(email = "test@email.com", password = ""))
+            .contentType(ContentType.JSON)
+            .`when`().post("/api/members/login")
+            .then().log().all()
+            .assertThat()
+            .statusCode(HttpStatus.BAD_REQUEST.value())
+            .body("errors.password", equalTo(expected))
     }
 
     @Test

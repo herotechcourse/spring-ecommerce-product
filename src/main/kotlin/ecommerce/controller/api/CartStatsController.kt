@@ -1,6 +1,6 @@
 package ecommerce.controller.api
 
-import ecommerce.dao.JdbcCartDAO
+import ecommerce.dao.JdbcCartDao
 import ecommerce.dto.ActiveMemberInfo
 import ecommerce.dto.TopProductStats
 import ecommerce.exception.InternalServerErrorException
@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/api/admin/cart-stats")
 class CartStatsController(
-    private val jdbcCartDAO: JdbcCartDAO,
+    private val jdbcCartDAO: JdbcCartDao,
 ) {
     @GetMapping("/top5-products")
     fun getTop5Products(

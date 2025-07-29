@@ -8,14 +8,14 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest
 import org.springframework.jdbc.core.JdbcTemplate
 
 @JdbcTest
-class JdbcCartDAOTest {
+class JdbcCartDaoTest {
     @Autowired private lateinit var jdbcTemplate: JdbcTemplate
 
-    private lateinit var jdbcCartDAO: JdbcCartDAO
+    private lateinit var jdbcCartDAO: JdbcCartDao
 
     @BeforeEach
     fun setUp() {
-        jdbcCartDAO = JdbcCartDAO(jdbcTemplate)
+        jdbcCartDAO = JdbcCartDao(jdbcTemplate)
 
         jdbcTemplate.execute("DROP TABLE product CASCADE")
         jdbcTemplate.execute(
