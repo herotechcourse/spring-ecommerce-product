@@ -15,7 +15,10 @@ import org.springframework.stereotype.Service
 class ProductServiceJDBC(private val productRepository: ProductRepository) : ProductService {
     override fun findAll(): List<ProductDTO> = productRepository.findAll().map { it.toDTO() }
 
-    override fun findAllPaginated(page: Int, size: Int): Pair<List<ProductDTO>, Int>  {
+    override fun findAllPaginated(
+        page: Int,
+        size: Int,
+    ): Pair<List<ProductDTO>, Int> {
         val offset = (page - 1).coerceAtLeast(0) * size
         val items = productRepository.findAllPaginated(offset, size).map { it.toDTO() }
         val totalCount = productRepository.countAll()
@@ -26,6 +29,7 @@ class ProductServiceJDBC(private val productRepository: ProductRepository) : Pro
         productRepository.findById(id)?.toDTO() ?: throw NotFoundException("Product with ID $id not found")
 
     override fun save(productDTO: ProductDTO): ProductDTO {
+        validateProductNameUniqueness(productDTO.name)
         val saved =
             productRepository.save(productDTO.toEntity())
                 ?: throw OperationFailedException("Failed to save product")
@@ -63,4 +67,10 @@ class ProductServiceJDBC(private val productRepository: ProductRepository) : Pro
         } else {
             Unit
         }
+
+    override fun validateProductNameUniqueness(name: String) {
+        if (productRepository.existsByName(name)) {
+            throw OperationFailedException("Product with name '$name' already exists")
+        }
+    }
 }
