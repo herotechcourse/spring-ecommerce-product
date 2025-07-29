@@ -149,10 +149,10 @@ Authorization: Bearer <token>
 
 ### Features to Implement step 2.4
 
-- [ ] add endpoint to get top 5 most added products in last 30 days
-- [ ] add endpoint to get members who added to cart in last 7 days
-- [ ] restrict `/admin/**` endpoints to users with ADMIN role
-- [ ] return detailed product stats (name, count, last added time)
-- [ ] return member info (id, name, email) for recent cart activity
+- [x] add endpoint to get top 5 most added products in last 30 days
+- [x] add endpoint to get members who added to cart in last 7 days
+- [x] restrict `/admin/**` endpoints to users with ADMIN role
+- [x] return detailed product stats (name, count, last added time)
+- [x] return member info (id, name, email) for recent cart activity
 
 
