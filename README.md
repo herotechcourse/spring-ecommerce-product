@@ -19,7 +19,6 @@
 - [x] Create a template html with the list of all products
 - [x] Add JS for CRUD request in the frontend.
 - [x] Display image instead of a string on image URL
--
 ### Step 1.3: introduce H2 database and replace product service with *product repository
 #### *contains helper functions for building responses
 - [x] Configure H2 database
@@ -31,7 +30,7 @@
 - [x] **Comprehensive product validation**
   - [x] **Product name validation**
     - [x] Maximum 15 characters including spaces
-    - [x] Allow only these special characters: `( )`, `[ ]`, `+`, `-`, `&`, `/`, `_`
+    - [x] Allow only these special characters: `( )`, `[]`, `+`, `-`, `&`, `/`, `_`
     - [x] Ensure unique names across all products (needs custom `@UniqueProductName` validator)
   - [x] **Product price validation**
     - [x] Must be greater than 0 (using `@DecimalMin`)
@@ -44,7 +43,7 @@
 - [x] **Implementation details**
   - [x] Created `ProductRequest.kt` with validation annotations
   - [x] Used `@Valid` in controller methods
-  - [] (optional) custom function to handle `MethodArgumentNotValidException` in GlobalControllerAdvice 
+  - [x] Custom function to handle `MethodArgumentNotValidException` in GlobalControllerAdvice 
 
 ### Step 2.2: clients can register and login as a user
 - [x] **User registration feature**
@@ -72,51 +71,53 @@
   - [x] Provide clear error messages for authentication failures
 
 ### Step 2.3: authorized users can add products to their cart
-- [ ] **User authentication integration**
-  - [] allow users to do [1]-[3] using the `token` which user received after login
-- [ ] **Cart management features**
-  - [ ] **Get cart contents**
-    - [ ] Retrieve all products in user's personal cart
-    - [ ] Return cart items with product details and quantities
-  - [ ] **Add to cart**
-    - [ ] Add products to user's personal cart
-    - [ ] Handle quantity and duplicate product additions
-  - [ ] **Remove from cart**
-    - [ ] Remove specific items from cart
-    - [ ] Support clearing entire cart
-- [ ] **Database design**
-  - [ ] Create `cart` table with user_id, product_id, quantity, added_at columns
-  - [ ] Create `CartRepository` with JDBC operations
-  - [ ] Create `Cart` domain model and `CartRequest` DTO
-- [ ] **Authentication service layer**
-  - [ ] Create `MemberService` for token validation and user lookup
-  - [ ] Implement JWT token parsing and validation
-  - [ ] Handle authentication exceptions properly
+- [x] **User authentication integration**
+  - [x] allow users to do [1]-[3] using the `token` which user received after login
+- [x] **Cart management features**
+  - [x] **Get cart contents**
+    - [x] Retrieve all products in user's personal cart
+    - [x] Return cart items with product details and quantities
+  - [x] **Add to cart**
+    - [x] Add products to user's personal cart
+    - [x] Handle quantity and duplicate product additions
+  - [x] **Remove from cart**
+    - [x] Remove specific items from cart
+    - [x] Support clearing entire cart
+- [x] **Database design**
+  - [x] Create `cart` table with user_id, product_id, quantity, added_at columns
+  - [x] Create `CartRepository` with JDBC operations
+  - [x] Create `Cart` domain model and cart DTOs (`AddToCartRequest`, `UpdateQuantityRequest`)
+- [x] **JWT design**
+  - [x] use header `Authorization: Bearer <token>`
+- [x] **Authentication interceptor layer**
+  - [x] Use existing `TokenService` for JWT token parsing and validation
+  - [x] `AuthInterceptor` handles cart endpoint authentication
+  - [x] Handle authentication exceptions properly with 401/403 responses
 
 ### Step 2.4: authorized admin can get specific N-products and N-users
-- [ ] **Admin authorization system**
-  - [ ] Implement `HandlerInterceptor` for role-based access control
-  - [ ] Restrict `/admin/*` endpoints to ADMIN role only
-  - [ ] Create `AuthInterceptor` to check user permissions
-  - [ ] Register interceptor in WebMvcConfigurer
-- [ ] **Top products analytics**
-  - [ ] Get top 5 most added products to cart in last 30 days
-  - [ ] Handle tie-breaking by most recent addition time
-  - [ ] Use SQL: `WHERE`, `DATE`, `GROUP BY`, `ORDER BY`, `LIMIT`
-  - [ ] Response includes:
-    - [ ] Product name
-    - [ ] Number of times added to cart
-    - [ ] Most recent addition timestamp
-- [ ] **Active users analytics**
-  - [ ] Get members who added items to cart in last 7 days
-  - [ ] Ensure unique member list (no duplicates)
-  - [ ] Use SQL: `EXISTS`, `DISTINCT`, `JOIN`
-  - [ ] Response includes:
-    - [ ] Member ID
-    - [ ] Member name
-    - [ ] Member email
-- [ ] **SQL optimization and implementation**
-  - [ ] Create analytics queries in repository layer
-  - [ ] Create `AnalyticsRepository` for complex queries
-  - [ ] Create response DTOs for analytics data
-  - [ ] Implement proper error handling for admin endpoints
+- [] **Admin authorization system**
+  - [] Implement `HandlerInterceptor` for role-based access control
+  - [] Restrict `/admin/*` endpoints to ADMIN role only
+  - [] Create `AuthInterceptor` to check user permissions
+  - [] Register interceptor in WebMvcConfigurer
+- [] **Top products analytics**
+  - [] Get top 5 most added products to cart in last 30 days
+  - [] Handle tie-breaking by most recent addition time
+  - [] Use SQL: `WHERE`, `DATE`, `GROUP BY`, `ORDER BY`, `LIMIT`
+  - [] Response includes:
+    - [] Product name
+    - [] Number of times added to cart
+    - [] Most recent addition timestamp
+- [] **Active users analytics**
+  - [] Get members who added items to cart in last 7 days
+  - [] Ensure unique member list (no duplicates)
+  - [] Use SQL: `EXISTS`, `DISTINCT`, `JOIN`
+  - [] Response includes:
+    - [] Member ID
+    - [] Member name
+    - [] Member email
+- [] **SQL optimization and implementation**
+  - [] Create analytics queries in repository layer
+  - [] Create `AnalyticsRepository` for complex queries
+  - [] Create response DTOs for analytics data
+  - [] Implement proper error handling for admin endpoints
