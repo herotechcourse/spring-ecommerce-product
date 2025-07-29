@@ -24,9 +24,8 @@ import java.net.URI
 @RequestMapping("/api/members")
 class AuthController(
     private val authService: AuthService,
+    private val authorizationExtractor: AuthorizationExtractor<String> = BearerAuthorizationExtractor(),
 ) {
-    private val authorizationExtractor: AuthorizationExtractor<String> = BearerAuthorizationExtractor()
-
     @PostMapping("/register")
     fun registerMember(
         @RequestBody @Valid form: RegisterForm,
