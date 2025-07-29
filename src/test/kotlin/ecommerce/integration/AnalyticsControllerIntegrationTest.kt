@@ -132,4 +132,74 @@ class AnalyticsControllerIntegrationTest {
             jsonPath("$[1].addedCount") { value(1) }
         }
     }
+
+    @Test
+    fun `should return 401 when no token provided for active users analytics`() {
+        mockMvc.get("/admin/analytics/active-users").andExpect {
+            status { isUnauthorized() }
+        }
+    }
+
+    @Test
+    fun `should return 403 when USER role tries to access active users analytics`() {
+        val testMember = Member(2L, "user@email.com", "password", "User", "USER")
+        val validToken = tokenService.generateToken(testMember)
+        
+        mockMvc.get("/admin/analytics/active-users") {
+            header("Authorization", "Bearer $validToken")
+        }.andExpect {
+            status { isForbidden() }
+        }
+    }
+
+    @Test
+    fun `should return empty list when no users have cart activity`() {
+        val testMember = Member(1L, "admin@email.com", "password", "Admin", "ADMIN")
+        val validToken = tokenService.generateToken(testMember)
+
+        mockMvc.get("/admin/analytics/active-users") {
+            header("Authorization", "Bearer $validToken")
+        }.andExpect {
+            status { isOk() }
+            content { json("[]") }
+        }
+    }
+
+    @Test
+    fun `should return unique active users from last 7 days`() {
+        val testMember = Member(1L, "admin@email.com", "password", "Admin", "ADMIN")
+        val validToken = tokenService.generateToken(testMember)
+
+        jdbcTemplate.update(
+            """
+            INSERT INTO cart (member_id, product_id, quantity, added_at)
+            VALUES (1, 1, 1, CURRENT_TIMESTAMP)
+        """,
+        )
+        jdbcTemplate.update(
+            """
+            INSERT INTO cart (member_id, product_id, quantity, added_at)
+            VALUES (1, 2, 1, CURRENT_TIMESTAMP)
+        """,
+        )
+        jdbcTemplate.update(
+            """
+            INSERT INTO cart (member_id, product_id, quantity, added_at)
+            VALUES (2, 1, 1, CURRENT_TIMESTAMP)
+        """,
+        )
+
+        mockMvc.get("/admin/analytics/active-users") {
+            header("Authorization", "Bearer $validToken")
+        }.andExpect {
+            status { isOk() }
+            jsonPath("$.length()") { value(2) }
+            jsonPath("$[0].memberId") { value(1) }
+            jsonPath("$[0].memberName") { value("Admin") }
+            jsonPath("$[0].memberEmail") { value("admin@email.com") }
+            jsonPath("$[1].memberId") { value(2) }
+            jsonPath("$[1].memberName") { value("User") }
+            jsonPath("$[1].memberEmail") { value("user@email.com") }
+        }
+    }
 }

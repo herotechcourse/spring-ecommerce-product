@@ -113,4 +113,27 @@ class CartRepository(private val jdbc: JdbcTemplate) {
             )
         }
     }
+
+    fun findMembersActiveInLast7Days(): List<Map<String, Any>> {
+        val sql = """
+            SELECT DISTINCT 
+                m.id as memberId,
+                m.name as memberName,
+                m.email as memberEmail
+            FROM members m
+            WHERE EXISTS (
+                SELECT 1 FROM cart c 
+                WHERE c.member_id = m.id 
+                AND c.added_at >= DATEADD('DAY', -7, CURRENT_TIMESTAMP)
+            )
+        """.trimIndent()
+
+        return jdbc.query(sql) { rs, _ ->
+            mapOf(
+                "memberId" to rs.getLong("memberId") as Any,
+                "memberName" to rs.getString("memberName") as Any,
+                "memberEmail" to rs.getString("memberEmail") as Any
+            )
+        }
+    }
 }

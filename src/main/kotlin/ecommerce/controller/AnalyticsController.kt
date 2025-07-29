@@ -14,4 +14,9 @@ class AnalyticsController(
     fun getTopProducts(): List<Map<String, Any>> {
         return cartRepository.findTop5MostAddedProductsLast30Days()
     }
+
+    @GetMapping("/active-users")
+    fun getActiveUsers(): List<Map<String, Any>> {
+        return cartRepository.findMembersActiveInLast7Days()
+    }
 }
