@@ -1,5 +1,3 @@
--- DROP TABLE product CASCADE;
-
 CREATE TABLE product
 (
     id       LONG         NOT NULL AUTO_INCREMENT,
@@ -9,8 +7,6 @@ CREATE TABLE product
     PRIMARY KEY (id)
 );
 
--- DROP TABLE member CASCADE;
-
 CREATE TABLE member
 (
     id       LONG         NOT NULL AUTO_INCREMENT,
@@ -19,8 +15,6 @@ CREATE TABLE member
     role     VARCHAR(255),
     PRIMARY KEY (id)
 );
-
--- DROP TABLE cart_item CASCADE;
 
 CREATE TABLE cart_item
 (
@@ -46,4 +40,3 @@ CREATE TABLE cart_item_event
     FOREIGN KEY (product_id) REFERENCES product (id)
 );
 
-// check for how to creat index!
