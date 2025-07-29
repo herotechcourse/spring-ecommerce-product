@@ -1,7 +1,7 @@
 package ecommerce.controller
 
 import ecommerce.dto.MemberRequest
-import ecommerce.dto.TokenResponse
+import ecommerce.dto.TokenMemberResponse
 import ecommerce.service.MemberService
 import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
@@ -18,7 +18,7 @@ class MemberController(
     @PostMapping("/register")
     fun register(
         @RequestBody @Valid request: MemberRequest,
-    ): ResponseEntity<TokenResponse> {
+    ): ResponseEntity<TokenMemberResponse> {
         val token = memberService.register(request)
         return ResponseEntity.status(201).body(token)
     }
@@ -26,7 +26,7 @@ class MemberController(
     @PostMapping("/login")
     fun login(
         @RequestBody @Valid request: MemberRequest,
-    ): ResponseEntity<TokenResponse> {
+    ): ResponseEntity<TokenMemberResponse> {
         val token = memberService.login(request)
         return ResponseEntity.ok(token)
     }

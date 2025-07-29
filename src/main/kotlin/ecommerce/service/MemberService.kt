@@ -2,7 +2,7 @@ package ecommerce.service
 
 import ecommerce.auth.JwtTokenProvider
 import ecommerce.dto.MemberRequest
-import ecommerce.dto.TokenResponse
+import ecommerce.dto.TokenMemberResponse
 import ecommerce.model.Member
 import ecommerce.repository.MemberRepository
 import org.springframework.stereotype.Service
@@ -12,7 +12,7 @@ class MemberService(
     private val memberRepository: MemberRepository,
     private val jwtTokenProvider: JwtTokenProvider,
 ) {
-    fun register(request: MemberRequest): TokenResponse {
+    fun register(request: MemberRequest): TokenMemberResponse {
         val existing = memberRepository.findByEmail(request.email)
         if (existing != null) {
             throw IllegalArgumentException("Email already in use")
@@ -20,10 +20,10 @@ class MemberService(
 
         val saved = memberRepository.save(Member(email = request.email, password = request.password))
         val token = jwtTokenProvider.createToken(saved.id)
-        return TokenResponse(token)
+        return TokenMemberResponse(token)
     }
 
-    fun login(request: MemberRequest): TokenResponse {
+    fun login(request: MemberRequest): TokenMemberResponse {
         val member =
             memberRepository.findByEmail(request.email)
                 ?: throw IllegalArgumentException("Invalid email or password")
@@ -33,7 +33,7 @@ class MemberService(
         }
 
         val token = jwtTokenProvider.createToken(member.id)
-        return TokenResponse(token)
+        return TokenMemberResponse(token)
     }
 
     fun findByToken(token: String): Member {
