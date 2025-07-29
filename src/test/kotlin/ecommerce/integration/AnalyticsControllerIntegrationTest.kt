@@ -77,7 +77,7 @@ class AnalyticsControllerIntegrationTest {
     fun `should return 403 when USER role tries to access analytics`() {
         val testMember = Member(2L, "user@email.com", "password", "User", "USER")
         val validToken = tokenService.generateToken(testMember)
-        
+
         mockMvc.get("/admin/analytics/top-products") {
             header("Authorization", "Bearer $validToken")
         }.andExpect {
@@ -144,7 +144,7 @@ class AnalyticsControllerIntegrationTest {
     fun `should return 403 when USER role tries to access active users analytics`() {
         val testMember = Member(2L, "user@email.com", "password", "User", "USER")
         val validToken = tokenService.generateToken(testMember)
-        
+
         mockMvc.get("/admin/analytics/active-users") {
             header("Authorization", "Bearer $validToken")
         }.andExpect {

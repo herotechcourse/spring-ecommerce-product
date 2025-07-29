@@ -92,7 +92,8 @@ class CartRepository(private val jdbc: JdbcTemplate) {
     }
 
     fun findTop5MostAddedProductsLast30Days(): List<Map<String, Any>> {
-        val sql = """
+        val sql =
+            """
             SELECT 
                 p.name as productName,
                 COUNT(*) as addedCount,
@@ -103,19 +104,20 @@ class CartRepository(private val jdbc: JdbcTemplate) {
             GROUP BY c.product_id, p.name
             ORDER BY COUNT(*) DESC, MAX(c.added_at) DESC
             LIMIT 5
-        """.trimIndent()
+            """.trimIndent()
 
         return jdbc.query(sql) { rs, _ ->
             mapOf(
                 "productName" to rs.getString("productName") as Any,
                 "addedCount" to rs.getInt("addedCount") as Any,
-                "mostRecentAdded" to (rs.getTimestamp("mostRecentAdded")?.toLocalDateTime() ?: "") as Any
+                "mostRecentAdded" to (rs.getTimestamp("mostRecentAdded")?.toLocalDateTime() ?: "") as Any,
             )
         }
     }
 
     fun findMembersActiveInLast7Days(): List<Map<String, Any>> {
-        val sql = """
+        val sql =
+            """
             SELECT DISTINCT 
                 m.id as memberId,
                 m.name as memberName,
@@ -126,13 +128,13 @@ class CartRepository(private val jdbc: JdbcTemplate) {
                 WHERE c.member_id = m.id 
                 AND c.added_at >= DATEADD('DAY', -7, CURRENT_TIMESTAMP)
             )
-        """.trimIndent()
+            """.trimIndent()
 
         return jdbc.query(sql) { rs, _ ->
             mapOf(
                 "memberId" to rs.getLong("memberId") as Any,
                 "memberName" to rs.getString("memberName") as Any,
-                "memberEmail" to rs.getString("memberEmail") as Any
+                "memberEmail" to rs.getString("memberEmail") as Any,
             )
         }
     }
