@@ -33,7 +33,8 @@ class AuthControllerTest {
     @Autowired
     private lateinit var objectMapper: ObjectMapper
 
-    private val tokenRequest = TokenRequest(name = "John Doe", "user@example.com", "password123", role = UserRole.USER.name)
+    private val tokenRequest =
+        TokenRequest(name = "John Doe", "user@example.com", "password123", role = UserRole.USER.name)
     private val tokenResponse = TokenResponse("mocked-jwt-token")
 
     @Test
@@ -104,7 +105,11 @@ class AuthControllerTest {
 
     @Test
     fun `shouldn't get member if token does not exist or invalid`() {
-        `when`(authService.findMemberByToken("invalid-token")).thenThrow(AuthorizationException("Invalid or expired JWT token"))
+        `when`(authService.findMemberByToken("invalid-token")).thenThrow(
+            AuthorizationException(
+                "Invalid or expired JWT token",
+            ),
+        )
 
         mockMvc.perform(
             get("/auth/find-member")

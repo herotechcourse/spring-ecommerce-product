@@ -1,5 +1,6 @@
 package ecommerce.infrastructure
 
+import ecommerce.handler.AuthorizationException
 import io.jsonwebtoken.JwtException
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.SignatureAlgorithm
@@ -8,13 +9,12 @@ import org.springframework.stereotype.Component
 import java.util.Date
 
 @Component
-class JWTProvider {
+class JWTProvider(
     @Value("\${security.jwt.token.secret-key}")
-    private lateinit var secretKey: String
-
-    @Value("\${security.jwt.token.expire-time-millis}") // <-- new key
-    private var validityInMillis: Long = 0
-
+    private val secretKey: String,
+    @Value("\${security.jwt.token.expire-time-millis}")
+    private val validityInMillis: Long,
+) {
     fun createToken(payload: String): String {
         val claims = Jwts.claims().setSubject(payload)
         val now = Date()
@@ -28,18 +28,27 @@ class JWTProvider {
             .compact()
     }
 
-    fun getPayload(token: String): String {
-        return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).body.subject
-    }
+    fun getPayload(token: String): String =
+        Jwts.parser()
+            .setSigningKey(secretKey)
+            .parseClaimsJws(token)
+            .body
+            .subject
 
-    fun validateToken(token: String): Boolean {
-        return try {
-            val claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token)
-            !claims.body.expiration.before(Date())
-        } catch (e: JwtException) {
-            false
-        } catch (e: IllegalArgumentException) {
-            false
+    fun validateToken(token: String) {
+        try {
+            val claims =
+                Jwts.parser()
+                    .setSigningKey(secretKey)
+                    .parseClaimsJws(token)
+
+            if (claims.body.expiration.before(Date())) {
+                throw AuthorizationException("JWT token expired")
+            }
+        } catch (ex: JwtException) {
+            throw AuthorizationException("Invalid JWT token")
+        } catch (ex: IllegalArgumentException) {
+            throw AuthorizationException("Malformed JWT token")
         }
     }
 }

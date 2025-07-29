@@ -51,10 +51,7 @@ class AuthService(
     }
 
     fun findMemberByToken(token: String): MemberResponse {
-        if (!jwtTokenProvider.validateToken(token)) {
-            throw AuthorizationException("Invalid or expired JWT token")
-        }
-
+        jwtTokenProvider.validateToken(token)
         val email = jwtTokenProvider.getPayload(token)
         val member =
             memberRepository.findByEmail(email)

@@ -18,9 +18,7 @@ class JwtAuthenticationInterceptor(
     ): Boolean {
         val accessToken =
             request.getHeader("Authorization") ?: throw AuthorizationException("Authorization header missing")
-        if (!jwtProvider.validateToken(accessToken)) {
-            throw AuthorizationException("Invalid or expired JWT token")
-        }
+        jwtProvider.validateToken(accessToken)
         return true
     }
 }
