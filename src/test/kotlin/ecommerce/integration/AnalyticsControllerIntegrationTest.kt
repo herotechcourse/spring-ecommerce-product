@@ -127,7 +127,7 @@ class AnalyticsControllerIntegrationTest {
         }.andExpect {
             status { isOk() }
             jsonPath("$[0].productName") { value("Product A") }
-            jsonPath("$[0].addedCount") { value(2) }
+            jsonPath("$[0].addedCount") { value(3) }
             jsonPath("$[1].productName") { value("Product B") }
             jsonPath("$[1].addedCount") { value(1) }
         }
