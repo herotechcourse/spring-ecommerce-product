@@ -2,42 +2,19 @@ package ecommerce.dao
 
 import ecommerce.model.Member
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest
-import org.springframework.jdbc.core.JdbcTemplate
+import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.test.context.jdbc.Sql
 
-@JdbcTest
-class JdbcMemberDaoTest {
-    @Autowired private lateinit var jdbcTemplate: JdbcTemplate
-
-    private lateinit var jdbcMemberDao: JdbcMemberDao
-
-    @BeforeEach
-    fun setUp() {
-        jdbcMemberDao = JdbcMemberDao(jdbcTemplate)
-
-        jdbcTemplate.execute("DROP TABLE member CASCADE")
-        jdbcTemplate.execute(
-            """CREATE TABLE member
-            (
-                id       LONG         NOT NULL AUTO_INCREMENT,
-                email    VARCHAR(255) NOT NULL UNIQUE,
-                password VARCHAR(255) NOT NULL,
-                role     VARCHAR(255),
-                PRIMARY KEY (id)
-            );""",
-        )
-
-        val query =
-            """INSERT INTO member (email, password, role) VALUES ( 'san@htc.com', 'san1234', 'admin');
-            INSERT INTO member (email, password, role) VALUES ( 'dan@htc.com', 'dan1234', 'admin');
-            INSERT INTO member (email, password) VALUES ( 'ann@htc.com', 'ann1234');
-            INSERT INTO member (email, password) VALUES ( 'min@htc.com', 'min1234');"""
-        jdbcTemplate.batchUpdate(query)
-    }
-
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
+@Sql(
+    scripts = ["/sql/member.sql"],
+    executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD,
+)
+class JdbcMemberDaoTest(
+    @Autowired private val jdbcMemberDao: JdbcMemberDao,
+) {
     @Test
     fun insert() {
         val member = Member(email = "test@test.com", password = "test1234")

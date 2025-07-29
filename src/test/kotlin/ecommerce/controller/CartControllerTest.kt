@@ -1,114 +1,33 @@
 package ecommerce.controller
 
-import ecommerce.auth.JwtTokenProvider
 import ecommerce.controller.api.CartController
-import ecommerce.dao.JdbcCartDao
-import ecommerce.dao.JdbcMemberDao
-import ecommerce.dao.JdbcProductDao
 import ecommerce.dto.AuthResponse
 import ecommerce.dto.CartAddItemForm
 import ecommerce.dto.CartUpdateQuantityForm
 import ecommerce.dto.LoginForm
 import ecommerce.exception.NotFoundException
 import ecommerce.model.Member
-import ecommerce.service.AuthService
 import ecommerce.service.CartService
 import io.restassured.RestAssured
 import io.restassured.http.ContentType
 import org.assertj.core.api.Assertions.assertThat
 import org.hamcrest.Matchers.equalTo
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
-import org.springframework.jdbc.core.JdbcTemplate
+import org.springframework.test.context.jdbc.Sql
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
-class CartControllerTest {
-    @Autowired private lateinit var jdbcTemplate: JdbcTemplate
-
-    @Autowired private lateinit var jdbcMemberDao: JdbcMemberDao
-
-    @Autowired private lateinit var jwtTokenProvider: JwtTokenProvider
-    private lateinit var authService: AuthService
-
-    @Autowired private lateinit var jdbcProductDao: JdbcProductDao
-
-    @Autowired private lateinit var jdbcCartDao: JdbcCartDao
-
-    @Autowired private lateinit var cartService: CartService
-
-    @Autowired private lateinit var controller: CartController
-
-    @BeforeEach
-    fun setUp() {
-        jdbcMemberDao = JdbcMemberDao(jdbcTemplate)
-        authService = AuthService(jdbcMemberDao, jwtTokenProvider)
-        jdbcProductDao = JdbcProductDao(jdbcTemplate)
-        jdbcCartDao = JdbcCartDao(jdbcTemplate)
-        cartService = CartService(jdbcCartDao, jdbcProductDao)
-
-        jdbcTemplate.execute("DROP TABLE product CASCADE")
-        jdbcTemplate.execute(
-            """CREATE TABLE product 
-            (
-                id          LONG    NOT NULL AUTO_INCREMENT,
-                name        varchar(255)    NOT NULL,
-                price       DOUBLE  NOT NULL,
-                imageUrl    TEXT    NOT NULL,
-                PRIMARY KEY (id)
-            );""",
-        )
-
-        jdbcTemplate.execute("DROP TABLE member CASCADE")
-        jdbcTemplate.execute(
-            """CREATE TABLE member
-            (
-                id       LONG         NOT NULL AUTO_INCREMENT,
-                email    VARCHAR(255) NOT NULL UNIQUE,
-                password VARCHAR(255) NOT NULL,
-                role     VARCHAR(255),
-                PRIMARY KEY (id)
-            );""",
-        )
-
-        jdbcTemplate.execute("DROP TABLE cart_item CASCADE;")
-        jdbcTemplate.execute(
-            """CREATE TABLE cart_item
-            (
-                id         LONG NOT NULL AUTO_INCREMENT,
-                member_id  LONG NOT NULL,
-                product_id LONG NOT NULL,
-                quantity   INT DEFAULT 1,
-                PRIMARY KEY (id),
-    
-                FOREIGN KEY (member_id) REFERENCES member (id),
-                FOREIGN KEY (product_id) REFERENCES product (id)
-            );""",
-        )
-
-        val query =
-            """INSERT INTO product (name, price, imageUrl) VALUES ('Iron Man', 1000, 'https://alexnsan.comics/imageurl/1');
-            INSERT INTO product (name, price, imageUrl) VALUES ('X-men', 1000, 'https://alexnsan.comics/imageurl/2');
-            INSERT INTO product (name, price, imageUrl) VALUES ('Superman', 1000, 'https://alexnsan.comics/imageurl/3');
-            INSERT INTO product (name, price, imageUrl) VALUES ('Naruto', 1000, 'https://alexnsan.comics/imageurl/4');
-            INSERT INTO product (name, price, imageUrl) VALUES ('Full Metal Alchemist', 1000, 'https://alexnsan.comics/imageurl/5');
-            INSERT INTO product (name, price, imageUrl) VALUES ('Batman', 1000, 'https://alexnsan.comics/imageurl/6');
-            ;
-            
-            INSERT INTO member (email, password, role) VALUES ( 'san@htc.com', 'san1234', 'admin');
-            INSERT INTO member (email, password, role) VALUES ( 'dan@htc.com', 'dan1234', 'admin');
-            INSERT INTO member (email, password) VALUES ( 'ann@htc.com', 'ann1234');
-            INSERT INTO member (email, password) VALUES ( 'min@htc.com', 'min1234');
-            """
-        jdbcTemplate.batchUpdate(query)
-
-        controller = CartController(cartService)
-    }
-
+@Sql(
+    scripts = ["/sql/member.sql", "/sql/product.sql", "/sql/cart_item.sql", "/sql/cart_item_event.sql"],
+    executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD,
+)
+class CartControllerTest(
+    @Autowired private val controller: CartController,
+) {
     @Test
     fun addToCart() {
         val productId = PRODUCT_ID

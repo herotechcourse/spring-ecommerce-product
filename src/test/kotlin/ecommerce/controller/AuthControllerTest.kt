@@ -1,8 +1,6 @@
 package ecommerce.controller
 
-import ecommerce.auth.JwtTokenProvider
 import ecommerce.controller.api.AuthController
-import ecommerce.dao.JdbcMemberDao
 import ecommerce.dto.AuthResponse
 import ecommerce.dto.LoginForm
 import ecommerce.dto.MemberResponse
@@ -13,53 +11,21 @@ import io.restassured.RestAssured
 import io.restassured.http.ContentType
 import org.assertj.core.api.Assertions.assertThat
 import org.hamcrest.Matchers.equalTo
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
-import org.springframework.jdbc.core.JdbcTemplate
+import org.springframework.test.context.jdbc.Sql
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
-class AuthControllerTest {
-    @Autowired private lateinit var jdbcTemplate: JdbcTemplate
-
-    @Autowired private lateinit var jdbcMemberDao: JdbcMemberDao
-
-    @Autowired private lateinit var jwtTokenProvider: JwtTokenProvider
-
-    @Autowired private lateinit var authService: AuthService
-
-    @Autowired private lateinit var controller: AuthController
-
-    @BeforeEach
-    fun setUp() {
-        jdbcMemberDao = JdbcMemberDao(jdbcTemplate)
-        authService = AuthService(jdbcMemberDao, jwtTokenProvider)
-
-        jdbcTemplate.execute("DROP TABLE member CASCADE")
-        jdbcTemplate.execute(
-            """CREATE TABLE member
-            (
-                id       LONG         NOT NULL AUTO_INCREMENT,
-                email    VARCHAR(255) NOT NULL UNIQUE,
-                password VARCHAR(255) NOT NULL,
-                role     VARCHAR(255) DEFAULT NULL,
-                PRIMARY KEY (id)
-            );""",
-        )
-
-        val query =
-            """INSERT INTO member (email, password, role) VALUES ( 'san@htc.com', 'san1234', 'admin');
-            INSERT INTO member (email, password, role) VALUES ( 'dan@htc.com', 'dan1234', 'admin');
-            INSERT INTO member (email, password) VALUES ( 'ann@htc.com', 'ann1234');
-            INSERT INTO member (email, password) VALUES ( 'min@htc.com', 'min1234');"""
-        jdbcTemplate.batchUpdate(query)
-
-        controller = AuthController(authService)
-    }
-
+@Sql(
+    scripts = ["/sql/member.sql"],
+    executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD,
+)
+class AuthControllerTest(
+    @Autowired private val controller: AuthController,
+) {
     @Test
     fun registerMember() {
         val email = "test@email.com"

@@ -5,58 +5,29 @@ import ecommerce.dao.JdbcProductDao
 import ecommerce.dto.ProductForm
 import ecommerce.exception.NotFoundException
 import ecommerce.model.Product
-import ecommerce.service.ProductService
 import io.restassured.RestAssured
 import io.restassured.http.ContentType
 import org.assertj.core.api.Assertions.assertThat
 import org.hamcrest.CoreMatchers.equalTo
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.HttpStatus
-import org.springframework.jdbc.core.JdbcTemplate
+import org.springframework.test.context.jdbc.Sql
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
-class ProductControllerTest {
-    @Autowired private lateinit var jdbcTemplate: JdbcTemplate
-
-    @Autowired private lateinit var jdbcProductDao: JdbcProductDao
-
-    @Autowired private lateinit var productService: ProductService
-
-    @Autowired private lateinit var controller: ProductController
-
+@Sql(
+    scripts = ["/sql/product.sql"],
+    executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD,
+)
+class ProductControllerTest(
+    @Autowired private val jdbcProductDao: JdbcProductDao,
+    @Autowired private val controller: ProductController,
+) {
     fun create() {
         val product = Product(name = "product1", price = 1.5, imageUrl = "https://www.product.com/image/1")
         jdbcProductDao.insert(product)
-    }
-
-    @BeforeEach
-    fun setUp() {
-        jdbcProductDao = JdbcProductDao(jdbcTemplate)
-        productService = ProductService(jdbcProductDao)
-
-        jdbcTemplate.execute("DROP TABLE product CASCADE")
-        jdbcTemplate.execute(
-            """CREATE TABLE product (
-                         id          LONG    NOT NULL AUTO_INCREMENT,
-                         name        varchar(255)    NOT NULL,
-                         price       DOUBLE  NOT NULL,
-                         imageUrl    TEXT    NOT NULL,
-                         PRIMARY KEY (id)
-                    );""",
-        )
-
-        val query = """INSERT INTO product (name, price, imageUrl) VALUES ('Iron Man', 1000, 'https://alexnsan.comics/imageurl/1');
-                    INSERT INTO product (name, price, imageUrl) VALUES ('X-men', 1000, 'https://alexnsan.comics/imageurl/2');
-                    INSERT INTO product (name, price, imageUrl) VALUES ('Superman', 1000, 'https://alexnsan.comics/imageurl/3');
-                    INSERT INTO product (name, price, imageUrl) VALUES ('Naruto', 1000, 'https://alexnsan.comics/imageurl/4');
-                    INSERT INTO product (name, price, imageUrl) VALUES ('Full Metal Alchemist', 1000, 'https://alexnsan.comics/imageurl/5');"""
-        jdbcTemplate.batchUpdate(query)
-
-        controller = ProductController(productService)
     }
 
     @Test
@@ -196,7 +167,7 @@ class ProductControllerTest {
         create()
         create()
         val response = controller.getProducts()
-        assertThat(response.body?.size).isEqualTo(7)
+        assertThat(response.body?.size).isEqualTo(8)
         assertThat(response.statusCode.value()).isEqualTo(HttpStatus.OK.value())
     }
 
