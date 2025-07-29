@@ -52,6 +52,6 @@ class GlobalExceptionHandler {
         val error = mapOf("authorization" to e.message)
         val errorBody = mapOf("errors" to error)
         println("AuthorizationException occurred: $errorBody")
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorBody)
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build()
     }
 }

@@ -235,15 +235,7 @@ class AuthControllerTest {
                 .contentType(ContentType.JSON)
                 .`when`().post("/api/members/login")
                 .then().log().all().extract()
-
-        val targets =
-            listOf(
-                "Invalid email",
-            )
-        val resBody = response.jsonPath().getMap<String, String>("errors")
-        val actual = resBody["authorization"]
         assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value())
-        assertThat(actual).isIn(targets)
     }
 
     @Test
@@ -255,15 +247,7 @@ class AuthControllerTest {
                 .contentType(ContentType.JSON)
                 .`when`().post("/api/members/login")
                 .then().log().all().extract()
-
-        val targets =
-            listOf(
-                "Invalid password",
-            )
-        val resBody = response.jsonPath().getMap<String, String>("errors")
-        val actual = resBody["authorization"]
         assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value())
-        assertThat(actual).isIn(targets)
     }
 
     @Test

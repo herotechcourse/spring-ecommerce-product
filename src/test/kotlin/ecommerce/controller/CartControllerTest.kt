@@ -168,15 +168,7 @@ class CartControllerTest {
                 .contentType(ContentType.JSON)
                 .`when`().post("/api/cart")
                 .then().log().all().extract()
-
-        val targets =
-            listOf(
-                "Invalid token",
-            )
-        val resBody = response.jsonPath().getMap<String, String>("errors")
-        val actual = resBody["authorization"]
         assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value())
-        assertThat(actual).isIn(targets)
     }
 
     @Test
