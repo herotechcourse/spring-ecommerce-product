@@ -8,11 +8,13 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.test.context.ActiveProfiles
 import org.springframework.transaction.annotation.Transactional
 import kotlin.test.assertNotNull
 
 @SpringBootTest
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.ANY)
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@ActiveProfiles("test")
 @Transactional
 class MemberServiceIntegrationTest {
     @Autowired private lateinit var memberService: MemberService
@@ -21,7 +23,7 @@ class MemberServiceIntegrationTest {
 
     @Test
     fun `should return generated token - valid register request`() {
-        val request = RegisterRequest("test@email.com", "password123", "Test User")
+        val request = RegisterRequest("unique@email.com", "password123", "Test User")
         val token = memberService.register(request)
 
         assertNotNull(token)

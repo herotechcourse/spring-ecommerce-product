@@ -7,7 +7,4 @@ import org.springframework.web.bind.annotation.RestController
 class TestController {
     @GetMapping("/admin")
     fun adminEndpoint() = "Admin access granted"
-
-    @GetMapping("/api/cart/items")
-    fun cartEndpoint() = "Cart access granted"
 }

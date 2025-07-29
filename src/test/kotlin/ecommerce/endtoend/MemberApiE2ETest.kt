@@ -10,13 +10,23 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.boot.test.web.server.LocalServerPort
 import org.springframework.http.HttpStatus
+import org.springframework.test.annotation.DirtiesContext
+import org.springframework.test.context.ActiveProfiles
 import org.springframework.transaction.annotation.Transactional
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.ANY)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@DirtiesContext
+@ActiveProfiles("test")
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Transactional
 class MemberApiE2ETest {
+    @LocalServerPort
+    private var port: Int = 0
+
+    private fun getBaseUrl() = "http://localhost:$port/api"
+
     @Test
     fun `should register user successfully with valid data`() {
         val registerRequest =
@@ -30,7 +40,7 @@ class MemberApiE2ETest {
             RestAssured.given()
                 .contentType(ContentType.JSON)
                 .body(registerRequest)
-                .post("/api/members/register")
+                .post("${getBaseUrl()}/members/register")
                 .then()
                 .extract()
 
@@ -47,17 +57,20 @@ class MemberApiE2ETest {
                 password = "password123",
                 name = "Duplicate User",
             )
+        val firstResponse =
+            RestAssured.given()
+                .contentType(ContentType.JSON)
+                .body(registerRequest)
+                .post("${getBaseUrl()}/members/register")
+                .then()
+                .extract()
 
-        RestAssured.given()
-            .contentType(ContentType.JSON)
-            .body(registerRequest)
-            .post("/api/members/register")
-
+        assertThat(firstResponse.statusCode()).isEqualTo(HttpStatus.CREATED.value())
         val response =
             RestAssured.given()
                 .contentType(ContentType.JSON)
                 .body(registerRequest)
-                .post("/api/members/register")
+                .post("${getBaseUrl()}/members/register")
                 .then()
                 .extract()
 
@@ -73,10 +86,15 @@ class MemberApiE2ETest {
                 name = "Login Test User",
             )
 
-        RestAssured.given()
-            .contentType(ContentType.JSON)
-            .body(registerRequest)
-            .post("/api/members/register")
+        val registerResponse =
+            RestAssured.given()
+                .contentType(ContentType.JSON)
+                .body(registerRequest)
+                .post("${getBaseUrl()}/members/register")
+                .then()
+                .extract()
+
+        assertThat(registerResponse.statusCode()).isEqualTo(HttpStatus.CREATED.value())
 
         val loginRequest =
             LoginRequest(
@@ -88,7 +106,7 @@ class MemberApiE2ETest {
             RestAssured.given()
                 .contentType(ContentType.JSON)
                 .body(loginRequest)
-                .post("/api/members/login")
+                .post("${getBaseUrl()}/members/login")
                 .then()
                 .extract()
 
@@ -109,7 +127,7 @@ class MemberApiE2ETest {
             RestAssured.given()
                 .contentType(ContentType.JSON)
                 .body(loginRequest)
-                .post("/api/members/login")
+                .post("${getBaseUrl()}/members/login")
                 .then()
                 .extract()
 
@@ -132,7 +150,7 @@ class MemberApiE2ETest {
             RestAssured.given()
                 .contentType(ContentType.JSON)
                 .body(registerRequest)
-                .post("/api/members/register")
+                .post("${getBaseUrl()}/members/register")
                 .then()
                 .extract()
 

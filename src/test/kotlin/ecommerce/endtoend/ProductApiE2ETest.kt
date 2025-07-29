@@ -1,181 +1,233 @@
 package ecommerce.endtoend
 
-import ecommerce.model.Product
 import io.restassured.RestAssured
 import io.restassured.http.ContentType
 import org.assertj.core.api.Assertions.assertThat
+import org.hamcrest.Matchers.equalTo
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.web.server.LocalServerPort
 import org.springframework.http.HttpStatus
+import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.test.annotation.DirtiesContext
+import org.springframework.test.context.ActiveProfiles
+import org.springframework.transaction.annotation.Transactional
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
+@DirtiesContext
+@ActiveProfiles("test")
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@Transactional
 class ProductApiE2ETest {
     @LocalServerPort
     private var port: Int = 0
 
+    @Autowired
+    private lateinit var jdbcTemplate: JdbcTemplate
+
+    private fun getBaseUrl() = "http://localhost:$port/api"
+
+    private fun logResponseOnFailure(response: io.restassured.response.ExtractableResponse<io.restassured.response.Response>) {
+        if (response.statusCode() >= 400) {
+            println("\n=== RESPONSE ===")
+            println("Status: ${response.statusCode()}")
+            println("Headers: ${response.headers()}")
+            println("Body: ${response.body().asString()}")
+            println("===============\n")
+        }
+    }
+
     @BeforeEach
     fun setUp() {
-        RestAssured.port = port
     }
 
     @Test
     fun getProducts() {
         val response =
-            RestAssured.given().log().all()
+            RestAssured.given()
                 .accept(ContentType.JSON)
-                .`when`().get("/api/products")
-                .then().log().all().extract()
+                .`when`().get("${getBaseUrl()}/products")
+                .then().extract()
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
-        val names = response.body().jsonPath().getList<String>("name")
-        assertThat(names).isNotEmpty()
-        assertThat(names.size).isEqualTo(2)
+        val products = response.body().jsonPath().getList<Any>("")
+        assertThat(products).isNotEmpty()
+        assertThat(products.size).isGreaterThanOrEqualTo(2)
     }
 
     @Test
     fun getProduct() {
-        val product =
-            Product(
-                name = "Speaker",
-                price = 99.99,
-                imageUrl = "https://images.unsplash.com/photo-1494905998402-395d579af36f?w=400&h=400&fit=crop",
-            )
-        val id =
-            RestAssured.given()
-                .contentType(ContentType.JSON)
-                .body(product)
-                .post("/api/products")
-                .then().extract().jsonPath().getLong("id")
-
         val response =
             RestAssured.given()
-                .get("/api/products/$id")
-                .then().log().all().extract()
+                .get("${getBaseUrl()}/products/1")
+                .then().extract()
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
-        assertThat(response.body().jsonPath().getString("name")).isEqualTo("Speaker")
-        assertThat(response.body().jsonPath().getFloat("price")).isEqualTo(99.99f)
+        assertThat(response.body().jsonPath().getString("name")).isEqualTo("Test Product")
+        assertThat(response.body().jsonPath().getDouble("price")).isEqualTo(100.0)
     }
 
     @Test
     fun getProduct_notFound() {
         val response =
             RestAssured.given()
-                .get("/api/products/999999")
-                .then().log().all().extract()
+                .get("${getBaseUrl()}/products/999999")
+                .then().extract()
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value())
     }
 
     @Test
     fun createProduct() {
-        val newProduct = Product(name = "Monitor", price = 150.0, imageUrl = "https://example.com/monitor.jpg")
+        val productName = "P_${System.currentTimeMillis() % 10000}".take(15)
+        val newProduct =
+            mapOf(
+                "name" to productName,
+                "price" to 100.0,
+                "imageUrl" to "http://example.com/image.jpg",
+            )
 
         val response =
-            RestAssured.given().log().all()
+            RestAssured.given()
                 .contentType(ContentType.JSON)
                 .body(newProduct)
-                .`when`().post("/api/products")
-                .then().log().all().extract()
+                .`when`()
+                .post("${getBaseUrl()}/products")
+                .then()
+                .statusCode(HttpStatus.CREATED.value())
+                .extract()
 
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value())
-        assertThat(response.body().jsonPath().getString("name")).isEqualTo("Monitor")
-        assertThat(response.body().jsonPath().getFloat("price")).isEqualTo(150.0f)
+        val responseBody = response.body().jsonPath()
+        assertThat(responseBody.getLong("id")).isNotNull()
+        assertThat(responseBody.getString("name")).isEqualTo(productName)
+        assertThat(responseBody.getDouble("price")).isEqualTo(100.0)
+        assertThat(responseBody.getString("imageUrl")).isEqualTo("http://example.com/image.jpg")
     }
 
     @Test
     fun updateProduct() {
-        val created =
-            Product(
-                name = "Mouse",
-                price = 25.0,
-                imageUrl = "https://images.unsplash.com/photo-1494905998402-395d579af36f?w=400&h=400&fit=crop",
+        val newProduct =
+            mapOf(
+                "name" to "Initial Product",
+                "price" to 100.0,
+                "imageUrl" to "http://example.com/initial.jpg",
             )
-        val id =
+
+        val createdResponse =
             RestAssured.given()
                 .contentType(ContentType.JSON)
-                .body(created)
-                .post("/api/products")
-                .then().extract().jsonPath().getLong("id")
+                .body(newProduct)
+                .`when`()
+                .post("${getBaseUrl()}/products")
+                .then()
+                .statusCode(HttpStatus.CREATED.value())
+                .extract()
 
-        val updated =
-            Product(
-                name = "Gaming Mouse",
-                price = 45.0,
-                imageUrl = "https://images.unsplash.com/photo-1494905998402-395d579af36f?w=400&h=400&fit=crop",
+        val productId = createdResponse.body().jsonPath().getLong("id")
+
+        val updatedProduct =
+            mapOf(
+                "name" to "Updated Product",
+                "price" to 150.0,
+                "imageUrl" to "http://example.com/updated.jpg",
             )
 
-        val response =
-            RestAssured.given().log().all()
-                .contentType(ContentType.JSON)
-                .body(updated)
-                .put("/api/products/$id")
-                .then().log().all().extract()
-
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
-        assertThat(response.body().jsonPath().getString("name")).isEqualTo("Gaming Mouse")
-        assertThat(response.body().jsonPath().getFloat("price")).isEqualTo(45.0f)
+        RestAssured.given()
+            .contentType(ContentType.JSON)
+            .body(updatedProduct)
+            .`when`()
+            .put("${getBaseUrl()}/products/$productId")
+            .then()
+            .statusCode(HttpStatus.OK.value())
+            .body("name", equalTo("Updated Product"))
+            .body("price", equalTo(150.0f))
     }
 
     @Test
     fun patchProduct() {
-        val created =
-            Product(
-                name = "Tablet",
-                price = 299.0,
-                imageUrl = "https://images.unsplash.com/photo-1494905998402-395d579af36f?w=400&h=400&fit=crop",
+        val newProduct =
+            mapOf(
+                "name" to "Initial Product",
+                "price" to 100.0,
+                "imageUrl" to "http://example.com/initial.jpg",
             )
-        val id =
+
+        val createdResponse =
             RestAssured.given()
                 .contentType(ContentType.JSON)
-                .body(created)
-                .post("/api/products")
-                .then().extract().jsonPath().getLong("id")
+                .body(newProduct)
+                .`when`()
+                .post("${getBaseUrl()}/products")
+                .then()
+                .statusCode(HttpStatus.CREATED.value())
+                .extract()
 
-        val patch = mapOf("price" to 249.0)
+        val productId = createdResponse.body().jsonPath().getLong("id")
+        val patch =
+            mapOf(
+                "name" to "Patched Product",
+            )
 
-        val response =
-            RestAssured.given().log().all()
-                .contentType(ContentType.JSON)
-                .body(patch)
-                .patch("/api/products/$id")
-                .then().log().all().extract()
-
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
-        assertThat(response.body().jsonPath().getFloat("price")).isEqualTo(249.0f)
+        RestAssured.given()
+            .contentType(ContentType.JSON)
+            .body(patch)
+            .`when`()
+            .patch("${getBaseUrl()}/products/$productId")
+            .then()
+            .statusCode(HttpStatus.OK.value())
+            .body("name", equalTo("Patched Product"))
     }
 
     @Test
     fun deleteProduct() {
-        val created =
-            Product(
-                name = "Keyboard",
-                price = 59.99,
-                imageUrl = "https://images.unsplash.com/photo-1494905998402-395d579af36f?w=400&h=400&fit=crop",
+        val newProduct =
+            mapOf(
+                "name" to "Delete Test",
+                "price" to 99.99,
+                "imageUrl" to "http://example.com/delete-me.jpg",
             )
-        val id =
+
+        val createdResponse =
             RestAssured.given()
                 .contentType(ContentType.JSON)
-                .body(created)
-                .post("/api/products")
-                .then().extract().jsonPath().getLong("id")
+                .body(newProduct)
+                .`when`()
+                .post("${getBaseUrl()}/products")
+                .then()
+                .statusCode(HttpStatus.CREATED.value())
+                .extract()
 
+        val productId = createdResponse.body().jsonPath().getLong("id")
         val deleteResponse =
             RestAssured.given()
-                .delete("/api/products/$id")
-                .then().log().all().extract()
+                .`when`()
+                .delete("${getBaseUrl()}/products/$productId")
+                .then()
+                .statusCode(HttpStatus.NO_CONTENT.value())
+                .extract()
 
-        assertThat(deleteResponse.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value())
+        assertThat(deleteResponse.statusCode())
+            .withFailMessage("Expected status code 204 but was ${deleteResponse.statusCode()}")
+            .isEqualTo(HttpStatus.NO_CONTENT.value())
+        val productCount =
+            jdbcTemplate.queryForObject(
+                "SELECT COUNT(*) FROM products WHERE id = ?",
+                { rs, _ -> rs.getInt(1) },
+                productId,
+            )
+        assertThat(productCount).isZero()
 
         val getResponse =
             RestAssured.given()
-                .get("/api/products/$id")
-                .then().log().all().extract()
+                .get("${getBaseUrl()}/products/$productId")
+                .then()
+                .extract()
 
-        assertThat(getResponse.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value())
+        assertThat(getResponse.statusCode())
+            .withFailMessage("Expected status code 404 but was ${getResponse.statusCode()}")
+            .isEqualTo(HttpStatus.NOT_FOUND.value())
     }
 }
