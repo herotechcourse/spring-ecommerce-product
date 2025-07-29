@@ -1,5 +1,7 @@
 package ecommerce
 
+import ecommerce.product.domain.Product
+import ecommerce.product.repository.ProductRepository
 import io.restassured.RestAssured
 import io.restassured.http.ContentType
 import org.assertj.core.api.Assertions.assertThat
@@ -20,6 +22,7 @@ class ProductControllerTest {
 
     @BeforeEach
     fun setUp() {
+        jdbcTemplate.execute("DROP TABLE CART_ITEMS IF EXISTS")
         jdbcTemplate.execute("DROP TABLE products IF EXISTS")
         jdbcTemplate.execute(
             "CREATE TABLE products(" + "id SERIAL, name VARCHAR(100), price DECIMAL(10,2), image_url VARCHAR(500))",
@@ -58,40 +61,40 @@ class ProductControllerTest {
     fun read() {
         val products = productRepository.findAllProducts()
         assertThat(products.size).isEqualTo(4)
-        with(products[0]) {
-            assertThat(id).isEqualTo(1)
-            assertThat(name).isEqualTo("Coca-Cola")
-            assertThat(price).isEqualTo(2.00)
-            assertThat(imageUrl).isEqualTo("https://mcdonalds.com.mt/wp-content/uploads/2024/06/COCA-COLA-WEBSITE-IMG.jpg")
-        }
-        with(products[1]) {
-            assertThat(id).isEqualTo(2)
-            assertThat(name).isEqualTo("Fanta")
-            assertThat(price).isEqualTo(2.50)
-            assertThat(
-                imageUrl,
-            ).isEqualTo(
-                "https://www.cokesolutions.com/content/dam/cokesolutions/us/images/Products/" +
-                    "Fanta-Orange-PET.jpg",
+
+        val expectedProducts =
+            listOf(
+                Product(
+                    id = 1,
+                    name = "Coca-Cola",
+                    price = 2.00,
+                    imageUrl = "https://mcdonalds.com.mt/wp-content/uploads/2024/06/COCA-COLA-WEBSITE-IMG.jpg",
+                ),
+                Product(
+                    id = 2,
+                    name = "Fanta",
+                    price = 2.50,
+                    imageUrl =
+                        "https://www.cokesolutions.com/content/dam/cokesolutions/us/images/Products/" +
+                            "Fanta-Orange-PET.jpg",
+                ),
+                Product(
+                    id = 3,
+                    name = "Cappuccino",
+                    price = 4.39,
+                    imageUrl =
+                        "https://www.tchibo.de/kaffeeakademie/media/pages/global-images/" +
+                            "fb95bb5370-1729609446/adobestock_219364830-1440x700-crop-42-46.jpg",
+                ),
+                Product(
+                    id = 4,
+                    name = "Tea",
+                    price = 1.59,
+                    imageUrl = "https://cupitol.com/wp-content/uploads/2019/08/tea-drinking-1.jpg",
+                ),
             )
-        }
-        with(products[2]) {
-            assertThat(id).isEqualTo(3)
-            assertThat(name).isEqualTo("Cappuccino")
-            assertThat(price).isEqualTo(4.39)
-            assertThat(
-                imageUrl,
-            ).isEqualTo(
-                "https://www.tchibo.de/kaffeeakademie/media/pages/global-images/fb95bb5370-1729609446/" +
-                    "adobestock_219364830-1440x700-crop-42-46.jpg",
-            )
-        }
-        with(products[3]) {
-            assertThat(id).isEqualTo(4)
-            assertThat(name).isEqualTo("Tea")
-            assertThat(price).isEqualTo(1.59)
-            assertThat(imageUrl).isEqualTo("https://cupitol.com/wp-content/uploads/2019/08/tea-drinking-1.jpg")
-        }
+
+        assertThat(products).isEqualTo(expectedProducts)
     }
 
     @Test
@@ -102,7 +105,7 @@ class ProductControllerTest {
                 .contentType(ContentType.JSON)
                 .body(
                     Product(
-                        name = "Fanta",
+                        name = "Fanta-new",
                         price = 5.60,
                         imageUrl =
                             "https://www.cokesolutions.com/content/dam/cokesolutions/us/images/" +
@@ -129,5 +132,109 @@ class ProductControllerTest {
                 .log().all()
                 .extract()
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value())
+    }
+
+    @Test
+    fun `create product with name longer than 15 characters should return 400`() {
+        val response =
+            RestAssured.given()
+                .log().all()
+                .contentType(ContentType.JSON)
+                .body(Product(name = "Very Long Product Name", price = 2.50, imageUrl = "https://sprite.jpg"))
+                .`when`()
+                .post("/products")
+                .then()
+                .log().all()
+                .extract()
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value())
+        assertThat(response.jsonPath().getString("details.name")).isEqualTo("Product name must be 15 characters or less")
+    }
+
+    @Test
+    fun `create product with invalid name characters should return 400`() {
+        val response =
+            RestAssured.given()
+                .log().all()
+                .contentType(ContentType.JSON)
+                .body(Product(name = "Cola#Invalid", price = 2.50, imageUrl = "https://example.com/sprite.jpg"))
+                .`when`()
+                .post("/products")
+                .then()
+                .log().all()
+                .extract()
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value())
+        assertThat(response.jsonPath().getString("details.name")).isEqualTo(
+            "Product name can only contain letters, numbers, spaces, and allowed special characters: (), [], +, -, &, /, _",
+        )
+    }
+
+    @Test
+    fun `create product with non-unique name should return 400`() {
+        val response =
+            RestAssured.given()
+                .log().all()
+                .contentType(ContentType.JSON)
+                .body(Product(name = "Coca-Cola", price = 2.50, imageUrl = "https://cola.jpg"))
+                .`when`()
+                .post("/products")
+                .then()
+                .log().all()
+                .extract()
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value())
+        assertThat(response.jsonPath().getString("error")).isEqualTo("Product name must be unique")
+    }
+
+    @Test
+    fun `create product with non-positive price should return 400`() {
+        val response =
+            RestAssured.given()
+                .log().all()
+                .contentType(ContentType.JSON)
+                .body(Product(name = "Sprite", price = 0.0, imageUrl = "https://sprite.jpg"))
+                .`when`()
+                .post("/products")
+                .then()
+                .log().all()
+                .extract()
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value())
+        assertThat(response.jsonPath().getString("details.price")).isEqualTo("Price must be greater than 0")
+    }
+
+    @Test
+    fun `create product with invalid image URL should return 400`() {
+        val response =
+            RestAssured.given()
+                .log().all()
+                .contentType(ContentType.JSON)
+                .body(Product(name = "Sprite", price = 2.50, imageUrl = "ftgeh4iugp://sprite.jpg"))
+                .`when`()
+                .post("/products")
+                .then()
+                .log().all()
+                .extract()
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value())
+        assertThat(response.jsonPath().getString("details.imageUrl")).isEqualTo("Image URL must start with http:// or https://")
+    }
+
+    @Test
+    fun `update product with non-unique name should return 400`() {
+        val response =
+            RestAssured.given()
+                .log().all()
+                .contentType(ContentType.JSON)
+                .body(Product(name = "Fanta", price = 2.50, imageUrl = "https://example.com/fanta.jpg"))
+                .`when`()
+                .put("/products/1")
+                .then()
+                .log().all()
+                .extract()
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value())
+        assertThat(response.jsonPath().getString("error")).isEqualTo("Product name must be unique")
     }
 }

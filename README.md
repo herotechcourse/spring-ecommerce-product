@@ -53,5 +53,126 @@ The required database tables are initialized automatically when the application 
 - TODO why do we combine Controller and ControllerView
 - read and learn SQL commands in H2 console
 
+## Step 2-1
 
+When a product is created or updated, the client may send invalid data.
+In such cases, your application must respond with enough information for the client to understand what is wrong and why.
 
+### Feature List
+
+- [x] Product Name
+    - [x] Product name is no longer than 15 characters (including spaces)
+    - [x] Allow only specific special characters: `( ), [ ], +, -, &, /, _`. All other special characters are not
+      allowed
+    - [x] The name must be unique across all products
+
+- [x] Product Price
+    - [x] Must be greater than 0
+
+- [x] Product Image URL
+    - [x] Must start with ``http://`` or ``https://``
+
+## Step 2-2
+
+Implement user account features including registration, login, and authentication so that users can access member-only
+functionality in the future.
+
+### Feature List
+
+- [x] create a ``Member`` data class
+    - [x] Member has ID
+    - [x] Member has email
+    - [x] Member has password
+    - [x] Member has role (initial "USER")
+
+- [x] add Members table in ``schema.sql``
+
+- [x] Create `MemberRepository` class - repository for working with the MEMBERS table, similar to `ProductRepository`
+
+- [x] create ``TokenRequest`` data class
+    - [x] has email
+    - [x] has password
+
+- [x] create ``TokenResponse`` data class
+    - [x] has accessToken: String
+
+- [x] create ``MemberResponse`` data class
+    - [x] has id
+    - [x] has email
+
+- [x] create interface ``AuthorizationExtractor``
+- [x] create  ``BearerAuthorizationExtractor``
+
+  Needed to extract the token from the Authorization: Bearer <token> header
+
+- [x] create class `AuthorizationException` - exception for handling authorization errors
+- [x] create class `JwtTokenProvider` - class for creating, validating and extracting payload from JWT
+- [x] create `AuthService` class to handle authentication logic, including token generation and user registration
+- [x] create `AuthController` class with endpoints for user registration (`/api/members/register`), login (
+  `/api/members/login`), and retrieving user info (`/api/members/me`)
+
+    - implement authentication controller with endpoints for registration, login, and user info
+
+## Step 2-3
+
+Using the token received after login, implement functionality that allows the user to add products to their own cart
+
+### Feature List
+
+- [x] Users can retrieve the list of products in their cart.
+    - [x] GET `/api/wishes` returns list of products in JSON format
+    - [x] Requires valid JWT token in `Authorization: Bearer <token>` header
+
+- [x] Users can add products to their cart.
+    - [x] POST `/api/wishes` accepts product ID in JSON body
+    - [x] Requires valid JWT token in `Authorization: Bearer <token>` header
+    - [x] Validates product existence and prevents duplicates
+
+- [x] Users can remove products from their cart.
+    - [x] DELETE `/api/wishes/{productId}` removes product by ID
+    - [x] Requires valid JWT token in `Authorization: Bearer <token>` header
+
+- [x] Add `CART_ITEMS` table in `schema.sql`
+    - [x] Links `member_id` to `MEMBERS` and `product_id` to `PRODUCTS`
+
+- [x] Create `CartItem` data class
+   - [x] Contains `id`, `memberId`, `productId`
+
+- [x] Create `CartRequest` data class
+  - [x] Contains `productId` with validation
+
+- [x] Create `CartResponse` data class
+  - [x] Contains `id` and `Product` object
+
+- [x] Create `CartRepository` class
+  - [x] Uses `JdbcTemplate` to manage `CART_ITEMS` table
+
+- [x] Create `CartService` class
+  - [x] Handles business logic for cart operations
+
+- [x] Create `WishController` class
+    - [x] Implements `/api/wishes` endpoints with `@LoginMember` for authentication
+
+- [x] Create `LoginMember` annotation and `LoginMemberArgumentResolver`
+  - [x] Injects authenticated `Member` into controller methods
+
+- [x] Create `CheckLoginInterceptor`
+  - [x] Protects `/api/wishes/**` routes with token validation
+
+## Step 2-4
+
+Implements admin statistics endpoints to retrieve insights from users' carts.
+
+### Feature List
+
+- [x] Retrieve Top 5 Most Added Products to Cart in the Last 30 Days
+  - [x] Returns product name, add count, and last added time
+  - [x] Orders by count  and last added time 
+  - [x] Limited to 5 products
+
+- [x] Retrieve Members Who Added Items to Their Cart in the Last 7 Days
+  - [x] Returns unique members with ID and email
+
+- [x] Restrict Access to Admin Endpoints
+  - [x] Only users with ADMIN role can access /admin/**
+  - [x] Implemented AuthInterceptor for role-based access control
