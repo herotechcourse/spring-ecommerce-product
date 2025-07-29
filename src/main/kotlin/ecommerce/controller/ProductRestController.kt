@@ -52,8 +52,6 @@ class ProductRestController(
 
         val product = request.toEntity()
         productRepository.createProduct(product)
-
-        // val saved = productRepository.getAll().last()
         return ResponseEntity.ok().body(product)
     }
 
@@ -93,10 +91,6 @@ class ProductRestController(
     fun delete(
         @PathVariable id: Long,
     ): ResponseEntity<Unit> {
-//        val existingProduct =
-//            productRepository.findById(id)
-//                ?: return ResponseEntity.notFound().build()
-
         productRepository.deleteProduct(id)
         return ResponseEntity.ok().build()
     }
