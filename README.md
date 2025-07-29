@@ -95,29 +95,29 @@
   - [x] Handle authentication exceptions properly with 401/403 responses
 
 ### Step 2.4: authorized admin can get specific N-products and N-users
-- [] **Admin authorization system**
-  - [] Implement `HandlerInterceptor` for role-based access control
-  - [] Restrict `/admin/*` endpoints to ADMIN role only
-  - [] Create `AuthInterceptor` to check user permissions
-  - [] Register interceptor in WebMvcConfigurer
-- [] **Top products analytics**
-  - [] Get top 5 most added products to cart in last 30 days
-  - [] Handle tie-breaking by most recent addition time
-  - [] Use SQL: `WHERE`, `DATE`, `GROUP BY`, `ORDER BY`, `LIMIT`
-  - [] Response includes:
-    - [] Product name
-    - [] Number of times added to cart
-    - [] Most recent addition timestamp
-- [] **Active users analytics**
-  - [] Get members who added items to cart in last 7 days
-  - [] Ensure unique member list (no duplicates)
-  - [] Use SQL: `EXISTS`, `DISTINCT`, `JOIN`
-  - [] Response includes:
-    - [] Member ID
-    - [] Member name
-    - [] Member email
-- [] **SQL optimization and implementation**
-  - [] Create analytics queries in repository layer
-  - [] Create `AnalyticsRepository` for complex queries
-  - [] Create response DTOs for analytics data
-  - [] Implement proper error handling for admin endpoints
+- [x] **Admin authorization system**
+  - [x] Implement `HandlerInterceptor` for role-based access control
+  - [x] Restrict `/admin/*` endpoints to ADMIN role only
+  - [x] Create `AuthInterceptor` to check user permissions
+  - [x] Register interceptor in WebMvcConfigurer
+- [x] **Top products analytics**
+  - [x] Get top 5 most added products to cart in last 30 days
+  - [x] Handle tie-breaking by most recent addition time
+  - [x] Use SQL: `WHERE`, `DATE`, `GROUP BY`, `ORDER BY`, `LIMIT`
+  - [x] Response includes:
+    - [x] Product name
+    - [x] Number of times added to cart (sum of quantities)
+    - [x] Most recent addition timestamp
+- [x] **Active users analytics**
+  - [x] Get members who added items to cart in last 7 days
+  - [x] Ensure unique member list (no duplicates)
+  - [x] Use SQL: `EXISTS`, `DISTINCT`, `JOIN`
+  - [x] Response includes:
+    - [x] Member ID
+    - [x] Member name
+    - [x] Member email
+- [x] **SQL optimization and implementation**
+  - [x] Create analytics queries in repository layer
+  - [x] Add database indexes for analytics performance
+  - [x] Implement proper error handling for admin endpoints
+  - [x] Use existing CartRepository (follows established architecture pattern)
