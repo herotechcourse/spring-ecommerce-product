@@ -11,12 +11,12 @@ class AnalyticsController(
     private val cartRepository: CartRepository,
 ) {
     @GetMapping("/top-products")
-    fun getTopProducts(): List<Map<String, Any>> {
+    fun getTopProducts(): List<Map<String, Any?>> {
         return cartRepository.findTop5MostAddedProductsLast30Days()
     }
 
     @GetMapping("/active-users")
-    fun getActiveUsers(): List<Map<String, Any>> {
+    fun getActiveUsers(): List<Map<String, Any?>> {
         return cartRepository.findMembersActiveInLast7Days()
     }
 }
