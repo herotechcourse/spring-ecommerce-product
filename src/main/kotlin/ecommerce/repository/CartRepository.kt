@@ -134,12 +134,16 @@ class CartRepository(private val jdbc: JdbcTemplate) {
             )
             """.trimIndent()
 
-        return jdbc.query(sql) { rs, _ ->
-            mapOf(
-                "memberId" to rs.getLong("memberId"),
-                "memberName" to rs.getString("memberName"),
-                "memberEmail" to rs.getString("memberEmail"),
-            )
+        return try {
+            jdbc.query(sql) { rs, _ ->
+                mapOf(
+                    "memberId" to rs.getLong("memberId"),
+                    "memberName" to rs.getString("memberName"),
+                    "memberEmail" to rs.getString("memberEmail"),
+                )
+            }
+        } catch (e: Exception) {
+            emptyList()
         }
     }
 }
