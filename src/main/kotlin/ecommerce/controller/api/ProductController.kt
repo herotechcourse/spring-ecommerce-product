@@ -1,7 +1,6 @@
 package ecommerce.controller.api
 
 import ecommerce.dto.ProductForm
-import ecommerce.exception.InternalServerErrorException
 import ecommerce.exception.NotFoundException
 import ecommerce.exception.ProductNameAlreadyExistsException
 import ecommerce.model.Product
@@ -50,28 +49,14 @@ class ProductController(private val productService: ProductService) {
         @PathVariable id: Long,
         @RequestBody @Valid productForm: ProductForm,
     ): ResponseEntity<Product> {
-        val affectedRows = productService.update(productForm, id)
-        when (affectedRows) {
-            1 -> {
-                val target =
-                    productService.findById(id) ?: throw InternalServerErrorException(MESSAGE_PRODUCT_NOT_FOUND)
-                return ResponseEntity.ok(target)
-            }
-            0 -> throw NotFoundException(MESSAGE_PRODUCT_NOT_FOUND)
-            else -> throw InternalServerErrorException(MESSAGE_UNEXPECTED_PRODUCT_ACTION)
-        }
+        return productService.update(productForm, id)
     }
 
     @DeleteMapping("{id}")
     fun deleteProduct(
         @PathVariable id: Long,
     ): ResponseEntity<Void> {
-        val affectedRows = productService.delete(id)
-        when (affectedRows) {
-            1 -> return ResponseEntity.noContent().build()
-            0 -> throw NotFoundException("Product not found - ID: $id")
-            else -> throw InternalServerErrorException(MESSAGE_UNEXPECTED_PRODUCT_ACTION)
-        }
+        return productService.delete(id)
     }
 
     @ExceptionHandler(ProductNameAlreadyExistsException::class)
