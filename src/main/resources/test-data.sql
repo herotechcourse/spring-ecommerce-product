@@ -1,6 +1,3 @@
--- Test data for integration tests
--- Comprehensive data set for consistent test results
-
 INSERT INTO products (name, price, imageUrl) VALUES
 ('Car', 1000.0, 'https://images.unsplash.com/photo-1494905998402-395d579af36f?w=400&h=400&fit=crop'),
 ('Bike', 200.0, 'https://images.unsplash.com/photo-1571068316344-75bc76f77890?w=400&h=400&fit=crop'),
@@ -8,6 +5,6 @@ INSERT INTO products (name, price, imageUrl) VALUES
 ('Laptop', 1500.0, 'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=400&h=400&fit=crop'),
 ('Phone', 800.0, 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=400&h=400&fit=crop');
 
--- Test members with properly hashed passwords (created via registration)
--- Note: Tests should create members dynamically via registration endpoint
--- to ensure proper password hashing
+INSERT INTO members (id, email, password, name, role) VALUES
+(1, 'test@example.com', '$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2uheWG/igi.', 'Test User', 'USER'),
+(2, 'admin@example.com', '$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2uheWG/igi.', 'Admin User', 'ADMIN');
