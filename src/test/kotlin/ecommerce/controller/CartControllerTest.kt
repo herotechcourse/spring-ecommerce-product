@@ -43,7 +43,6 @@ class CartControllerTest {
     @BeforeEach
     fun setUp() {
         jdbcMemberDAO = JdbcMemberDAO(jdbcTemplate)
-        jwtTokenProvider = JwtTokenProvider()
         authService = AuthService(jdbcMemberDAO, jwtTokenProvider)
         jdbcProductDAO = JdbcProductDAO(jdbcTemplate)
         jdbcCartDAO = JdbcCartDAO(jdbcTemplate)

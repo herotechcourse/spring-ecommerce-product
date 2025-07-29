@@ -28,7 +28,6 @@ class AuthServiceTest {
     @BeforeEach
     fun setUp() {
         jdbcMemberDAO = JdbcMemberDAO(jdbcTemplate)
-        jwtTokenProvider = JwtTokenProvider()
         authService = AuthService(jdbcMemberDAO, jwtTokenProvider)
 
         jdbcTemplate.execute("DROP TABLE member CASCADE")

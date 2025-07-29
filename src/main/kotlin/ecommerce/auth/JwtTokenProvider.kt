@@ -3,13 +3,17 @@ package ecommerce.auth
 import io.jsonwebtoken.JwtException
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.security.Keys
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 import java.util.Date
 
 @Component
-class JwtTokenProvider() {
-    private var secret = SECRET_KEY
-    private var validityInMilliseconds = EXPIRATION_TIME
+class JwtTokenProvider(
+    @Value("\${jwt.secret-key}")
+    private val secret: String,
+    @Value("\${jwt.expiration-ms}")
+    private val validityInMilliseconds: Long,
+) {
     private val secretKey = Keys.hmacShaKeyFor(secret.toByteArray())
 
     fun createToken(payload: String): String {
@@ -48,10 +52,5 @@ class JwtTokenProvider() {
             println(e.message)
             false
         }
-    }
-
-    companion object {
-        private const val SECRET_KEY = "X1yk3dV+NQemyyJbg6WzioaRR1NArxZxjMvvroTZauk="
-        private const val EXPIRATION_TIME = 3600000L
     }
 }
