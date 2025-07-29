@@ -96,13 +96,13 @@ class CartRepository(private val jdbc: JdbcTemplate) {
             """
             SELECT 
                 p.name as productName,
-                COUNT(*) as addedCount,
+                SUM(c.quantity) as addedCount,
                 MAX(c.added_at) as mostRecentAdded
             FROM cart c
             JOIN products p ON c.product_id = p.id
             WHERE c.added_at >= DATEADD('DAY', -30, CURRENT_TIMESTAMP)
             GROUP BY c.product_id, p.name
-            ORDER BY COUNT(*) DESC, MAX(c.added_at) DESC
+            ORDER BY SUM(c.quantity) DESC, MAX(c.added_at) DESC
             LIMIT 5
             """.trimIndent()
 
