@@ -25,7 +25,7 @@ class AdminRoleCheckInterceptor(
             }
 
         val uri = request.requestURI
-        if (uri.startsWith("/admin") && member?.role != UserRole.ADMIN.name) {
+        if (uri.startsWith("/api/protected/admin") && member?.role != UserRole.ADMIN.name) {
             response.status = HttpServletResponse.SC_UNAUTHORIZED
             return false
         }

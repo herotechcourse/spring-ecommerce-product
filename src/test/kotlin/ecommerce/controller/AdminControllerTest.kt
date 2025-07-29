@@ -2,6 +2,7 @@ package ecommerce.controller
 
 import ecommerce.dto.MemberResponse
 import ecommerce.dto.TopProductStatResponse
+import ecommerce.infrastructure.JWTProvider
 import ecommerce.model.UserRole
 import ecommerce.service.AuthService
 import ecommerce.service.CartService
@@ -9,6 +10,7 @@ import org.hamcrest.Matchers.hasItem
 import org.hamcrest.Matchers.not
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.mockito.Mockito.doNothing
 import org.mockito.Mockito.verify
 import org.mockito.Mockito.`when`
 import org.springframework.beans.factory.annotation.Autowired
@@ -31,6 +33,9 @@ class AdminControllerTest {
     private lateinit var cartService: CartService
 
     @MockitoBean
+    private lateinit var jwtProvider: JWTProvider
+
+    @MockitoBean
     private lateinit var authService: AuthService
 
     private lateinit var topProducts: List<TopProductStatResponse>
@@ -48,7 +53,7 @@ class AdminControllerTest {
                 TopProductStatResponse("Keyboard", 11, Timestamp.valueOf("2025-07-23 16:45:00")),
                 TopProductStatResponse("Mouse", 10, Timestamp.valueOf("2025-07-22 11:20:00")),
             )
-
+        doNothing().`when`(jwtProvider).validateToken(token)
         `when`(cartService.findTop5ProductsInLast30Days()).thenReturn(topProducts.take(5))
     }
 
@@ -58,7 +63,7 @@ class AdminControllerTest {
         `when`(authService.findMemberByToken(token)).thenReturn(memberResponse)
 
         mockMvc.perform(
-            get("/admin/top-products")
+            get("/api/protected/admin/top-products")
                 .header("Authorization", "Bearer $token"),
         ).andExpect {
             status().isOk
@@ -81,7 +86,7 @@ class AdminControllerTest {
         `when`(authService.findMemberByToken(token)).thenReturn(memberResponse)
 
         mockMvc.perform(
-            get("/admin/top-products")
+            get("/api/protected/admin/top-products")
                 .header("Authorization", "Bearer $token"),
         ).andExpect {
             status().isUnauthorized
@@ -102,7 +107,7 @@ class AdminControllerTest {
         `when`(cartService.findMembersWithCartActivityInLast7Days()).thenReturn(activeMembers)
 
         mockMvc.perform(
-            get("/admin/cart-activity")
+            get("/api/protected/admin/cart-activity")
                 .header("Authorization", "Bearer $token"),
         ).andExpect {
             status().isOk
@@ -122,7 +127,7 @@ class AdminControllerTest {
         `when`(authService.findMemberByToken(token)).thenReturn(memberResponse)
 
         mockMvc.perform(
-            get("/admin/cart-activity")
+            get("/api/protected/admin/cart-activity")
                 .header("Authorization", "Bearer $token"),
         ).andExpect {
             status().isUnauthorized

@@ -6,8 +6,10 @@ import ecommerce.dto.TokenRequest
 import ecommerce.dto.TokenResponse
 import ecommerce.handler.AuthorizationException
 import ecommerce.handler.ValidationException
+import ecommerce.infrastructure.JWTProvider
 import ecommerce.model.UserRole
 import ecommerce.service.AuthService
+import org.mockito.Mockito.doNothing
 import org.mockito.Mockito.`when`
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
@@ -29,6 +31,9 @@ class AuthControllerTest {
 
     @MockitoBean
     private lateinit var authService: AuthService
+
+    @MockitoBean
+    private lateinit var jwtProvider: JWTProvider
 
     @Autowired
     private lateinit var objectMapper: ObjectMapper
@@ -91,8 +96,10 @@ class AuthControllerTest {
 
     @Test
     fun `should get member if token exists`() {
+        val token = "mocked-jwt-token"
+        doNothing().`when`(jwtProvider).validateToken("Bearer $token")
         val memberResponse = MemberResponse(1L, "user@example.com", role = "user", name = "John Doe")
-        `when`(authService.findMemberByToken("mocked-jwt-token")).thenReturn(memberResponse)
+        `when`(authService.findMemberByToken(token)).thenReturn(memberResponse)
 
         mockMvc.perform(
             get("/auth/find-member")
@@ -105,12 +112,11 @@ class AuthControllerTest {
 
     @Test
     fun `shouldn't get member if token does not exist or invalid`() {
-        `when`(authService.findMemberByToken("invalid-token")).thenThrow(
+        `when`(jwtProvider.validateToken("Bearer invalid-token")).thenThrow(
             AuthorizationException(
                 "Invalid or expired JWT token",
             ),
         )
-
         mockMvc.perform(
             get("/auth/find-member")
                 .header("Authorization", "Bearer invalid-token"),

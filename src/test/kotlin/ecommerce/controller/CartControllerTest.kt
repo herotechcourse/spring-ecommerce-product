@@ -4,11 +4,13 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import ecommerce.dto.CartItem
 import ecommerce.dto.CartRequest
 import ecommerce.dto.MemberResponse
+import ecommerce.infrastructure.JWTProvider
 import ecommerce.model.UserRole
 import ecommerce.service.AuthService
 import ecommerce.service.CartService
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.mockito.Mockito.doNothing
 import org.mockito.Mockito.verify
 import org.mockito.Mockito.`when`
 import org.springframework.beans.factory.annotation.Autowired
@@ -33,24 +35,29 @@ class CartControllerTest {
     private lateinit var cartService: CartService
 
     @MockitoBean
+    private lateinit var jwtProvider: JWTProvider
+
+    @MockitoBean
     private lateinit var authService: AuthService
 
     @Autowired
     private lateinit var objectMapper: ObjectMapper
 
     private val token = "mocked-jwt-token"
-    private val memberResponse = MemberResponse(id = 1L, email = "user@example.com", name = "John Doe", role = UserRole.USER.name)
+    private val memberResponse =
+        MemberResponse(id = 1L, email = "user@example.com", name = "John Doe", role = UserRole.USER.name)
     private val cartRequest = CartRequest(productId = 100L)
 
     @BeforeEach
     fun setup() {
+        doNothing().`when`(jwtProvider).validateToken(token)
         `when`(authService.findMemberByToken(token)).thenReturn(memberResponse)
     }
 
     @Test
     fun `should add product to cart`() {
         mockMvc.perform(
-            post("/api/cart")
+            post("/api/protected/cart")
                 .header("Authorization", "Bearer $token")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(cartRequest)),
@@ -63,7 +70,7 @@ class CartControllerTest {
     @Test
     fun `should remove product from cart`() {
         mockMvc.perform(
-            delete("/api/cart")
+            delete("/api/protected/cart")
                 .header("Authorization", "Bearer $token")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(cartRequest)),
@@ -84,7 +91,7 @@ class CartControllerTest {
         `when`(cartService.getCartItems(memberResponse.id)).thenReturn(cartItems)
 
         mockMvc.perform(
-            get("/api/cart")
+            get("/api/protected/cart")
                 .header("Authorization", "Bearer $token"),
         )
             .andExpect(status().isOk)

@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController
 import java.net.URI
 
 @RestController
-@RequestMapping("/api/cart")
+@RequestMapping("/api/protected/cart")
 class CartController(
     private val cartService: CartService,
 ) {
