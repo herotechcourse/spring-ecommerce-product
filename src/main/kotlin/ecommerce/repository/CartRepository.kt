@@ -91,7 +91,7 @@ class CartRepository(private val jdbc: JdbcTemplate) {
         return jdbc.query(sql, cartRowMapper)
     }
 
-    fun findTop5MostAddedProductsLast30Days(): List<Map<String, Any>> {
+    fun findTop5MostAddedProductsLast30Days(): List<Map<String, Any?>> {
         val sql =
             """
             SELECT 
@@ -106,12 +106,16 @@ class CartRepository(private val jdbc: JdbcTemplate) {
             LIMIT 5
             """.trimIndent()
 
-        return jdbc.query(sql) { rs, _ ->
-            mapOf(
-                "productName" to rs.getString("productName"),
-                "addedCount" to rs.getInt("addedCount"),
-                "mostRecentAdded" to rs.getTimestamp("mostRecentAdded")?.toLocalDateTime(),
-            )
+        return try {
+            jdbc.query(sql) { rs, _ ->
+                mapOf(
+                    "productName" to rs.getString("productName"),
+                    "addedCount" to rs.getInt("addedCount"),
+                    "mostRecentAdded" to rs.getTimestamp("mostRecentAdded")?.toLocalDateTime(),
+                )
+            }
+        } catch (e: Exception) {
+            emptyList()
         }
     }
 
