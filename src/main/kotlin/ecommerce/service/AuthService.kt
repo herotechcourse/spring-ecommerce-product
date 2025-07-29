@@ -13,34 +13,34 @@ import org.springframework.stereotype.Service
 
 @Service
 class AuthService(
-    private val jdbcMemberDAO: JdbcMemberDao,
+    private val jdbcMemberDao: JdbcMemberDao,
     private val jwtTokenProvider: JwtTokenProvider,
 ) {
     fun registerMember(form: RegisterForm): Member {
         checkMemberEmailExists(form.email)
         val member = Member.from(form)
-        val id = jdbcMemberDAO.insert(member)
-        return jdbcMemberDAO.findById(id)
-            ?: throw InternalServerErrorException("AuthService.register() - Member with ID $id not found")
+        val id = jdbcMemberDao.insert(member)
+        return jdbcMemberDao.findById(id)
+            ?: throw InternalServerErrorException(MESSAGE_MEMBER_NOT_FOUND)
     }
 
     fun loginMember(form: LoginForm): AuthResponse {
-        val member = jdbcMemberDAO.findByEmail(form.email) ?: throw AuthorizationException("Invalid email")
-        if (member.password != form.password) throw AuthorizationException("Invalid password")
+        val member = jdbcMemberDao.findByEmail(form.email) ?: throw AuthorizationException(MESSAGE_INVALID_EMAIL)
+        if (member.password != form.password) throw AuthorizationException(MESSAGE_INVALID_PASSWORD)
         val accessToken = jwtTokenProvider.createToken(member.email)
         return AuthResponse(accessToken)
     }
 
-    fun findMemberById(id: Long): Member? = jdbcMemberDAO.findById(id)
+    fun findMemberById(id: Long): Member? = jdbcMemberDao.findById(id)
 
-    fun findMemberByEmail(email: String): Member? = jdbcMemberDAO.findByEmail(email)
+    fun findMemberByEmail(email: String): Member? = jdbcMemberDao.findByEmail(email)
 
     fun findMemberByToken(token: String): Member {
         if (!jwtTokenProvider.validateToken(token)) {
-            throw AuthorizationException("Invalid token")
+            throw AuthorizationException(MESSAGE_INVALID_TOKEN)
         }
         val email = jwtTokenProvider.getPayload(token)
-        val member = jdbcMemberDAO.findByEmail(email) ?: throw AuthorizationException("Invalid email")
+        val member = jdbcMemberDao.findByEmail(email) ?: throw AuthorizationException(MESSAGE_INVALID_EMAIL)
         return member
     }
 
@@ -50,9 +50,16 @@ class AuthService(
     ) {
         if (originalEmail != null && email == originalEmail) {
             return
-        } else if (jdbcMemberDAO.existsByEmail(email)) {
-            val message = "Email $email already exists."
-            throw MemberEmailAlreadyExistsException(message)
+        } else if (jdbcMemberDao.existsByEmail(email)) {
+            throw MemberEmailAlreadyExistsException(MESSAGE_EMAIL_ALREADY_EXISTS)
         }
+    }
+
+    companion object {
+        const val MESSAGE_MEMBER_NOT_FOUND = "Member not found"
+        const val MESSAGE_INVALID_EMAIL = "Invalid email"
+        const val MESSAGE_INVALID_PASSWORD = "Invalid password"
+        const val MESSAGE_INVALID_TOKEN = "Invalid token"
+        const val MESSAGE_EMAIL_ALREADY_EXISTS = "Email already exists"
     }
 }

@@ -26,7 +26,11 @@ class LoginMemberArgumentResolver(
     ): Any {
         val token =
             webRequest.getHeader(HttpHeaders.AUTHORIZATION)?.removePrefix("Bearer ")
-                ?: throw AuthorizationException("Authorization failed")
+                ?: throw AuthorizationException(MESSAGE_AUTH_FAILED)
         return authService.findMemberByToken(token)
+    }
+
+    companion object {
+        const val MESSAGE_AUTH_FAILED = "Authentication failed"
     }
 }

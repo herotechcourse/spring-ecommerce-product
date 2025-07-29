@@ -41,7 +41,7 @@ class ProductController(private val productService: ProductService) {
     fun getProduct(
         @PathVariable id: Long,
     ): ResponseEntity<Product> {
-        val product = productService.findById(id) ?: throw NotFoundException("Product not found - ID: $id")
+        val product = productService.findById(id) ?: throw NotFoundException(MESSAGE_PRODUCT_NOT_FOUND)
         return ResponseEntity.ok(product)
     }
 
@@ -54,11 +54,11 @@ class ProductController(private val productService: ProductService) {
         when (affectedRows) {
             1 -> {
                 val target =
-                    productService.findById(id) ?: throw InternalServerErrorException("Product not found - ID: $id")
+                    productService.findById(id) ?: throw InternalServerErrorException(MESSAGE_PRODUCT_NOT_FOUND)
                 return ResponseEntity.ok(target)
             }
-            0 -> throw NotFoundException("Product not found - ID: $id")
-            else -> throw InternalServerErrorException("Unexpected update on Product - ID: $id")
+            0 -> throw NotFoundException(MESSAGE_PRODUCT_NOT_FOUND)
+            else -> throw InternalServerErrorException(MESSAGE_UNEXPECTED_PRODUCT_ACTION)
         }
     }
 
@@ -66,12 +66,11 @@ class ProductController(private val productService: ProductService) {
     fun deleteProduct(
         @PathVariable id: Long,
     ): ResponseEntity<Void> {
-        productService.findById(id) ?: throw NotFoundException("Product not found - ID: $id")
         val affectedRows = productService.delete(id)
         when (affectedRows) {
             1 -> return ResponseEntity.noContent().build()
             0 -> throw NotFoundException("Product not found - ID: $id")
-            else -> throw InternalServerErrorException("Unexpected delete on Product - ID: $id")
+            else -> throw InternalServerErrorException(MESSAGE_UNEXPECTED_PRODUCT_ACTION)
         }
     }
 
@@ -81,5 +80,10 @@ class ProductController(private val productService: ProductService) {
         val errorBody = mapOf("errors" to error)
         println("ProductNameAlreadyExistsException occurred: $errorBody")
         return ResponseEntity.badRequest().body(errorBody)
+    }
+
+    companion object {
+        const val MESSAGE_PRODUCT_NOT_FOUND = "Product not found"
+        const val MESSAGE_UNEXPECTED_PRODUCT_ACTION = "Unexpected product action"
     }
 }

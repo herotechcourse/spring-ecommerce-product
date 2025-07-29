@@ -14,17 +14,17 @@ import org.springframework.jdbc.core.JdbcTemplate
 class CartServiceTest {
     @Autowired private lateinit var jdbcTemplate: JdbcTemplate
 
-    @Autowired private lateinit var jdbcProductDAO: JdbcProductDao
+    @Autowired private lateinit var jdbcProductDao: JdbcProductDao
 
-    @Autowired private lateinit var jdbcCartDAO: JdbcCartDao
+    @Autowired private lateinit var jdbcCartDao: JdbcCartDao
 
     @Autowired private lateinit var cartService: CartService
 
     @BeforeEach
     fun setUp() {
-        jdbcProductDAO = JdbcProductDao(jdbcTemplate)
-        jdbcCartDAO = JdbcCartDao(jdbcTemplate)
-        cartService = CartService(jdbcCartDAO, jdbcProductDAO)
+        jdbcProductDao = JdbcProductDao(jdbcTemplate)
+        jdbcCartDao = JdbcCartDao(jdbcTemplate)
+        cartService = CartService(jdbcCartDao, jdbcProductDao)
 
         jdbcTemplate.execute("DROP TABLE product CASCADE")
         jdbcTemplate.execute(

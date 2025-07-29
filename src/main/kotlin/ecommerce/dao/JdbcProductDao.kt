@@ -48,7 +48,7 @@ class JdbcProductDao(private val db: JdbcTemplate) : ProductDao {
                 setString(3, product.imageUrl)
             }
         }, keyHolder)
-        return keyHolder.key?.toLong() ?: throw IllegalStateException("insert - Failed to retrieve ID")
+        return keyHolder.key?.toLong() ?: throw IllegalStateException(MESSAGE_INSERT_RETRIEVE_ID_FAILED)
     }
 
     override fun update(product: Product): Int {
@@ -72,5 +72,9 @@ class JdbcProductDao(private val db: JdbcTemplate) : ProductDao {
         val sql = "SELECT COUNT(*) FROM product WHERE name = ?"
         val count = db.queryForObject(sql, Long::class.java, name)
         return count != null && count > 0
+    }
+
+    companion object {
+        const val MESSAGE_INSERT_RETRIEVE_ID_FAILED = "insert - Failed to retrieve ID"
     }
 }

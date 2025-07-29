@@ -25,7 +25,7 @@ import org.springframework.jdbc.core.JdbcTemplate
 class AuthControllerTest {
     @Autowired private lateinit var jdbcTemplate: JdbcTemplate
 
-    @Autowired private lateinit var jdbcMemberDAO: JdbcMemberDao
+    @Autowired private lateinit var jdbcMemberDao: JdbcMemberDao
 
     @Autowired private lateinit var jwtTokenProvider: JwtTokenProvider
 
@@ -35,8 +35,8 @@ class AuthControllerTest {
 
     @BeforeEach
     fun setUp() {
-        jdbcMemberDAO = JdbcMemberDao(jdbcTemplate)
-        authService = AuthService(jdbcMemberDAO, jwtTokenProvider)
+        jdbcMemberDao = JdbcMemberDao(jdbcTemplate)
+        authService = AuthService(jdbcMemberDao, jwtTokenProvider)
 
         jdbcTemplate.execute("DROP TABLE member CASCADE")
         jdbcTemplate.execute(
@@ -129,7 +129,7 @@ class AuthControllerTest {
     @Test
     fun `registerMember() - should return 400 when email already exists`() {
         val targetEmail = "dan@htc.com"
-        val expected = "Email $targetEmail already exists."
+        val expected = AuthService.MESSAGE_EMAIL_ALREADY_EXISTS
         RestAssured
             .given().log().all()
             .body(Member(email = targetEmail, password = "test1234"))

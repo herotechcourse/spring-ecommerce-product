@@ -30,14 +30,14 @@ import org.springframework.jdbc.core.JdbcTemplate
 class CartControllerTest {
     @Autowired private lateinit var jdbcTemplate: JdbcTemplate
 
-    @Autowired private lateinit var jdbcMemberDAO: JdbcMemberDao
+    @Autowired private lateinit var jdbcMemberDao: JdbcMemberDao
 
     @Autowired private lateinit var jwtTokenProvider: JwtTokenProvider
     private lateinit var authService: AuthService
 
-    @Autowired private lateinit var jdbcProductDAO: JdbcProductDao
+    @Autowired private lateinit var jdbcProductDao: JdbcProductDao
 
-    @Autowired private lateinit var jdbcCartDAO: JdbcCartDao
+    @Autowired private lateinit var jdbcCartDao: JdbcCartDao
 
     @Autowired private lateinit var cartService: CartService
 
@@ -45,11 +45,11 @@ class CartControllerTest {
 
     @BeforeEach
     fun setUp() {
-        jdbcMemberDAO = JdbcMemberDao(jdbcTemplate)
-        authService = AuthService(jdbcMemberDAO, jwtTokenProvider)
-        jdbcProductDAO = JdbcProductDao(jdbcTemplate)
-        jdbcCartDAO = JdbcCartDao(jdbcTemplate)
-        cartService = CartService(jdbcCartDAO, jdbcProductDAO)
+        jdbcMemberDao = JdbcMemberDao(jdbcTemplate)
+        authService = AuthService(jdbcMemberDao, jwtTokenProvider)
+        jdbcProductDao = JdbcProductDao(jdbcTemplate)
+        jdbcCartDao = JdbcCartDao(jdbcTemplate)
+        cartService = CartService(jdbcCartDao, jdbcProductDao)
 
         jdbcTemplate.execute("DROP TABLE product CASCADE")
         jdbcTemplate.execute(
@@ -114,7 +114,7 @@ class CartControllerTest {
         val productId = PRODUCT_ID
         val quantity = 1
         val form = CartAddItemForm(productId, quantity)
-        val expected = CartController.MESSAGE_ADD_SUCCESS
+        val expected = CartService.MESSAGE_ADD_SUCCESS
         val response = controller.addToCart(form, LOGIN_MEMBER)
         assertThat(response.statusCode).isEqualTo(HttpStatus.OK)
         assertThat(response.body).isEqualTo(expected)
@@ -124,7 +124,7 @@ class CartControllerTest {
     fun `addToCart() - return 200 OK when credential is valid`() {
         val productId = PRODUCT_ID
         val quantity = 1
-        val expected = CartController.MESSAGE_ADD_SUCCESS
+        val expected = CartService.MESSAGE_ADD_SUCCESS
 
         val accessToken =
             RestAssured
@@ -224,7 +224,7 @@ class CartControllerTest {
     fun `removeFromCart() - return 200 OK when remove success`() {
         addToCart()
         val productId = PRODUCT_ID
-        val expected = CartController.MESSAGE_REMOVE_SUCCESS
+        val expected = CartService.MESSAGE_REMOVE_SUCCESS
         val response = controller.removeFromCart(productId, LOGIN_MEMBER)
         assertThat(response.statusCode).isEqualTo(HttpStatus.OK)
         assertThat(response.body).isEqualTo(expected)
@@ -242,7 +242,7 @@ class CartControllerTest {
         val productId = PRODUCT_ID
         val quantity = 10
         val form = CartUpdateQuantityForm(quantity)
-        val expected = CartController.MESSAGE_UPDATE_SUCCESS
+        val expected = CartService.MESSAGE_UPDATE_SUCCESS
         val response = controller.updateQuantity(productId, form, LOGIN_MEMBER)
         assertThat(response.statusCode).isEqualTo(HttpStatus.OK)
         assertThat(response.body).isEqualTo(expected)

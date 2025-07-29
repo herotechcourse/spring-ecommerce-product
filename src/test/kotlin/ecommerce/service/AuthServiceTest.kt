@@ -19,7 +19,7 @@ import org.springframework.jdbc.core.JdbcTemplate
 class AuthServiceTest {
     @Autowired private lateinit var jdbcTemplate: JdbcTemplate
 
-    @Autowired private lateinit var jdbcMemberDAO: JdbcMemberDao
+    @Autowired private lateinit var jdbcMemberDao: JdbcMemberDao
 
     @Autowired private lateinit var jwtTokenProvider: JwtTokenProvider
 
@@ -27,8 +27,8 @@ class AuthServiceTest {
 
     @BeforeEach
     fun setUp() {
-        jdbcMemberDAO = JdbcMemberDao(jdbcTemplate)
-        authService = AuthService(jdbcMemberDAO, jwtTokenProvider)
+        jdbcMemberDao = JdbcMemberDao(jdbcTemplate)
+        authService = AuthService(jdbcMemberDao, jwtTokenProvider)
 
         jdbcTemplate.execute("DROP TABLE member CASCADE")
         jdbcTemplate.execute(

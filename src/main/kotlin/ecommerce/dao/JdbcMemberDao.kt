@@ -30,7 +30,7 @@ class JdbcMemberDao(private val db: JdbcTemplate) : MemberDao {
                 setString(3, member.role)
             }
         }, keyHolder)
-        return keyHolder.key?.toLong() ?: throw IllegalStateException("insert - Failed to retrieve ID")
+        return keyHolder.key?.toLong() ?: throw IllegalStateException(MESSAGE_INSERT_RETRIEVE_ID_FAILED)
     }
 
     override fun findByEmail(email: String): Member? {
@@ -63,5 +63,9 @@ class JdbcMemberDao(private val db: JdbcTemplate) : MemberDao {
         val sql = "SELECT COUNT(*) FROM member WHERE email = ?"
         val count = db.queryForObject(sql, Long::class.java, email)
         return count != null && count > 0
+    }
+
+    companion object {
+        const val MESSAGE_INSERT_RETRIEVE_ID_FAILED = "insert - Failed to retrieve ID"
     }
 }

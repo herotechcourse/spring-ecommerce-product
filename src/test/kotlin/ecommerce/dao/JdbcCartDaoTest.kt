@@ -11,11 +11,11 @@ import org.springframework.jdbc.core.JdbcTemplate
 class JdbcCartDaoTest {
     @Autowired private lateinit var jdbcTemplate: JdbcTemplate
 
-    private lateinit var jdbcCartDAO: JdbcCartDao
+    private lateinit var jdbcCartDao: JdbcCartDao
 
     @BeforeEach
     fun setUp() {
-        jdbcCartDAO = JdbcCartDao(jdbcTemplate)
+        jdbcCartDao = JdbcCartDao(jdbcTemplate)
 
         jdbcTemplate.execute("DROP TABLE product CASCADE")
         jdbcTemplate.execute(
@@ -89,52 +89,52 @@ class JdbcCartDaoTest {
 
     @Test
     fun addItemToCart() {
-        val itemId = jdbcCartDAO.addItemToCart(MEMBER_ID, PRODUCT_ID)
+        val itemId = jdbcCartDao.addItemToCart(MEMBER_ID, PRODUCT_ID)
         assertThat(itemId).isNotNull()
-        val cartItems = jdbcCartDAO.getCartItemsByMemberId(MEMBER_ID)
+        val cartItems = jdbcCartDao.getCartItemsByMemberId(MEMBER_ID)
         assertThat(cartItems.first().quantity).isEqualTo(1)
     }
 
     @Test
     fun `addItemToCart() - update quantity when the product already exists in the cart`() {
         addItemToCart()
-        val itemId = jdbcCartDAO.addItemToCart(MEMBER_ID, PRODUCT_ID)
+        val itemId = jdbcCartDao.addItemToCart(MEMBER_ID, PRODUCT_ID)
         assertThat(itemId).isNotNull()
-        val cartItems = jdbcCartDAO.getCartItemsByMemberId(MEMBER_ID)
+        val cartItems = jdbcCartDao.getCartItemsByMemberId(MEMBER_ID)
         assertThat(cartItems.first().quantity).isEqualTo(2)
     }
 
     @Test
     fun getCartItemsByMemberId() {
         addItemToCart()
-        val cartItems = jdbcCartDAO.getCartItemsByMemberId(MEMBER_ID)
+        val cartItems = jdbcCartDao.getCartItemsByMemberId(MEMBER_ID)
         assertThat(cartItems).hasSize(1)
     }
 
     @Test
     fun removeItemFromCart() {
         addItemToCart()
-        assertThat(jdbcCartDAO.removeItemFromCart(MEMBER_ID, PRODUCT_ID)).isEqualTo(1)
-        assertThat(jdbcCartDAO.getCartItemsByMemberId(MEMBER_ID)).hasSize(0)
+        assertThat(jdbcCartDao.removeItemFromCart(MEMBER_ID, PRODUCT_ID)).isEqualTo(1)
+        assertThat(jdbcCartDao.getCartItemsByMemberId(MEMBER_ID)).hasSize(0)
     }
 
     @Test
     fun updateItemQuantityInCart() {
         addItemToCart()
-        assertThat(jdbcCartDAO.updateItemQuantityInCart(MEMBER_ID, PRODUCT_ID, QUANTITY)).isEqualTo(1)
-        val cartItems = jdbcCartDAO.getCartItemsByMemberId(MEMBER_ID)
+        assertThat(jdbcCartDao.updateItemQuantityInCart(MEMBER_ID, PRODUCT_ID, QUANTITY)).isEqualTo(1)
+        val cartItems = jdbcCartDao.getCartItemsByMemberId(MEMBER_ID)
         assertThat(cartItems.first().quantity).isEqualTo(QUANTITY)
     }
 
     @Test
     fun getTop5AddedProductsInLast30Days() {
-        val stats = jdbcCartDAO.getTop5AddedProductsInLast30Days()
+        val stats = jdbcCartDao.getTop5AddedProductsInLast30Days()
         assertThat(stats).hasSize(5)
     }
 
     @Test
     fun getActiveMembersInLast7Days() {
-        val stats = jdbcCartDAO.getActiveMembersInLast7Days()
+        val stats = jdbcCartDao.getActiveMembersInLast7Days()
         assertThat(stats).hasSize(3)
     }
 

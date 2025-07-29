@@ -12,11 +12,11 @@ import org.springframework.jdbc.core.JdbcTemplate
 class JdbcMemberDaoTest {
     @Autowired private lateinit var jdbcTemplate: JdbcTemplate
 
-    private lateinit var jdbcMemberDAO: JdbcMemberDao
+    private lateinit var jdbcMemberDao: JdbcMemberDao
 
     @BeforeEach
     fun setUp() {
-        jdbcMemberDAO = JdbcMemberDao(jdbcTemplate)
+        jdbcMemberDao = JdbcMemberDao(jdbcTemplate)
 
         jdbcTemplate.execute("DROP TABLE member CASCADE")
         jdbcTemplate.execute(
@@ -41,8 +41,8 @@ class JdbcMemberDaoTest {
     @Test
     fun insert() {
         val member = Member(email = "test@test.com", password = "test1234")
-        val id = jdbcMemberDAO.insert(member)
-        val target = jdbcMemberDAO.findById(id)
+        val id = jdbcMemberDao.insert(member)
+        val target = jdbcMemberDao.findById(id)
         assertThat(target?.email).isEqualTo(member.email)
         assertThat(target?.password).isEqualTo(member.password)
     }
@@ -50,7 +50,7 @@ class JdbcMemberDaoTest {
     @Test
     fun findByEmail() {
         val email = "san@htc.com"
-        val member = jdbcMemberDAO.findByEmail(email)
+        val member = jdbcMemberDao.findByEmail(email)
         val expected = 1L
         assertThat(member?.id).isEqualTo(expected)
     }
@@ -58,7 +58,7 @@ class JdbcMemberDaoTest {
     @Test
     fun findById() {
         val id = 1L
-        val member = jdbcMemberDAO.findById(id)
+        val member = jdbcMemberDao.findById(id)
         val expected = "san@htc.com"
         assertThat(member?.email).isEqualTo(expected)
     }
@@ -66,14 +66,14 @@ class JdbcMemberDaoTest {
     @Test
     fun `existsByEmail() - return false if email does not exist`() {
         val target = "test@test.com"
-        val actual = jdbcMemberDAO.existsByEmail(target)
+        val actual = jdbcMemberDao.existsByEmail(target)
         assertThat(actual).isFalse
     }
 
     @Test
     fun `existsByEmail() - return true if email exists`() {
         val target = "san@htc.com"
-        val actual = jdbcMemberDAO.existsByEmail(target)
+        val actual = jdbcMemberDao.existsByEmail(target)
         assertThat(actual).isTrue
     }
 }

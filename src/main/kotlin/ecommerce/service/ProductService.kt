@@ -3,6 +3,7 @@ package ecommerce.service
 import ecommerce.dao.JdbcProductDao
 import ecommerce.dto.ProductForm
 import ecommerce.exception.InternalServerErrorException
+import ecommerce.exception.NotFoundException
 import ecommerce.exception.ProductNameAlreadyExistsException
 import ecommerce.model.Product
 import org.springframework.stereotype.Service
@@ -36,6 +37,7 @@ class ProductService(private val jdbcProductDao: JdbcProductDao) {
     }
 
     fun delete(id: Long): Int {
+        findById(id) ?: throw NotFoundException("Product not found - ID: $id")
         val numberOfAffectedRow = jdbcProductDao.delete(id)
         return numberOfAffectedRow
     }

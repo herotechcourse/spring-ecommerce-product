@@ -3,7 +3,6 @@ package ecommerce.controller.api
 import ecommerce.dto.CartAddItemForm
 import ecommerce.dto.CartUpdateQuantityForm
 import ecommerce.exception.InternalServerErrorException
-import ecommerce.exception.NotFoundException
 import ecommerce.model.CartItem
 import ecommerce.model.Member
 import ecommerce.service.CartService
@@ -28,7 +27,7 @@ class CartController(
     fun viewCart(
         @LoginMember member: Member,
     ): ResponseEntity<List<CartItem>> {
-        val memberId = member.id ?: throw InternalServerErrorException("auth failed")
+        val memberId = member.id ?: throw InternalServerErrorException(MESSAGE_AUTH_FAILED)
         val cartItems = cartService.getCart(memberId)
         return ResponseEntity.ok(cartItems)
     }
@@ -38,23 +37,8 @@ class CartController(
         @RequestBody @Valid cartForm: CartAddItemForm,
         @LoginMember member: Member,
     ): ResponseEntity<String> {
-        val memberId = member.id ?: throw InternalServerErrorException("auth failed")
-        cartService.addToCart(memberId, cartForm.productId, cartForm.quantity)
-        return ResponseEntity.ok(MESSAGE_ADD_SUCCESS)
-    }
-
-    @DeleteMapping("/{productId}")
-    fun removeFromCart(
-        @PathVariable productId: Long,
-        @LoginMember member: Member,
-    ): ResponseEntity<String> {
-        val memberId = member.id ?: throw InternalServerErrorException("auth failed")
-        val affectedRows = cartService.removeFromCart(memberId, productId)
-        when (affectedRows) {
-            1 -> return ResponseEntity.ok().body(MESSAGE_REMOVE_SUCCESS)
-            0 -> throw NotFoundException("Product not found in the cart - Product ID: $productId")
-            else -> throw InternalServerErrorException("Unexpected delete on item in cart - Product ID: $productId")
-        }
+        val memberId = member.id ?: throw InternalServerErrorException(MESSAGE_AUTH_FAILED)
+        return cartService.addToCart(memberId, cartForm.productId, cartForm.quantity)
     }
 
     @PutMapping("/{productId}")
@@ -63,18 +47,20 @@ class CartController(
         @RequestBody @Valid cartForm: CartUpdateQuantityForm,
         @LoginMember member: Member,
     ): ResponseEntity<String> {
-        val memberId = member.id ?: throw InternalServerErrorException("auth failed")
-        val affectedRows = cartService.updateQuantity(memberId, productId, cartForm.quantity)
-        when (affectedRows) {
-            1 -> return ResponseEntity.ok().body(MESSAGE_UPDATE_SUCCESS)
-            0 -> throw NotFoundException("Product not found in the cart - Product ID: $productId")
-            else -> throw InternalServerErrorException("Unexpected update on item in cart - Product ID: $productId")
-        }
+        val memberId = member.id ?: throw InternalServerErrorException(MESSAGE_AUTH_FAILED)
+        return cartService.updateQuantity(memberId, productId, cartForm.quantity)
+    }
+
+    @DeleteMapping("/{productId}")
+    fun removeFromCart(
+        @PathVariable productId: Long,
+        @LoginMember member: Member,
+    ): ResponseEntity<String> {
+        val memberId = member.id ?: throw InternalServerErrorException(MESSAGE_AUTH_FAILED)
+        return cartService.removeFromCart(memberId, productId)
     }
 
     companion object {
-        const val MESSAGE_ADD_SUCCESS = "Item added to cart"
-        const val MESSAGE_REMOVE_SUCCESS = "Item removed from cart"
-        const val MESSAGE_UPDATE_SUCCESS = "Item updated in cart"
+        const val MESSAGE_AUTH_FAILED = "auth failed"
     }
 }

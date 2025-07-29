@@ -52,7 +52,7 @@ class JdbcCartDao(private val db: JdbcTemplate) : CartDao {
             },
             keyHolder,
         )
-        return keyHolder.key?.toLong() ?: throw IllegalStateException("insert - Failed to retrieve ID")
+        return keyHolder.key?.toLong() ?: throw IllegalStateException(MESSAGE_INSERT_RETRIEVE_ID_FAILED)
     }
 
     private fun addItemIfNotExistInCart(
@@ -79,7 +79,7 @@ class JdbcCartDao(private val db: JdbcTemplate) : CartDao {
             memberId,
             productId,
         )
-        return keyHolder.key?.toLong() ?: throw IllegalStateException("insert - Failed to retrieve ID")
+        return keyHolder.key?.toLong() ?: throw IllegalStateException(MESSAGE_INSERT_RETRIEVE_ID_FAILED)
     }
 
     override fun getCartItemsByMemberId(memberId: Long): List<CartItem> {
@@ -152,5 +152,9 @@ class JdbcCartDao(private val db: JdbcTemplate) : CartDao {
                 email = rs.getString("email"),
             )
         }
+    }
+
+    companion object {
+        const val MESSAGE_INSERT_RETRIEVE_ID_FAILED = "insert - Failed to retrieve ID"
     }
 }
