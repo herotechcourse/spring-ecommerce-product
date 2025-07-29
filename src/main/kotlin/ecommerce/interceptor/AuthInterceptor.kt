@@ -76,7 +76,8 @@ class AuthInterceptor(private val tokenService: TokenService) : HandlerIntercept
     }
 
     private fun requiresAdminAccess(request: HttpServletRequest): Boolean {
-        return request.requestURI.startsWith(ADMIN_PATH_PREFIX)
+        val uri = request.requestURI
+        return uri == "/admin" || uri.startsWith(ADMIN_PATH_PREFIX)
     }
 
     private fun hasAdminRole(claims: io.jsonwebtoken.Claims): Boolean {

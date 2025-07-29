@@ -133,4 +133,15 @@ class MemberControllerIntegrationTest {
             status { isUnauthorized() }
         }
     }
+
+    @Test
+    fun `should return 403 - USER role cannot access admin endpoint`() {
+        val testMember = Member(1L, "user@gmail.com", "pw1234", "user", "USER")
+        val validToken = tokenService.generateToken(testMember)
+        mockMvc.get("/admin") {
+            header("Authorization", "Bearer $validToken")
+        }.andExpect {
+            status { isForbidden() }
+        }
+    }
 }

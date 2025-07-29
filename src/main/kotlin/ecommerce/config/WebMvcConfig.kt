@@ -10,6 +10,7 @@ class WebMvcConfig(private val authInterceptor: AuthInterceptor) : WebMvcConfigu
     override fun addInterceptors(registry: InterceptorRegistry) {
         registry.addInterceptor(authInterceptor)
             .addPathPatterns("/api/cart/**")
+            .addPathPatterns("/admin")
             .addPathPatterns("/admin/**")
             .excludePathPatterns("/api/members/register")
             .excludePathPatterns("/api/members/login")
