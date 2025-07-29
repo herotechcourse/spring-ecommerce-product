@@ -119,7 +119,7 @@ class CartRepository(private val jdbc: JdbcTemplate) {
         }
     }
 
-    fun findMembersActiveInLast7Days(): List<Map<String, Any>> {
+    fun findMembersActiveInLast7Days(): List<Map<String, Any?>> {
         val sql =
             """
             SELECT DISTINCT 
