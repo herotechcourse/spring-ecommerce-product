@@ -23,30 +23,36 @@ class ProductService(
             throw DuplicateProductNameException()
         }
 
-        val product = Product(
-            id = 0L,
-            name = request.name,
-            price = request.price,
-            imageUrl = request.imageUrl
-        )
+        val product =
+            Product(
+                id = 0L,
+                name = request.name,
+                price = request.price,
+                imageUrl = request.imageUrl,
+            )
 
         productRepository.createProduct(product)
         return product
     }
 
-    fun update(id: Long, request: ProductRequest): Product {
-        val existingProduct = productRepository.findById(id)
-            ?: throw NoSuchElementException("Product not found")
+    fun update(
+        id: Long,
+        request: ProductRequest,
+    ): Product {
+        val existingProduct =
+            productRepository.findById(id)
+                ?: throw NoSuchElementException("Product not found")
 
         if (productRepository.existsByNameExcludingId(request.name, id)) {
             throw DuplicateProductNameException()
         }
 
-        val updatedProduct = existingProduct.copy(
-            name = request.name,
-            price = request.price,
-            imageUrl = request.imageUrl,
-        )
+        val updatedProduct =
+            existingProduct.copy(
+                name = request.name,
+                price = request.price,
+                imageUrl = request.imageUrl,
+            )
 
         productRepository.updateProduct(updatedProduct)
         return updatedProduct

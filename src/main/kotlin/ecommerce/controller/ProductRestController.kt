@@ -25,14 +25,19 @@ class ProductRestController(
     }
 
     @GetMapping("/{id}")
-    fun getById(@PathVariable id: Long): ResponseEntity<Product> {
-        val product = productService.getById(id)
-            ?: return ResponseEntity.notFound().build()
+    fun getById(
+        @PathVariable id: Long,
+    ): ResponseEntity<Product> {
+        val product =
+            productService.getById(id)
+                ?: return ResponseEntity.notFound().build()
         return ResponseEntity.ok(product)
     }
 
     @PostMapping
-    fun create(@RequestBody @Valid request: ProductRequest): ResponseEntity<Product> {
+    fun create(
+        @RequestBody @Valid request: ProductRequest,
+    ): ResponseEntity<Product> {
         val createdProduct = productService.create(request)
         return ResponseEntity.ok(createdProduct)
     }
@@ -47,7 +52,9 @@ class ProductRestController(
     }
 
     @DeleteMapping("/{id}")
-    fun delete(@PathVariable id: Long): ResponseEntity<Unit> {
+    fun delete(
+        @PathVariable id: Long,
+    ): ResponseEntity<Unit> {
         productService.delete(id)
         return ResponseEntity.ok().build()
     }

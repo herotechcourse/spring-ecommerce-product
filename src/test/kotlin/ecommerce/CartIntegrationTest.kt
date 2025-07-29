@@ -108,7 +108,7 @@ class CartIntegrationTest {
 
     @Test
     fun `user can add, get, and remove product in cart`() {
-        val cartRequest = CartRequest(productId = product.id)
+        val cartRequest = CartRequest(productId = product.id ?: throw IllegalStateException("Product not yet persisted"))
 
         // Add to cart
         RestAssured.given()
@@ -131,7 +131,8 @@ class CartIntegrationTest {
                 .getList("", Map::class.java)
 
         assertThat(cartItems).hasSize(1)
-        assertThat(cartItems[0]["productId"]).isEqualTo(product.id.toInt())
+        val expectedProductId = requireNotNull(product.id).toInt()
+        assertThat(cartItems[0]["productId"]).isEqualTo(expectedProductId)
 
         // Remove from cart
         RestAssured.given()

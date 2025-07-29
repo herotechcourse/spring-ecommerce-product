@@ -5,7 +5,7 @@ import ecommerce.model.Product
 
 fun ProductRequest.toEntity(): Product {
     return Product(
-        id = 0,
+        id = null,
         name = this.name,
         price = this.price,
         imageUrl = this.imageUrl,
