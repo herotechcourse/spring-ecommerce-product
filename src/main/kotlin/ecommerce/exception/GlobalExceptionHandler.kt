@@ -35,6 +35,16 @@ class GlobalExceptionHandler {
             )
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response)
     }
+
+    @ExceptionHandler(DuplicateProductNameException::class)
+    fun handleDuplicateProductName(ex: DuplicateProductNameException): ResponseEntity<ErrorResponse> {
+        val error = ErrorResponse(
+            message = "Validation failed",
+            errors = listOf(FieldError(ex.field, ex.message ?: "Invalid value")),
+        )
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error)
+    }
+
 }
 
 data class ErrorResponse(
