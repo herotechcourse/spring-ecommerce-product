@@ -28,3 +28,7 @@ CREATE TABLE cart(
     FOREIGN KEY (product_id) REFERENCES products(id),
     UNIQUE(member_id, product_id)
 );
+
+CREATE INDEX idx_cart_added_at ON cart(added_at);
+CREATE INDEX idx_cart_product_added ON cart(product_id, added_at);
+CREATE INDEX idx_cart_member_added ON cart(member_id, added_at);
