@@ -2,6 +2,7 @@ package ecommerce.advice
 
 import ecommerce.exception.ErrorResponse
 import ecommerce.exception.NotFoundException
+import ecommerce.exception.ProductValidationException
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.ResponseStatus
@@ -15,6 +16,16 @@ class GlobalControllerAdvice {
         return ErrorResponse(
             error = "NOT_FOUND",
             message = e.message ?: "Resource not found",
+        )
+    }
+
+    @ExceptionHandler(ProductValidationException::class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    fun handleProductValidationException(e: ProductValidationException): ErrorResponse {
+        return ErrorResponse(
+            error = "VALIDATION_ERROR",
+            message = e.message ?: "Validation failed",
+            fieldErrors = null
         )
     }
 }
