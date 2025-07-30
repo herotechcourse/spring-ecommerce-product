@@ -1,7 +1,9 @@
-package ecommerce.service
+package ecommerce.config
 
 import ecommerce.dto.annotation.LoginMember
 import ecommerce.exception.UnauthorizedException
+import ecommerce.service.AuthService
+import ecommerce.sql.AuthConstsSQL
 import org.springframework.core.MethodParameter
 import org.springframework.stereotype.Component
 import org.springframework.web.bind.support.WebDataBinderFactory
@@ -29,10 +31,14 @@ class LoginMemberArgumentResolver(
 
     private fun extractToken(webRequest: NativeWebRequest): String {
         val authHeader =
-            webRequest.getHeader("Authorization")
+            webRequest.getHeader(AuthConstsSQL.HEADER_AUTHORIZATION)
                 ?: throw UnauthorizedException("Authorization header is missing")
 
-        return authHeader.removePrefix("Bearer ").trim()
+        if (authHeader.contains(AuthConstsSQL.HEADER_PREFIX)) {
+            throw UnauthorizedException("Authorization prefix is missing")
+        }
+
+        return authHeader.removePrefix(AuthConstsSQL.HEADER_PREFIX).trim()
             .takeIf { it.isNotEmpty() }
             ?: throw UnauthorizedException("Bearer token is missing")
     }

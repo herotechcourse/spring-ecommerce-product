@@ -1,58 +1,53 @@
 # spring-ecommerce-product
 ## refactor
-### 1. Package Structure
-- [ ] **Move `LoginMemberArgumentResolver`**
-  - **Current:** `service` package
-  - **Suggested:** A package similar to `webconfig` for better cohesion.
+
+### 1. LoginMemberArgumentResolver
+- [ ] **Explain decision:** Why ArgumentResolver (not Interceptor)?
+- [x] Move a package similar to `webconfig` for better cohesion.
   ```kotlin
   @Component
   class LoginMemberArgumentResolver( ... )
   ```
-- [ ] **Explain decision:** Why ArgumentResolver (not Interceptor)?
-
-### 2. Token Handling
-- [ ] **Define constants for magic strings**
+- [x] Define constants for magic strings 
+- [x] Ensure token extraction fails if `"Bearer "` is missing.
   ```kotlin
   return authHeader.removePrefix("Bearer ").trim()
   ```
-- [ ] **Add Bearer validation**
-  - [ ] Ensure token extraction fails if `"Bearer "` is missing.
 
-### 3. Repository Queries
+### 2. Repository Queries
 - [ ] **Change COUNT query to EXISTS**
   - [ ] `MemberRepository.existsByEmail()`
   - [ ] `CartRepository.existsByMemberId()`
   - [ ] `ProductRepository.existsById()`
 - [ ] **Learn differences between COUNT vs EXISTS**
 
-### 4. DTO Usage in Repository Layer
+### 3. DTO Usage in Repository Layer
 - [ ] **Prevent DTOs from reaching Repository**,
   - [ ] `CartRepository.insert(...)`
   - [ ] `MemberRepository.prepareInsertStatement(...)`
   - [ ] `ProductRepository.insertWithKeyholder(...)`
   - [ ] Consider mapping DTO → Entity
 
-### 5. Method Relocation
+### 4. Method Relocation
 - [ ] Move `matches()` method in `MemberRepository` to a better place
 
-### 6. Admin Controller
+### 5. Admin Controller
 - [x] Remove unnecessary `ResponseEntity` wrapping
 ```kotlin
 @GetMapping("/stats/products/top")
 fun getTopProducts(): List<ProductStatsResponse>
 ```
 
-### 7. CartController REST Naming
+### 6. CartController REST Naming
 - [x] Change endpoint from `/api/cart/items/{productId}` → `/api/cart-items/{productId}`
-- [ ] Need test
 
-### 8. ProductController Refactor
+### 7. ProductController Refactor
 - [ ] Extract logic to a Service layer
 
-### 9. CartService Method Naming
+### 8. CartService Method Naming
 - [x] Rename `upsertCartItems` → `insertCartItem`
 
-### 10. JWT and AuthService
+### 9. JWT and AuthService
 - [x] Rename `JwtTokenProvider` → `JwtProvider`
 - [x] Inline simple methods
 ```kotlin
@@ -66,9 +61,8 @@ class JwtProperties(
     val expireLength: Long
 )
 ```
-- [ ] Add JWT-related tests
 
-### 11. SQL and Enum Usage
+### 10. SQL and Enum Usage
 - [x] Remove unused constants in `StateConstsSQL.kt`
 - [x] Update hardcoded sort strings to use `SortOption` enum
 ```kotlin
@@ -79,10 +73,10 @@ StatsQueryParams(
 )
 ```
 
-### 12. Sensitive Config
+### 11. Sensitive Config
 - [ ] Properly handle secrets (`secret-key`) in `application.yml`
 
-### 13. Tests and Annotations
+### 12. Tests and Annotations
 - [ ] Avoid `@DirtiesContext`
   - [x] CartServiceTest
 - [ ] Add **JWT-related tests** (critical logic).
@@ -90,8 +84,7 @@ StatsQueryParams(
 - [ ] Review `@AutoConfigureTestDatabase` and `@ActiveProfiles("test")`
 - [ ] Create separate test profile
 
-### 14. General
-- [ ] Add tests for JWT, Auth flows
+### 13. General
 - [x] Remove unused SQL template constants
 ---
 
