@@ -1,6 +1,7 @@
 package ecommerce.controller
 
 import ecommerce.annotation.Admin
+import ecommerce.dto.ProductRequest
 import ecommerce.dto.RegisteredMember
 import ecommerce.model.Product
 import ecommerce.service.ProductService
@@ -19,7 +20,7 @@ import java.net.URI
 class ProductController(private val productService: ProductService) {
     @PostMapping("/api/products")
     fun create(
-        @RequestBody @Valid product: Product,
+        @RequestBody @Valid product: ProductRequest,
         @Admin admin: RegisteredMember,
     ): ResponseEntity<Unit> {
         val id = productService.create(product)
@@ -36,7 +37,7 @@ class ProductController(private val productService: ProductService) {
 
     @PutMapping("/api/products/{id}")
     fun upsert(
-        @RequestBody @Valid newProduct: Product,
+        @RequestBody @Valid newProduct: ProductRequest,
         @PathVariable id: Long,
         @Admin admin: RegisteredMember,
     ): ResponseEntity<Unit> {

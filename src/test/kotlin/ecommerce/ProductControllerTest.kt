@@ -1,7 +1,7 @@
 package ecommerce
 
+import ecommerce.dto.ProductRequest
 import ecommerce.dto.TokenRequest
-import ecommerce.model.Product
 import ecommerce.repository.ProductRepository
 import io.restassured.RestAssured
 import io.restassured.http.ContentType
@@ -63,7 +63,7 @@ class ProductControllerTest {
             RestAssured.given().log().all()
                 .header("Authorization", "Bearer $adminToken")
                 .body(
-                    Product(
+                    ProductRequest(
                         name = "iced latte",
                         price = 4.5,
                         imageUrl = "https://cola.jpg",
@@ -87,7 +87,7 @@ class ProductControllerTest {
             RestAssured
                 .given().log().all()
                 .header("Authorization", "Bearer $adminToken")
-                .body(Product(name = "fanta", price = 5.6, imageUrl = "https://fanta.jpg"))
+                .body(ProductRequest(name = "fanta", price = 5.6, imageUrl = "https://fanta.jpg"))
                 .contentType(ContentType.JSON).`when`().put("/api/products/1")
                 .then().log().all()
                 .extract()

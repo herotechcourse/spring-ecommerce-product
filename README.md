@@ -313,7 +313,7 @@ of Long types Value Class types like ProductId, or should it take a CartRequestD
 - [ ] more OOP style inside the service e.g. -> retrieve cart -> retrieve product -> create cart item -> add item to cart -> return response
 - [ ] turn data class into simple class if you implement your own hashcode() and equals() implementations
 - [ ] Member should have name attribute
-- [ ] add Service layer for Product
+- [x] add Service layer for Product
 - [x] add /api before the /products path
 - [x] only allow admin to manipulate products
 

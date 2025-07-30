@@ -1,7 +1,7 @@
 package ecommerce
 
+import ecommerce.dto.ProductRequest
 import ecommerce.dto.TokenRequest
-import ecommerce.model.Product
 import io.restassured.RestAssured
 import io.restassured.http.ContentType
 import io.restassured.response.ExtractableResponse
@@ -44,7 +44,7 @@ class ProductControllerExceptionTest {
         return token
     }
 
-    private fun makeRequestToProducts(product: Product): ExtractableResponse<Response> =
+    private fun makeRequestToProducts(product: ProductRequest): ExtractableResponse<Response> =
         RestAssured
             .given().log().all()
             .header("Authorization", "Bearer $adminToken")
@@ -57,7 +57,7 @@ class ProductControllerExceptionTest {
     fun handleExceptionUsingExceptionHandler() {
         val response =
             makeRequestToProducts(
-                Product(
+                ProductRequest(
                     name = "colaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
                     price = 0.0,
                     imageUrl = "abchttps://cola.jpg",
@@ -70,8 +70,8 @@ class ProductControllerExceptionTest {
 
     @Test
     fun sameNameException() {
-        val response = makeRequestToProducts(Product(name = "cola", price = 4.5, imageUrl = "https://cola.jpg"))
-        val sameNameResponse = makeRequestToProducts(Product(name = "cola", price = 4.5, imageUrl = "https://cola.jpg"))
+        val response = makeRequestToProducts(ProductRequest(name = "cola", price = 4.5, imageUrl = "https://cola.jpg"))
+        val sameNameResponse = makeRequestToProducts(ProductRequest(name = "cola", price = 4.5, imageUrl = "https://cola.jpg"))
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value())
         assertThat(sameNameResponse.statusCode()).isEqualTo(HttpStatus.CONFLICT.value())

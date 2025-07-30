@@ -1,5 +1,6 @@
 package ecommerce.service
 
+import ecommerce.dto.ProductRequest
 import ecommerce.exception.ConflictException
 import ecommerce.exception.NotFoundException
 import ecommerce.model.Product
@@ -8,11 +9,11 @@ import org.springframework.stereotype.Service
 
 @Service
 class ProductService(private val productRepository: ProductRepository) {
-    fun create(product: Product): Long {
-        if (productRepository.existsByName(product.name)) {
-            throw ConflictException("Product with name ${product.name} already exists")
+    fun create(productRequest: ProductRequest): Long {
+        if (productRepository.existsByName(productRequest.name)) {
+            throw ConflictException("Product with name ${productRequest.name} already exists")
         }
-        val id = productRepository.insertWithKeyHolder(product)
+        val id = productRepository.insertWithKeyHolder(productRequest.toProduct())
         return id
     }
 
@@ -22,14 +23,14 @@ class ProductService(private val productRepository: ProductRepository) {
     }
 
     fun upsert(
-        newProduct: Product,
+        updateRequest: ProductRequest,
         id: Long,
     ): Boolean {
         if (!productRepository.existsById(id)) {
-            create(newProduct)
+            create(updateRequest)
             return true
         }
-        if (!productRepository.update(newProduct, id)) {
+        if (!productRepository.update(updateRequest.toProduct(), id)) {
             throw NotFoundException()
         }
         return false
