@@ -53,11 +53,11 @@
 - [x] user can only access and modify their own cart
 
 ## Cart Statistics
-- [] Retrieve top 5 products added to any cart
+- [x] Retrieve top 5 products added to any cart
   - ranking based on count of additions
   - tie breaking - most recent add listed first
   - response includes - product name, total times added, most recent added time
-- [] Recently Active Members 
+- [x] Recently Active Members 
   - List of members who added at least one product in last 7 days
   - response includes - member ID, name, email
 - [] Role based access control(Admin only)
