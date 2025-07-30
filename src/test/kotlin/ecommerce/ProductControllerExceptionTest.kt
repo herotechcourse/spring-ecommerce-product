@@ -1,24 +1,56 @@
 package ecommerce
 
+import ecommerce.dto.TokenRequest
 import ecommerce.model.Product
 import io.restassured.RestAssured
 import io.restassured.http.ContentType
 import io.restassured.response.ExtractableResponse
 import io.restassured.response.Response
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.HttpStatus
+import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.test.annotation.DirtiesContext
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 class ProductControllerExceptionTest {
+    @Autowired
+    private lateinit var jdbcTemplate: JdbcTemplate
+
+    private lateinit var adminToken: String
+
+    @BeforeEach
+    fun setUp() {
+        jdbcTemplate.execute("DROP TABLE IF EXISTS cart_items")
+        jdbcTemplate.execute("DROP TABLE IF EXISTS carts")
+        jdbcTemplate.execute("DROP TABLE products IF EXISTS")
+        jdbcTemplate.execute(
+            "CREATE TABLE products(" + "id SERIAL, name VARCHAR(100), price DECIMAL(10,2), image_url VARCHAR(500))",
+        )
+        jdbcTemplate.update("INSERT INTO members(email, password, role) VALUES (?,?,?)", "admin@email.com", "AdminPassword", "ADMIN")
+        adminToken = loginAsAdmin()
+    }
+
+    private fun loginAsAdmin(): String {
+        val loginRequest = TokenRequest("admin@email.com", "AdminPassword")
+        val loginResponse =
+            RestAssured.given().log().all().body(loginRequest).contentType(ContentType.JSON).`when`()
+                .post("/api/members/login").then().log().all().extract()
+        val token = loginResponse.body().jsonPath().getString("token")
+        return token
+    }
+
     private fun makeRequestToProducts(product: Product): ExtractableResponse<Response> =
         RestAssured
-            .given().log().all().body(product)
+            .given().log().all()
+            .header("Authorization", "Bearer $adminToken")
+            .body(product)
             .contentType(ContentType.JSON)
-            .`when`().post("/products")
+            .`when`().post("/api/products")
             .then().log().all().extract()
 
     @Test

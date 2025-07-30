@@ -1,5 +1,7 @@
 package ecommerce.controller
 
+import ecommerce.annotation.Admin
+import ecommerce.dto.RegisteredMember
 import ecommerce.exception.ConflictException
 import ecommerce.model.Product
 import ecommerce.repository.ProductRepository
@@ -16,30 +18,34 @@ import java.net.URI
 
 @RestController
 class ProductController(private val productRepository: ProductRepository) {
-    @PostMapping("/products")
+    @PostMapping("/api/products")
     fun create(
         @RequestBody @Valid product: Product,
+        @Admin admin: RegisteredMember,
     ): ResponseEntity<Unit> {
         if (productRepository.existsByName(product.name)) {
             throw ConflictException("Product with name ${product.name} already exists")
         }
         val id = productRepository.insertWithKeyHolder(product)
-        return ResponseEntity.created(URI.create("/products/$id")).build()
+        return ResponseEntity.created(URI.create("/api/products/$id")).build()
     }
 
-    @GetMapping("/products")
-    fun read(): @Valid ResponseEntity<List<Product>> {
+    @GetMapping("/api/products")
+    fun read(
+        @Admin admin: RegisteredMember,
+    ): ResponseEntity<List<Product>> {
         val products = productRepository.findAllProducts()
         return ResponseEntity.ok().body(products)
     }
 
-    @PutMapping("/products/{id}")
+    @PutMapping("/api/products/{id}")
     fun update(
         @RequestBody @Valid newProduct: Product,
         @PathVariable id: Long,
+        @Admin admin: RegisteredMember,
     ): ResponseEntity<Unit> {
         if (!productRepository.existsById(id)) {
-            return create(newProduct)
+            return create(newProduct, admin)
         }
         if (!productRepository.update(newProduct, id)) {
             return ResponseEntity.notFound().build()
@@ -47,9 +53,10 @@ class ProductController(private val productRepository: ProductRepository) {
         return ResponseEntity.ok().build()
     }
 
-    @DeleteMapping("/products/{id}")
+    @DeleteMapping("/api/products/{id}")
     fun delete(
         @PathVariable id: Long,
+        @Admin admin: RegisteredMember,
     ): ResponseEntity<Unit> {
         if (!productRepository.delete(id)) {
             return ResponseEntity.notFound().build()

@@ -1,5 +1,6 @@
 package ecommerce
 
+import ecommerce.dto.TokenRequest
 import ecommerce.model.Product
 import ecommerce.repository.ProductRepository
 import io.restassured.RestAssured
@@ -22,6 +23,8 @@ class ProductControllerTest {
     @Autowired
     private lateinit var jdbcTemplate: JdbcTemplate
 
+    private lateinit var adminToken: String
+
     @BeforeEach
     fun setUp() {
         productRepository = ProductRepository(jdbcTemplate)
@@ -41,22 +44,35 @@ class ProductControllerTest {
                 "tea 4 http//tea",
             ).map { name -> name.split(" ").toTypedArray() }.toList()
         jdbcTemplate.batchUpdate("INSERT INTO products(name, price, image_url) VALUES (?,?,?)", splitUpAttributes)
+        jdbcTemplate.update("INSERT INTO members(email, password, role) VALUES (?,?,?)", "admin@email.com", "AdminPassword", "ADMIN")
+        adminToken = loginAsAdmin()
+    }
+
+    private fun loginAsAdmin(): String {
+        val loginRequest = TokenRequest("admin@email.com", "AdminPassword")
+        val loginResponse =
+            RestAssured.given().log().all().body(loginRequest).contentType(ContentType.JSON).`when`()
+                .post("/api/members/login").then().log().all().extract()
+        val token = loginResponse.body().jsonPath().getString("token")
+        return token
     }
 
     @Test
     fun create() {
         val response =
-            RestAssured.given().log().all().body(
-                Product(
-                    name = "iced latte",
-                    price = 4.5,
-                    imageUrl = "https://cola.jpg",
-                ),
-            )
-                .contentType(ContentType.JSON).`when`().post("/products").then().log().all().extract()
+            RestAssured.given().log().all()
+                .header("Authorization", "Bearer $adminToken")
+                .body(
+                    Product(
+                        name = "iced latte",
+                        price = 4.5,
+                        imageUrl = "https://cola.jpg",
+                    ),
+                )
+                .contentType(ContentType.JSON).`when`().post("/api/products").then().log().all().extract()
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value())
-        assertThat(response.headers().toString()).contains("/products/5")
+        assertThat(response.headers().toString()).contains("/api/products/5")
     }
 
     @Test
@@ -68,15 +84,26 @@ class ProductControllerTest {
     @Test
     fun `update existing product`() {
         val response =
-            RestAssured.given().log().all().body(Product(name = "fanta", price = 5.6, imageUrl = "https://fanta.jpg"))
-                .contentType(ContentType.JSON).`when`().put("/products/1").then().log().all().extract()
+            RestAssured
+                .given().log().all()
+                .header("Authorization", "Bearer $adminToken")
+                .body(Product(name = "fanta", price = 5.6, imageUrl = "https://fanta.jpg"))
+                .contentType(ContentType.JSON).`when`().put("/api/products/1")
+                .then().log().all()
+                .extract()
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
     }
 
     @Test
     fun delete() {
-        val response = RestAssured.given().log().all().`when`().delete("/products/1").then().log().all().extract()
+        val response =
+            RestAssured
+                .given().log().all()
+                .header("Authorization", "Bearer $adminToken")
+                .`when`().delete("/api/products/1")
+                .then().log().all()
+                .extract()
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value())
     }
 }
