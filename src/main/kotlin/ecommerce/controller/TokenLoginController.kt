@@ -41,7 +41,9 @@ class TokenLoginController(private val authService: AuthService) {
      * accept: application/json
      */
     @GetMapping("me/token")
-    fun findMyInfo(@LoginMember member: RegisteredMember): ResponseEntity<RegisteredMember> {
+    fun findMyInfo(
+        @LoginMember member: RegisteredMember,
+    ): ResponseEntity<RegisteredMember> {
         return ResponseEntity.ok().body(member)
     }
 }

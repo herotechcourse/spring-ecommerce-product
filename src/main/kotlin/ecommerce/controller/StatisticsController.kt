@@ -1,9 +1,9 @@
 package ecommerce.controller
 
 import ecommerce.annotation.Admin
-import ecommerce.dto.RegisteredMember
 import ecommerce.dto.MemberStatsResponse
 import ecommerce.dto.ProductStatsResponse
+import ecommerce.dto.RegisteredMember
 import ecommerce.service.StatService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
