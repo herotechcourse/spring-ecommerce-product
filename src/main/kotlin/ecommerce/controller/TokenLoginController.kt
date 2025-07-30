@@ -1,12 +1,10 @@
 package ecommerce.controller
 
+import ecommerce.annotation.LoginMember
 import ecommerce.dto.RegisteredMember
 import ecommerce.dto.TokenRequest
 import ecommerce.dto.TokenResponse
-import ecommerce.exception.UnauthorizedException
-import ecommerce.infrastructure.AuthorizationExtractor
 import ecommerce.service.AuthService
-import jakarta.servlet.http.HttpServletRequest
 import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -19,8 +17,6 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/api/members")
 class TokenLoginController(private val authService: AuthService) {
-    private val authorizationExtractor: AuthorizationExtractor = AuthorizationExtractor()
-
     @PostMapping("/register")
     fun registerMember(
         @Valid @RequestBody request: TokenRequest,
@@ -45,12 +41,7 @@ class TokenLoginController(private val authService: AuthService) {
      * accept: application/json
      */
     @GetMapping("me/token")
-    fun findMyInfo(request: HttpServletRequest): ResponseEntity<RegisteredMember> {
-        val token = authorizationExtractor.extract(request)
-        if (token.isEmpty()) {
-            throw UnauthorizedException()
-        }
-        val member = authService.findMemberByToken(token)
+    fun findMyInfo(@LoginMember member: RegisteredMember): ResponseEntity<RegisteredMember> {
         return ResponseEntity.ok().body(member)
     }
 }

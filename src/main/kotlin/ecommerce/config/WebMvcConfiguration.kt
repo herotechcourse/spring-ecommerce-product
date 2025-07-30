@@ -25,6 +25,6 @@ class WebMvcConfiguration(
         registry.addInterceptor(AuthInterceptor(authExtractor, jwtTokenProvider))
             .addPathPatterns("/admin/**")
             .addPathPatterns("/api/**")
-            .excludePathPatterns("/api/members/login", "/api/members/register", "/api/members/me/token")
+            .excludePathPatterns("/api/members/login", "/api/members/register")
     }
 }
