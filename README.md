@@ -8,23 +8,6 @@ Implement a simple HTTP API that allows users to retrieve, add, update, and dele
 
 Implement the API to send and receive HTTP messages as shown in the example below.
 
-### Request
-```aiignore
-GET /api/products HTTP/1.1
-Response
-HTTP/1.1 200
-Content-Type: application/json
-
-[
-    {
-        "id": 8146027,
-        "name": "Iced Americano T",
-        "price": 4.50,
-        "imageUrl": "https://st.kakaocdn.net/product/gift/product/20231010111814_9a667f9eccc943648797925498bdd8a3.jpg"
-    }
-]
-```
-
 ## Features Step1-1
 
 - [x] Implement Product entity class
@@ -60,3 +43,116 @@ Database tables must be initialized automatically when the application starts.
   - [x] Set up application.properties to enable H2-Console
 - [x] use Spring's JdbcTemplate
 - [x] Use SQL scripts for table creation and initial data.
+
+## Functional Requirements Step 2-1 – Validation & Exception Handling
+
+When a product is created or updated, the client may send invalid data.  
+In such cases, the API must respond with a clear and structured error message to help the client understand what went wrong.
+
+###  Validation Rules
+
+- **Product Name**
+  - Maximum length: 15 characters (including spaces)
+  - Only these special characters are allowed: `()`, `[]`, `+`, `-`, `&`, `/`, `_`
+  - Must be unique across all products
+
+- **Product Price**
+  - Must be greater than 0
+
+- **Product Image URL**
+  - Must start with `http://` or `https://`
+
+###  Error Handling
+- If validation fails, the API should return a `400 Bad Request` with a meaningful error message.
+- Responses must be in JSON format, containing information about the invalid fields and reasons.
+
+## Features Step 2-1
+
+- [x] Create a `ProductRequest` DTO class to receive and validate incoming product data
+- [x] Annotate fields in the DTO using `jakarta.validation.constraints` (e.g., `@Size`, `@Pattern`, `@Min`)
+- [x] Replace usage of the `Product` class in `@RequestBody` with `ProductRequest` in both `ProductRestController` and `ProductAdminController`
+- [x] Use `@Valid` in controller methods to trigger validation automatically
+- [x] Add a global exception handler using `@RestControllerAdvice` to return readable error messages when validation fails
+- [x] Ensure that the name is checked for uniqueness before creating/updating products
+
+## Functional Requirements Step 2-2 – Authentication & Authorization
+
+Implement token-based authentication using JSON Web Tokens (JWT).
+Users can register and log in with their email and password. Upon success, the server issues a token that will be used for future authenticated requests.
+
+### Login and Registration Flow
+
+- A new user can register by sending their email and password to the /api/members/register endpoint.
+
+- An existing user can log in using the /api/members/login endpoint.
+
+- If authentication is successful, the server responds with a JWT token.
+
+- The token is included in the Authorization header of future requests in the format:
+Authorization: Bearer <token>
+
+## Features Step 2-2
+
+- [x] Create Member entity class to represent user accounts
+
+- [x] Implement MemberRequest and TokenResponse DTOs for request/response handling
+
+- [x] Add MemberRepository to manage member data
+
+- [x] Implement MemberService with:
+
+- [x] register() method to create a new user and issue a JWT
+
+- [x] login() method to authenticate credentials and issue a JWT
+
+- [x] Create JWTProvider utility to generate and validate tokens
+
+- [x] Implement MemberController with:
+
+- [x] POST /api/members/register endpoint
+
+- [x] POST /api/members/login endpoint
+
+- [x] Return appropriate HTTP status codes:
+
+   - 201 Created on successful registration
+
+   - 200 OK on successful login
+
+   - 403 Forbidden for invalid credentials
+
+   - 401 Unauthorized for missing or invalid token
+
+- [x] Extend `JWTProvider` with a `getSubject(token: String)` method to extract member ID from token
+- [x] Implement `findByToken(token: String)` in `MemberService` to return the authenticated member  
+
+## Step 2.3 - Cart Functionality (Add, View, Remove)
+
+### Features to Implement step 2.3
+
+- [x] Add `CartItem` domain model to represent cart entries (memberId, productId, createdAt)
+- [x] Add `cart_items` table in schema.sql with proper foreign keys
+- [x] Create `CartRequest` DTO to handle add/remove product input
+- [x] Implement `CartRepository` to:
+  - [x] Add a product to the authenticated member's cart
+  - [x] Retrieve all cart items for a member
+  - [x] Remove a product from the member's cart
+- [x] Create and register `@LoginMember` annotation and `LoginMemberArgumentResolver` to resolve the authenticated member from JWT
+- [x] Create `CartService` to encapsulate cart logic and communicate with the repository
+- [x] Create `CartController` with endpoints:
+  - `POST /api/cart` – Add product to cart
+  - `GET /api/cart` – View cart items
+  - `DELETE /api/cart` – Remove product from cart
+
+
+## Step 2.4 - Cart Statistics & Admin Role
+
+### Features to Implement step 2.4
+
+- [x] add endpoint to get top 5 most added products in last 30 days
+- [x] add endpoint to get members who added to cart in last 7 days
+- [x] restrict `/admin/**` endpoints to users with ADMIN role
+- [x] return detailed product stats (name, count, last added time)
+- [x] return member info (id, name, email) for recent cart activity
+
+
