@@ -1,6 +1,6 @@
-package ecommerce.controller
+package ecommerce.controller.view
 
-import ecommerce.model.Product
+import ecommerce.domain.Product
 import ecommerce.service.ProductService
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
@@ -20,7 +20,7 @@ class ProductViewController(private val productService: ProductService) {
     @GetMapping("/admin/products")
     fun listAllProducts(model: Model): String {
         model.addAttribute("products", productService.getAllProducts())
-        model.addAttribute("product", ::Product)
+        model.addAttribute("product", Product(0, "", 0.0, "", 0))
         return "products"
     }
 

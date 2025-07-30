@@ -1,0 +1,145 @@
+package ecommerce.advice
+
+import ecommerce.exception.AuthenticationException
+import ecommerce.exception.CartOperationException
+import ecommerce.exception.DuplicateEmailException
+import ecommerce.exception.ForbiddenException
+import ecommerce.exception.InvalidInputException
+import ecommerce.exception.ResourceNotFoundException
+import ecommerce.exception.UnauthorizedException
+import jakarta.servlet.http.HttpServletRequest
+import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
+import org.springframework.validation.FieldError
+import org.springframework.web.bind.MethodArgumentNotValidException
+import org.springframework.web.bind.MissingPathVariableException
+import org.springframework.web.bind.MissingServletRequestParameterException
+import org.springframework.web.bind.annotation.ControllerAdvice
+import org.springframework.web.bind.annotation.ExceptionHandler
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException
+
+@ControllerAdvice
+class GlobalExceptionHandler {
+    @ExceptionHandler(MethodArgumentNotValidException::class)
+    fun handleValidationExceptions(
+        ex: MethodArgumentNotValidException,
+        request: HttpServletRequest,
+    ): ResponseEntity<Map<String, String?>> {
+        val errors = mutableMapOf<String, String?>()
+        ex.bindingResult.allErrors.forEach { error ->
+            val fieldName = if (error is FieldError) error.field else error.objectName
+            val errorMessage = error.defaultMessage
+            errors[fieldName] = errorMessage
+        }
+        println("Validation error for request ${request.requestURI}: $errors")
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors)
+    }
+
+    @ExceptionHandler(ResourceNotFoundException::class)
+    fun handleResourceNotFoundException(
+        ex: ResourceNotFoundException,
+        request: HttpServletRequest,
+    ): ResponseEntity<String> {
+        println("Resource not found for request ${request.requestURI}: ${ex.message}")
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.message)
+    }
+
+    @ExceptionHandler(IllegalArgumentException::class)
+    fun handleIllegalArgumentException(
+        ex: IllegalArgumentException,
+        request: HttpServletRequest,
+    ): ResponseEntity<String> {
+        println("Illegal argument for request ${request.requestURI}: ${ex.message}")
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.message)
+    }
+
+    @ExceptionHandler(InvalidInputException::class)
+    fun handleInvalidInputException(
+        ex: InvalidInputException,
+        request: HttpServletRequest,
+    ): ResponseEntity<String> {
+        println("Invalid input for request ${request.requestURI}: ${ex.message}")
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.message)
+    }
+
+    @ExceptionHandler(MethodArgumentTypeMismatchException::class)
+    fun handleTypeMismatch(
+        ex: MethodArgumentTypeMismatchException,
+        request: HttpServletRequest,
+    ): ResponseEntity<String> {
+        println("Type mismatch error for request ${request.requestURI}: ${ex.message}")
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.message)
+    }
+
+    @ExceptionHandler(MissingServletRequestParameterException::class)
+    fun handleMissingRequestParam(
+        ex: MissingServletRequestParameterException,
+        request: HttpServletRequest,
+    ): ResponseEntity<String> {
+        println("Missing request parameter for request ${request.requestURI}: ${ex.message}")
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.message)
+    }
+
+    @ExceptionHandler(MissingPathVariableException::class)
+    fun handleMissingPathVariable(
+        ex: MissingPathVariableException,
+        request: HttpServletRequest,
+    ): ResponseEntity<String> {
+        println("Missing path variable for request ${request.requestURI}: ${ex.message}")
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.message)
+    }
+
+    @ExceptionHandler(Exception::class)
+    fun handleAllOtherExceptions(
+        ex: Exception,
+        request: HttpServletRequest,
+    ): ResponseEntity<String> {
+        println("An unhandled exception occurred for request ${request.requestURI}: ${ex.message}")
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.message)
+    }
+
+    @ExceptionHandler(AuthenticationException::class)
+    fun handleAuthenticationException(
+        ex: AuthenticationException,
+        request: HttpServletRequest,
+    ): ResponseEntity<String> {
+        println("Authentication failed for request ${request.requestURI}: ${ex.message}")
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ex.message)
+    }
+
+    @ExceptionHandler(DuplicateEmailException::class)
+    fun handleDuplicateEmailException(
+        ex: DuplicateEmailException,
+        request: HttpServletRequest,
+    ): ResponseEntity<String> {
+        println("Registration failed due to duplicate email for request ${request.requestURI}: ${ex.message}")
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.message)
+    }
+
+    @ExceptionHandler(UnauthorizedException::class)
+    fun handleUnauthorizedException(
+        ex: UnauthorizedException,
+        request: HttpServletRequest,
+    ): ResponseEntity<String> {
+        println("Unauthorized access attempt for request ${request.requestURI}: ${ex.message}")
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ex.message)
+    }
+
+    @ExceptionHandler(CartOperationException::class)
+    fun handleCartException(
+        ex: CartOperationException,
+        request: HttpServletRequest,
+    ): ResponseEntity<String> {
+        println("CartOperation failed for request ${request.requestURI}: ${ex.message}")
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.message)
+    }
+
+    @ExceptionHandler(ForbiddenException::class)
+    fun handleForbiddenException(
+        ex: ForbiddenException,
+        request: HttpServletRequest,
+    ): ResponseEntity<String> {
+        println("Forbidden access attempt for request ${request.requestURI}: ${ex.message}")
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ex.message)
+    }
+}

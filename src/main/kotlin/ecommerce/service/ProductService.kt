@@ -1,6 +1,8 @@
 package ecommerce.service
 
-import ecommerce.model.Product
+import ecommerce.domain.Product
+import ecommerce.exception.InvalidInputException
+import ecommerce.exception.ResourceNotFoundException
 import ecommerce.repository.ProductRepository
 import org.springframework.stereotype.Service
 
@@ -8,9 +10,16 @@ import org.springframework.stereotype.Service
 class ProductService(private val productRepository: ProductRepository) {
     fun getAllProducts(): List<Product> = productRepository.findAllProducts()
 
-    fun getProductById(id: Long): Product? = productRepository.findById(id)
+    fun getProductById(id: Long): Product {
+        require(id > 0) { "Product ID must be greater than 0." }
+        return productRepository.findById(id) ?: throw ResourceNotFoundException("Product", "id", id)
+    }
 
     fun createProduct(newProduct: Product) {
+        if (productRepository.findByName(newProduct.name) != null) {
+            throw InvalidInputException("Product name ${newProduct.name} already exists")
+        }
+
         productRepository.create(newProduct)
     }
 
@@ -18,6 +27,11 @@ class ProductService(private val productRepository: ProductRepository) {
         id: Long,
         updatedProduct: Product,
     ) {
+        require(id > 0) { "Product ID must be greater than 0." }
+
+        productRepository.findById(id)
+            ?: throw ResourceNotFoundException("Product", "id", id)
+
         productRepository.update(id, updatedProduct)
     }
 
