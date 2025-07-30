@@ -14,12 +14,14 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import java.net.URI
 
 @RestController
+@RequestMapping("/products")
 class ProductController(private val productService: ProductService) {
-    @PostMapping("/products")
+    @PostMapping("")
     fun createProduct(
         @Valid @RequestBody newProduct: CreateProductRequest,
     ): ResponseEntity<ProductResponse> {
@@ -28,7 +30,7 @@ class ProductController(private val productService: ProductService) {
         return ResponseEntity.created(URI.create("/products/${createdProduct?.id}")).build()
     }
 
-    @GetMapping("/products/{id}")
+    @GetMapping("/{id}")
     fun getProductById(
         @PathVariable("id") id: Long,
     ): ResponseEntity<ProductResponse> {
@@ -36,13 +38,13 @@ class ProductController(private val productService: ProductService) {
         return ResponseEntity.ok(product.toResponse())
     }
 
-    @GetMapping("/products")
+    @GetMapping("")
     fun getProducts(): ResponseEntity<List<ProductResponse>> {
         val products = productService.getAllProducts().map { it.toResponse() }
         return ResponseEntity.ok(products)
     }
 
-    @PutMapping("/products/{id}")
+    @PutMapping("{id}")
     fun updateProduct(
         @PathVariable("id") id: Long,
         @Valid @RequestBody request: UpdateProductRequest,
@@ -52,7 +54,7 @@ class ProductController(private val productService: ProductService) {
         return ResponseEntity.ok().body(updatedProduct.toResponse())
     }
 
-    @DeleteMapping("/products/{id}")
+    @DeleteMapping("/{id}")
     fun deleteProduct(
         @PathVariable("id") id: Long,
     ): ResponseEntity<Void> {

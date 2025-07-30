@@ -9,15 +9,15 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping("/api/admin")
+@RequestMapping("/api/admin/stats")
 class AdminController(private val adminService: AdminService) {
-    @GetMapping("/stats/top-products")
+    @GetMapping("/top-products")
     fun getTopProducts(): ResponseEntity<List<TopProductStats>> {
         val topProducts = adminService.getTop5MostAddedProducts()
         return ResponseEntity.ok(topProducts)
     }
 
-    @GetMapping("/stats/active-members")
+    @GetMapping("/active-members")
     fun getActiveMembers(): ResponseEntity<List<ActiveMemberResponse>> {
         val activeMembers = adminService.getRecentlyActiveMembers()
         return ResponseEntity.ok(activeMembers)

@@ -18,11 +18,11 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping("/api/cart")
+@RequestMapping("/api/cart/items")
 class CartController(
     private val cartService: CartService,
 ) {
-    @PostMapping("/items")
+    @PostMapping("")
     fun addProductToCart(
         @Valid @RequestBody request: AddCartItemRequest,
         @LoginMember member: Member,
@@ -31,7 +31,7 @@ class CartController(
         return ResponseEntity(cartItem, HttpStatus.OK)
     }
 
-    @GetMapping("/items")
+    @GetMapping("/")
     fun getCartItems(
         @LoginMember member: Member,
     ): ResponseEntity<CartResponse> {
@@ -39,7 +39,7 @@ class CartController(
         return ResponseEntity(cart, HttpStatus.OK)
     }
 
-    @DeleteMapping("/items/{productId}")
+    @DeleteMapping("/{productId}")
     fun removeProductFromCart(
         @PathVariable productId: Long,
         @LoginMember member: Member,
@@ -48,7 +48,7 @@ class CartController(
         return ResponseEntity.noContent().build()
     }
 
-    @DeleteMapping("/items")
+    @DeleteMapping("")
     fun removeAllProductsFromCart(
         @LoginMember member: Member,
     ): ResponseEntity<Void> {
