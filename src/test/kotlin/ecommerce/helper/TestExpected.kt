@@ -3,7 +3,7 @@ package ecommerce.helper
 import ecommerce.dto.MemberRequest
 import io.jsonwebtoken.Claims
 import io.jsonwebtoken.Jwts
-import java.util.*
+import java.util.Date
 
 class TestExpected(
     val request: MemberRequest,
