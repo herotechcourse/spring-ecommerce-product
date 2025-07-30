@@ -45,6 +45,7 @@ fun getTopProducts(): List<ProductStatsResponse>
 ### 7. CartController REST Naming
 - [x] Change endpoint from `/api/cart/items/{productId}` → `/api/cart-items/{productId}`
 - [ ] Need test
+
 ### 8. ProductController Refactor
 - [ ] Extract logic to a Service layer
 
@@ -79,8 +80,9 @@ enum class SortOption(val sql: String) { PRODUCT_COUNT("add_count DESC") }
 
 ### 13. Tests and Annotations
 - [ ] Avoid `@DirtiesContext`
+  - [x] CartServiceTest
 - [ ] Add **JWT-related tests** (critical logic).
-- [ ] Remove redundant annotations (`@Rollback`)
+- [x] Remove redundant annotations (`@Rollback`)
 - [ ] Review `@AutoConfigureTestDatabase` and `@ActiveProfiles("test")`
 - [ ] Create separate test profile
 
