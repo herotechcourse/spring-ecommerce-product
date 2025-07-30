@@ -38,7 +38,7 @@ class CartController(
         @RequestBody request: CartQuantityRequest,
         @LoginMember member: Member,
     ): ResponseEntity<CartResponse> {
-        val response = service.insertCartItem(member.id, productId, request.quantity)
+        val response = service.insertNewItemToCart(member.id, productId, request.quantity)
         return ResponseEntity.status(HttpStatus.CREATED).body(response)
     }
 
@@ -47,7 +47,7 @@ class CartController(
         @RequestBody requests: List<CartRequest>,
         @LoginMember member: Member,
     ): ResponseEntity<List<CartResponse>> {
-        val responses = service.insertCartItems(member.id, requests)
+        val responses = service.insertNewItemsToCart(member.id, requests)
         return ResponseEntity.ok(responses)
     }
 

@@ -15,29 +15,32 @@ class CartService(private val repository: CartRepository) {
         return repository.selectByMemberId(memberId)
     }
 
-    fun insertCartItems(
-        memberId: Long,
-        requests: List<CartRequest>,
-    ): List<CartResponse> {
-        return requests.map { request ->
-            val insertedId =
-                repository.insert(memberId, request)
-                    ?: throw RetrievalFailedException("Failed to insert cart")
-
-            val cartItem =
-                repository.findByItemId(insertedId)
-                    ?: throw RetrievalFailedException("Inserted cart item not found")
-
-            CartMapper.toResponse(cartItem)
-        }
-    }
-
-    fun insertCartItem(
+    fun insertNewItemToCart(
         memberId: Long,
         productId: Long,
         quantity: Int,
     ): CartResponse {
-        return insertCartItems(memberId, listOf(CartRequest(productId, quantity))).first()
+        return insertNewItemsToCart(
+            memberId,
+            listOf(CartRequest(productId, quantity)),
+        ).first()
+    }
+
+    fun insertNewItemsToCart(
+        memberId: Long,
+        requests: List<CartRequest>,
+    ): List<CartResponse> {
+        return requests.map { request ->
+            val newItemId =
+                repository.insertNewItem(CartMapper.toNewItem(memberId, request))
+                    ?: throw RetrievalFailedException("Failed to insert cart")
+
+            val cartItem =
+                repository.findByItemId(newItemId)
+                    ?: throw RetrievalFailedException("Inserted cart item not found")
+
+            CartMapper.toResponse(cartItem)
+        }
     }
 
     fun deleteBy(

@@ -1,12 +1,14 @@
 package ecommerce.repository
 
-import ecommerce.dto.CartRequest
+import ecommerce.domain.NewCartItem
 import ecommerce.entity.CartItem
 import ecommerce.helper.JdbcHelper
 import ecommerce.sql.CartConstsSQL
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.jdbc.core.RowMapper
 import org.springframework.stereotype.Repository
+import java.sql.Connection
+import java.sql.PreparedStatement
 import java.sql.ResultSet
 
 @Repository
@@ -24,7 +26,7 @@ class CartRepository(private val jdbcTemplate: JdbcTemplate) {
         }
 
     fun existsByMemberId(memberId: Long): Boolean {
-        val sql = CartConstsSQL.EXISTS_BY_MEMBER
+        val sql = CartConstsSQL.EXISTS_BY_MEMBER.trimIndent()
         val existing = jdbcTemplate.queryForObject(sql, Boolean::class.java, memberId)
         return existing ?: false
     }
@@ -48,21 +50,25 @@ class CartRepository(private val jdbcTemplate: JdbcTemplate) {
         return jdbcTemplate.update(sql, memberId, productId)
     }
 
-    fun insert(
-        memberId: Long,
-        request: CartRequest,
-    ): Long? {
+    fun insertNewItem(newItem: NewCartItem): Long? {
         val sql = CartConstsSQL.INSERT.trimIndent()
         return JdbcHelper.insertAndReturnKey(
             jdbcTemplate,
             sql,
-            request,
-        ) { connection, sql, req ->
-            connection.prepareStatement(sql, arrayOf("id")).apply {
-                setLong(1, memberId)
-                setLong(2, req.productId)
-                setInt(3, req.quantity)
-            }
+            newItem,
+            ::prepareInsertStatement,
+        )
+    }
+
+    private fun prepareInsertStatement(
+        connection: Connection,
+        sql: String,
+        newItem: NewCartItem,
+    ): PreparedStatement {
+        return connection.prepareStatement(sql, arrayOf("id")).apply {
+            setLong(1, newItem.memberId)
+            setLong(2, newItem.productId)
+            setInt(3, newItem.quantity)
         }
     }
 
