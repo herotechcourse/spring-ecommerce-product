@@ -268,7 +268,7 @@ of Long types Value Class types like ProductId, or should it take a CartRequestD
 
 ### Feedback from the reviewer
 - [x] declare enum class for ADMIN and USER
-- [ ] delegate the logic inside @Admin argument resolver to the `AuthService` 
+- [x] delegate the logic inside @Admin argument resolver to the `AuthService` 
   - reason: resolver can solely focus on parameter passing, business logic is inside the service
 - [ ] do not expose error message when handling `500 Internal Server Error`
   - reason: info can be sensitive and we might not know where it comes from, so the message is just for debugging purposes
@@ -276,12 +276,13 @@ of Long types Value Class types like ProductId, or should it take a CartRequestD
 - [ ] return values of a repository should align with the aggregate or entity it represents
   - [ ] refactor Cart repository 
 - [ ] test password validation
-- [ ] return another error in the code below in `AdminArgumentResolver.kt`
-  - ```kotlin
-    val request =
-    webRequest.getNativeRequest(HttpServletRequest::class.java)
-    ?: throw UnauthorizedException()
-  ```
+  - [x] return another error in the code below in `AdminArgumentResolver.kt`
+    - ```kotlin
+      val request =
+      webRequest.getNativeRequest(HttpServletRequest::class.java)
+      ?: throw UnauthorizedException()
+    ```
+  - returns IllegalStateException, because it is more of a server side error
 - [ ] refactor the code below in `ProductController.kt` by creating a custom exception for "duplicate product" and mapping it cleanly to HTTP 409
   - ```kotlin
     if (productRepository.existsByName(product.name)) {

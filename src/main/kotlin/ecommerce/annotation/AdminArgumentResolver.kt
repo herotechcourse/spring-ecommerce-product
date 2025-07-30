@@ -1,8 +1,5 @@
 package ecommerce.annotation
 
-import ecommerce.dto.MemberDto
-import ecommerce.dto.Role
-import ecommerce.exception.ForbiddenException
 import ecommerce.exception.NotFoundException
 import ecommerce.exception.UnauthorizedException
 import ecommerce.service.AuthService
@@ -26,22 +23,18 @@ class AdminArgumentResolver(
         webRequest: NativeWebRequest,
         binderFactory: WebDataBinderFactory?,
     ): Any {
-        lateinit var member: MemberDto
         val request =
             webRequest.getNativeRequest(HttpServletRequest::class.java)
-                ?: throw UnauthorizedException()
+                ?: throw IllegalStateException("HttpServletRequest not available")
 
-        val email = request.getAttribute("email") ?: throw UnauthorizedException()
-        try {
-            member = authService.findMember(email.toString())
+        val email =
+            request.getAttribute("email")?.toString()
+                ?: throw IllegalStateException("Email attribute  missing")
+
+        return try {
+            authService.findAdminMember(email)
         } catch (e: NotFoundException) {
             throw UnauthorizedException()
         }
-
-        if (member.role != Role.ADMIN) {
-            throw ForbiddenException()
-        }
-
-        return member
     }
 }

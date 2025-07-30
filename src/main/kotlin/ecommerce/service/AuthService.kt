@@ -1,8 +1,10 @@
 package ecommerce.service
 
 import ecommerce.dto.MemberDto
+import ecommerce.dto.Role
 import ecommerce.dto.TokenRequest
 import ecommerce.dto.TokenResponse
+import ecommerce.exception.ForbiddenException
 import ecommerce.exception.NotFoundException
 import ecommerce.exception.UnauthorizedException
 import ecommerce.infrastructure.JwtTokenProvider
@@ -21,6 +23,12 @@ class AuthService(
             throw NotFoundException("Member not found")
         }
         return member.toMemberDto()
+    }
+
+    fun findAdminMember(email: String): MemberDto {
+        val member = findMember(email)
+        return member.takeIf { it.role == Role.ADMIN }
+            ?: throw ForbiddenException()
     }
 
     fun findMemberByToken(token: String): MemberDto {
