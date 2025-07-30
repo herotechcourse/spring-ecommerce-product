@@ -14,12 +14,12 @@ import org.springframework.stereotype.Service
 @Service
 class MemberService(
     private val repository: MemberRepository,
-    private val jwtTokenProvider: JwtTokenProvider,
+    private val jwtProvider: JwtProvider,
 ) {
     fun registerByEmail(request: MemberRequest): TokenResponse {
         val member = registerNewMember(request)
 
-        val token = jwtTokenProvider.createToken(member)
+        val token = jwtProvider.createToken(member)
         return MemberMapper.toResponse(token)
     }
 
@@ -40,7 +40,7 @@ class MemberService(
         val member = findMemberByEmailOrFail(request.email)
         validatePasswordOrFail(request.password, member.password)
 
-        val token = jwtTokenProvider.createToken(member)
+        val token = jwtProvider.createToken(member)
         return MemberMapper.toResponse(token)
     }
 

@@ -1,4 +1,93 @@
 # spring-ecommerce-product
+## refactor
+### 1. Package Structure
+- [ ] **Move `LoginMemberArgumentResolver`**
+  - **Current:** `service` package
+  - **Suggested:** A package similar to `webconfig` for better cohesion.
+  ```kotlin
+  @Component
+  class LoginMemberArgumentResolver( ... )
+  ```
+- [ ] **Explain decision:** Why ArgumentResolver (not Interceptor)?
+
+### 2. Token Handling
+- [ ] **Define constants for magic strings**
+  ```kotlin
+  return authHeader.removePrefix("Bearer ").trim()
+  ```
+- [ ] **Add Bearer validation**
+  - [ ] Ensure token extraction fails if `"Bearer "` is missing.
+
+### 3. Repository Queries
+- [ ] **Change COUNT query to EXISTS**
+  - [ ] `MemberRepository.existsByEmail()`
+  - [ ] `CartRepository.existsByMemberId()`
+  - [ ] `ProductRepository.existsById()`
+- [ ] **Learn differences between COUNT vs EXISTS**
+
+### 4. DTO Usage in Repository Layer
+- [ ] **Prevent DTOs from reaching Repository**,
+  - [ ] `CartRepository.insert(...)`
+  - [ ] `MemberRepository.prepareInsertStatement(...)`
+  - [ ] `ProductRepository.insertWithKeyholder(...)`
+  - [ ] Consider mapping DTO → Entity
+
+### 5. Method Relocation
+- [ ] Move `matches()` method in `MemberRepository` to a better place
+
+### 6. Admin Controller
+- [ ] Remove unnecessary `ResponseEntity` wrapping
+```kotlin
+@GetMapping("/stats/products/top")
+fun getTopProducts(): List<ProductStatsResponse>
+```
+
+### 7. CartController REST Naming
+- [ ] Change endpoint from `/api/cart/items/{productId}` → `/api/cart-items/{productId}`
+- [ ] Need test
+### 8. ProductController Refactor
+- [ ] Extract logic to a Service layer
+
+### 9. CartService Method Naming
+- [ ] Rename `upsertCartItems` → `insertCartItem`
+
+### 10. JWT and AuthService
+- [x] Rename `JwtTokenProvider` → `JwtProvider`
+- [x] Inline simple methods
+```kotlin
+private fun validateToken(token: String) { ... }
+```
+- [x] Use `@ConfigurationProperties` for JWT properties
+```kotlin
+@ConfigurationProperties(prefix = "security.jwt.token")
+class JwtProperties(
+    val secretKey: String,
+    val expireLength: Long
+)
+```
+- [ ] Add JWT-related tests
+
+### 11. SQL and Enum Usage
+- [ ] Remove unused constants in `StateConstsSQL.kt`
+- [ ] Update hardcoded sort strings to use `SortOption` enum
+```kotlin
+enum class SortOption(val sql: String) { PRODUCT_COUNT("add_count DESC") }
+```
+
+### 12. Sensitive Config
+- [ ] Properly handle secrets (`secret-key`) in `application.yml`
+
+### 13. Tests and Annotations
+- [ ] Avoid `@DirtiesContext`
+- [ ] Add **JWT-related tests** (critical logic).
+- [ ] Remove redundant annotations (`@Rollback`)
+- [ ] Review `@AutoConfigureTestDatabase` and `@ActiveProfiles("test")`
+- [ ] Create separate test profile
+
+### 14. General
+- [ ] Add tests for JWT, Auth flows
+- [ ] Remove unused SQL template constants
+---
 
 ## Features:
 
@@ -39,7 +128,7 @@ HTTP API that allows users to retrieve, add, update, and delete products.
 
 ## Step 2
 
-### 2-1 Validate 
+### 2-1 Validate
 #### Product
 -[x] Validate `ProductRequest.name`
   -[x] Must be **no more than 15 characters**, including spaces.
@@ -64,8 +153,8 @@ HTTP API that allows users to retrieve, add, update, and delete products.
 #### Refactor
 -[x] The application is now structured into Controller, Service, and Repository layers in Member.
   - Business logic is handled in the Service layer, which throws specific custom exceptions depending on the condition.
-  Repository methods are allowed to return null, and the responsibility for interpreting the result lies in the Service.
-  - related with...  "In `ProductStore.update()`, `ProductStore.delete()` throw an exception".
+    Repository methods are allowed to return null, and the responsibility for interpreting the result lies in the Service.
+  - related with...  "In `ProductStore.update()`, `ProductStore.delete()` throw an exception."
 -[x] The application is now structured into Controller, Service, and Repository layers in Product.
 
 
@@ -83,7 +172,7 @@ HTTP API that allows users to retrieve, add, update, and delete products.
 
 ---
 
-### 2-2, 2-3 Cart 
+### 2-2, 2-3 Cart
 #### Create Entity
 -[x] Implement `CartItem entity`
   -[x] Fields: id, memberId, productId, quantity, createdAt, updatedAt
@@ -108,7 +197,7 @@ HTTP API that allows users to retrieve, add, update, and delete products.
   -[x] `GET /api/cart` → get cart items
   -[x] `POST /api/cart` → add/update item
   -[x] `DELETE /api/cart/{productId}` → remove item
-  -[x] Use `@LoginMember` to inject the authenticated Member. 
+  -[x] Use `@LoginMember` to inject the authenticated Member.
 #### Authentication Setup
 -[x] Create `@LoginMember` annotation
 -[x] Implement `WebConfig`

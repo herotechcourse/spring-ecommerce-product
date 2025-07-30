@@ -5,10 +5,10 @@ import io.jsonwebtoken.security.MacAlgorithm
 import java.util.Base64
 import javax.crypto.SecretKey
 
-class ValidationTestSet(
-    val key: String,
-    val validityInMilliseconds: Long,
+class JwtTestSetup(
+    val secretKey: String,
+    val expireLength: Long,
     val algorithm: MacAlgorithm,
 ) {
-    val secretKey: SecretKey = Keys.hmacShaKeyFor(Base64.getDecoder().decode(key))
+    val key: SecretKey = Keys.hmacShaKeyFor(Base64.getDecoder().decode(secretKey))
 }

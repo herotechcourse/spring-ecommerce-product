@@ -4,43 +4,47 @@ import ecommerce.entity.Member
 import io.jsonwebtoken.JwtException
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.security.Keys
-import org.springframework.beans.factory.annotation.Value
+import jakarta.annotation.PostConstruct
+import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.stereotype.Component
 import java.util.Base64
 import java.util.Date
 import javax.crypto.SecretKey
 
-@Component
-class JwtTokenProvider {
-    @Value("\${security.jwt.token.secret-key}")
-    private lateinit var rawSecretKey: String
 
-    @Value("\${security.jwt.token.expire-length}")
-    private var validityInMilliseconds: Long = 0
+@Component
+@ConfigurationProperties(prefix = "security.jwt.token")
+class JwtProvider {
+    lateinit var secretKey: String
+    var expireLength: Long = 0
 
     private val algorithm = Jwts.SIG.HS256
+    private val key: SecretKey by lazy {
+        Keys.hmacShaKeyFor(Base64.getDecoder().decode(secretKey))
+    }
 
-    private val secretKey: SecretKey by lazy {
-        Keys.hmacShaKeyFor(Base64.getDecoder().decode(rawSecretKey))
+    @PostConstruct
+    fun init() {
+        println("secretKey in JwtProvider = $secretKey")
     }
 
     fun createToken(member: Member): String {
         val now = Date()
-        val validity = Date(now.time + validityInMilliseconds)
+        val validity = Date(now.time + expireLength)
 
         return Jwts.builder()
             .subject(member.id.toString())
             .claim("email", member.email)
             .issuedAt(now)
             .expiration(validity)
-            .signWith(secretKey, algorithm)
+            .signWith(key, algorithm)
             .compact()
     }
 
     fun getPayload(token: String): String {
         val claims =
             Jwts.parser()
-                .verifyWith(secretKey)
+                .verifyWith(key)
                 .build()
                 .parseSignedClaims(token)
                 .payload
@@ -51,7 +55,7 @@ class JwtTokenProvider {
         return try {
             val claims =
                 Jwts.parser()
-                    .verifyWith(secretKey)
+                    .verifyWith(key)
                     .build()
                     .parseSignedClaims(token)
             !claims.payload.expiration.before(Date())

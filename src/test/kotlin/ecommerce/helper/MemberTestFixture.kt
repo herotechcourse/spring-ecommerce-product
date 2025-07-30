@@ -24,9 +24,9 @@ object MemberTestFixture {
 
     object ValidationCase {
         val DEFAULT_CASE =
-            ValidationTestSet(
-                key = "TGZtZ3VyaU94UVZ1d2k2NGhNVmxuY3AzZ1JHVWltcE5HTnZkNWQzZg==",
-                validityInMilliseconds = 3600000,
+            JwtTestSetup(
+                secretKey = "TGZtZ3VyaU94UVZ1d2k2NGhNVmxuY3AzZ1JHVWltcE5HTnZkNWQzZg==",
+                expireLength = 3600000,
                 algorithm = Jwts.SIG.HS256,
             )
     }
