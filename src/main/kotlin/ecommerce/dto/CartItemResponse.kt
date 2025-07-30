@@ -1,6 +1,6 @@
 package ecommerce.dto
 
-class CartItemDto(
+class CartItemResponse(
     var quantity: Long,
     val productId: Long,
     val productName: String,

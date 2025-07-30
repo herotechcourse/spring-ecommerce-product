@@ -1,6 +1,6 @@
 package ecommerce.repository
 
-import ecommerce.dto.CartItemDto
+import ecommerce.dto.CartItemResponse
 import ecommerce.exception.NotFoundException
 import org.springframework.jdbc.core.simple.JdbcClient
 import org.springframework.stereotype.Repository
@@ -11,7 +11,7 @@ class CartRepository(private val jdbcClient: JdbcClient) {
         productId: Long,
         productQuantity: Long,
         cartId: Long,
-    ): CartItemDto {
+    ): CartItemResponse {
         val updateSql =
             """
             UPDATE cart_items
@@ -52,7 +52,7 @@ class CartRepository(private val jdbcClient: JdbcClient) {
         productId: Long,
         quantity: Long,
         cartId: Long,
-    ): CartItemDto? {
+    ): CartItemResponse? {
         val currentQuantity = quantityInCart(productId, cartId)
         var updateQuantity: Long = quantity
         if (currentQuantity - updateQuantity < 0) {
@@ -157,7 +157,7 @@ class CartRepository(private val jdbcClient: JdbcClient) {
         return cartId
     }
 
-    fun showAllItemsInCart(cartId: Long): List<CartItemDto> {
+    fun showAllItemsInCart(cartId: Long): List<CartItemResponse> {
         val sql =
             """
             SELECT
@@ -174,7 +174,7 @@ class CartRepository(private val jdbcClient: JdbcClient) {
             jdbcClient
                 .sql(sql)
                 .param(1, cartId)
-                .query(CartItemDto::class.java)
+                .query(CartItemResponse::class.java)
                 .list()
         return cartItems
     }
@@ -182,7 +182,7 @@ class CartRepository(private val jdbcClient: JdbcClient) {
     fun showItem(
         cartId: Long,
         productId: Long,
-    ): CartItemDto? {
+    ): CartItemResponse? {
         val joinedSql =
             """
             SELECT 
@@ -199,7 +199,7 @@ class CartRepository(private val jdbcClient: JdbcClient) {
         return jdbcClient
             .sql(joinedSql)
             .params(cartId, productId)
-            .query(CartItemDto::class.java)
+            .query(CartItemResponse::class.java)
             .optional()
             .orElse(null)
     }

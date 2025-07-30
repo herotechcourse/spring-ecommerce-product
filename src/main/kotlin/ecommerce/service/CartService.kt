@@ -1,8 +1,8 @@
 package ecommerce.service
 
-import ecommerce.dto.AllCartItemsDto
-import ecommerce.dto.CartItemDto
+import ecommerce.dto.AllCartItemsResponse
 import ecommerce.dto.CartItemRequest
+import ecommerce.dto.CartItemResponse
 import ecommerce.exception.NotFoundException
 import ecommerce.repository.CartRepository
 import ecommerce.repository.ProductRepository
@@ -13,16 +13,16 @@ class CartService(
     private val cartRepository: CartRepository,
     private val productRepository: ProductRepository,
 ) {
-    fun getAllItems(memberId: Long): AllCartItemsDto {
+    fun getAllItems(memberId: Long): AllCartItemsResponse {
         val cartId = cartRepository.findOrCreateCartId(memberId)
         val items = cartRepository.showAllItemsInCart(cartId)
-        return AllCartItemsDto(cartId, items)
+        return AllCartItemsResponse(cartId, items)
     }
 
     fun addItem(
         memberId: Long,
         request: CartItemRequest,
-    ): CartItemDto {
+    ): CartItemResponse {
         val cartId = cartRepository.findOrCreateCartId(memberId)
         if (!productRepository.existsById(request.productId)) {
             throw NotFoundException("Product with ${request.productId} not found")
@@ -33,7 +33,7 @@ class CartService(
     fun deleteItem(
         memberId: Long,
         request: CartItemRequest,
-    ): CartItemDto? {
+    ): CartItemResponse? {
         val cartId = cartRepository.findOrCreateCartId(memberId)
         if (!productRepository.existsById(request.productId)) {
             throw NotFoundException("Product with ${request.productId} not found")

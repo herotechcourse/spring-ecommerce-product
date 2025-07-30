@@ -273,15 +273,12 @@ of Long types Value Class types like ProductId, or should it take a CartRequestD
 - [x] do not expose error message when handling `500 Internal Server Error`
   - reason: info can be sensitive and we might not know where it comes from, so the message is just for debugging purposes
 - [x] send back a kind message to the user on `404 Not Found`
-- [ ] return values of a repository should align with the aggregate or entity it represents
-  - [ ] refactor Cart repository 
-- [ ] test password validation after refactoring
-  - [x] return another error in the code below in `AdminArgumentResolver.kt`
-    - ```kotlin
-      val request =
-      webRequest.getNativeRequest(HttpServletRequest::class.java)
-      ?: throw UnauthorizedException()
-    ```
+- [x] return another error in the code below in `AdminArgumentResolver.kt`
+  - ```kotlin
+    val request =
+    webRequest.getNativeRequest(HttpServletRequest::class.java)
+    ?: throw UnauthorizedException()
+  ```
   - returns IllegalStateException, because it is more of a server side error
   - [x] refactor the code below in `ProductController.kt` by creating a custom exception for "duplicate product" and mapping it cleanly to HTTP 409
     - ```kotlin
@@ -292,18 +289,22 @@ of Long types Value Class types like ProductId, or should it take a CartRequestD
   - [x] also return CONFLICT when registering already existent members
 - [x] rename with time unit or append comment to `security.jwt.token.expire-length=3600000`
   - append comment 
-- [ ] override equals() and hashcode() for Member ??
+- [ ] return values of a repository should align with the aggregate or entity it represents
+  - [ ] refactor Cart repository
 - [ ] inside `findMemberByToken()`: `if (jwtTokenProvider.isInvalid(token)) { ... }` or throw exception in getPayload method 
+  - not a priority now, logic is separated, so I will keep the current implementation
 - [ ] try to refactor structure according to these principles:
   - [ ] everything related to the HTTP protocol should be managed by the Controller, and anything business-related should be passed to the Service
     - A DTO is simply a "truck" that moves data between layers.
     - A Domain model is a collection of business behaviors (methods), with no concern for how data is stored.
     - An Entity is a representation of data in the database and usually includes an id.
   - e.g.: MemberRegisterRequest(DTO) → RegisterMember(DM) → MemberEntity → RegisteredMember(DM) → MemberRegisteredResponse(DTO)
-
+- [ ] test password validation after refactoring
+- [ ] override equals() and hashcode() for Member ??
+- 
 ### Feedback from coaches
 - [ ] all Controllers use DTOs
-  - [ ] change DTO names to more specific names e.g. *DTO -> *Response
+  - [x] change DTO names to more specific names e.g. *DTO -> *Response
   - [ ] move validation logic to DTOs, do not validate inside Models
   - [ ] bundle related DTOs into the same file
 - [ ] repos use Entity (or sometimes DTO?)
@@ -312,6 +313,9 @@ of Long types Value Class types like ProductId, or should it take a CartRequestD
 - [ ] more OOP style inside the service e.g. -> retrieve cart -> retrieve product -> create cart item -> add item to cart -> return response
 - [ ] turn data class into simple class if you implement your own hashcode() and equals() implementations
 - [ ] Member should have name attribute
+- [ ] add Service layer for Product
+- [ ] add /api before the /products path
+- [ ] only allow admin to manipulate products
 
 ### Tests
 - [ ] test refactored CartRepository
