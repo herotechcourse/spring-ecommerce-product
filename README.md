@@ -314,8 +314,8 @@ of Long types Value Class types like ProductId, or should it take a CartRequestD
 - [ ] turn data class into simple class if you implement your own hashcode() and equals() implementations
 - [ ] Member should have name attribute
 - [ ] add Service layer for Product
-- [ ] add /api before the /products path
-- [ ] only allow admin to manipulate products
+- [x] add /api before the /products path
+- [x] only allow admin to manipulate products
 
 ### Tests
 - [ ] test refactored CartRepository
