@@ -24,11 +24,10 @@
   - [x] `ProductRepository.existsById()`
 
 ### 4. DTO Usage in Repository Layer
-- [ ] **Prevent DTOs from reaching Repository**,
-  - [ ] `CartRepository.insert(...)`
-  - [ ] `MemberRepository.prepareInsertStatement(...)`
-  - [ ] `ProductRepository.insertWithKeyholder(...)`
-  - [ ] Consider mapping DTO → Entity
+- [x] **Prevent DTOs from reaching Repository**,
+  - [x] `CartRepository.insert(...)`
+  - [x] `MemberRepository.prepareInsertStatement(...)`
+  - [x] `ProductRepository.insertWithKeyholder(...)`
 
 ### 5. Method Relocation
 - [ ] Move `matches()` method in `MemberRepository` to a better place
