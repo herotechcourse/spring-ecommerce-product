@@ -21,7 +21,8 @@ class GlobalExceptionHandler {
 
     @ExceptionHandler(NotFoundException::class)
     fun handleNotFound(e: NotFoundException): ResponseEntity<String> {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.message)
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+            .body("Oops... The requested resource was not found on this server.")
     }
 
     @ExceptionHandler(UnauthorizedException::class)
