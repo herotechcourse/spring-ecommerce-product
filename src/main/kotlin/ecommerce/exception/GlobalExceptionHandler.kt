@@ -22,13 +22,13 @@ class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(mapOf("errors" to errors))
     }
 
-    @ExceptionHandler(ProductNotFoundException::class)
+    @ExceptionHandler(value = [ProductNotFoundException::class, CartItemNotFoundException::class])
     @ResponseStatus(HttpStatus.NOT_FOUND)
     fun handleProductNotFound(ex: ProductNotFoundException): Map<String, String> {
         return mapOf("error" to ex.message.orEmpty())
     }
 
-    @ExceptionHandler(DuplicateProductNameException::class)
+    @ExceptionHandler(value = [DuplicateProductNameException::class, EmailAlreadyExistsException::class])
     @ResponseStatus(HttpStatus.CONFLICT)
     fun handleDuplicateException(ex: DuplicateProductNameException): Map<String, String> {
         return mapOf("error" to ex.message.orEmpty())
@@ -46,21 +46,9 @@ class GlobalExceptionHandler {
         return mapOf("error" to ex.message.orEmpty())
     }
 
-    @ResponseStatus(HttpStatus.CONFLICT)
-    @ExceptionHandler(EmailAlreadyExistsException::class)
-    fun handleEmailAlreadyExistsException(ex: EmailAlreadyExistsException): Map<String, String> {
-        return mapOf("error" to ex.message.orEmpty())
-    }
-
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     @ExceptionHandler(InvalidCredentialsException::class)
     fun handleInvalidCredentialsException(ex: InvalidCredentialsException): Map<String, String> {
-        return mapOf("error" to ex.message.orEmpty())
-    }
-
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    @ExceptionHandler(CartItemNotFoundException::class)
-    fun handleCartItemNotFoundException(ex: CartItemNotFoundException): Map<String, String> {
         return mapOf("error" to ex.message.orEmpty())
     }
 }
