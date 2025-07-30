@@ -74,7 +74,7 @@ class MemberApiE2ETest {
                 .then()
                 .extract()
 
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value())
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value())
     }
 
     @Test
