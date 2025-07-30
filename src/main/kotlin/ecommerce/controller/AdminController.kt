@@ -5,7 +5,6 @@ import ecommerce.dto.ProductStatsResponse
 import ecommerce.dto.StatsQueryParams
 import ecommerce.service.AdminService
 import ecommerce.sql.SortOption
-import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
@@ -14,16 +13,10 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping("/api/admin")
 class AdminController(private val service: AdminService) {
     @GetMapping("/stats/products/top")
-    fun getTopProducts(): ResponseEntity<List<ProductStatsResponse>> {
-        val products = service.getTopProducts(TOP_5_LAST_30_DAYS)
-        return ResponseEntity.ok(products)
-    }
+    fun getTopProducts(): List<ProductStatsResponse> = service.getTopProducts(TOP_5_LAST_30_DAYS)
 
     @GetMapping("/stats/members/active")
-    fun getActiveMembers(): ResponseEntity<List<MemberStatsResponse>> {
-        val products = service.getActiveMembers(ACTIVE_MEMBERS_LAST_7_DAYS)
-        return ResponseEntity.ok(products)
-    }
+    fun getActiveMembers(): List<MemberStatsResponse> = service.getActiveMembers(ACTIVE_MEMBERS_LAST_7_DAYS)
 
     companion object {
         val TOP_5_LAST_30_DAYS =

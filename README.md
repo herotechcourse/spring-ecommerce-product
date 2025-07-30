@@ -36,7 +36,7 @@
 - [ ] Move `matches()` method in `MemberRepository` to a better place
 
 ### 6. Admin Controller
-- [ ] Remove unnecessary `ResponseEntity` wrapping
+- [x] Remove unnecessary `ResponseEntity` wrapping
 ```kotlin
 @GetMapping("/stats/products/top")
 fun getTopProducts(): List<ProductStatsResponse>
