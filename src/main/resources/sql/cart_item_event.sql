@@ -1,18 +1,17 @@
-INSERT INTO product (name, price, imageUrl) VALUES ('Iron Man', 1000, 'https://alexnsan.comics/imageurl/1');
-INSERT INTO product (name, price, imageUrl) VALUES ('X-men', 1000, 'https://alexnsan.comics/imageurl/2');
-INSERT INTO product (name, price, imageUrl) VALUES ('Superman', 1000, 'https://alexnsan.comics/imageurl/3');
-INSERT INTO product (name, price, imageUrl) VALUES ('Naruto', 1000, 'https://alexnsan.comics/imageurl/4');
-INSERT INTO product (name, price, imageUrl) VALUES ('Full Metal Alchemist', 1000, 'https://alexnsan.comics/imageurl/5');
-INSERT INTO product (name, price, imageUrl) VALUES ('Batman', 1000, 'https://alexnsan.comics/imageurl/6');
-;
+DROP TABLE cart_item_event CASCADE;
 
-INSERT INTO member (email, password, role) VALUES ( 'san@htc.com', 'san1234', 'admin');
-INSERT INTO member (email, password, role) VALUES ( 'dan@htc.com', 'dan1234', 'admin');
-INSERT INTO member (email, password) VALUES ( 'ann@htc.com', 'ann1234');
-INSERT INTO member (email, password) VALUES ( 'min@htc.com', 'min1234');
-;
+CREATE TABLE cart_item_event
+(
+    id         BIGINT AUTO_INCREMENT,
+    member_id  BIGINT NOT NULL,
+    product_id BIGINT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (id),
 
--- Cart Item Events with varying timestamps
+    FOREIGN KEY (member_id) REFERENCES member (id),
+    FOREIGN KEY (product_id) REFERENCES product (id)
+);
+
 INSERT INTO cart_item_event (member_id, product_id, created_at) VALUES (1, 1, CURRENT_TIMESTAMP - INTERVAL '5' DAY);
 INSERT INTO cart_item_event (member_id, product_id, created_at) VALUES (1, 2, CURRENT_TIMESTAMP - INTERVAL '3' DAY);
 INSERT INTO cart_item_event (member_id, product_id, created_at) VALUES (2, 2, CURRENT_TIMESTAMP - INTERVAL '2' DAY);
@@ -24,4 +23,3 @@ INSERT INTO cart_item_event (member_id, product_id, created_at) VALUES (1, 4, CU
 INSERT INTO cart_item_event (member_id, product_id, created_at) VALUES (2, 5, CURRENT_TIMESTAMP - INTERVAL '7' DAY);
 INSERT INTO cart_item_event (member_id, product_id, created_at) VALUES (3, 5, CURRENT_TIMESTAMP - INTERVAL '8' DAY);
 INSERT INTO cart_item_event (member_id, product_id, created_at) VALUES (1, 5, CURRENT_TIMESTAMP - INTERVAL '9' DAY);
-;
