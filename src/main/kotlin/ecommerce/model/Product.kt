@@ -7,10 +7,11 @@ class Product(
     var imageUrl: String = "",
 ) {
     init {
-        require(name.isNotBlank()) { "Product name must not be blank." }
-        require(name.length <= 255) { "Product name must be 255 characters or fewer." }
-        require(price >= 0) { "Product price must be non-negative." }
-        require(imageUrl.length <= 255) { "Image URL must be 255 characters or fewer." }
+        require(name.isNotBlank()) { "Product name must not be blank" }
+        require(price >= 0.01) { "Price must be at least 0.01" }
+        require(imageUrl.startsWith("http://") || imageUrl.startsWith("https://")) {
+            "Image URL must start with http:// or https://"
+        }
     }
 
     override fun equals(other: Any?): Boolean {

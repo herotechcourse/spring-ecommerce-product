@@ -1,4 +1,4 @@
-package ecommerce
+package ecommerce.repository
 
 import ecommerce.model.Product
 
@@ -9,12 +9,16 @@ interface ProductStore {
 
     fun findById(id: Long): Product?
 
-    fun save(product: Product)
+    fun findByName(name: String): Product?
+
+    fun existsByName(name: String): Boolean
+
+    fun save(product: Product): Product
 
     fun update(
         id: Long,
         product: Product,
-    ): Int
+    ): Boolean
 
-    fun delete(id: Long): Int
+    fun delete(id: Long): Boolean
 }
