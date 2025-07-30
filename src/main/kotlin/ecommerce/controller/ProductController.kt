@@ -1,5 +1,6 @@
 package ecommerce.controller
 
+import ecommerce.exception.ConflictException
 import ecommerce.model.Product
 import ecommerce.repository.ProductRepository
 import jakarta.validation.Valid
@@ -20,7 +21,7 @@ class ProductController(private val productRepository: ProductRepository) {
         @RequestBody @Valid product: Product,
     ): ResponseEntity<Unit> {
         if (productRepository.existsByName(product.name)) {
-            throw IllegalArgumentException("Product with name ${product.name} already exists")
+            throw ConflictException("Product with name ${product.name} already exists")
         }
         val id = productRepository.insertWithKeyHolder(product)
         return ResponseEntity.created(URI.create("/products/$id")).build()

@@ -272,10 +272,10 @@ of Long types Value Class types like ProductId, or should it take a CartRequestD
   - reason: resolver can solely focus on parameter passing, business logic is inside the service
 - [x] do not expose error message when handling `500 Internal Server Error`
   - reason: info can be sensitive and we might not know where it comes from, so the message is just for debugging purposes
-- [ ] send back a kind message to the user on `404 Not Found`
+- [x] send back a kind message to the user on `404 Not Found`
 - [ ] return values of a repository should align with the aggregate or entity it represents
   - [ ] refactor Cart repository 
-- [ ] test password validation
+- [ ] test password validation after refactoring
   - [x] return another error in the code below in `AdminArgumentResolver.kt`
     - ```kotlin
       val request =
@@ -283,12 +283,13 @@ of Long types Value Class types like ProductId, or should it take a CartRequestD
       ?: throw UnauthorizedException()
     ```
   - returns IllegalStateException, because it is more of a server side error
-- [ ] refactor the code below in `ProductController.kt` by creating a custom exception for "duplicate product" and mapping it cleanly to HTTP 409
-  - ```kotlin
-    if (productRepository.existsByName(product.name)) {
-            throw IllegalArgumentException("Product with name ${product.name} already exists")
-        }
-  ```
+  - [x] refactor the code below in `ProductController.kt` by creating a custom exception for "duplicate product" and mapping it cleanly to HTTP 409
+    - ```kotlin
+      if (productRepository.existsByName(product.name)) {
+              throw IllegalArgumentException("Product with name ${product.name} already exists")
+          }
+    ```
+  - [x] also return CONFLICT when registering already existent members
 - [ ] rename with time unit or append comment to `security.jwt.token.expire-length=3600000`
 - [ ] override equals() and hashcode() for Member ??
 - [ ] inside `findMemberByToken()`: `if (jwtTokenProvider.isInvalid(token)) { ... }` or throw exception in getPayload method 

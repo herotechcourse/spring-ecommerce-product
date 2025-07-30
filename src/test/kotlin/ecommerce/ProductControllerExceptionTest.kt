@@ -42,7 +42,7 @@ class ProductControllerExceptionTest {
         val sameNameResponse = makeRequestToProducts(Product(name = "cola", price = 4.5, imageUrl = "https://cola.jpg"))
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value())
-        assertThat(sameNameResponse.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value())
+        assertThat(sameNameResponse.statusCode()).isEqualTo(HttpStatus.CONFLICT.value())
         assertThat(sameNameResponse.body().asString()).contains("Product with name cola already exists")
     }
 }

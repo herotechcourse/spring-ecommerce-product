@@ -14,9 +14,9 @@ class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(errors)
     }
 
-    @ExceptionHandler(IllegalArgumentException::class)
-    fun handleIllegalArgument(e: IllegalArgumentException): ResponseEntity<String> {
-        return ResponseEntity.badRequest().body(e.message)
+    @ExceptionHandler(ConflictException::class)
+    fun handleConflictException(e: ConflictException): ResponseEntity<String> {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(e.message)
     }
 
     @ExceptionHandler(NotFoundException::class)

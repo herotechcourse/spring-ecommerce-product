@@ -4,6 +4,7 @@ import ecommerce.dto.MemberDto
 import ecommerce.dto.Role
 import ecommerce.dto.TokenRequest
 import ecommerce.dto.TokenResponse
+import ecommerce.exception.ConflictException
 import ecommerce.exception.ForbiddenException
 import ecommerce.exception.NotFoundException
 import ecommerce.exception.UnauthorizedException
@@ -41,7 +42,7 @@ class AuthService(
 
     fun register(request: TokenRequest): TokenResponse {
         if (memberRepository.existsByEmail(request.email)) {
-            throw IllegalArgumentException("Account with email already exists")
+            throw ConflictException("Account with email already exists")
         }
         memberRepository.registerMember(Member(email = request.email, password = request.password))
         return createToken(request)

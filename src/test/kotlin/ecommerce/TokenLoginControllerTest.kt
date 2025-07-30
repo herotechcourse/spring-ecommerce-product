@@ -38,8 +38,6 @@ class TokenLoginControllerTest {
                 TokenRequest("", "abcdef1234"),
                 // invalid password
                 TokenRequest("a@mail.com", ""),
-                // already existent member
-                TokenRequest("sandra@email.com", "MyPassword"),
             )
     }
 
@@ -87,6 +85,13 @@ class TokenLoginControllerTest {
         val body = TokenRequest(email = "newmember@gmail.com", password = "abcdef1234")
         val response = registerRequest(body)
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value())
+    }
+
+    @Test
+    fun `test registering already existent member`() {
+        val body = TokenRequest("sandra@email.com", "MyPassword")
+        val response = registerRequest(body)
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.CONFLICT.value())
     }
 
     @ParameterizedTest
