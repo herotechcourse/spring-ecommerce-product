@@ -6,11 +6,11 @@ import java.sql.Connection
 import java.sql.PreparedStatement
 
 object JdbcHelper {
-    fun <Res> insertAndReturnKey(
+    fun <Domain> insertAndReturnKey(
         jdbcTemplate: JdbcTemplate,
         sql: String,
-        request: Res,
-        bind: (Connection, String, Res) -> PreparedStatement,
+        request: Domain,
+        bind: (Connection, String, Domain) -> PreparedStatement,
     ): Long? {
         val keyHolder = GeneratedKeyHolder()
         jdbcTemplate.update({ conn ->

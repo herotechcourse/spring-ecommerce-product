@@ -83,6 +83,7 @@ StatsQueryParams(
 
 ### 13. General
 - [x] Remove unused SQL template constants
+
 ---
 
 ## Features:
