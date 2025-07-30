@@ -4,7 +4,7 @@ import ecommerce.annotation.LoginMember
 import ecommerce.dto.AllCartItemsResponse
 import ecommerce.dto.CartItemRequest
 import ecommerce.dto.CartItemResponse
-import ecommerce.dto.MemberDto
+import ecommerce.dto.RegisteredMember
 import ecommerce.service.CartService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -21,30 +21,30 @@ import java.net.URI
 class CartController(private val cartService: CartService) {
     @GetMapping
     fun getAllItems(
-        @LoginMember member: MemberDto,
+        @LoginMember member: RegisteredMember,
     ): ResponseEntity<AllCartItemsResponse> {
-        val allCartItemsDto = cartService.getAllItems(member.id)
-        return ResponseEntity.status(HttpStatus.OK).body(allCartItemsDto)
+        val allCartItemsResponse = cartService.getAllItems(member.id)
+        return ResponseEntity.status(HttpStatus.OK).body(allCartItemsResponse)
     }
 
     @PostMapping
     fun addItem(
-        @LoginMember member: MemberDto,
+        @LoginMember member: RegisteredMember,
         @RequestBody request: CartItemRequest,
     ): ResponseEntity<CartItemResponse> {
-        val cartItemDto = cartService.addItem(member.id, request)
-        return ResponseEntity.created(URI("/api/cart/items/${cartItemDto.productId}")).body(cartItemDto)
+        val cartItemResponse = cartService.addItem(member.id, request)
+        return ResponseEntity.created(URI("/api/cart/items/${cartItemResponse.productId}")).body(cartItemResponse)
     }
 
     @DeleteMapping
     fun deleteItem(
-        @LoginMember member: MemberDto,
+        @LoginMember member: RegisteredMember,
         @RequestBody request: CartItemRequest,
     ): ResponseEntity<CartItemResponse?> {
-        val cartItemDto = cartService.deleteItem(member.id, request)
-        if (cartItemDto == null) {
+        val cartItemResponse = cartService.deleteItem(member.id, request)
+        if (cartItemResponse == null) {
             return ResponseEntity.noContent().build()
         }
-        return ResponseEntity.ok().body(cartItemDto)
+        return ResponseEntity.ok().body(cartItemResponse)
     }
 }

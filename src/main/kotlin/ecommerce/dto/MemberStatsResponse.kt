@@ -1,6 +1,6 @@
 package ecommerce.dto
 
-class MemberStatsDto(
+class MemberStatsResponse(
     val memberId: Long,
     val name: String = "",
     val email: String,

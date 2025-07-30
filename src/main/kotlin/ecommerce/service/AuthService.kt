@@ -1,6 +1,6 @@
 package ecommerce.service
 
-import ecommerce.dto.MemberDto
+import ecommerce.dto.RegisteredMember
 import ecommerce.dto.Role
 import ecommerce.dto.TokenRequest
 import ecommerce.dto.TokenResponse
@@ -18,7 +18,7 @@ class AuthService(
     private val jwtTokenProvider: JwtTokenProvider,
     private val memberRepository: MemberRepository,
 ) {
-    fun findMember(payload: String): MemberDto {
+    fun findMember(payload: String): RegisteredMember {
         val member = memberRepository.findByEmail(payload)
         if (member == null) {
             throw NotFoundException("Member not found")
@@ -26,13 +26,13 @@ class AuthService(
         return member.toMemberDto()
     }
 
-    fun findAdminMember(email: String): MemberDto {
+    fun findAdminMember(email: String): RegisteredMember {
         val member = findMember(email)
         return member.takeIf { it.role == Role.ADMIN }
             ?: throw ForbiddenException()
     }
 
-    fun findMemberByToken(token: String): MemberDto {
+    fun findMemberByToken(token: String): RegisteredMember {
         if (!jwtTokenProvider.validateToken(token)) {
             throw UnauthorizedException("Invalid token")
         }

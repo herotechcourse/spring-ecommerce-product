@@ -1,6 +1,6 @@
 package ecommerce.model
 
-import ecommerce.dto.MemberDto
+import ecommerce.dto.RegisteredMember
 import ecommerce.dto.Role
 import ecommerce.exception.UnauthorizedException
 import jakarta.validation.constraints.Email
@@ -26,8 +26,8 @@ data class Member(
         }
     }
 
-    fun toMemberDto(): MemberDto {
+    fun toMemberDto(): RegisteredMember {
         val role = Role.valueOf(this.role)
-        return MemberDto(this.id!!, email, role)
+        return RegisteredMember(this.id!!, email, role)
     }
 }

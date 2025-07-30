@@ -1,13 +1,13 @@
 package ecommerce.repository
 
-import ecommerce.dto.MemberStatsDto
-import ecommerce.dto.ProductStatsDto
+import ecommerce.dto.MemberStatsResponse
+import ecommerce.dto.ProductStatsResponse
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.stereotype.Repository
 
 @Repository
 class StatRepository(private val jdbcTemplate: JdbcTemplate) {
-    fun getActiveMembersInThePast7Days(): List<MemberStatsDto> {
+    fun getActiveMembersInThePast7Days(): List<MemberStatsResponse> {
         val query = """
             SELECT DISTINCT
                 m.id AS member_id,
@@ -23,7 +23,7 @@ class StatRepository(private val jdbcTemplate: JdbcTemplate) {
         """
 
         return jdbcTemplate.query(query) { rs, _ ->
-            MemberStatsDto(
+            MemberStatsResponse(
                 memberId = rs.getLong("member_id"),
                 email = rs.getString("email"),
                 name = "",
@@ -31,7 +31,7 @@ class StatRepository(private val jdbcTemplate: JdbcTemplate) {
         }
     }
 
-    fun getTop5ProductsInThePast30Days(): List<ProductStatsDto> {
+    fun getTop5ProductsInThePast30Days(): List<ProductStatsResponse> {
         val query = """
             SELECT
                 p.name AS product_name,
@@ -52,7 +52,7 @@ class StatRepository(private val jdbcTemplate: JdbcTemplate) {
         """
 
         return jdbcTemplate.query(query) { rs, _ ->
-            ProductStatsDto(
+            ProductStatsResponse(
                 productName = rs.getString("product_name"),
                 productQuantity = rs.getLong("product_quantity"),
                 mostRecent = rs.getTimestamp("most_recent").toLocalDateTime(),
