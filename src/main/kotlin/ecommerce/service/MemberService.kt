@@ -1,6 +1,7 @@
 package ecommerce.service
 
 import ecommerce.dto.member.RegisterRequest
+import ecommerce.exception.AuthenticationException
 import ecommerce.model.Member
 import ecommerce.repository.MemberRepository
 import org.springframework.stereotype.Service
@@ -34,10 +35,10 @@ class MemberService(
     ): String {
         val member =
             memberRepository.findByEmail(email)
-                ?: throw IllegalArgumentException("Invalid email or password")
+                ?: throw AuthenticationException("Invalid email or password")
 
         if (!passwordService.verifyPassword(password, member.password)) {
-            throw IllegalArgumentException("Invalid email or password")
+            throw AuthenticationException("Invalid email or password")
         }
 
         return tokenService.generateToken(member)

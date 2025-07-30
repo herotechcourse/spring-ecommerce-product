@@ -1,5 +1,6 @@
 package ecommerce.advice
 
+import ecommerce.exception.AuthenticationException
 import ecommerce.exception.ErrorResponse
 import ecommerce.exception.NotFoundException
 import ecommerce.exception.ProductValidationException
@@ -25,7 +26,25 @@ class GlobalControllerAdvice {
         return ErrorResponse(
             error = "VALIDATION_ERROR",
             message = e.message ?: "Validation failed",
-            fieldErrors = null
+            fieldErrors = null,
+        )
+    }
+
+    @ExceptionHandler(AuthenticationException::class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    fun handleAuthenticationException(e: AuthenticationException): ErrorResponse {
+        return ErrorResponse(
+            error = "Unauthorized",
+            message = e.message ?: "Authentication failed",
+        )
+    }
+
+    @ExceptionHandler(IllegalArgumentException::class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    fun handleIllegalArgumentException(e: IllegalArgumentException): ErrorResponse {
+        return ErrorResponse(
+            error = "BAD_REQUEST",
+            message = e.message ?: "Invalid request",
         )
     }
 }
