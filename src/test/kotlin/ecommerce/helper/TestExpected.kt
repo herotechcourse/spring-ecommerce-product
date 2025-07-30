@@ -8,11 +8,10 @@ import java.util.*
 class TestExpected(
     val request: MemberRequest,
     val set: JwtTestSetup,
-    val id: Long = 1
+    val id: Long = 1,
 ) {
     val accessToken: String = obtainAccessToken()
     val claims: Claims = decode(accessToken, set)
-
 
     private fun obtainAccessToken(): String {
         val now = Date()

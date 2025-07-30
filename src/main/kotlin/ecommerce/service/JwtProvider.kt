@@ -11,7 +11,6 @@ import java.util.Base64
 import java.util.Date
 import javax.crypto.SecretKey
 
-
 @Component
 @ConfigurationProperties(prefix = "security.jwt.token")
 class JwtProvider {

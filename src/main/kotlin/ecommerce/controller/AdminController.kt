@@ -4,6 +4,7 @@ import ecommerce.dto.MemberStatsResponse
 import ecommerce.dto.ProductStatsResponse
 import ecommerce.dto.StatsQueryParams
 import ecommerce.service.AdminService
+import ecommerce.sql.SortOption
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
@@ -29,14 +30,14 @@ class AdminController(private val service: AdminService) {
             StatsQueryParams(
                 limit = 5,
                 days = 30,
-                sort = "add_count DESC",
+                sort = SortOption.PRODUCT_COUNT,
             )
 
         val ACTIVE_MEMBERS_LAST_7_DAYS =
             StatsQueryParams(
                 limit = Int.MAX_VALUE,
                 days = 7,
-                sort = "m.id DESC",
+                sort = SortOption.MEMBER_EMAIL,
             )
     }
 }

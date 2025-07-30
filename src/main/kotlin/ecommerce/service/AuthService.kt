@@ -14,8 +14,9 @@ class AuthService(
         if (!jwtProvider.validateToken(token)) {
             throw InvalidTokenException()
         }
-        val id = jwtProvider.getPayload(token).toLongOrNull()
-            ?: throw InvalidTokenException("can not parse token")
+        val id =
+            jwtProvider.getPayload(token).toLongOrNull()
+                ?: throw InvalidTokenException("can not parse token")
 
         return repository.findById(id)
             ?: throw InvalidTokenException("Member with ID $id not found")
