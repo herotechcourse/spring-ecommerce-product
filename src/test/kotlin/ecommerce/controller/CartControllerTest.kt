@@ -65,7 +65,7 @@ class CartControllerTest
             whenever(cartService.findByMemberId(memberId))
                 .thenReturn(listOf(mockCartItem))
 
-            mockMvc.get("/api/cart") {
+            mockMvc.get("/api/cart-items") {
                 header("Authorization", "Bearer fake-token")
             }
                 .andExpect {
@@ -80,7 +80,7 @@ class CartControllerTest
             whenever(authService.findMemberByToken("invalid-token"))
                 .thenThrow(UnauthorizedException("Invalid token"))
 
-            mockMvc.get("/api/cart") {
+            mockMvc.get("/api/cart-items") {
                 header("Authorization", "Bearer invalid-token")
             }
                 .andExpect {
@@ -94,10 +94,10 @@ class CartControllerTest
             val productId = 101L
             val mockResponse = CartResponse(id = 1L, productId = productId, quantity = 2, updatedAt = LocalDateTime.now())
 
-            whenever(cartService.upsertCartItem(memberId, productId, 2))
+            whenever(cartService.insertCartItem(memberId, productId, 2))
                 .thenReturn(mockResponse)
 
-            mockMvc.post("/api/cart/items/$productId") {
+            mockMvc.post("/api/cart-items/$productId") {
                 header("Authorization", "Bearer fake-token")
                 contentType = MediaType.APPLICATION_JSON
                 content = """{"quantity": 2}"""
@@ -118,10 +118,10 @@ class CartControllerTest
                     CartResponse(id = 2L, productId = 102, quantity = 3, updatedAt = LocalDateTime.now()),
                 )
 
-            whenever(cartService.upsertCartItems(eq(memberId), any()))
+            whenever(cartService.insertCartItems(eq(memberId), any()))
                 .thenReturn(mockResponses)
 
-            mockMvc.put("/api/cart/items") {
+            mockMvc.put("/api/cart-items/") {
                 header("Authorization", "Bearer fake-token")
                 contentType = MediaType.APPLICATION_JSON
                 content = """
@@ -143,7 +143,7 @@ class CartControllerTest
             val memberId = 1L
             val productId = 101L
 
-            mockMvc.delete("/api/cart/items/$productId") {
+            mockMvc.delete("/api/cart-items/$productId") {
                 header("Authorization", "Bearer fake-token")
             }
                 .andExpect {
@@ -159,7 +159,7 @@ class CartControllerTest
             whenever(cartService.deleteBy(memberId, productId))
                 .thenThrow(NotFoundException("not found"))
 
-            mockMvc.delete("/api/cart/items/$productId") {
+            mockMvc.delete("/api/cart-items/$productId") {
                 header("Authorization", "Bearer fake-token")
             }
                 .andExpect {

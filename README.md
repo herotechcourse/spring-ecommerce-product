@@ -43,7 +43,7 @@ fun getTopProducts(): List<ProductStatsResponse>
 ```
 
 ### 7. CartController REST Naming
-- [ ] Change endpoint from `/api/cart/items/{productId}` → `/api/cart-items/{productId}`
+- [x] Change endpoint from `/api/cart/items/{productId}` → `/api/cart-items/{productId}`
 - [ ] Need test
 ### 8. ProductController Refactor
 - [ ] Extract logic to a Service layer

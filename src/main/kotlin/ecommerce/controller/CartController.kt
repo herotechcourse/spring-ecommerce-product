@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping("/api/cart")
+@RequestMapping("/api/cart-items")
 class CartController(
     private val service: CartService,
 ) {
@@ -32,26 +32,26 @@ class CartController(
         return ResponseEntity.ok(cartResponses)
     }
 
-    @PostMapping("/items/{productId}")
+    @PostMapping("/{productId}")
     fun addCartItem(
         @PathVariable productId: Long,
         @RequestBody request: CartQuantityRequest,
         @LoginMember member: Member,
     ): ResponseEntity<CartResponse> {
-        val response = service.upsertCartItem(member.id, productId, request.quantity)
+        val response = service.insertCartItem(member.id, productId, request.quantity)
         return ResponseEntity.status(HttpStatus.CREATED).body(response)
     }
 
-    @PutMapping("/items")
+    @PutMapping("/")
     fun updateCartItems(
         @RequestBody requests: List<CartRequest>,
         @LoginMember member: Member,
     ): ResponseEntity<List<CartResponse>> {
-        val responses = service.upsertCartItems(member.id, requests)
+        val responses = service.insertCartItems(member.id, requests)
         return ResponseEntity.ok(responses)
     }
 
-    @DeleteMapping("/items/{productId}")
+    @DeleteMapping("/{productId}")
     fun deleteCartItem(
         @PathVariable productId: Long,
         @LoginMember member: Member,
