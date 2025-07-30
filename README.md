@@ -14,35 +14,35 @@
   return authHeader.removePrefix("Bearer ").trim()
   ```
 
-### 2. Repository Queries
+### 2. ProductController Refactor
+- [ ] Extract logic to a Service layer
+
+### 3. Repository Queries
 - [ ] **Change COUNT query to EXISTS**
   - [ ] `MemberRepository.existsByEmail()`
   - [ ] `CartRepository.existsByMemberId()`
   - [ ] `ProductRepository.existsById()`
 - [ ] **Learn differences between COUNT vs EXISTS**
 
-### 3. DTO Usage in Repository Layer
+### 4. DTO Usage in Repository Layer
 - [ ] **Prevent DTOs from reaching Repository**,
   - [ ] `CartRepository.insert(...)`
   - [ ] `MemberRepository.prepareInsertStatement(...)`
   - [ ] `ProductRepository.insertWithKeyholder(...)`
   - [ ] Consider mapping DTO → Entity
 
-### 4. Method Relocation
+### 5. Method Relocation
 - [ ] Move `matches()` method in `MemberRepository` to a better place
 
-### 5. Admin Controller
+### 6. Admin Controller
 - [x] Remove unnecessary `ResponseEntity` wrapping
 ```kotlin
 @GetMapping("/stats/products/top")
 fun getTopProducts(): List<ProductStatsResponse>
 ```
 
-### 6. CartController REST Naming
+### 7. CartController REST Naming
 - [x] Change endpoint from `/api/cart/items/{productId}` → `/api/cart-items/{productId}`
-
-### 7. ProductController Refactor
-- [ ] Extract logic to a Service layer
 
 ### 8. CartService Method Naming
 - [x] Rename `upsertCartItems` → `insertCartItem`
