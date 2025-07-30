@@ -30,9 +30,21 @@ class ProductRepositoryTest {
             .filter { it.isNotBlank() }
             .forEach { jdbcTemplate.execute(it.trim()) }
 
-        createData().split(";")
-            .filter { it.isNotBlank() }
-            .forEach { jdbcTemplate.execute(it.trim()) }
+        insertTestProducts()
+    }
+
+    private fun insertTestProducts() {
+        val products = listOf(
+            Product(0, "Coffee", 10.99, "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Roasted_coffee_beans.jpg/1200px-Roasted_coffee_beans.jpg"),
+            Product(0, "Hand cream", 6.99, "https://cdn.idealo.com/folder/Product/6178/3/6178302/s1_produktbild_gross/neutrogena-hydro-boost-creme-gel-50ml.jpg"),
+            Product(0, "Chair", 77.99, "https://encrypted-tbn1.gstatic.com/shopping?q=tbn:ANd9GcRqUHblIQ5QCehPdDXFHqSqUKqxNExCjw_mKe-wsYJYNXP7S7pnlrGpBKEPGzutl3CSIxRQSJjb3HbbQevqNeDMZQdxtP0ml591k0zsn-b-4KAMs9aMwJngvHNPGf7KHbNhUuOn6g&usqp=CAc"),
+            Product(0, "Notebook", 3.49, "https://upload.wikimedia.org/wikipedia/commons/6/6e/Moleskine_notebook.jpg")
+        )
+
+        val insertSql = "INSERT INTO products (name, price, image_url) VALUES (?, ?, ?)"
+        products.forEach {
+            jdbcTemplate.update(insertSql, it.name, it.price, it.imageUrl)
+        }
     }
 
     @Test
