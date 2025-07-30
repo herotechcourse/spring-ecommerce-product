@@ -1,6 +1,6 @@
 package ecommerce.domain
 
-class RegisterMember(
+class NewMember(
     val email: String,
     val password: String,
 ) {

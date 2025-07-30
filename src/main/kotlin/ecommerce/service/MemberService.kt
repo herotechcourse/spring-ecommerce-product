@@ -1,5 +1,6 @@
 package ecommerce.service
 
+import ecommerce.domain.NewMember
 import ecommerce.dto.MemberRequest
 import ecommerce.dto.TokenResponse
 import ecommerce.dto.mapper.MemberMapper
@@ -17,20 +18,19 @@ class MemberService(
     private val jwtProvider: JwtProvider,
 ) {
     fun registerByEmail(request: MemberRequest): TokenResponse {
-        val member = registerNewMember(request)
-
+        val member = registerNewMember(NewMember(request.email, request.password))
         val token = jwtProvider.createToken(member)
         return MemberMapper.toResponse(token)
     }
 
-    private fun registerNewMember(request: MemberRequest): Member {
-        if (repository.existsByEmail(request.email)) {
-            throw MemberAlreadyExistsException("Email ${request.email} already exists")
+    private fun registerNewMember(registerMember: NewMember): Member {
+        if (repository.existsByEmail(registerMember.email)) {
+            throw MemberAlreadyExistsException("Email ${registerMember.email} already exists")
         }
 
         val id =
-            repository.insert(request)
-                ?: throw MemberInsertFailedException("Failed to insert member with email ${request.email}")
+            repository.insert(registerMember)
+                ?: throw MemberInsertFailedException("Failed to insert member with email ${registerMember.email}")
 
         return repository.findById(id)
             ?: throw RetrievalFailedException("Member with ID $id could not be retrieved after insertion")

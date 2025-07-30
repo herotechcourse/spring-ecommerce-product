@@ -1,6 +1,6 @@
 package ecommerce.repository
 
-import ecommerce.dto.MemberRequest
+import ecommerce.domain.NewMember
 import ecommerce.entity.Member
 import ecommerce.helper.JdbcHelper
 import ecommerce.sql.MemberConstsSQL
@@ -32,19 +32,19 @@ class MemberRepository(private val jdbcTemplate: JdbcTemplate) {
         return existing ?: false
     }
 
-    fun insert(request: MemberRequest): Long? {
+    fun insert(newMember: NewMember): Long? {
         val sql = MemberConstsSQL.INSERT.trimIndent()
-        return JdbcHelper.insertAndReturnKey(jdbcTemplate, sql, request, ::prepareInsertStatement)
+        return JdbcHelper.insertAndReturnKey(jdbcTemplate, sql, newMember, ::prepareInsertStatement)
     }
 
     private fun prepareInsertStatement(
         connection: Connection,
         sql: String,
-        request: MemberRequest,
+        newMember: NewMember,
     ): PreparedStatement {
         return connection.prepareStatement(sql, arrayOf("id")).apply {
-            setString(1, request.email)
-            setString(2, request.password)
+            setString(1, newMember.email)
+            setString(2, newMember.password)
         }
     }
 
