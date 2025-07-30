@@ -2,7 +2,7 @@ package ecommerce.exception
 
 import ecommerce.dto.member.LoginRequest
 import ecommerce.dto.member.RegisterRequest
-import ecommerce.dto.product.CreateProductRequest
+import ecommerce.dto.product.ProductRequest
 import ecommerce.dto.product.ProductResponse
 import io.restassured.RestAssured
 import io.restassured.http.ContentType
@@ -57,7 +57,7 @@ class ProductExceptionTest {
         img: String,
         quantity: Int,
     ): ProductResponse {
-        val createRequest = CreateProductRequest(name, price, img, quantity)
+        val createRequest = ProductRequest(name, price, img, quantity)
         val response =
             RestAssured
                 .given().log().all()
@@ -84,7 +84,7 @@ class ProductExceptionTest {
     @Test
     fun `invalid name returns 400(too long)`() {
         val createRequest =
-            CreateProductRequest(
+            ProductRequest(
                 name = "ThisProductNameIsTooLongToBeValid",
                 price = 10.0,
                 img = "https://valid_image_url.com/img.jpg",
@@ -107,7 +107,7 @@ class ProductExceptionTest {
     @Test
     fun `invalid name returns 400(contains invalid character)`() {
         val invalidProductName = "%ProductName%"
-        val createRequest = CreateProductRequest(invalidProductName, 10.0, "https://valid_image_url.com/img.jpg", 10)
+        val createRequest = ProductRequest(invalidProductName, 10.0, "https://valid_image_url.com/img.jpg", 10)
         val response =
             RestAssured
                 .given()
@@ -124,7 +124,7 @@ class ProductExceptionTest {
     @Test
     fun `invalid price returns 400(less than 0)`() {
         val createRequest =
-            CreateProductRequest(
+            ProductRequest(
                 name = "ValidProductA",
                 price = 0.0,
                 img = "https://valid_image_url.com/img.jpg",
@@ -147,7 +147,7 @@ class ProductExceptionTest {
     @Test
     fun `invalid image url returns 400(does not start with http or https)`() {
         val createRequest =
-            CreateProductRequest(
+            ProductRequest(
                 name = "ValidProductB",
                 price = 0.0,
                 img = "invalidImage.jpg",
@@ -172,7 +172,7 @@ class ProductExceptionTest {
         val productName = "ProductNameC"
         createProductWithAuth(10, productName, 10.0, "https://valid_image_url.com/img1.jpg", 10)
         val duplicateProductRequest =
-            CreateProductRequest(
+            ProductRequest(
                 name = "ProductNameC",
                 price = 10.0,
                 img = "https://valid_image_url.com/img1.jpg",

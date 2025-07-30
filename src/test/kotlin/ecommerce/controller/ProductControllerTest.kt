@@ -2,9 +2,8 @@ package ecommerce.controller
 
 import ecommerce.dto.member.LoginRequest
 import ecommerce.dto.member.RegisterRequest
-import ecommerce.dto.product.CreateProductRequest
+import ecommerce.dto.product.ProductRequest
 import ecommerce.dto.product.ProductResponse
-import ecommerce.dto.product.UpdateProductRequest
 import ecommerce.model.Product
 import io.restassured.RestAssured
 import io.restassured.http.ContentType
@@ -15,7 +14,6 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.web.server.LocalServerPort
 import org.springframework.http.HttpStatus
 import org.springframework.test.annotation.DirtiesContext
-import org.springframework.web.servlet.function.RequestPredicates.contentType
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
@@ -57,7 +55,7 @@ class ProductControllerTest {
         img: String,
         quantity: Int,
     ): ProductResponse {
-        val createRequest = CreateProductRequest(name = name, price = price, img = img, quantity = quantity)
+        val createRequest = ProductRequest(name = name, price = price, img = img, quantity = quantity)
         val response =
             RestAssured
                 .given().log().all()
@@ -83,7 +81,7 @@ class ProductControllerTest {
 
     @Test
     fun `createProduct should return 201`() {
-        val createRequest = CreateProductRequest("Test Product10", 10.0, "http://example_img", 2)
+        val createRequest = ProductRequest("Test Product10", 10.0, "http://example_img", 2)
         val response =
             RestAssured
                 .given().log().all()
@@ -116,7 +114,7 @@ class ProductControllerTest {
     fun `updateProduct should return 200 OK`() {
         val createdProduct = createProductWithAuth(900, "original", 20.0, "https://example.com/original", 5)
         val productIdToUpdate = createdProduct.id
-        val updateRequest = UpdateProductRequest("updated", 30.0, "https://example.com/original", 5)
+        val updateRequest = ProductRequest("updated", 30.0, "https://example.com/original", 5)
         val response =
             RestAssured
                 .given().log().all()

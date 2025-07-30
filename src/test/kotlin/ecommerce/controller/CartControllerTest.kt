@@ -5,7 +5,7 @@ import ecommerce.dto.cartItem.CartItemResponse
 import ecommerce.dto.cartItem.CartResponse
 import ecommerce.dto.member.LoginRequest
 import ecommerce.dto.member.RegisterRequest
-import ecommerce.dto.product.CreateProductRequest
+import ecommerce.dto.product.ProductRequest
 import io.restassured.RestAssured
 import io.restassured.http.ContentType
 import org.assertj.core.api.Assertions.assertThat
@@ -49,7 +49,7 @@ class CartControllerTest {
         assertThat(authToken).isNotNull().isNotBlank()
     }
 
-    private fun createProductWithAuth(createRequest: CreateProductRequest): Long {
+    private fun createProductWithAuth(createRequest: ProductRequest): Long {
         val response =
             RestAssured
                 .given()
@@ -70,7 +70,7 @@ class CartControllerTest {
     fun `add product to Cart should return 200 OK`() {
         val productId =
             createProductWithAuth(
-                CreateProductRequest(
+                ProductRequest(
                     "ProductA",
                     10.0,
                     "http://productA_img.jpg",
@@ -99,7 +99,7 @@ class CartControllerTest {
     fun `update product in cart should return 200 OK`() {
         val productId =
             createProductWithAuth(
-                CreateProductRequest(
+                ProductRequest(
                     "ProductZ",
                     10.0,
                     "http://productA_img.jpg",
@@ -180,7 +180,7 @@ class CartControllerTest {
         val productQuantity = 5
         val productId =
             createProductWithAuth(
-                CreateProductRequest(
+                ProductRequest(
                     "ProductY",
                     productPrice,
                     "http://productB_img.jpg",

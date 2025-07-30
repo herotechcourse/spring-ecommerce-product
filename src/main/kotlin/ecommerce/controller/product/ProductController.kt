@@ -1,12 +1,12 @@
 package ecommerce.controller.product
 
-import ecommerce.dto.product.CreateProductRequest
+import ecommerce.dto.product.ProductRequest
 import ecommerce.dto.product.ProductResponse
-import ecommerce.dto.product.UpdateProductRequest
 import ecommerce.service.ProductService
 import ecommerce.utils.toModel
 import ecommerce.utils.toResponse
 import jakarta.validation.Valid
+import org.springframework.data.jpa.domain.AbstractPersistable_.id
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
@@ -23,9 +23,9 @@ import java.net.URI
 class ProductController(private val productService: ProductService) {
     @PostMapping("")
     fun createProduct(
-        @Valid @RequestBody newProduct: CreateProductRequest,
+        @Valid @RequestBody newProduct: ProductRequest,
     ): ResponseEntity<ProductResponse> {
-        val product = newProduct.toModel()
+        val product = newProduct.toModel(0)
         val createdProduct = productService.createProduct(product)
         return ResponseEntity.created(URI.create("/products/${createdProduct?.id}")).build()
     }
@@ -47,7 +47,7 @@ class ProductController(private val productService: ProductService) {
     @PutMapping("{id}")
     fun updateProduct(
         @PathVariable("id") id: Long,
-        @Valid @RequestBody request: UpdateProductRequest,
+        @Valid @RequestBody request: ProductRequest,
     ): ResponseEntity<ProductResponse> {
         val updatedProduct = request.toModel(id)
         productService.updateProduct(id, updatedProduct)
