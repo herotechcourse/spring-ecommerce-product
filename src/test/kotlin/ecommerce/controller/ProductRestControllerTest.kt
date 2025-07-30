@@ -52,9 +52,6 @@ class ProductRestControllerTest {
                 .then().log().all()
                 .extract().response()
 
-        println("Status code: ${response.statusCode}")
-        println("Body: ${response.body.asString()}")
-
         productId = response.jsonPath().getLong("id")
     }
 
