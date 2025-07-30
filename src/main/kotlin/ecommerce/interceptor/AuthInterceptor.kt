@@ -9,15 +9,6 @@ import org.springframework.web.servlet.HandlerInterceptor
 
 @Component
 class AuthInterceptor(private val tokenService: TokenService) : HandlerInterceptor {
-    companion object {
-        const val USER_ID_ATTRIBUTE = "userId"
-        const val USER_ROLE_ATTRIBUTE = "userRole"
-        const val USER_EMAIL_ATTRIBUTE = "userEmail"
-        const val USER_NAME_ATTRIBUTE = "userName"
-        private const val BEARER_PREFIX = "Bearer "
-        private const val ADMIN_PATH_PREFIX = "/admin/"
-    }
-
     override fun preHandle(
         request: HttpServletRequest,
         response: HttpServletResponse,
@@ -102,5 +93,14 @@ class AuthInterceptor(private val tokenService: TokenService) : HandlerIntercept
         response.contentType = "application/json"
         response.writer.write("""{"error": "Forbidden", "message": "$message"}""")
         return false
+    }
+
+    companion object {
+        const val USER_ID_ATTRIBUTE = "userId"
+        const val USER_ROLE_ATTRIBUTE = "userRole"
+        const val USER_EMAIL_ATTRIBUTE = "userEmail"
+        const val USER_NAME_ATTRIBUTE = "userName"
+        private const val BEARER_PREFIX = "Bearer "
+        private const val ADMIN_PATH_PREFIX = "/admin/"
     }
 }
