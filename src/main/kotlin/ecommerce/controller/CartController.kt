@@ -2,6 +2,7 @@ package ecommerce.controller
 
 import ecommerce.dto.cart.AddToCartRequest
 import ecommerce.dto.cart.UpdateQuantityRequest
+import ecommerce.exception.NotFoundException
 import ecommerce.model.Cart
 import ecommerce.repository.CartRepository
 import ecommerce.repository.ProductRepository
@@ -72,7 +73,7 @@ class CartController(
 
         val existingCart =
             cartRepository.findByUserIdAndProductId(userId, productId)
-                ?: throw IllegalArgumentException("Item not found in cart")
+                ?: throw NotFoundException("Item not found in cart")
 
         val updatedCart = existingCart.copy(quantity = updateRequest.quantity)
         return cartRepository.update(updatedCart)
