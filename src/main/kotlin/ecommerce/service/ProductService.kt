@@ -17,8 +17,7 @@ class ProductService(
 ) {
     private fun validateBasicProductData(request: ProductRequest) {
         val errors = mutableListOf<String>()
-        
-        // Name validation
+
         if (request.name.isBlank()) {
             errors.add("Product name cannot be blank")
         }
@@ -28,25 +27,28 @@ class ProductService(
         if (!request.name.matches(PRODUCT_NAME_PATTERN.toRegex())) {
             errors.add("Product name contains invalid characters")
         }
-        
+
         val minPrice = PRODUCT_PRICE_MINIMUM.toDouble()
         if (request.price <= minPrice) {
             errors.add("Product price must be greater than $minPrice")
         }
-        
+
         if (request.imageUrl.isBlank()) {
             errors.add("Product image URL cannot be blank")
         }
         if (!request.imageUrl.matches(URL_PATTERN.toRegex())) {
             errors.add("Product image URL must start with http:// or https://")
         }
-        
+
         if (errors.isNotEmpty()) {
             throw ProductValidationException(errors)
         }
     }
 
-    private fun validateProductNameUniqueness(name: String, excludeId: Long? = null) {
+    private fun validateProductNameUniqueness(
+        name: String,
+        excludeId: Long? = null,
+    ) {
         if (excludeId != null) {
             val existingProduct = productRepository.findById(excludeId)
             if (existingProduct.name != name && productRepository.existsByName(name)) {
@@ -64,9 +66,12 @@ class ProductService(
         validateProductNameUniqueness(request.name)
     }
 
-    private fun validateProductForUpdate(id: Long, request: ProductRequest) {
+    private fun validateProductForUpdate(
+        id: Long,
+        request: ProductRequest,
+    ) {
         validateBasicProductData(request)
-        
+
         val existingProduct = productRepository.findById(id)
         if (existingProduct.name != request.name) {
             validateProductNameUniqueness(request.name, id)
@@ -75,32 +80,40 @@ class ProductService(
 
     fun createProduct(request: ProductRequest): Product {
         validateProductForCreation(request)
-        
-        val product = Product(
-            name = request.name,
-            price = request.price,
-            imageUrl = request.imageUrl,
-        )
+
+        val product =
+            Product(
+                name = request.name,
+                price = request.price,
+                imageUrl = request.imageUrl,
+            )
         return productRepository.save(product)
     }
 
-    fun updateProduct(id: Long, request: ProductRequest): Product {
+    fun updateProduct(
+        id: Long,
+        request: ProductRequest,
+    ): Product {
         validateProductForUpdate(id, request)
-        
-        val product = Product(
-            id = id,
-            name = request.name,
-            price = request.price,
-            imageUrl = request.imageUrl,
-        )
+
+        val product =
+            Product(
+                id = id,
+                name = request.name,
+                price = request.price,
+                imageUrl = request.imageUrl,
+            )
         return productRepository.update(id, product)
     }
 
-    fun patchProduct(id: Long, request: ProductPatchRequest): Product {
+    fun patchProduct(
+        id: Long,
+        request: ProductPatchRequest,
+    ): Product {
         request.name?.let { newName ->
             validateProductNameUniqueness(newName, id)
         }
-        
+
         return productRepository.patch(id, request)
     }
 
