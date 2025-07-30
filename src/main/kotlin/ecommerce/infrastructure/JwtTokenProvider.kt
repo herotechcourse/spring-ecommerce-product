@@ -13,7 +13,7 @@ import javax.crypto.SecretKey
 class JwtTokenProvider(
     @Value("\${security.jwt.token.secret-key}")
     secret: String,
-    @Value("\${security.jwt.token.expire-length}")
+    @Value("\${security.jwt.token.expire-length-ms}")
     private var validityInMilliseconds: Long = 0,
 ) {
     private val secretKey: SecretKey = Keys.hmacShaKeyFor(secret.toByteArray(StandardCharsets.UTF_8))

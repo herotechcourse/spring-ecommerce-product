@@ -290,7 +290,8 @@ of Long types Value Class types like ProductId, or should it take a CartRequestD
           }
     ```
   - [x] also return CONFLICT when registering already existent members
-- [ ] rename with time unit or append comment to `security.jwt.token.expire-length=3600000`
+- [x] rename with time unit or append comment to `security.jwt.token.expire-length=3600000`
+  - append comment 
 - [ ] override equals() and hashcode() for Member ??
 - [ ] inside `findMemberByToken()`: `if (jwtTokenProvider.isInvalid(token)) { ... }` or throw exception in getPayload method 
 - [ ] try to refactor structure according to these principles:
