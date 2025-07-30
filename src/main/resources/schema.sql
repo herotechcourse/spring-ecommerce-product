@@ -11,6 +11,7 @@ create table MEMBERS
 (
     id        BIGINT AUTO_INCREMENT,
     email     VARCHAR(20) UNIQUE,
+    name      VARCHAR(100) DEFAULT '',
     password  VARCHAR(50),
     role      VARCHAR(10),
     PRIMARY KEY (id)

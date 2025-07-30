@@ -73,16 +73,16 @@ class StatisticsE2ETest {
 
     private fun createMembersTable() {
         jdbcTemplate.execute(
-            "CREATE TABLE members(" + " id SERIAL, email VARCHAR(20) UNIQUE, password VARCHAR(50), role VARCHAR(10))",
+            "CREATE TABLE members(" + " id SERIAL, email VARCHAR(20) UNIQUE, name VARCHAR(100) DEFAULT '', password VARCHAR(50), role VARCHAR(10))",
         )
 
         val splitUpAttributes: List<Array<String>> =
             listOf(
-                "$USER1_MAIL $USER1_PASSWORD $USER",
-                "$USER2_MAIL $USER2_PASSWORD $USER",
-                "$ADMIN_MAIL $ADMIN_PASSWORD $ADMIN",
+                "$USER1_MAIL Anna $USER1_PASSWORD $USER",
+                "$USER2_MAIL Anna $USER2_PASSWORD $USER",
+                "$ADMIN_MAIL Anna $ADMIN_PASSWORD $ADMIN",
             ).map { name -> name.split(" ").toTypedArray() }.toList()
-        jdbcTemplate.batchUpdate("INSERT INTO members(email, password, role) VALUES (?,?,?)", splitUpAttributes)
+        jdbcTemplate.batchUpdate("INSERT INTO members(email, name, password, role) VALUES (?,?,?,?)", splitUpAttributes)
     }
 
     private fun createProductsTable() {

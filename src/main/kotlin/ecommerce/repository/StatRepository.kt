@@ -11,7 +11,8 @@ class StatRepository(private val jdbcTemplate: JdbcTemplate) {
         val query = """
             SELECT DISTINCT
                 m.id AS member_id,
-                m.email
+                m.email,
+                m.name
             FROM
                 cart_items ci
             JOIN
@@ -26,7 +27,7 @@ class StatRepository(private val jdbcTemplate: JdbcTemplate) {
             MemberStatsResponse(
                 memberId = rs.getLong("member_id"),
                 email = rs.getString("email"),
-                name = "",
+                name = rs.getString("name") ?: "",
             )
         }
     }

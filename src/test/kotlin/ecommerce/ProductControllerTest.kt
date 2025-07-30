@@ -33,7 +33,7 @@ class ProductControllerTest {
         jdbcTemplate.execute("DROP TABLE IF EXISTS carts")
         jdbcTemplate.execute("DROP TABLE products IF EXISTS")
         jdbcTemplate.execute(
-            "CREATE TABLE products(" + "id SERIAL, name VARCHAR(100), price DECIMAL(10,2), image_url VARCHAR(500))",
+            "CREATE TABLE products(" + "id SERIAL, name VARCHAR(100) DEFAULT '', price DECIMAL(10,2), image_url VARCHAR(500))",
         )
 
         val splitUpAttributes: List<Array<String>> =
@@ -44,7 +44,13 @@ class ProductControllerTest {
                 "tea 4 http//tea",
             ).map { name -> name.split(" ").toTypedArray() }.toList()
         jdbcTemplate.batchUpdate("INSERT INTO products(name, price, image_url) VALUES (?,?,?)", splitUpAttributes)
-        jdbcTemplate.update("INSERT INTO members(email, password, role) VALUES (?,?,?)", "admin@email.com", "AdminPassword", "ADMIN")
+        jdbcTemplate.update(
+            "INSERT INTO members(email, name, password, role) VALUES (?,?,?,?)",
+            "admin@email.com",
+            "admin",
+            "AdminPassword",
+            "ADMIN",
+        )
         adminToken = loginAsAdmin()
     }
 

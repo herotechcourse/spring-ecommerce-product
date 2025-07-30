@@ -12,14 +12,15 @@ class MemberRepository(private val jdbcTemplate: JdbcTemplate) {
             Member(
                 rs.getLong("id"),
                 rs.getString("email"),
+                rs.getString("name"),
                 rs.getString("password"),
                 rs.getString("role"),
             )
         }
 
     fun registerMember(member: Member): Boolean {
-        val sql = "INSERT INTO members (email, password, role) VALUES (?, ?, ?)"
-        val rowsAffected = jdbcTemplate.update(sql, member.email, member.password, member.role)
+        val sql = "INSERT INTO members (email, name, password, role) VALUES (?, ?, ?, ?)"
+        val rowsAffected = jdbcTemplate.update(sql, member.email, member.name, member.password, member.role)
         return rowsAffected > 0
     }
 

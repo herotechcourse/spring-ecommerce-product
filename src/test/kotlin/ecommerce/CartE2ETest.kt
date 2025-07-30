@@ -45,7 +45,7 @@ class CartE2ETest {
 
     private fun createTables() {
         jdbcTemplate.execute(
-            "CREATE TABLE members(" + " id SERIAL, email VARCHAR(20) UNIQUE, password VARCHAR(50), role VARCHAR(10))",
+            "CREATE TABLE members(" + " id SERIAL, email VARCHAR(20) UNIQUE, name VARCHAR(100), password VARCHAR(50), role VARCHAR(10))",
         )
         jdbcTemplate.execute(
             "CREATE TABLE products(" + "id SERIAL, name VARCHAR(100), price DECIMAL(10,2), image_url VARCHAR(500))",
@@ -68,8 +68,9 @@ class CartE2ETest {
 
     private fun insertDataIntoTables() {
         jdbcTemplate.update(
-            "INSERT INTO members(email, password, role) VALUES (?,?,?)",
+            "INSERT INTO members(email, name, password, role) VALUES (?,?,?,?)",
             "sandra@email.com",
+            "sandra",
             "MyPassword",
             Role.USER.toString(),
         )

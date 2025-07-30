@@ -49,7 +49,7 @@ class TokenLoginControllerTest {
         jdbcTemplate.execute("DROP TABLE IF EXISTS carts")
         jdbcTemplate.execute("DROP TABLE members IF EXISTS")
         jdbcTemplate.execute(
-            "CREATE TABLE members(" + " id SERIAL, email VARCHAR(20) UNIQUE, password VARCHAR(50), role VARCHAR(10))",
+            "CREATE TABLE members(" + " id SERIAL, email VARCHAR(20) UNIQUE, name VARCHAR(100) DEFAULT '', password VARCHAR(50), role VARCHAR(10))",
         )
 
         val splitUpAttributes: List<Array<String>> =

@@ -7,6 +7,7 @@ import ecommerce.exception.UnauthorizedException
 class Member(
     val id: Long? = null,
     val email: String,
+    val name: String = "",
     val password: String,
     val role: String = Role.USER.toString(),
 ) {

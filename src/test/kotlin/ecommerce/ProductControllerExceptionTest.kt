@@ -31,7 +31,13 @@ class ProductControllerExceptionTest {
         jdbcTemplate.execute(
             "CREATE TABLE products(" + "id SERIAL, name VARCHAR(100), price DECIMAL(10,2), image_url VARCHAR(500))",
         )
-        jdbcTemplate.update("INSERT INTO members(email, password, role) VALUES (?,?,?)", "admin@email.com", "AdminPassword", "ADMIN")
+        jdbcTemplate.update(
+            "INSERT INTO members(email, name, password, role) VALUES (?,?,?,?)",
+            "admin@email.com",
+            "admin",
+            "AdminPassword",
+            "ADMIN",
+        )
         adminToken = loginAsAdmin()
     }
 

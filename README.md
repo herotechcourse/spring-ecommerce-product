@@ -300,19 +300,20 @@ of Long types Value Class types like ProductId, or should it take a CartRequestD
     - An Entity is a representation of data in the database and usually includes an id.
   - e.g.: MemberRegisterRequest(DTO) → RegisterMember(DM) → MemberEntity → RegisteredMember(DM) → MemberRegisteredResponse(DTO)
 - [ ] test password validation after refactoring
-- [ ] override equals() and hashcode() for Member ??
+- [x] override equals() and hashcode() for Member
 - 
 ### Feedback from coaches
-- [ ] all Controllers use DTOs
+- [x] all Controllers use DTOs
   - [x] change DTO names to more specific names e.g. *DTO -> *Response
-  - [ ] move validation logic to DTOs, do not validate inside Models
+  - [x] move validation logic to DTOs, do not validate inside Models
   - [ ] bundle related DTOs into the same file
-- [ ] repos use Entity (or sometimes DTO?)
+    - I prefer to keep them separately
+- [x] repos use Model (or sometimes DTO?)
   - [ ] StatRepository can return Member and ProductStat
 - [ ] separate CartsRepository from CartItemsRepository
 - [ ] more OOP style inside the service e.g. -> retrieve cart -> retrieve product -> create cart item -> add item to cart -> return response
-- [ ] turn data class into simple class if you implement your own hashcode() and equals() implementations
-- [ ] Member should have name attribute
+- [x] turn data class into simple class if you implement your own hashcode() and equals() implementations
+- [x] Member should have name attribute
 - [x] add Service layer for Product
 - [x] add /api before the /products path
 - [x] only allow admin to manipulate products
