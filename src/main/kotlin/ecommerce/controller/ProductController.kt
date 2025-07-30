@@ -2,9 +2,8 @@ package ecommerce.controller
 
 import ecommerce.annotation.Admin
 import ecommerce.dto.RegisteredMember
-import ecommerce.exception.ConflictException
 import ecommerce.model.Product
-import ecommerce.repository.ProductRepository
+import ecommerce.service.ProductService
 import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -17,16 +16,13 @@ import org.springframework.web.bind.annotation.RestController
 import java.net.URI
 
 @RestController
-class ProductController(private val productRepository: ProductRepository) {
+class ProductController(private val productService: ProductService) {
     @PostMapping("/api/products")
     fun create(
         @RequestBody @Valid product: Product,
         @Admin admin: RegisteredMember,
     ): ResponseEntity<Unit> {
-        if (productRepository.existsByName(product.name)) {
-            throw ConflictException("Product with name ${product.name} already exists")
-        }
-        val id = productRepository.insertWithKeyHolder(product)
+        val id = productService.create(product)
         return ResponseEntity.created(URI.create("/api/products/$id")).build()
     }
 
@@ -34,23 +30,22 @@ class ProductController(private val productRepository: ProductRepository) {
     fun read(
         @Admin admin: RegisteredMember,
     ): ResponseEntity<List<Product>> {
-        val products = productRepository.findAllProducts()
+        val products = productService.read()
         return ResponseEntity.ok().body(products)
     }
 
     @PutMapping("/api/products/{id}")
-    fun update(
+    fun upsert(
         @RequestBody @Valid newProduct: Product,
         @PathVariable id: Long,
         @Admin admin: RegisteredMember,
     ): ResponseEntity<Unit> {
-        if (!productRepository.existsById(id)) {
-            return create(newProduct, admin)
+        val created = productService.upsert(newProduct, id)
+        return if (created) {
+            return ResponseEntity.created(URI.create("/api/products/$id")).build()
+        } else {
+            ResponseEntity.ok().build()
         }
-        if (!productRepository.update(newProduct, id)) {
-            return ResponseEntity.notFound().build()
-        }
-        return ResponseEntity.ok().build()
     }
 
     @DeleteMapping("/api/products/{id}")
@@ -58,9 +53,7 @@ class ProductController(private val productRepository: ProductRepository) {
         @PathVariable id: Long,
         @Admin admin: RegisteredMember,
     ): ResponseEntity<Unit> {
-        if (!productRepository.delete(id)) {
-            return ResponseEntity.notFound().build()
-        }
+        productService.delete(id)
         return ResponseEntity.noContent().build()
     }
 }
