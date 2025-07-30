@@ -2,6 +2,7 @@ package ecommerce.service
 
 import ecommerce.exception.auth.UnauthorizedException
 import ecommerce.model.Member
+import ecommerce.utils.LoginMember
 import org.slf4j.LoggerFactory
 import org.springframework.core.MethodParameter
 import org.springframework.security.core.Authentication
@@ -12,10 +13,6 @@ import org.springframework.web.bind.support.WebDataBinderFactory
 import org.springframework.web.context.request.NativeWebRequest
 import org.springframework.web.method.support.HandlerMethodArgumentResolver
 import org.springframework.web.method.support.ModelAndViewContainer
-
-@Target(AnnotationTarget.VALUE_PARAMETER)
-@Retention(AnnotationRetention.RUNTIME)
-annotation class LoginMember
 
 @Component
 class LoginMemberArgumentResolver(
