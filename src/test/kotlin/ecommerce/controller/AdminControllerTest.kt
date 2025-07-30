@@ -1,5 +1,6 @@
 package ecommerce.controller
 
+import ecommerce.dto.MemberRequest
 import ecommerce.dto.MemberStatsResponse
 import ecommerce.dto.ProductStatsResponse
 import ecommerce.entity.Member
@@ -21,9 +22,7 @@ import java.time.LocalDateTime
 @WebMvcTest(AdminController::class)
 class AdminControllerTest
     @Autowired
-    constructor(
-        private val mockMvc: MockMvc,
-    ) {
+    constructor(private val mockMvc: MockMvc) {
         @MockitoBean
         private lateinit var adminService: AdminService
 
@@ -32,7 +31,8 @@ class AdminControllerTest
 
         @BeforeEach
         fun setup() {
-            val mockMember = VALID_MEMBER_GURI
+            val request = MemberRequest(email = "guri@email.com", password = "very_cute_dog")
+            val mockMember = Member(id = 1L, email = request.email, password = request.password)
             whenever(authService.findMemberByToken("fake-token"))
                 .thenReturn(
                     Member(

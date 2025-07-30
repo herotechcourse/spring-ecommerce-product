@@ -5,7 +5,7 @@ import io.jsonwebtoken.Claims
 import io.jsonwebtoken.Jwts
 import java.util.Date
 
-class TestExpected(
+class MemberTestExpected(
     val request: MemberRequest,
     val set: JwtTestSetup,
     val id: Long = 1,

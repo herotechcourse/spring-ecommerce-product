@@ -76,12 +76,11 @@ StatsQueryParams(
 - [ ] Properly handle secrets (`secret-key`) in `application.yml`
 
 ### 12. Tests and Annotations
-- [ ] Avoid `@DirtiesContext`
+- [x] Avoid `@DirtiesContext`
   - [x] CartServiceTest
 - [ ] Add **JWT-related tests** (critical logic).
 - [x] Remove redundant annotations (`@Rollback`)
 - [ ] Review `@AutoConfigureTestDatabase` and `@ActiveProfiles("test")`
-- [ ] Create separate test profile
 
 ### 13. General
 - [x] Remove unused SQL template constants

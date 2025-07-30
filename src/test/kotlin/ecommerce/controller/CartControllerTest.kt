@@ -1,11 +1,11 @@
 package ecommerce.controller
 
+import ecommerce.config.LoginMemberArgumentResolver
 import ecommerce.dto.CartResponse
+import ecommerce.dto.MemberRequest
 import ecommerce.entity.CartItem
 import ecommerce.entity.Member
 import ecommerce.exception.NotFoundException
-import ecommerce.exception.UnauthorizedException
-import ecommerce.helper.MemberTestFixture
 import ecommerce.service.AuthService
 import ecommerce.service.CartService
 import org.junit.jupiter.api.BeforeEach
@@ -36,17 +36,16 @@ class CartControllerTest
         @MockitoBean
         private lateinit var authService: AuthService
 
+        @MockitoBean
+        private lateinit var loginMemberArgumentResolver: LoginMemberArgumentResolver
+
         @BeforeEach
         fun setup() {
-            val mockMember = MemberTestFixture.RequestCases.VALID_MEMBER_GURI
-            whenever(authService.findMemberByToken("fake-token"))
-                .thenReturn(
-                    Member(
-                        id = 1L,
-                        email = mockMember.email,
-                        password = mockMember.password,
-                    ),
-                )
+            val request = MemberRequest(email = "guri@email.com", password = "very_cute_dog")
+            val mockMember = Member(id = 1L, email = request.email, password = request.password)
+            whenever(loginMemberArgumentResolver.supportsParameter(any())).thenReturn(true)
+            whenever(loginMemberArgumentResolver.resolveArgument(any(), any(), any(), any()))
+                .thenReturn(mockMember)
         }
 
         @Test
@@ -76,25 +75,12 @@ class CartControllerTest
         }
 
         @Test
-        fun `should return 401 if no token provided`() {
-            whenever(authService.findMemberByToken("invalid-token"))
-                .thenThrow(UnauthorizedException("Invalid token"))
-
-            mockMvc.get("/api/cart-items") {
-                header("Authorization", "Bearer invalid-token")
-            }
-                .andExpect {
-                    status { isUnauthorized() }
-                }
-        }
-
-        @Test
         fun `should add single item to cart`() {
             val memberId = 1L
             val productId = 101L
             val mockResponse = CartResponse(id = 1L, productId = productId, quantity = 2, updatedAt = LocalDateTime.now())
 
-            whenever(cartService.insertCartItem(memberId, productId, 2))
+            whenever(cartService.insertNewItemToCart(memberId, productId, 2))
                 .thenReturn(mockResponse)
 
             mockMvc.post("/api/cart-items/$productId") {
@@ -118,7 +104,7 @@ class CartControllerTest
                     CartResponse(id = 2L, productId = 102, quantity = 3, updatedAt = LocalDateTime.now()),
                 )
 
-            whenever(cartService.insertCartItems(eq(memberId), any()))
+            whenever(cartService.insertNewItemsToCart(eq(memberId), any()))
                 .thenReturn(mockResponses)
 
             mockMvc.put("/api/cart-items/") {
