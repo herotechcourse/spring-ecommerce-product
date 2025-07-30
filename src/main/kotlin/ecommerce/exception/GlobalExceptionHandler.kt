@@ -37,6 +37,6 @@ class GlobalExceptionHandler {
     @ExceptionHandler(Exception::class)
     fun handleGenericException(e: Exception): ResponseEntity<String> {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-            .body("An unexpected error occurred: ${e.localizedMessage ?: "Unknown error"}")
+            .body("An unexpected error occurred.")
     }
 }
