@@ -23,6 +23,9 @@ class ProductRestControllerTest {
 
     @BeforeEach
     fun setUp() {
+        jdbcTemplate.execute("DROP TABLE IF EXISTS cart_products")
+        jdbcTemplate.execute("DROP TABLE IF EXISTS products")
+
         jdbcTemplate.execute(
             """
             CREATE TABLE IF NOT EXISTS products (
