@@ -69,10 +69,14 @@ class JwtProperties(
 - [ ] Add JWT-related tests
 
 ### 11. SQL and Enum Usage
-- [ ] Remove unused constants in `StateConstsSQL.kt`
-- [ ] Update hardcoded sort strings to use `SortOption` enum
+- [x] Remove unused constants in `StateConstsSQL.kt`
+- [x] Update hardcoded sort strings to use `SortOption` enum
 ```kotlin
-enum class SortOption(val sql: String) { PRODUCT_COUNT("add_count DESC") }
+StatsQueryParams(
+  limit = 5,
+  days = 30,
+  sort = SortOption.PRODUCT_COUNT, // here was String
+)
 ```
 
 ### 12. Sensitive Config
@@ -88,7 +92,7 @@ enum class SortOption(val sql: String) { PRODUCT_COUNT("add_count DESC") }
 
 ### 14. General
 - [ ] Add tests for JWT, Auth flows
-- [ ] Remove unused SQL template constants
+- [x] Remove unused SQL template constants
 ---
 
 ## Features:

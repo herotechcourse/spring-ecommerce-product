@@ -24,17 +24,4 @@ object StateConstsSQL {
         )
         ORDER BY %s
         """
-
-    const val ACTIVE_MEMBERS_TEMPLATE = """
-        SELECT 
-            m.id AS member_id,
-            m.email,
-            COUNT(c.id) AS add_count
-        FROM members m
-        JOIN cart_items c ON c.member_id = m.id
-        WHERE c.created_at >= DATEADD('DAY', ?, CURRENT_TIMESTAMP)
-        GROUP BY m.id, m.email
-        ORDER BY add_count DESC
-        LIMIT ?
-        """
 }
