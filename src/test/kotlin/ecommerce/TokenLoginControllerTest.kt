@@ -56,10 +56,10 @@ class TokenLoginControllerTest {
 
         val splitUpAttributes: List<Array<String>> =
             listOf(
-                "sandra@email.com MyPassword user",
-                "simon@email.com Hello1234 user",
-                "sara@email.com 1234567! user",
-                "sam@email.com abcdefghijkl user",
+                "sandra@email.com MyPassword USER",
+                "simon@email.com Hello1234 USER",
+                "sara@email.com 1234567! USER",
+                "sam@email.com abcdefghijkl USER",
             ).map { name -> name.split(" ").toTypedArray() }.toList()
         jdbcTemplate.batchUpdate("INSERT INTO members(email, password, role) VALUES (?,?,?)", splitUpAttributes)
     }

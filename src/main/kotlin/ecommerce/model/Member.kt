@@ -1,5 +1,7 @@
 package ecommerce.model
 
+import ecommerce.dto.MemberDto
+import ecommerce.dto.Role
 import ecommerce.exception.UnauthorizedException
 import jakarta.validation.constraints.Email
 import jakarta.validation.constraints.NotBlank
@@ -16,11 +18,16 @@ data class Member(
     val password: String,
     @field:NotBlank(message = "Field cannot be blank")
     @field:Pattern(regexp = "^(user|admin)", message = "Invalid role")
-    val role: String = "user",
+    val role: String = Role.USER.toString(),
 ) {
     fun validatePassword(password: String) {
         if (this.password != password) {
             throw UnauthorizedException("Incorrect password")
         }
+    }
+
+    fun toMemberDto(): MemberDto {
+        val role = Role.valueOf(this.role)
+        return MemberDto(this.id!!, email, role)
     }
 }

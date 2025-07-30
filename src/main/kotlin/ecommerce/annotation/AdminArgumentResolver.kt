@@ -1,6 +1,7 @@
 package ecommerce.annotation
 
 import ecommerce.dto.MemberDto
+import ecommerce.dto.Role
 import ecommerce.exception.ForbiddenException
 import ecommerce.exception.NotFoundException
 import ecommerce.exception.UnauthorizedException
@@ -37,7 +38,7 @@ class AdminArgumentResolver(
             throw UnauthorizedException()
         }
 
-        if (member.role != "admin") {
+        if (member.role != Role.ADMIN) {
             throw ForbiddenException()
         }
 

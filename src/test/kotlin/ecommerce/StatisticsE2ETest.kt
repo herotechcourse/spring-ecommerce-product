@@ -180,7 +180,7 @@ class StatisticsE2ETest {
         private const val USER2_PASSWORD = "User2Password"
         private const val ADMIN_MAIL = "admin@email.com"
         private const val ADMIN_PASSWORD = "AdminPassword"
-        private const val ADMIN = "admin"
-        private const val USER = "user"
+        private const val ADMIN = "ADMIN"
+        private const val USER = "USER"
     }
 }

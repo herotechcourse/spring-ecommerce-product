@@ -19,11 +19,10 @@ class AuthInterceptor(
         handler: Any,
     ): Boolean {
         val token = authExtractor.extract(request)
-        if (token.isEmpty())
-            {
-                response.status = HttpStatus.UNAUTHORIZED.value()
-                return false
-            }
+        if (token.isEmpty()) {
+            response.status = HttpStatus.UNAUTHORIZED.value()
+            return false
+        }
         if (!jwtTokenProvider.validateToken(token)) {
             response.status = HttpStatus.UNAUTHORIZED.value()
             return false

@@ -20,7 +20,7 @@ class AuthService(
         if (member == null) {
             throw NotFoundException("Member not found")
         }
-        return MemberDto(member.id!!, member.email, member.role)
+        return member.toMemberDto()
     }
 
     fun findMemberByToken(token: String): MemberDto {

@@ -267,7 +267,7 @@ of Long types Value Class types like ProductId, or should it take a CartRequestD
 ## Refactoring List
 
 ### Feedback from the reviewer
-- [ ] declare enum class for ADMIN and USER
+- [x] declare enum class for ADMIN and USER
 - [ ] delegate the logic inside @Admin argument resolver to the `AuthService` 
   - reason: resolver can solely focus on parameter passing, business logic is inside the service
 - [ ] do not expose error message when handling `500 Internal Server Error`

@@ -1,6 +1,7 @@
 package ecommerce
 
 import ecommerce.dto.CartItemRequest
+import ecommerce.dto.Role
 import ecommerce.dto.TokenRequest
 import ecommerce.repository.ProductRepository
 import io.restassured.RestAssured
@@ -66,7 +67,12 @@ class CartE2ETest {
     }
 
     private fun insertDataIntoTables() {
-        jdbcTemplate.update("INSERT INTO members(email, password, role) VALUES (?,?,?)", "sandra@email.com", "MyPassword", "user")
+        jdbcTemplate.update(
+            "INSERT INTO members(email, password, role) VALUES (?,?,?)",
+            "sandra@email.com",
+            "MyPassword",
+            Role.USER.toString(),
+        )
 
         val splitUpAttributes: List<Array<String>> =
             listOf(
