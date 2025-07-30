@@ -18,11 +18,10 @@
 - [ ] Extract logic to a Service layer
 
 ### 3. Repository Queries
-- [ ] **Change COUNT query to EXISTS**
-  - [ ] `MemberRepository.existsByEmail()`
-  - [ ] `CartRepository.existsByMemberId()`
-  - [ ] `ProductRepository.existsById()`
-- [ ] **Learn differences between COUNT vs EXISTS**
+- [x] **Change COUNT query to EXISTS**
+  - [x] `MemberRepository.existsByEmail()`
+  - [x] `CartRepository.existsByMemberId()`
+  - [x] `ProductRepository.existsById()`
 
 ### 4. DTO Usage in Repository Layer
 - [ ] **Prevent DTOs from reaching Repository**,

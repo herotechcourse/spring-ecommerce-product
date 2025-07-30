@@ -72,9 +72,9 @@ class ProductRepository(private val jdbcTemplate: JdbcTemplate) {
     }
 
     fun existsByName(name: String): Boolean {
-        val sql = ProductConstsSQL.COUNT_BY_NAME
-        val found = jdbcTemplate.queryForObject(sql, Int::class.java, name)
-        return found != null && found > 0
+        val sql = ProductConstsSQL.EXISTS_BY_NAME
+        val existing = jdbcTemplate.queryForObject(sql, Boolean::class.java, name)
+        return existing ?: false
     }
 
     fun insertWithKeyholder(request: ProductRequest): Long {

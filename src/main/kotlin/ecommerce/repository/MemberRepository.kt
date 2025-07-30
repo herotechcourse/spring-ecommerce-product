@@ -27,9 +27,9 @@ class MemberRepository(private val jdbcTemplate: JdbcTemplate) {
         }
 
     fun existsByEmail(email: String): Boolean {
-        val sql = MemberConstsSQL.COUNT_BY_EMAIL
-        val existing = jdbcTemplate.queryForObject(sql, Int::class.java, email)
-        return existing != null && existing > 0
+        val sql = MemberConstsSQL.EXISTS_BY_EMAIL
+        val existing = jdbcTemplate.queryForObject(sql, Boolean::class.java, email)
+        return existing ?: false
     }
 
     fun insert(request: MemberRequest): Long? {
@@ -96,5 +96,4 @@ class MemberRepository(private val jdbcTemplate: JdbcTemplate) {
     ): Boolean {
         return actual == expected
     }
-//    fun deleteById(id: Long): Boolean
 }

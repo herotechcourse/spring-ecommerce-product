@@ -11,8 +11,8 @@ object CartConstsSQL {
         FROM cart_items WHERE member_id = ?
         """
 
-    const val COUNT_BY_MEMBER = """
-        SELECT count(*) FROM cart_items WHERE member_id = ?
+    const val EXISTS_BY_MEMBER = """
+        SELECT EXISTS(SELECT 1 FROM cart_items WHERE member_id = ?)
         """
 
     const val SELECT_BY_ID = """

@@ -24,9 +24,9 @@ class CartRepository(private val jdbcTemplate: JdbcTemplate) {
         }
 
     fun existsByMemberId(memberId: Long): Boolean {
-        val sql = CartConstsSQL.COUNT_BY_MEMBER
-        val existing = jdbcTemplate.queryForObject(sql, Int::class.java, memberId)
-        return existing != null && existing > 0
+        val sql = CartConstsSQL.EXISTS_BY_MEMBER
+        val existing = jdbcTemplate.queryForObject(sql, Boolean::class.java, memberId)
+        return existing ?: false
     }
 
     fun selectByMemberId(memberId: Long): List<CartItem> {
