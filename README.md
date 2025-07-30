@@ -330,5 +330,5 @@ fun createToken(tokenRequest: TokenRequest): TokenResponse {
 ```
 
 ### Miscellaneous
-- [ ] change from INT to BIGINT inside `schema.sql`
+- [x] change from INT to BIGINT inside `schema.sql`
 ---

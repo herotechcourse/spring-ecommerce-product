@@ -1,6 +1,6 @@
 create table PRODUCTS
 (
-    id        INT AUTO_INCREMENT,
+    id        BIGINT AUTO_INCREMENT,
     name      VARCHAR(100) UNIQUE,
     price     DECIMAL(10, 2),
     image_url VARCHAR(500),
@@ -9,7 +9,7 @@ create table PRODUCTS
 
 create table MEMBERS
 (
-    id        INT AUTO_INCREMENT,
+    id        BIGINT AUTO_INCREMENT,
     email     VARCHAR(20) UNIQUE,
     password  VARCHAR(50),
     role      VARCHAR(10),
@@ -18,15 +18,15 @@ create table MEMBERS
 
 create table CARTS
 (
-    cart_id        INT AUTO_INCREMENT,
-    user_id   INT UNIQUE,
+    cart_id        BIGINT AUTO_INCREMENT,
+    user_id   BIGINT UNIQUE,
     PRIMARY KEY (cart_id),
     FOREIGN KEY (user_id) REFERENCES MEMBERS(id)
 );
 
 create table CART_ITEMS (
-    cart_id INT,
-    product_id INT,
+    cart_id BIGINT,
+    product_id BIGINT,
     quantity INT DEFAULT 1,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (cart_id, product_id),
