@@ -1,6 +1,7 @@
 package ecommerce.repository
 
 import ecommerce.model.Member
+import ecommerce.model.Role
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.jdbc.core.RowMapper
 import org.springframework.jdbc.support.GeneratedKeyHolder
@@ -16,7 +17,7 @@ class MemberRepository(private val jdbc: JdbcTemplate) {
                 rs.getString("email"),
                 rs.getString("password"),
                 rs.getString("name"),
-                rs.getString("role"),
+                Role.valueOf(rs.getString("role")),
             )
         }
 
@@ -28,7 +29,7 @@ class MemberRepository(private val jdbc: JdbcTemplate) {
                 setString(1, member.email)
                 setString(2, member.password)
                 setString(3, member.name)
-                setString(4, member.role)
+                setString(4, member.role.name)
             }
         }, keyHolder)
         return member.copy(id = keyHolder.key!!.toLong())

@@ -1,5 +1,6 @@
 package ecommerce.dto.member
 
+import ecommerce.model.Role
 import jakarta.validation.constraints.Email
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.Size
@@ -14,5 +15,5 @@ data class RegisterRequest(
     @field:Size(min = 2, max = 30, message = "Name between 2 and 50 characters")
     @field:NotBlank(message = "Name must not be blank")
     val name: String,
-    val role: String = "USER",
+    val role: Role = Role.USER,
 )

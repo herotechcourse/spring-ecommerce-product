@@ -1,5 +1,6 @@
 package ecommerce.interceptor
 
+import ecommerce.model.Role
 import ecommerce.service.TokenService
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
@@ -15,7 +16,6 @@ class AuthInterceptor(private val tokenService: TokenService) : HandlerIntercept
         const val USER_NAME_ATTRIBUTE = "userName"
         private const val BEARER_PREFIX = "Bearer "
         private const val ADMIN_PATH_PREFIX = "/admin/"
-        private const val ADMIN_ROLE = "ADMIN"
     }
 
     override fun preHandle(
@@ -81,7 +81,7 @@ class AuthInterceptor(private val tokenService: TokenService) : HandlerIntercept
     }
 
     private fun hasAdminRole(claims: io.jsonwebtoken.Claims): Boolean {
-        return claims["role"] as? String == ADMIN_ROLE
+        return claims["role"] as? String == Role.ADMIN.name
     }
 
     private fun sendUnauthorizedResponse(

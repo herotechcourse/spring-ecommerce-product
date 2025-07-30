@@ -23,7 +23,7 @@ class TokenService(
         return Jwts.builder()
             .subject(member.id.toString())
             .claim("email", member.email)
-            .claim("role", member.role)
+            .claim("role", member.role.name)
             .claim("name", member.name)
             .issuedAt(now)
             .expiration(expiryDate)
