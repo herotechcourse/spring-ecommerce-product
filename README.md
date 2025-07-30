@@ -15,7 +15,7 @@
   ```
 
 ### 2. ProductController Refactor
-- [ ] Extract logic to a Service layer
+- [x] Extract logic to a Service layer
 
 ### 3. Repository Queries
 - [x] **Change COUNT query to EXISTS**

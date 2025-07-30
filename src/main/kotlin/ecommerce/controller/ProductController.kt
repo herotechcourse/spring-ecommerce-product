@@ -2,8 +2,9 @@ package ecommerce.controller
 
 import ecommerce.dto.ProductRequest
 import ecommerce.dto.ProductResponse
-import ecommerce.dto.mapper.ProductMapper
-import ecommerce.repository.ProductRepository
+import ecommerce.dto.mapper.ProductMapper.toNewProduct
+import ecommerce.dto.mapper.ProductMapper.toResponse
+import ecommerce.service.ProductService
 import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -16,57 +17,35 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-class ProductController(private val repository: ProductRepository) {
+class ProductController(private val service: ProductService) {
     @PostMapping(PRODUCTS_ENDPOINT)
     fun createProduct(
         @Valid @RequestBody request: ProductRequest,
     ): ResponseEntity<ProductResponse> {
-        return try {
-            val id = repository.insertWithKeyholder(request)
-            val product =
-                requireNotNull(repository.findById(id)) {
-                    "Product with id $id could not be found"
-                }
+        val product = service.insertNewProduct(toNewProduct(request))
 
-            ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(ProductMapper.toResponse(product))
-        } catch (exception: Exception) {
-            ResponseEntity.status(HttpStatus.BAD_REQUEST).build()
-        }
+        return ResponseEntity
+            .status(HttpStatus.CREATED)
+            .body(toResponse(product))
     }
 
     @GetMapping(PRODUCTS_ENDPOINT)
-    fun getProducts(): ResponseEntity<List<ProductResponse>> {
-        return ResponseEntity.ok(
-            repository.findAll()
-                .map { ProductMapper.toResponse(it) },
-        )
-    }
+    fun getProducts(): List<ProductResponse> = service.getAllProducts()
 
     @PutMapping(PRODUCT_BY_ID_ENDPOINT)
     fun updateProduct(
         @Valid @RequestBody request: ProductRequest,
         @PathVariable id: Long,
-    ): ResponseEntity<ProductResponse> {
-        return try {
-            val updatedProduct = repository.putById(id, request)
-            ResponseEntity.ok(ProductMapper.toResponse(updatedProduct))
-        } catch (exception: Exception) {
-            ResponseEntity.status(HttpStatus.NOT_FOUND).build()
-        }
+    ): ProductResponse {
+        return toResponse(service.updateProduct(id, toNewProduct(request)))
     }
 
     @DeleteMapping(PRODUCT_BY_ID_ENDPOINT)
     fun deleteProductById(
         @PathVariable id: Long,
     ): ResponseEntity<Void> {
-        return try {
-            repository.deleteById(id)
-            ResponseEntity.noContent().build()
-        } catch (exception: Exception) {
-            ResponseEntity.status(HttpStatus.NOT_FOUND).build()
-        }
+        service.deleteProductById(id)
+        return ResponseEntity.noContent().build()
     }
 
     companion object {

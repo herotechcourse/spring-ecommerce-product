@@ -1,5 +1,6 @@
 package ecommerce.dto.mapper
 
+import ecommerce.domain.NewProduct
 import ecommerce.dto.ProductRequest
 import ecommerce.dto.ProductResponse
 import ecommerce.entity.Product
@@ -14,15 +15,23 @@ object ProductMapper {
         )
     }
 
+    fun toNewProduct(request: ProductRequest): NewProduct {
+        return NewProduct(
+            name = request.name,
+            price = request.price,
+            imageUrl = request.imageUrl,
+        )
+    }
+
     fun toEntity(
-        request: ProductRequest,
+        newProduct: NewProduct,
         id: Long,
     ): Product {
         return Product(
             id = id,
-            name = request.name,
-            price = request.price,
-            imageUrl = request.imageUrl,
+            name = newProduct.name,
+            price = newProduct.price,
+            imageUrl = newProduct.imageUrl,
         )
     }
 }

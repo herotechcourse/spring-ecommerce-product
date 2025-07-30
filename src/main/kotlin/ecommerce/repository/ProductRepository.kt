@@ -1,6 +1,6 @@
 package ecommerce.repository
 
-import ecommerce.dto.ProductRequest
+import ecommerce.domain.NewProduct
 import ecommerce.dto.mapper.ProductMapper
 import ecommerce.entity.Product
 import ecommerce.helper.JdbcHelper
@@ -47,20 +47,18 @@ class ProductRepository(private val jdbcTemplate: JdbcTemplate) {
 
     fun putById(
         id: Long,
-        request: ProductRequest,
-    ): Product {
-        require(existsById(id)) { "Product with id $id not found" }
-
+        newProduct: NewProduct,
+    ): Product? {
         val sql = ProductConstsSQL.UPDATE_BY_ID.trimIndent()
-        val entity = ProductMapper.toEntity(request, id)!!
-        jdbcTemplate.update(sql, entity.name, entity.price, entity.imageUrl, entity.id)
-
-        return entity
+        val entity = ProductMapper.toEntity(newProduct, id)!!
+        val affected = jdbcTemplate.update(sql, entity.name, entity.price, entity.imageUrl, entity.id)
+        return when {
+            affected > 0 -> entity
+            else -> null
+        }
     }
 
     fun deleteById(id: Long) {
-        require(existsById(id)) { "Product with id $id not found" }
-
         val sql = ProductConstsSQL.DELETE_BY_ID.trimIndent()
         jdbcTemplate.update(sql, id)
     }
@@ -77,13 +75,12 @@ class ProductRepository(private val jdbcTemplate: JdbcTemplate) {
         return existing ?: false
     }
 
-    fun insertWithKeyholder(request: ProductRequest): Long {
-        require(!existsByName(request.name)) { "Product with name ${request.name} already exists" }
+    fun insertWithKeyholder(newProduct: NewProduct): Long {
         val sql = ProductConstsSQL.INSERT.trimIndent()
-        val id = JdbcHelper.insertAndReturnKey(jdbcTemplate, sql, request, ::prepareInsertStatement)
+        val id = JdbcHelper.insertAndReturnKey(jdbcTemplate, sql, newProduct, ::prepareInsertStatement)
 
         return requireNotNull(id) {
-            "Failed to retrieve generated ID after inserting product '${request.name}'. " +
+            "Failed to retrieve generated ID after inserting product '${newProduct.name}'. " +
                 "Database key generation failed."
         }
     }
@@ -91,12 +88,12 @@ class ProductRepository(private val jdbcTemplate: JdbcTemplate) {
     private fun prepareInsertStatement(
         connection: Connection,
         sql: String,
-        request: ProductRequest,
+        newProduct: NewProduct,
     ): PreparedStatement {
         return connection.prepareStatement(sql, arrayOf("id")).apply {
-            setString(1, request.name)
-            setString(2, request.price.toPlainString())
-            setString(3, request.imageUrl)
+            setString(1, newProduct.name)
+            setString(2, newProduct.price.toPlainString())
+            setString(3, newProduct.imageUrl)
         }
     }
 }
