@@ -1,6 +1,7 @@
 package ecommerce.integration
 
 import ecommerce.model.Member
+import ecommerce.model.Role
 import ecommerce.service.TokenService
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -98,7 +99,7 @@ class MemberControllerIntegrationTest {
 
     @Test
     fun `should return 200 - valid token of ADMIN member`() {
-        val testMember = Member(1L, "jin@gmail.com", "pw1234", "jin", "ADMIN")
+        val testMember = Member(1L, "jin@gmail.com", "pw1234", "jin", Role.ADMIN)
         val validToken = tokenService.generateToken(testMember)
         mockMvc.get("/admin") {
             header("Authorization", "Bearer $validToken")
@@ -136,7 +137,7 @@ class MemberControllerIntegrationTest {
 
     @Test
     fun `should return 403 - USER role cannot access admin endpoint`() {
-        val testMember = Member(1L, "user@gmail.com", "pw1234", "user", "USER")
+        val testMember = Member(1L, "user@gmail.com", "pw1234", "user", Role.USER)
         val validToken = tokenService.generateToken(testMember)
         mockMvc.get("/admin") {
             header("Authorization", "Bearer $validToken")

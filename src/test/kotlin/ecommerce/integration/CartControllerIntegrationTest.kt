@@ -1,6 +1,7 @@
 package ecommerce.integration
 
 import ecommerce.model.Member
+import ecommerce.model.Role
 import ecommerce.service.TokenService
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -76,7 +77,7 @@ class CartControllerIntegrationTest {
 
     @Test
     fun `should return 200 and empty cart for authenticated user`() {
-        val testMember = Member(1L, "test@email.com", "password", "Test User", "USER")
+        val testMember = Member(1L, "test@email.com", "password", "Test User", Role.USER)
         val validToken = tokenService.generateToken(testMember)
 
         mockMvc.get("/api/cart/items") {
@@ -89,7 +90,7 @@ class CartControllerIntegrationTest {
 
     @Test
     fun `should add product to cart with valid token and product`() {
-        val testMember = Member(1L, "test@email.com", "password", "Test User", "USER")
+        val testMember = Member(1L, "test@email.com", "password", "Test User", Role.USER)
         val validToken = tokenService.generateToken(testMember)
 
         mockMvc.post("/api/cart/items") {
@@ -106,7 +107,7 @@ class CartControllerIntegrationTest {
 
     @Test
     fun `should return 404 when adding non-existent product to cart`() {
-        val testMember = Member(1L, "test@email.com", "password", "Test User", "USER")
+        val testMember = Member(1L, "test@email.com", "password", "Test User", Role.USER)
         val validToken = tokenService.generateToken(testMember)
 
         mockMvc.post("/api/cart/items") {
@@ -120,7 +121,7 @@ class CartControllerIntegrationTest {
 
     @Test
     fun `should return 400 for invalid add to cart request`() {
-        val testMember = Member(1L, "test@email.com", "password", "Test User", "USER")
+        val testMember = Member(1L, "test@email.com", "password", "Test User", Role.USER)
         val validToken = tokenService.generateToken(testMember)
 
         mockMvc.post("/api/cart/items") {
@@ -134,7 +135,7 @@ class CartControllerIntegrationTest {
 
     @Test
     fun `should update quantity of existing cart item`() {
-        val testMember = Member(1L, "test@email.com", "password", "Test User", "USER")
+        val testMember = Member(1L, "test@email.com", "password", "Test User", Role.USER)
         val validToken = tokenService.generateToken(testMember)
 
         mockMvc.post("/api/cart/items") {
@@ -155,7 +156,7 @@ class CartControllerIntegrationTest {
 
     @Test
     fun `should return 404 when updating non-existent product`() {
-        val testMember = Member(1L, "test@email.com", "password", "Test User", "USER")
+        val testMember = Member(1L, "test@email.com", "password", "Test User", Role.USER)
         val validToken = tokenService.generateToken(testMember)
 
         mockMvc.put("/api/cart/items/999") {
@@ -169,7 +170,7 @@ class CartControllerIntegrationTest {
 
     @Test
     fun `should return 400 when updating with invalid quantity`() {
-        val testMember = Member(1L, "test@email.com", "password", "Test User", "USER")
+        val testMember = Member(1L, "test@email.com", "password", "Test User", Role.USER)
         val validToken = tokenService.generateToken(testMember)
 
         mockMvc.post("/api/cart/items") {
@@ -189,7 +190,7 @@ class CartControllerIntegrationTest {
 
     @Test
     fun `should remove item from cart`() {
-        val testMember = Member(1L, "test@email.com", "password", "Test User", "USER")
+        val testMember = Member(1L, "test@email.com", "password", "Test User", Role.USER)
         val validToken = tokenService.generateToken(testMember)
 
         mockMvc.post("/api/cart/items") {
@@ -207,7 +208,7 @@ class CartControllerIntegrationTest {
 
     @Test
     fun `should clear entire cart`() {
-        val testMember = Member(1L, "test@email.com", "password", "Test User", "USER")
+        val testMember = Member(1L, "test@email.com", "password", "Test User", Role.USER)
         val validToken = tokenService.generateToken(testMember)
 
         mockMvc.post("/api/cart/items") {
@@ -238,7 +239,7 @@ class CartControllerIntegrationTest {
 
     @Test
     fun `should handle duplicate product additions by updating quantity`() {
-        val testMember = Member(1L, "test@email.com", "password", "Test User", "USER")
+        val testMember = Member(1L, "test@email.com", "password", "Test User", Role.USER)
         val validToken = tokenService.generateToken(testMember)
 
         mockMvc.post("/api/cart/items") {

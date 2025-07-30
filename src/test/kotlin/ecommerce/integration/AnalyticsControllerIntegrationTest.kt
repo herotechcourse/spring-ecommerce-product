@@ -1,6 +1,7 @@
 package ecommerce.integration
 
 import ecommerce.model.Member
+import ecommerce.model.Role
 import ecommerce.service.TokenService
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -75,7 +76,7 @@ class AnalyticsControllerIntegrationTest {
 
     @Test
     fun `should return 403 when USER role tries to access analytics`() {
-        val testMember = Member(2L, "user@email.com", "password", "User", "USER")
+        val testMember = Member(2L, "user@email.com", "password", "User", Role.USER)
         val validToken = tokenService.generateToken(testMember)
 
         mockMvc.get("/admin/analytics/top-products") {
@@ -87,7 +88,7 @@ class AnalyticsControllerIntegrationTest {
 
     @Test
     fun `should return empty list when no cart data exists`() {
-        val testMember = Member(1L, "admin@email.com", "password", "Admin", "ADMIN")
+        val testMember = Member(1L, "admin@email.com", "password", "Admin", Role.ADMIN)
         val validToken = tokenService.generateToken(testMember)
 
         mockMvc.get("/admin/analytics/top-products") {
@@ -100,7 +101,7 @@ class AnalyticsControllerIntegrationTest {
 
     @Test
     fun `should return top products analytics with correct ranking`() {
-        val testMember = Member(1L, "admin@email.com", "password", "Admin", "ADMIN")
+        val testMember = Member(1L, "admin@email.com", "password", "Admin", Role.ADMIN)
         val validToken = tokenService.generateToken(testMember)
 
         jdbcTemplate.update(
@@ -142,7 +143,7 @@ class AnalyticsControllerIntegrationTest {
 
     @Test
     fun `should return 403 when USER role tries to access active users analytics`() {
-        val testMember = Member(2L, "user@email.com", "password", "User", "USER")
+        val testMember = Member(2L, "user@email.com", "password", "User", Role.USER)
         val validToken = tokenService.generateToken(testMember)
 
         mockMvc.get("/admin/analytics/active-users") {
@@ -154,7 +155,7 @@ class AnalyticsControllerIntegrationTest {
 
     @Test
     fun `should return empty list when no users have cart activity`() {
-        val testMember = Member(1L, "admin@email.com", "password", "Admin", "ADMIN")
+        val testMember = Member(1L, "admin@email.com", "password", "Admin", Role.ADMIN)
         val validToken = tokenService.generateToken(testMember)
 
         mockMvc.get("/admin/analytics/active-users") {
@@ -167,7 +168,7 @@ class AnalyticsControllerIntegrationTest {
 
     @Test
     fun `should return unique active users from last 7 days`() {
-        val testMember = Member(1L, "admin@email.com", "password", "Admin", "ADMIN")
+        val testMember = Member(1L, "admin@email.com", "password", "Admin", Role.ADMIN)
         val validToken = tokenService.generateToken(testMember)
 
         jdbcTemplate.update(
