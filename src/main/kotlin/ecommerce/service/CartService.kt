@@ -15,7 +15,7 @@ class CartService(private val repository: CartRepository) {
         return repository.selectByMemberId(memberId)
     }
 
-    fun upsertCartItems(
+    fun insertCartItems(
         memberId: Long,
         requests: List<CartRequest>,
     ): List<CartResponse> {
@@ -32,12 +32,12 @@ class CartService(private val repository: CartRepository) {
         }
     }
 
-    fun upsertCartItem(
+    fun insertCartItem(
         memberId: Long,
         productId: Long,
         quantity: Int,
     ): CartResponse {
-        return upsertCartItems(memberId, listOf(CartRequest(productId, quantity))).first()
+        return insertCartItems(memberId, listOf(CartRequest(productId, quantity))).first()
     }
 
     fun deleteBy(

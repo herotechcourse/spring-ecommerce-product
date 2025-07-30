@@ -49,7 +49,7 @@ fun getTopProducts(): List<ProductStatsResponse>
 - [ ] Extract logic to a Service layer
 
 ### 9. CartService Method Naming
-- [ ] Rename `upsertCartItems` → `insertCartItem`
+- [x] Rename `upsertCartItems` → `insertCartItem`
 
 ### 10. JWT and AuthService
 - [x] Rename `JwtTokenProvider` → `JwtProvider`
