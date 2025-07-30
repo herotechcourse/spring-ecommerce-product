@@ -14,7 +14,7 @@
   - Image Url (must start with http:// or https://)
 
 ## Admin
-- [ ] Login for Admin
+- [x] Login for Admin
 - [x] Admin can view, add, update, and delete products
 - [x] handle exception during add, delete and update of products
 - [x] Template for Product Page
@@ -60,6 +60,6 @@
 - [x] Recently Active Members 
   - List of members who added at least one product in last 7 days
   - response includes - member ID, name, email
-- [] Role based access control(Admin only)
+- [x] Role based access control(Admin only)
   - statistical API endpoints - admins only
   - 401 Unauthorized if user is not authorized

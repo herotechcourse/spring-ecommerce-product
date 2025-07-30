@@ -6,6 +6,7 @@ import ecommerce.model.MemberRole
 import ecommerce.repository.MemberRepository
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
+import java.util.UUID
 
 @Service
 class MemberService(
@@ -28,6 +29,7 @@ class MemberService(
         val hashedPassword = passwordEncoder.encode(password)
         val newMember =
             Member(
+                id = UUID.randomUUID(),
                 email = email,
                 password = hashedPassword,
                 role = role,

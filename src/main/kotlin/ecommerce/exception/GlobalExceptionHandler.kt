@@ -1,7 +1,9 @@
 package ecommerce.exception
 
 import ecommerce.exception.auth.EmailAlreadyExistsException
+import ecommerce.exception.auth.ForbiddenException
 import ecommerce.exception.auth.InvalidCredentialsException
+import ecommerce.exception.auth.UnauthorizedException
 import ecommerce.exception.cartItem.CartItemNotFoundException
 import ecommerce.exception.product.DuplicateProductNameException
 import ecommerce.exception.product.ProductNotFoundException
@@ -47,8 +49,14 @@ class GlobalExceptionHandler {
     }
 
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    @ExceptionHandler(InvalidCredentialsException::class)
+    @ExceptionHandler(value = [InvalidCredentialsException::class, UnauthorizedException::class])
     fun handleInvalidCredentialsException(ex: InvalidCredentialsException): Map<String, String> {
+        return mapOf("error" to ex.message.orEmpty())
+    }
+
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    @ExceptionHandler(ForbiddenException::class)
+    fun handleForbiddenException(ex: ForbiddenException): Map<String, String> {
         return mapOf("error" to ex.message.orEmpty())
     }
 }

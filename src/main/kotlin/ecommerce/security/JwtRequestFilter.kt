@@ -8,7 +8,6 @@ import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Component
 import org.springframework.web.filter.OncePerRequestFilter
 
-// Interacts with JwtTokenProvider and SpringSecurity's context, not with the database directly
 @Component
 class JwtRequestFilter(
     private val jwtTokenProvider: JwtTokenProvider,

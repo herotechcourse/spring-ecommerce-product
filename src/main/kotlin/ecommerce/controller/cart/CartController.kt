@@ -5,7 +5,7 @@ import ecommerce.dto.cartItem.CartItemResponse
 import ecommerce.dto.cartItem.CartResponse
 import ecommerce.model.Member
 import ecommerce.service.CartService
-import ecommerce.service.LoginMember
+import ecommerce.utils.LoginMember
 import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
