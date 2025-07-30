@@ -34,7 +34,7 @@ class TokenServiceTest {
         assertNotNull(claims)
         assertThat(claims.subject).isEqualTo(member.id.toString())
         assertThat(claims["email"]).isEqualTo(member.email)
-        assertThat(claims["role"]).isEqualTo(member.role)
+        assertThat(claims["role"]).isEqualTo(member.role.name)
         assertThat(claims["name"]).isEqualTo(member.name)
     }
 
