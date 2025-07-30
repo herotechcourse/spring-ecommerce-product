@@ -62,22 +62,9 @@ class CartItemRepository(private val jdbcTemplate: JdbcTemplate) {
         return jdbcTemplate.query(sql, carItemRowMapper, memberId.toString())
     }
 
-    fun findByProductId(productId: Long): CartItem? {
-        val sql = "SELECT * from cart_items WHERE product_id = ?"
-        return jdbcTemplate.query(sql, carItemRowMapper, productId).firstOrNull()
-    }
-
     fun deleteById(id: Long) {
         val sql = "DELETE FROM cart_items WHERE id = ?"
         jdbcTemplate.update(sql, id)
-    }
-
-    fun deleteByMemberIdAndProductId(
-        memberId: UUID,
-        productId: Long,
-    ) {
-        val sql = "DELETE FROM cart_items WHERE member_id = ? AND product_id = ?"
-        jdbcTemplate.update(sql, memberId.toString(), productId)
     }
 
     fun findTop5AddedProducts(since: LocalDateTime): List<TopProductStats> {
