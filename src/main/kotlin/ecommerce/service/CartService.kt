@@ -2,10 +2,8 @@ package ecommerce.service
 
 import ecommerce.domain.Cart
 import ecommerce.domain.CartItem
-import ecommerce.dto.cartItem.CartItemResponse
 import ecommerce.exception.CartOperationException
 import ecommerce.exception.ResourceNotFoundException
-import ecommerce.repository.CartEventRepository
 import ecommerce.repository.CartItemRepository
 import ecommerce.repository.CartRepository
 import org.springframework.stereotype.Service
@@ -16,7 +14,6 @@ class CartService(
     private val cartRepository: CartRepository,
     private val cartItemRepository: CartItemRepository,
     private val productService: ProductService,
-    private val cartEventRepository: CartEventRepository,
 ) {
     private fun getOrCreateCartForMember(memberId: Long): Cart {
         require(memberId > 0) { "memberId must be greater than 0" }
@@ -36,19 +33,11 @@ class CartService(
         return getOrCreateCartForMember(memberId)
     }
 
-    fun getCartItems(memberId: Long): List<CartItemResponse> {
+    fun getCartItems(memberId: Long): List<CartItem> {
         val cart = getOrCreateCartForMember(memberId)
         val cartItems = cartItemRepository.findByCartId(cart.id)
 
-        return cartItems.map { cartItem ->
-            val product = productService.getProductById(cartItem.productId)
-            CartItemResponse(
-                productId = product.id,
-                productName = product.name,
-                quantity = cartItem.quantity,
-                price = product.price,
-            )
-        }
+        return cartItems
     }
 
     fun addProductToCart(

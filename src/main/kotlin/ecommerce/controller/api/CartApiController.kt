@@ -2,10 +2,13 @@ package ecommerce.controller.api
 
 import ecommerce.annotation.LoginMember
 import ecommerce.domain.Cart
+import ecommerce.domain.CartItem
 import ecommerce.domain.Member
 import ecommerce.dto.cart.AddToCartRequest
 import ecommerce.dto.cart.CartResponse
+import ecommerce.dto.cartItem.CartItemResponse
 import ecommerce.service.CartService
+import ecommerce.service.ProductService
 import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -15,23 +18,41 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
-import kotlin.times
 
 @RestController
 @RequestMapping("/api/cart")
-class CartApiController(private val cartService: CartService) {
-    private fun createCartResponse(
+class CartApiController(
+    private val cartService: CartService,
+    private val productService: ProductService,
+) {
+    private fun CartItem.toCartItemResponse(): CartItemResponse? {
+        val product = productService.getProductById(this.productId)
+
+        return product.let {
+            CartItemResponse(
+                productId = it.id,
+                productName = it.name,
+                quantity = this.quantity,
+                price = it.price,
+            )
+        }
+    }
+
+    private fun buildCartResponse(
         cart: Cart,
         memberId: Long,
     ): CartResponse {
-        val cartItems = cartService.getCartItems(memberId)
-        val totalPrice = cartItems.sumOf { it.price * it.quantity }
-        val totalQuantity = cartItems.sumOf { it.quantity }
+        val cartItemsDomain = cartService.getCartItems(memberId)
+
+        val cartItemResponses = cartItemsDomain.mapNotNull { it.toCartItemResponse() }
+
+        val totalPrice = cartItemResponses.sumOf { it.price * it.quantity }
+        val totalQuantity = cartItemResponses.sumOf { it.quantity }
 
         return CartResponse(
             id = cart.id,
             memberId = memberId,
-            items = cartItems,
+            items = cartItemResponses,
             totalPrice = totalPrice,
             totalQuantity = totalQuantity,
         )
@@ -41,8 +62,8 @@ class CartApiController(private val cartService: CartService) {
     fun getCart(
         @LoginMember member: Member,
     ): ResponseEntity<CartResponse> {
-        val cart = cartService.getCart(member.userId)
-        val cartResponse = createCartResponse(cart, cart.memberId)
+        val cartEntity = cartService.getCart(member.userId)
+        val cartResponse = buildCartResponse(cartEntity, member.userId)
         return ResponseEntity.ok().body(cartResponse)
     }
 
@@ -51,13 +72,13 @@ class CartApiController(private val cartService: CartService) {
         @Valid @RequestBody request: AddToCartRequest,
         @LoginMember member: Member,
     ): ResponseEntity<CartResponse> {
-        val updatedCart =
+        val updatedCartEntity =
             cartService.addProductToCart(
-                member.userId,
-                request.productId,
+                memberId = member.userId,
+                productId = request.productId,
                 quantity = request.quantity,
             )
-        val cartResponse = createCartResponse(updatedCart, member.userId)
+        val cartResponse = buildCartResponse(updatedCartEntity, member.userId)
         return ResponseEntity.ok().body(cartResponse)
     }
 
