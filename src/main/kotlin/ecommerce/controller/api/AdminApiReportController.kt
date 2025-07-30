@@ -2,8 +2,8 @@ package ecommerce.controller.api
 
 import ecommerce.annotation.LoginMember
 import ecommerce.domain.Member
-import ecommerce.repository.reportDTO.MemberCartActivityDto
-import ecommerce.repository.reportDTO.ProductCartCountDto
+import ecommerce.repository.reportDto.MemberCartActivityDto
+import ecommerce.repository.reportDto.ProductCartCountDto
 import ecommerce.service.ReportService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping

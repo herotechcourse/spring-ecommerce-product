@@ -1,8 +1,8 @@
 package ecommerce.service
 
 import ecommerce.repository.CartEventRepository
-import ecommerce.repository.reportDTO.MemberCartActivityDto
-import ecommerce.repository.reportDTO.ProductCartCountDto
+import ecommerce.repository.reportDto.MemberCartActivityDto
+import ecommerce.repository.reportDto.ProductCartCountDto
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime
 import java.time.temporal.ChronoUnit

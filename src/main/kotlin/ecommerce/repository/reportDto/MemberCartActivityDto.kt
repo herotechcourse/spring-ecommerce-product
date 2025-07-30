@@ -1,4 +1,4 @@
-package ecommerce.repository.reportDTO
+package ecommerce.repository.reportDto
 
 data class MemberCartActivityDto(
     val userId: Long,

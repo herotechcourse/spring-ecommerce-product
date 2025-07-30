@@ -1,8 +1,8 @@
 package ecommerce.repository
 
 import ecommerce.domain.CartEvent
-import ecommerce.repository.reportDTO.MemberCartActivityDto
-import ecommerce.repository.reportDTO.ProductCartCountDto
+import ecommerce.repository.reportDto.MemberCartActivityDto
+import ecommerce.repository.reportDto.ProductCartCountDto
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.jdbc.core.RowMapper
 import org.springframework.jdbc.support.GeneratedKeyHolder

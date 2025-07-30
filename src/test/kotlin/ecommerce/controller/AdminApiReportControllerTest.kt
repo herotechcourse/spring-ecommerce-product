@@ -8,8 +8,8 @@ import ecommerce.dto.member.MemberLoginRequest
 import ecommerce.repository.CartEventRepository
 import ecommerce.repository.MemberRepository
 import ecommerce.repository.ProductRepository
-import ecommerce.repository.reportDTO.MemberCartActivityDto
-import ecommerce.repository.reportDTO.ProductCartCountDto
+import ecommerce.repository.reportDto.MemberCartActivityDto
+import ecommerce.repository.reportDto.ProductCartCountDto
 import ecommerce.service.AuthService
 import io.restassured.RestAssured
 import io.restassured.http.ContentType
