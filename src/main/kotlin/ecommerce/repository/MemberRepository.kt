@@ -45,8 +45,7 @@ class MemberRepository(private val jdbc: JdbcTemplate) {
     }
 
     fun existsByEmail(email: String): Boolean {
-        val sql = "SELECT COUNT(*) FROM members WHERE email = ?"
-        val count = jdbc.queryForObject(sql, Int::class.java, email) ?: 0
-        return count > 0
+        val sql = "SELECT EXISTS(SELECT 1 FROM members WHERE email = ?)"
+        return jdbc.queryForObject(sql, Boolean::class.java, email) ?: false
     }
 }
