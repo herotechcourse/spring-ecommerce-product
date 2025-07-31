@@ -44,7 +44,7 @@ Content-Type: application/json
 GET http://localhost:8080/api/products
 
 ### 6. Add Product to Cart (Fixed URL - was missing /items)
-POST http://localhost:8080/api/cart/items
+POST http://localhost:8080/api/cart-items
 Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyIiwiZW1haWwiOiJhZG1pbkBleGFtcGxlLmNvbSIsInJvbGUiOiJBRE1JTiIsIm5hbWUiOiJBZG1pbiBVc2VyIiwiaWF0IjoxNzUzNzYxMzU2LCJleHAiOjE3NTM4NDc3NTZ9.xGxEAkT42Xa29mmW92Uj8tCcTzUSQmt5NaNE_C6MYtc
 Content-Type: application/json
 
@@ -54,7 +54,7 @@ Content-Type: application/json
 }
 
 ### 7. Add Another Product to Cart
-POST http://localhost:8080/api/cart/items
+POST http://localhost:8080/api/cart-items
 Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyIiwiZW1haWwiOiJhZG1pbkBleGFtcGxlLmNvbSIsInJvbGUiOiJBRE1JTiIsIm5hbWUiOiJBZG1pbiBVc2VyIiwiaWF0IjoxNzUzNzYxMzU2LCJleHAiOjE3NTM4NDc3NTZ9.xGxEAkT42Xa29mmW92Uj8tCcTzUSQmt5NaNE_C6MYtc
 Content-Type: application/json
 
@@ -64,11 +64,11 @@ Content-Type: application/json
 }
 
 ### 8. Get Cart Items
-GET http://localhost:8080/api/cart/items
+GET http://localhost:8080/api/cart-items
 Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyIiwiZW1haWwiOiJhZG1pbkBleGFtcGxlLmNvbSIsInJvbGUiOiJBRE1JTiIsIm5hbWUiOiJBZG1pbiBVc2VyIiwiaWF0IjoxNzUzNzYxMzU2LCJleHAiOjE3NTM4NDc3NTZ9.xGxEAkT42Xa29mmW92Uj8tCcTzUSQmt5NaNE_C6MYtc
 
 ### 9. Update Cart Item Quantity
-PUT http://localhost:8080/api/cart/items/1
+PUT http://localhost:8080/api/cart-items/1
 Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyIiwiZW1haWwiOiJhZG1pbkBleGFtcGxlLmNvbSIsInJvbGUiOiJBRE1JTiIsIm5hbWUiOiJBZG1pbiBVc2VyIiwiaWF0IjoxNzUzNzYxMzU2LCJleHAiOjE3NTM4NDc3NTZ9.xGxEAkT42Xa29mmW92Uj8tCcTzUSQmt5NaNE_C6MYtc
 Content-Type: application/json
 
@@ -77,7 +77,7 @@ Content-Type: application/json
 }
 
 ### 10. Remove Item from Cart
-DELETE http://localhost:8080/api/cart/items/2
+DELETE http://localhost:8080/api/cart-items/2
 Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyIiwiZW1haWwiOiJhZG1pbkBleGFtcGxlLmNvbSIsInJvbGUiOiJBRE1JTiIsIm5hbWUiOiJBZG1pbiBVc2VyIiwiaWF0IjoxNzUzNzYxMzU2LCJleHAiOjE3NTM4NDc3NTZ9.xGxEAkT42Xa29mmW92Uj8tCcTzUSQmt5NaNE_C6MYtc
 
 ### 11. Admin Analytics(ADMIN TOKEN) - Top 5 Most Added Products (Last 30 Days)
@@ -89,7 +89,7 @@ GET http://localhost:8080/admin/analytics/active-users
 Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyIiwiZW1haWwiOiJhZG1pbkBleGFtcGxlLmNvbSIsInJvbGUiOiJBRE1JTiIsIm5hbWUiOiJBZG1pbiBVc2VyIiwiaWF0IjoxNzUzNzYxNDA5LCJleHAiOjE3NTM4NDc4MDl9.gbVd91e_5ohuHHOnBe2uz_zfm2gu72X7Ro2sJJv68YQ
 
 ### 13. Clear Entire Cart
-DELETE http://localhost:8080/api/cart/items
+DELETE http://localhost:8080/api/cart-items
 Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyIiwiZW1haWwiOiJhZG1pbkBleGFtcGxlLmNvbSIsInJvbGUiOiJBRE1JTiIsIm5hbWUiOiJBZG1pbiBVc2VyIiwiaWF0IjoxNzUzNzYxMzU2LCJleHAiOjE3NTM4NDc3NTZ9.xGxEAkT42Xa29mmW92Uj8tCcTzUSQmt5NaNE_C6MYtc
 
 ### 14. Create New Product (Admin can do this via products API)

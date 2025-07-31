@@ -61,14 +61,14 @@ class CartControllerIntegrationTest {
 
     @Test
     fun `should return 401 when no token provided`() {
-        mockMvc.get("/api/cart/items").andExpect {
+        mockMvc.get("/api/cart-items").andExpect {
             status { isUnauthorized() }
         }
     }
 
     @Test
     fun `should return 401 when invalid token provided`() {
-        mockMvc.get("/api/cart/items") {
+        mockMvc.get("/api/cart-items") {
             header("Authorization", "Bearer invalid-token")
         }.andExpect {
             status { isUnauthorized() }
@@ -80,7 +80,7 @@ class CartControllerIntegrationTest {
         val testMember = Member(1L, "test@email.com", "password", "Test User", Role.USER)
         val validToken = tokenService.generateToken(testMember)
 
-        mockMvc.get("/api/cart/items") {
+        mockMvc.get("/api/cart-items") {
             header("Authorization", "Bearer $validToken")
         }.andExpect {
             status { isOk() }
@@ -93,7 +93,7 @@ class CartControllerIntegrationTest {
         val testMember = Member(1L, "test@email.com", "password", "Test User", Role.USER)
         val validToken = tokenService.generateToken(testMember)
 
-        mockMvc.post("/api/cart/items") {
+        mockMvc.post("/api/cart-items") {
             header("Authorization", "Bearer $validToken")
             contentType = APPLICATION_JSON
             content = """{"productId": 1, "quantity": 2}"""
@@ -110,7 +110,7 @@ class CartControllerIntegrationTest {
         val testMember = Member(1L, "test@email.com", "password", "Test User", Role.USER)
         val validToken = tokenService.generateToken(testMember)
 
-        mockMvc.post("/api/cart/items") {
+        mockMvc.post("/api/cart-items") {
             header("Authorization", "Bearer $validToken")
             contentType = APPLICATION_JSON
             content = """{"productId": 999, "quantity": 1}"""
@@ -124,7 +124,7 @@ class CartControllerIntegrationTest {
         val testMember = Member(1L, "test@email.com", "password", "Test User", Role.USER)
         val validToken = tokenService.generateToken(testMember)
 
-        mockMvc.post("/api/cart/items") {
+        mockMvc.post("/api/cart-items") {
             header("Authorization", "Bearer $validToken")
             contentType = APPLICATION_JSON
             content = """{"productId": 1, "quantity": 0}"""
@@ -138,13 +138,13 @@ class CartControllerIntegrationTest {
         val testMember = Member(1L, "test@email.com", "password", "Test User", Role.USER)
         val validToken = tokenService.generateToken(testMember)
 
-        mockMvc.post("/api/cart/items") {
+        mockMvc.post("/api/cart-items") {
             header("Authorization", "Bearer $validToken")
             contentType = APPLICATION_JSON
             content = """{"productId": 1, "quantity": 1}"""
         }
 
-        mockMvc.put("/api/cart/items/1") {
+        mockMvc.put("/api/cart-items/1") {
             header("Authorization", "Bearer $validToken")
             contentType = APPLICATION_JSON
             content = """{"quantity": 5}"""
@@ -159,7 +159,7 @@ class CartControllerIntegrationTest {
         val testMember = Member(1L, "test@email.com", "password", "Test User", Role.USER)
         val validToken = tokenService.generateToken(testMember)
 
-        mockMvc.put("/api/cart/items/999") {
+        mockMvc.put("/api/cart-items/999") {
             header("Authorization", "Bearer $validToken")
             contentType = APPLICATION_JSON
             content = """{"quantity": 1}"""
@@ -173,13 +173,13 @@ class CartControllerIntegrationTest {
         val testMember = Member(1L, "test@email.com", "password", "Test User", Role.USER)
         val validToken = tokenService.generateToken(testMember)
 
-        mockMvc.post("/api/cart/items") {
+        mockMvc.post("/api/cart-items") {
             header("Authorization", "Bearer $validToken")
             contentType = APPLICATION_JSON
             content = """{"productId": 1, "quantity": 1}"""
         }
 
-        mockMvc.put("/api/cart/items/1") {
+        mockMvc.put("/api/cart-items/1") {
             header("Authorization", "Bearer $validToken")
             contentType = APPLICATION_JSON
             content = """{"quantity": 0}"""
@@ -193,13 +193,13 @@ class CartControllerIntegrationTest {
         val testMember = Member(1L, "test@email.com", "password", "Test User", Role.USER)
         val validToken = tokenService.generateToken(testMember)
 
-        mockMvc.post("/api/cart/items") {
+        mockMvc.post("/api/cart-items") {
             header("Authorization", "Bearer $validToken")
             contentType = APPLICATION_JSON
             content = """{"productId": 1, "quantity": 1}"""
         }
 
-        mockMvc.delete("/api/cart/items/1") {
+        mockMvc.delete("/api/cart-items/1") {
             header("Authorization", "Bearer $validToken")
         }.andExpect {
             status { isNoContent() }
@@ -211,25 +211,25 @@ class CartControllerIntegrationTest {
         val testMember = Member(1L, "test@email.com", "password", "Test User", Role.USER)
         val validToken = tokenService.generateToken(testMember)
 
-        mockMvc.post("/api/cart/items") {
+        mockMvc.post("/api/cart-items") {
             header("Authorization", "Bearer $validToken")
             contentType = APPLICATION_JSON
             content = """{"productId": 1, "quantity": 1}"""
         }
 
-        mockMvc.post("/api/cart/items") {
+        mockMvc.post("/api/cart-items") {
             header("Authorization", "Bearer $validToken")
             contentType = APPLICATION_JSON
             content = """{"productId": 2, "quantity": 2}"""
         }
 
-        mockMvc.delete("/api/cart/items") {
+        mockMvc.delete("/api/cart-items") {
             header("Authorization", "Bearer $validToken")
         }.andExpect {
             status { isNoContent() }
         }
 
-        mockMvc.get("/api/cart/items") {
+        mockMvc.get("/api/cart-items") {
             header("Authorization", "Bearer $validToken")
         }.andExpect {
             status { isOk() }
@@ -242,7 +242,7 @@ class CartControllerIntegrationTest {
         val testMember = Member(1L, "test@email.com", "password", "Test User", Role.USER)
         val validToken = tokenService.generateToken(testMember)
 
-        mockMvc.post("/api/cart/items") {
+        mockMvc.post("/api/cart-items") {
             header("Authorization", "Bearer $validToken")
             contentType = APPLICATION_JSON
             content = """{"productId": 1, "quantity": 2}"""
@@ -251,7 +251,7 @@ class CartControllerIntegrationTest {
             jsonPath("$.quantity") { value(2) }
         }
 
-        mockMvc.post("/api/cart/items") {
+        mockMvc.post("/api/cart-items") {
             header("Authorization", "Bearer $validToken")
             contentType = APPLICATION_JSON
             content = """{"productId": 1, "quantity": 3}"""

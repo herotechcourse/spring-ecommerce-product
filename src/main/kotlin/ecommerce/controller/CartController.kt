@@ -20,19 +20,19 @@ import org.springframework.web.bind.annotation.RestController
 import java.net.URI
 import java.time.LocalDateTime
 
-@RequestMapping("/api/cart")
+@RequestMapping("/api")
 @RestController
 class CartController(
     private val cartRepository: CartRepository,
     private val productRepository: ProductRepository,
 ) {
-    @GetMapping("/items")
+    @GetMapping("/cart-items")
     fun getCartItems(request: HttpServletRequest): List<Cart> {
         val userId = request.getAttribute("userId") as Long
         return cartRepository.findByUserId(userId)
     }
 
-    @PostMapping("/items")
+    @PostMapping("/cart-items")
     fun addToCart(
         @Valid @RequestBody addToCartRequest: AddToCartRequest,
         request: HttpServletRequest,
@@ -58,10 +58,10 @@ class CartController(
                 cartRepository.save(newCart)
             }
 
-        return ResponseEntity.created(URI.create("/api/cart/items")).body(cart)
+        return ResponseEntity.created(URI.create("/api/cart-items")).body(cart)
     }
 
-    @PutMapping("/items/{productId}")
+    @PutMapping("/cart-items/{productId}")
     fun updateQuantity(
         @PathVariable productId: Long,
         @Valid @RequestBody updateRequest: UpdateQuantityRequest,
@@ -79,7 +79,7 @@ class CartController(
         return cartRepository.update(updatedCart)
     }
 
-    @DeleteMapping("/items/{productId}")
+    @DeleteMapping("/cart-items/{productId}")
     fun removeFromCart(
         @PathVariable productId: Long,
         request: HttpServletRequest,
@@ -89,7 +89,7 @@ class CartController(
         return ResponseEntity.noContent().build()
     }
 
-    @DeleteMapping("/items")
+    @DeleteMapping("/cart-items")
     fun clearCart(request: HttpServletRequest): ResponseEntity<Unit> {
         val userId = request.getAttribute("userId") as Long
         cartRepository.deleteByUserId(userId)

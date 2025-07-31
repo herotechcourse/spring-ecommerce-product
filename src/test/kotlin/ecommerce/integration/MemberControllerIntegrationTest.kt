@@ -112,7 +112,7 @@ class MemberControllerIntegrationTest {
     fun `should return 200 - USER can access cart`() {
         val testMember = Member(1L, "jin@gmail.com", "pw1234", "jin")
         val validToken = tokenService.generateToken(testMember)
-        mockMvc.get("/api/cart/items") {
+        mockMvc.get("/api/cart-items") {
             header("Authorization", "Bearer $validToken")
         }.andExpect {
             status { isOk() }
