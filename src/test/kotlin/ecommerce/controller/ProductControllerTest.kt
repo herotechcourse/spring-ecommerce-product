@@ -33,9 +33,11 @@ class ProductControllerTest {
                 .then().log().all().extract()
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
-        val names = response.body().jsonPath().getList<String>("name")
-        assertThat(names).isNotEmpty()
-        assertThat(names.size).isEqualTo(2)
+        val products = response.body().jsonPath().getList<Map<String, Any>>("$")
+        assertThat(products).isNotEmpty()
+        assertThat(products).anyMatch { product ->
+            product["name"] == "Test Product" && product["price"] == 100.0f
+        }
     }
 
     @Test
