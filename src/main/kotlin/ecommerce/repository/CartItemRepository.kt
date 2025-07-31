@@ -99,12 +99,15 @@ class CartItemRepository(private val jdbcTemplate: JdbcTemplate) {
 
     fun findRecentlyActiveMemberIds(since: LocalDateTime): List<UUID> {
         val sql = """
-            SELECT DISTINCT ci.member_id
-            FROM cart_items ci
-            WHERE ci.created_at >= ?        
-        """
+        SELECT m.id
+        FROM members m
+        INNER JOIN cart_items ci ON m.id = ci.member_id
+        WHERE ci.created_at >= ?
+        GROUP BY m.id
+        ORDER BY MAX(ci.created_at) DESC
+    """.trimIndent()
         return jdbcTemplate.query(sql, { rs, _ ->
-            UUID.fromString(rs.getString("member_id"))
+            UUID.fromString(rs.getString("id"))
         }, since)
     }
 }
