@@ -14,7 +14,7 @@ class TokenServiceTest {
             secretKey = "dGVzdC1zZWNyZXQtdGhhdC1pcy1hdC1sZWFzdC0zMi1ieXRlcy1sb25n",
             expiration = 3600000,
         )
-    private val member = Member(1, "g@gmail.com", "123", "jieun")
+    private val member = Member(1L, "g@gmail.com", "123", "jieun")
 
     @Test
     fun `generateToken should return valid JWT token`() {

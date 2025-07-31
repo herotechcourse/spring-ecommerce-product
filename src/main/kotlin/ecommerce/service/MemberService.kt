@@ -19,11 +19,10 @@ class MemberService(
         val hashedPassword = passwordService.hashPassword(request.password)
         val member =
             Member(
-                0L,
-                request.email,
-                hashedPassword,
-                request.name,
-                request.role,
+                email = request.email,
+                password = hashedPassword,
+                name = request.name,
+                role = request.role,
             )
         val savedMember = memberRepository.save(member)
         return tokenService.generateToken(savedMember)

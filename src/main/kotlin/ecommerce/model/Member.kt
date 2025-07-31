@@ -1,7 +1,7 @@
 package ecommerce.model
 
 data class Member(
-    val id: Long = 0L,
+    val id: Long? = null,
     val email: String,
     val password: String,
     val name: String,
