@@ -6,3 +6,8 @@ Spring:
     init:
       schema-locations: classpath:schema.sql
       data-locations: classpath:test-data.sql
+
+# JWT Configuration for testing only - NOT for production
+jwt:
+  secret: XsbQDqeFSVC8GRbbEYImM9nvJhvAGt4TwYKViNcXxF4Q43Ck5i7jwehscr5CISxCO9rfiYeYV27BV9NuowC1dw==
+  expiration: 86400000
