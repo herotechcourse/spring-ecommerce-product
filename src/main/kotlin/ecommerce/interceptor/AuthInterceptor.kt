@@ -64,10 +64,6 @@ class AuthInterceptor(private val tokenService: TokenService) : HandlerIntercept
                 name = claims["name"] as? String,
             )
         request.setAttribute(AUTHENTICATED_USER_ATTRIBUTE, authenticatedUser)
-        request.setAttribute(USER_ID_ATTRIBUTE, userId)
-        request.setAttribute(USER_ROLE_ATTRIBUTE, claims["role"] as? String)
-        request.setAttribute(USER_EMAIL_ATTRIBUTE, claims["email"] as? String)
-        request.setAttribute(USER_NAME_ATTRIBUTE, claims["name"] as? String)
     }
 
     private fun requiresAdminAccess(request: HttpServletRequest): Boolean {
@@ -81,10 +77,6 @@ class AuthInterceptor(private val tokenService: TokenService) : HandlerIntercept
 
     companion object {
         const val AUTHENTICATED_USER_ATTRIBUTE = "authenticatedUser"
-        const val USER_ID_ATTRIBUTE = "userId"
-        const val USER_ROLE_ATTRIBUTE = "userRole"
-        const val USER_EMAIL_ATTRIBUTE = "userEmail"
-        const val USER_NAME_ATTRIBUTE = "userName"
         const val AUTH_HEADER = "Authorization"
         private const val BEARER_PREFIX = "Bearer "
         private const val ADMIN_PATH = "/admin"
