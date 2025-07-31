@@ -1,5 +1,6 @@
-package ecommerce
+package ecommerce.repository
 
+import ecommerce.model.Product
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.jdbc.core.RowMapper
 import org.springframework.jdbc.support.GeneratedKeyHolder
@@ -46,7 +47,7 @@ class ProductRepository(private val jdbcTemplate: JdbcTemplate) {
         return keyHolder.key!!.toLong()
     }
 
-    fun update (
+    fun update(
         product: Product,
         productId: Long,
     ): Boolean {
@@ -58,5 +59,26 @@ class ProductRepository(private val jdbcTemplate: JdbcTemplate) {
     fun delete(id: Long): Boolean {
         val rowsAffected = jdbcTemplate.update("delete from products where id = ?", id)
         return rowsAffected > 0
+    }
+
+    fun existsByName(name: String): Boolean {
+        val sql = "select count(*) from products where name = ?"
+        val count = jdbcTemplate.queryForObject(sql, Int::class.java, name) ?: 0
+        return count > 0
+    }
+
+    fun existsById(id: Long): Boolean {
+        val sql = "select count(*) from products where id = ?"
+        val count = jdbcTemplate.queryForObject(sql, Int::class.java, id) ?: 0
+        return count > 0
+    }
+
+    fun findById(id: Long): Product? {
+        val sql = "select * from products where id = ?"
+        return try {
+            jdbcTemplate.queryForObject(sql, productRowMapper, id)
+        } catch (e: Exception) {
+            null
+        }
     }
 }

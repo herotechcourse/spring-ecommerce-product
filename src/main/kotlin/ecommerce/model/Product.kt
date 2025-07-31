@@ -1,10 +1,10 @@
-package ecommerce
+package ecommerce.model
 
-data class Product(
-    var id: Long? = null,
-    var name: String = "",
-    var price: Double = 0.0,
-    var imageUrl: String = "",
+class Product(
+    var id: Long?,
+    var name: String,
+    var price: Double,
+    var imageUrl: String,
 ) {
     override fun equals(other: Any?): Boolean {
         if (this == other) return true
