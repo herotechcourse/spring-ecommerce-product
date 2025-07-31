@@ -43,7 +43,7 @@ class AuthInterceptor(private val tokenService: TokenService) : HandlerIntercept
     }
 
     private fun extractToken(request: HttpServletRequest): String? {
-        val authHeader = request.getHeader("Authorization")
+        val authHeader = request.getHeader(AUTH_HEADER)
         return if (authHeader?.startsWith(BEARER_PREFIX) == true) {
             authHeader.substring(BEARER_PREFIX.length)
         } else {
@@ -100,6 +100,7 @@ class AuthInterceptor(private val tokenService: TokenService) : HandlerIntercept
         const val USER_ROLE_ATTRIBUTE = "userRole"
         const val USER_EMAIL_ATTRIBUTE = "userEmail"
         const val USER_NAME_ATTRIBUTE = "userName"
+        const val AUTH_HEADER = "Authorization"
         private const val BEARER_PREFIX = "Bearer "
         private const val ADMIN_PATH_PREFIX = "/admin/"
     }
