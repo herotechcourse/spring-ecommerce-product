@@ -2,10 +2,8 @@ package ecommerce.controller
 
 import ecommerce.dto.cart.AddToCartRequest
 import ecommerce.dto.cart.UpdateQuantityRequest
-import ecommerce.exception.NotFoundException
 import ecommerce.model.Cart
-import ecommerce.repository.CartRepository
-import ecommerce.repository.ProductRepository
+import ecommerce.service.CartService
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
@@ -18,18 +16,16 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import java.net.URI
-import java.time.LocalDateTime
 
 @RequestMapping("/api")
 @RestController
 class CartController(
-    private val cartRepository: CartRepository,
-    private val productRepository: ProductRepository,
+    private val cartService: CartService,
 ) {
     @GetMapping("/cart-items")
     fun getCartItems(request: HttpServletRequest): List<Cart> {
         val userId = request.getAttribute("userId") as Long
-        return cartRepository.findByUserId(userId)
+        return cartService.getCartItems(userId)
     }
 
     @PostMapping("/cart-items")
@@ -38,26 +34,7 @@ class CartController(
         request: HttpServletRequest,
     ): ResponseEntity<Cart> {
         val userId = request.getAttribute("userId") as Long
-
-        productRepository.findById(addToCartRequest.productId)
-
-        val existingCart = cartRepository.findByUserIdAndProductId(userId, addToCartRequest.productId)
-
-        val cart =
-            if (existingCart != null) {
-                val updatedCart = existingCart.copy(quantity = existingCart.quantity + addToCartRequest.quantity)
-                cartRepository.update(updatedCart)
-            } else {
-                val newCart =
-                    Cart(
-                        memberId = userId,
-                        productId = addToCartRequest.productId,
-                        quantity = addToCartRequest.quantity,
-                        addedAt = LocalDateTime.now(),
-                    )
-                cartRepository.save(newCart)
-            }
-
+        val cart = cartService.addToCart(userId, addToCartRequest)
         return ResponseEntity.created(URI.create("/api/cart-items")).body(cart)
     }
 
@@ -68,15 +45,7 @@ class CartController(
         request: HttpServletRequest,
     ): Cart {
         val userId = request.getAttribute("userId") as Long
-
-        productRepository.findById(productId)
-
-        val existingCart =
-            cartRepository.findByUserIdAndProductId(userId, productId)
-                ?: throw NotFoundException("Item not found in cart")
-
-        val updatedCart = existingCart.copy(quantity = updateRequest.quantity)
-        return cartRepository.update(updatedCart)
+        return cartService.updateQuantity(userId, productId, updateRequest)
     }
 
     @DeleteMapping("/cart-items/{productId}")
@@ -85,14 +54,14 @@ class CartController(
         request: HttpServletRequest,
     ): ResponseEntity<Unit> {
         val userId = request.getAttribute("userId") as Long
-        cartRepository.deleteByUserIdAndProductId(userId, productId)
+        cartService.removeFromCart(userId, productId)
         return ResponseEntity.noContent().build()
     }
 
     @DeleteMapping("/cart-items")
     fun clearCart(request: HttpServletRequest): ResponseEntity<Unit> {
         val userId = request.getAttribute("userId") as Long
-        cartRepository.deleteByUserId(userId)
+        cartService.clearCart(userId)
         return ResponseEntity.noContent().build()
     }
 }

@@ -1,6 +1,6 @@
 package ecommerce.controller
 
-import ecommerce.repository.CartRepository
+import ecommerce.repository.AnalyticsRepository
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
@@ -8,15 +8,15 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping("/admin/analytics")
 @RestController
 class AnalyticsController(
-    private val cartRepository: CartRepository,
+    private val analyticsRepository: AnalyticsRepository,
 ) {
     @GetMapping("/top-products")
     fun getTopProducts(): List<Map<String, Any?>> {
-        return cartRepository.findTop5MostAddedProductsLast30Days()
+        return analyticsRepository.findTop5MostAddedProductsLast30Days()
     }
 
     @GetMapping("/active-users")
     fun getActiveUsers(): List<Map<String, Any?>> {
-        return cartRepository.findMembersActiveInLast7Days()
+        return analyticsRepository.findMembersActiveInLast7Days()
     }
 }
