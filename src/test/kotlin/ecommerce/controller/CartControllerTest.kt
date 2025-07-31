@@ -4,21 +4,27 @@ import ecommerce.dto.cartItem.AddCartItemRequest
 import ecommerce.dto.cartItem.CartItemResponse
 import ecommerce.dto.cartItem.CartResponse
 import ecommerce.dto.member.LoginRequest
-import ecommerce.dto.member.RegisterRequest
-import ecommerce.dto.product.ProductRequest
 import io.restassured.RestAssured
 import io.restassured.http.ContentType
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.web.server.LocalServerPort
 import org.springframework.http.HttpStatus
-import org.springframework.test.annotation.DirtiesContext
+import org.springframework.jdbc.core.JdbcTemplate
+import org.springframework.test.annotation.Rollback
+import org.springframework.transaction.annotation.Transactional
+import kotlin.test.junit5.JUnit5Asserter.fail
 
+@Transactional
+@Rollback
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 class CartControllerTest {
+    @Autowired
+    private lateinit var jdbcTemplate: JdbcTemplate
+
     @LocalServerPort
     private var port: Int = 0
     private lateinit var authToken: String
@@ -26,16 +32,8 @@ class CartControllerTest {
     @BeforeEach
     fun setupAuthentication() {
         RestAssured.port = port
-        val registerRequest = RegisterRequest("validEmail3@email.com", "SecureP@ss1", "name")
-        RestAssured.given()
-            .contentType(ContentType.JSON)
-            .body(registerRequest)
-            .`when`().post("/api/members/register")
-            .then()
-            .statusCode(HttpStatus.CREATED.value())
-            .extract()
 
-        val loginRequest = LoginRequest("validEmail3@email.com", "SecureP@ss1")
+        val loginRequest = LoginRequest("user1@example.com", "User1_password")
         val response =
             RestAssured.given()
                 .contentType(ContentType.JSON)
@@ -49,34 +47,10 @@ class CartControllerTest {
         assertThat(authToken).isNotNull().isNotBlank()
     }
 
-    private fun createProductWithAuth(createRequest: ProductRequest): Long {
-        val response =
-            RestAssured
-                .given()
-                .header("Authorization", "Bearer $authToken")
-                .contentType(ContentType.JSON)
-                .body(createRequest)
-                .`when`().post("/products")
-                .then()
-                .statusCode(HttpStatus.CREATED.value())
-                .extract()
-
-        val locationHeader = response.header("Location")
-        assertThat(locationHeader).isNotNull()
-        return locationHeader.substringAfterLast("/").toLong()
-    }
-
     @Test
     fun `add product to Cart should return 200 OK`() {
-        val productId =
-            createProductWithAuth(
-                ProductRequest(
-                    "ProductA",
-                    10.0,
-                    "http://productA_img.jpg",
-                    20,
-                ),
-            )
+        val productId = 1L
+
         val addCartItemRequest = AddCartItemRequest(productId, 2)
         val response =
             RestAssured
@@ -97,15 +71,8 @@ class CartControllerTest {
 
     @Test
     fun `update product in cart should return 200 OK`() {
-        val productId =
-            createProductWithAuth(
-                ProductRequest(
-                    "ProductZ",
-                    10.0,
-                    "http://productA_img.jpg",
-                    20,
-                ),
-            )
+        val productId = 1L
+
         val addCartItemRequest = AddCartItemRequest(productId, 2)
         val response =
             RestAssured
@@ -134,7 +101,7 @@ class CartControllerTest {
         assertThat(updateResponse.statusCode()).isEqualTo(HttpStatus.OK.value())
         assertThat(cartItemResponse.productId).isEqualTo(productId)
         assertThat(cartItemResponse.quantity).isEqualTo(addCartItemRequest.quantity + updateCartItemRequest.quantity)
-        assertThat(cartItemResponse.productName).isEqualTo("ProductZ")
+        assertThat(cartItemResponse.productName).isEqualTo("Lotion")
         assertThat(cartItemResponse.productPrice).isEqualTo(10.0)
     }
 
@@ -157,6 +124,7 @@ class CartControllerTest {
 
     @Test
     fun `get cart items from empty cart`() {
+        jdbcTemplate.execute("TRUNCATE TABLE cart_items")
         val response =
             RestAssured
                 .given().log().all()
@@ -176,28 +144,22 @@ class CartControllerTest {
 
     @Test
     fun `get cart items from cart with items should return 200 OK with items`() {
-        val productPrice = 15.5
         val productQuantity = 5
-        val productId =
-            createProductWithAuth(
-                ProductRequest(
-                    "ProductY",
-                    productPrice,
-                    "http://productB_img.jpg",
-                    25,
-                ),
-            )
+        val productId = 2L
 
         val addCartItemRequest = AddCartItemRequest(productId, productQuantity)
-        RestAssured
-            .given().log().all()
-            .header("Authorization", "Bearer $authToken")
-            .contentType(ContentType.JSON)
-            .body(addCartItemRequest)
-            .`when`().post("/api/cart/items")
-            .then().log().all()
-            .statusCode(HttpStatus.OK.value())
-            .extract()
+        val addResponse =
+            RestAssured
+                .given().log().all()
+                .header("Authorization", "Bearer $authToken")
+                .contentType(ContentType.JSON)
+                .body(addCartItemRequest)
+                .`when`().post("/api/cart/items")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value())
+                .extract()
+        val cartItemResponse = addResponse.jsonPath().getObject("", CartItemResponse::class.java)
+        val actualProductPrice = cartItemResponse.productPrice
 
         val response =
             RestAssured
@@ -208,16 +170,20 @@ class CartControllerTest {
                 .statusCode(HttpStatus.OK.value())
                 .extract()
 
+        if (response.statusCode() != 200) {
+            println("Error response: ${response.asString()}")
+            fail("Expected 200 but got ${response.statusCode()}")
+        }
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
         val cartResponse = response.jsonPath().getObject("", CartResponse::class.java)
         assertThat(cartResponse).isNotNull
         assertThat(cartResponse.totalItems).isEqualTo(productQuantity)
-        assertThat(cartResponse.totalPrice).isEqualTo(productPrice * productQuantity)
+        assertThat(cartResponse.totalPrice).isEqualTo(actualProductPrice * productQuantity)
     }
 
     @Test
     fun `delete non existent product from cart should return 404 NOT FOUND`() {
-        val nonExistentProductId = 100
+        val nonExistentProductId = 3L
         val response =
             RestAssured
                 .given().log().all()

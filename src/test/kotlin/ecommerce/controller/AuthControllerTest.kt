@@ -10,11 +10,11 @@ import org.junit.jupiter.api.Test
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.web.server.LocalServerPort
 import org.springframework.http.HttpStatus
-import org.springframework.test.annotation.DirtiesContext
+import org.springframework.test.context.jdbc.Sql
 import org.springframework.test.util.AssertionErrors.assertNotNull
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
+@Sql(scripts = ["/sql/cleanup-members.sql"], executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 class AuthControllerTest() {
     @LocalServerPort
     private var port: Int = 0
@@ -27,7 +27,7 @@ class AuthControllerTest() {
     @Test
     fun `register with valid data should return 201 Created`() {
         val registerRequest =
-            RegisterRequest("valid2@example.com", "SecureP@ss1", "User1")
+            RegisterRequest("valid2@example.com", "SecureP@ss1", "User Three")
         val response =
             RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
@@ -45,14 +45,14 @@ class AuthControllerTest() {
     @Test
     fun `register with existing email should return 409 Conflict`() {
         val email = "repeat@example.com"
-        val registerRequest = RegisterRequest(email, "SecureP@ss1", "name")
+        val registerRequest = RegisterRequest(email, "SecureP@ss1", "User four")
         RestAssured.given().log().all()
             .contentType(ContentType.JSON)
             .body(registerRequest)
             .`when`().post("/api/members/register")
             .then().statusCode(HttpStatus.CREATED.value())
 
-        val duplicateRegisterRequest = RegisterRequest(email, "AnotherP@ss1", "name")
+        val duplicateRegisterRequest = RegisterRequest(email, "AnotherP@ss1", "User five")
         val response =
             RestAssured.given().log().all()
                 .contentType(ContentType.JSON)

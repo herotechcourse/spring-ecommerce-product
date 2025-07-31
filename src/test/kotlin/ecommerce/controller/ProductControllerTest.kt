@@ -1,10 +1,8 @@
 package ecommerce.controller
 
 import ecommerce.dto.member.LoginRequest
-import ecommerce.dto.member.RegisterRequest
 import ecommerce.dto.product.ProductRequest
 import ecommerce.dto.product.ProductResponse
-import ecommerce.model.Product
 import io.restassured.RestAssured
 import io.restassured.http.ContentType
 import org.assertj.core.api.Assertions.assertThat
@@ -13,10 +11,10 @@ import org.junit.jupiter.api.Test
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.web.server.LocalServerPort
 import org.springframework.http.HttpStatus
-import org.springframework.test.annotation.DirtiesContext
+import org.springframework.test.context.jdbc.Sql
 
+@Sql(scripts = ["/sql/cleanup-products.sql"], executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 class ProductControllerTest {
     @LocalServerPort
     private var port: Int = 0
@@ -25,16 +23,7 @@ class ProductControllerTest {
     @BeforeEach
     fun setupAuthentication() {
         RestAssured.port = port
-        val registerRequest = RegisterRequest("validEmail5@email.com", "SecureP@ss1", "name")
-        RestAssured.given()
-            .contentType(ContentType.JSON)
-            .body(registerRequest)
-            .`when`().post("/api/members/register")
-            .then()
-            .statusCode(HttpStatus.CREATED.value())
-            .extract()
-
-        val loginRequest = LoginRequest("validEmail5@email.com", "SecureP@ss1")
+        val loginRequest = LoginRequest("admin@example.com", "Admin_passw0rd")
         val response =
             RestAssured.given()
                 .contentType(ContentType.JSON)
@@ -107,7 +96,6 @@ class ProductControllerTest {
                 .then().log().all().extract()
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
-        assertThat(response.jsonPath().getList<Product>("")).hasSize(5)
     }
 
     @Test

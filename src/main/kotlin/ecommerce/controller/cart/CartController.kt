@@ -31,7 +31,7 @@ class CartController(
         return ResponseEntity(cartItem, HttpStatus.OK)
     }
 
-    @GetMapping("/")
+    @GetMapping("")
     fun getCartItems(
         @LoginMember member: Member,
     ): ResponseEntity<CartResponse> {

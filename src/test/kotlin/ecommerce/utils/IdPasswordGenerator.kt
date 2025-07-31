@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import java.util.UUID
 
-class IDGenerator {
+class IdPasswordGenerator {
     @Test
     fun generatePasswordHashes() {
         val passwordEncoder = BCryptPasswordEncoder()

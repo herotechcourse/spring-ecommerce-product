@@ -26,13 +26,13 @@ class GlobalExceptionHandler {
 
     @ExceptionHandler(value = [ProductNotFoundException::class, CartItemNotFoundException::class])
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    fun handleProductNotFound(ex: ProductNotFoundException): Map<String, String> {
+    fun handleNotFoundExceptions(ex: Exception): Map<String, String> {
         return mapOf("error" to ex.message.orEmpty())
     }
 
     @ExceptionHandler(value = [DuplicateProductNameException::class, EmailAlreadyExistsException::class])
     @ResponseStatus(HttpStatus.CONFLICT)
-    fun handleDuplicateException(ex: DuplicateProductNameException): Map<String, String> {
+    fun handleDuplicateException(ex: Exception): Map<String, String> {
         return mapOf("error" to ex.message.orEmpty())
     }
 
