@@ -12,8 +12,5 @@ class WebMvcConfig(private val authInterceptor: AuthInterceptor) : WebMvcConfigu
             .addPathPatterns("/api/cart/**")
             .addPathPatterns("/admin")
             .addPathPatterns("/admin/**")
-            .excludePathPatterns("/api/members/register")
-            .excludePathPatterns("/api/members/login")
-            .excludePathPatterns("/api/products/**")
     }
 }
