@@ -1,6 +1,8 @@
 package ecommerce.interceptor
 
 import ecommerce.dto.auth.AuthenticatedUser
+import ecommerce.exception.AuthenticationException
+import ecommerce.exception.AuthorizationException
 import ecommerce.model.Role
 import ecommerce.service.TokenService
 import jakarta.servlet.http.HttpServletRequest
@@ -15,32 +17,22 @@ class AuthInterceptor(private val tokenService: TokenService) : HandlerIntercept
         response: HttpServletResponse,
         handler: Any,
     ): Boolean {
-        return try {
-            val token =
-                extractToken(request) ?: return sendUnauthorizedResponse(
-                    response, "Missing or invalid Authorization header",
-                )
+        val token = extractToken(request) 
+            ?: throw AuthenticationException("Missing or invalid Authorization header")
 
-            val claims =
-                tokenService.validateToken(token) ?: return sendUnauthorizedResponse(
-                    response, "Invalid or expired token",
-                )
+        val claims = tokenService.validateToken(token) 
+            ?: throw AuthenticationException("Invalid or expired token")
 
-            val userId =
-                extractUserId(claims) ?: return sendUnauthorizedResponse(
-                    response, "Invalid token payload",
-                )
+        val userId = extractUserId(claims) 
+            ?: throw AuthenticationException("Invalid token payload")
 
-            storeAuthenticatedUser(request, claims, userId)
+        storeAuthenticatedUser(request, claims, userId)
 
-            if (requiresAdminAccess(request) && !hasAdminRole(claims)) {
-                return sendForbiddenResponse(response, "Admin access required")
-            }
-
-            true
-        } catch (e: Exception) {
-            sendUnauthorizedResponse(response, "Authentication error: ${e.message}")
+        if (requiresAdminAccess(request) && !hasAdminRole(claims)) {
+            throw AuthorizationException("Admin access required")
         }
+
+        return true
     }
 
     private fun extractToken(request: HttpServletRequest): String? {
@@ -69,8 +61,6 @@ class AuthInterceptor(private val tokenService: TokenService) : HandlerIntercept
                 name = claims["name"] as? String,
             )
         request.setAttribute(AUTHENTICATED_USER_ATTRIBUTE, authenticatedUser)
-
-        // Keep backward compatibility with existing code
         request.setAttribute(USER_ID_ATTRIBUTE, userId)
         request.setAttribute(USER_ROLE_ATTRIBUTE, claims["role"] as? String)
         request.setAttribute(USER_EMAIL_ATTRIBUTE, claims["email"] as? String)
@@ -86,25 +76,6 @@ class AuthInterceptor(private val tokenService: TokenService) : HandlerIntercept
         return claims["role"] as? String == Role.ADMIN.name
     }
 
-    private fun sendUnauthorizedResponse(
-        response: HttpServletResponse,
-        message: String,
-    ): Boolean {
-        response.status = HttpServletResponse.SC_UNAUTHORIZED
-        response.contentType = "application/json"
-        response.writer.write("""{"error": "Unauthorized", "message": "$message"}""")
-        return false
-    }
-
-    private fun sendForbiddenResponse(
-        response: HttpServletResponse,
-        message: String,
-    ): Boolean {
-        response.status = HttpServletResponse.SC_FORBIDDEN
-        response.contentType = "application/json"
-        response.writer.write("""{"error": "Forbidden", "message": "$message"}""")
-        return false
-    }
 
     companion object {
         const val AUTHENTICATED_USER_ATTRIBUTE = "authenticatedUser"

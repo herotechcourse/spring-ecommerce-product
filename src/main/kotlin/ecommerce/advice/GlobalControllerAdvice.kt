@@ -1,6 +1,7 @@
 package ecommerce.advice
 
 import ecommerce.exception.AuthenticationException
+import ecommerce.exception.AuthorizationException
 import ecommerce.exception.ErrorResponse
 import ecommerce.exception.NotFoundException
 import ecommerce.exception.ProductValidationException
@@ -36,6 +37,15 @@ class GlobalControllerAdvice {
         return ErrorResponse(
             error = "Unauthorized",
             message = e.message ?: "Authentication failed",
+        )
+    }
+
+    @ExceptionHandler(AuthorizationException::class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    fun handleAuthorizationException(e: AuthorizationException): ErrorResponse {
+        return ErrorResponse(
+            error = "Forbidden",
+            message = e.message ?: "Access denied",
         )
     }
 
