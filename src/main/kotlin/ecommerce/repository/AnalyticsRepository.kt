@@ -43,7 +43,7 @@ class AnalyticsRepository(private val jdbc: JdbcTemplate) {
 
         return try {
             jdbc.query(sql, topProductRowMapper)
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             emptyList()
         }
     }

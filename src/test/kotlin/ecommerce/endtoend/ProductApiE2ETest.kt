@@ -28,16 +28,6 @@ class ProductApiE2ETest {
 
     private fun getBaseUrl() = "http://localhost:$port/api"
 
-    private fun logResponseOnFailure(response: io.restassured.response.ExtractableResponse<io.restassured.response.Response>) {
-        if (response.statusCode() >= 400) {
-            println("\n=== RESPONSE ===")
-            println("Status: ${response.statusCode()}")
-            println("Headers: ${response.headers()}")
-            println("Body: ${response.body().asString()}")
-            println("===============\n")
-        }
-    }
-
     @BeforeEach
     fun setUp() {
     }
