@@ -40,3 +40,13 @@ out/
 
 ### Mac OS ###
 .DS_Store
+
+### Security & Environment ###
+# Local configuration files with sensitive data
+application-local.properties
+application-dev.properties
+application-prod.properties
+.env
+.env.local
+.env.development
+.env.production
