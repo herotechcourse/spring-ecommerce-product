@@ -12,20 +12,20 @@ import org.springframework.web.method.support.ModelAndViewContainer
 
 @Component
 class AuthenticatedUserArgumentResolver : HandlerMethodArgumentResolver {
-    
     override fun supportsParameter(parameter: MethodParameter): Boolean {
         return parameter.parameterType == AuthenticatedUser::class.java
     }
-    
+
     override fun resolveArgument(
         parameter: MethodParameter,
         mavContainer: ModelAndViewContainer?,
         webRequest: NativeWebRequest,
-        binderFactory: WebDataBinderFactory?
+        binderFactory: WebDataBinderFactory?,
     ): Any? {
-        val request = webRequest.getNativeRequest(HttpServletRequest::class.java)
-            ?: throw IllegalStateException("Expected HttpServletRequest")
-        
+        val request =
+            webRequest.getNativeRequest(HttpServletRequest::class.java)
+                ?: throw IllegalStateException("Expected HttpServletRequest")
+
         return request.getAttribute(AuthInterceptor.AUTHENTICATED_USER_ATTRIBUTE) as? AuthenticatedUser
             ?: throw IllegalStateException("AuthenticatedUser not found in request attributes")
     }

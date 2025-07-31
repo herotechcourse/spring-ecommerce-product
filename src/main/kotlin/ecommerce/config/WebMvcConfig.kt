@@ -10,7 +10,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 @Configuration
 class WebMvcConfig(
     private val authInterceptor: AuthInterceptor,
-    private val authenticatedUserArgumentResolver: AuthenticatedUserArgumentResolver
+    private val authenticatedUserArgumentResolver: AuthenticatedUserArgumentResolver,
 ) : WebMvcConfigurer {
     override fun addInterceptors(registry: InterceptorRegistry) {
         registry.addInterceptor(authInterceptor)
@@ -18,7 +18,7 @@ class WebMvcConfig(
             .addPathPatterns("/api/cart-items/**")
             .addPathPatterns("/admin/**")
     }
-    
+
     override fun addArgumentResolvers(resolvers: MutableList<HandlerMethodArgumentResolver>) {
         resolvers.add(authenticatedUserArgumentResolver)
     }

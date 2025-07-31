@@ -17,14 +17,17 @@ class AuthInterceptor(private val tokenService: TokenService) : HandlerIntercept
         response: HttpServletResponse,
         handler: Any,
     ): Boolean {
-        val token = extractToken(request) 
-            ?: throw AuthenticationException("Missing or invalid Authorization header")
+        val token =
+            extractToken(request)
+                ?: throw AuthenticationException("Missing or invalid Authorization header")
 
-        val claims = tokenService.validateToken(token) 
-            ?: throw AuthenticationException("Invalid or expired token")
+        val claims =
+            tokenService.validateToken(token)
+                ?: throw AuthenticationException("Invalid or expired token")
 
-        val userId = extractUserId(claims) 
-            ?: throw AuthenticationException("Invalid token payload")
+        val userId =
+            extractUserId(claims)
+                ?: throw AuthenticationException("Invalid token payload")
 
         storeAuthenticatedUser(request, claims, userId)
 
@@ -75,7 +78,6 @@ class AuthInterceptor(private val tokenService: TokenService) : HandlerIntercept
     private fun hasAdminRole(claims: io.jsonwebtoken.Claims): Boolean {
         return claims["role"] as? String == Role.ADMIN.name
     }
-
 
     companion object {
         const val AUTHENTICATED_USER_ATTRIBUTE = "authenticatedUser"
