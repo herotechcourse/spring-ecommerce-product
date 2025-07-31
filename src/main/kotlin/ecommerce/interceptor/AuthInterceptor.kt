@@ -1,5 +1,6 @@
 package ecommerce.interceptor
 
+import ecommerce.dto.auth.AuthenticatedUser
 import ecommerce.model.Role
 import ecommerce.service.TokenService
 import jakarta.servlet.http.HttpServletRequest
@@ -30,7 +31,7 @@ class AuthInterceptor(private val tokenService: TokenService) : HandlerIntercept
                     response, "Invalid token payload",
                 )
 
-            storeUserAttributes(request, claims, userId)
+            storeAuthenticatedUser(request, claims, userId)
 
             if (requiresAdminAccess(request) && !hasAdminRole(claims)) {
                 return sendForbiddenResponse(response, "Admin access required")
@@ -55,11 +56,21 @@ class AuthInterceptor(private val tokenService: TokenService) : HandlerIntercept
         return claims.subject?.toLongOrNull()
     }
 
-    private fun storeUserAttributes(
+    private fun storeAuthenticatedUser(
         request: HttpServletRequest,
         claims: io.jsonwebtoken.Claims,
         userId: Long,
     ) {
+        val authenticatedUser =
+            AuthenticatedUser(
+                userId = userId,
+                role = claims["role"] as? String,
+                email = claims["email"] as? String,
+                name = claims["name"] as? String,
+            )
+        request.setAttribute(AUTHENTICATED_USER_ATTRIBUTE, authenticatedUser)
+
+        // Keep backward compatibility with existing code
         request.setAttribute(USER_ID_ATTRIBUTE, userId)
         request.setAttribute(USER_ROLE_ATTRIBUTE, claims["role"] as? String)
         request.setAttribute(USER_EMAIL_ATTRIBUTE, claims["email"] as? String)
@@ -96,6 +107,7 @@ class AuthInterceptor(private val tokenService: TokenService) : HandlerIntercept
     }
 
     companion object {
+        const val AUTHENTICATED_USER_ATTRIBUTE = "authenticatedUser"
         const val USER_ID_ATTRIBUTE = "userId"
         const val USER_ROLE_ATTRIBUTE = "userRole"
         const val USER_EMAIL_ATTRIBUTE = "userEmail"
