@@ -1,11 +1,32 @@
 package ecommerce.repository
 
+import ecommerce.dto.analytics.ActiveUserAnalytics
+import ecommerce.dto.analytics.TopProductAnalytics
 import org.springframework.jdbc.core.JdbcTemplate
+import org.springframework.jdbc.core.RowMapper
 import org.springframework.stereotype.Repository
 
 @Repository
 class AnalyticsRepository(private val jdbc: JdbcTemplate) {
-    fun findTop5MostAddedProductsLast30Days(): List<Map<String, Any?>> {
+    private val topProductRowMapper =
+        RowMapper<TopProductAnalytics> { rs, _ ->
+            TopProductAnalytics(
+                productName = rs.getString("productName"),
+                addedCount = rs.getInt("addedCount"),
+                mostRecentAdded = rs.getTimestamp("mostRecentAdded")?.toLocalDateTime(),
+            )
+        }
+
+    private val activeUserRowMapper =
+        RowMapper<ActiveUserAnalytics> { rs, _ ->
+            ActiveUserAnalytics(
+                memberId = rs.getLong("memberId"),
+                memberName = rs.getString("memberName"),
+                memberEmail = rs.getString("memberEmail"),
+            )
+        }
+
+    fun findTop5MostAddedProductsLast30Days(): List<TopProductAnalytics> {
         val sql =
             """
             SELECT 
@@ -21,19 +42,13 @@ class AnalyticsRepository(private val jdbc: JdbcTemplate) {
             """.trimIndent()
 
         return try {
-            jdbc.query(sql) { rs, _ ->
-                mapOf(
-                    "productName" to rs.getString("productName"),
-                    "addedCount" to rs.getInt("addedCount"),
-                    "mostRecentAdded" to rs.getTimestamp("mostRecentAdded")?.toLocalDateTime(),
-                )
-            }
+            jdbc.query(sql, topProductRowMapper)
         } catch (e: Exception) {
             emptyList()
         }
     }
 
-    fun findMembersActiveInLast7Days(): List<Map<String, Any?>> {
+    fun findMembersActiveInLast7Days(): List<ActiveUserAnalytics> {
         val sql =
             """
             SELECT DISTINCT 
@@ -49,13 +64,7 @@ class AnalyticsRepository(private val jdbc: JdbcTemplate) {
             """.trimIndent()
 
         return try {
-            jdbc.query(sql) { rs, _ ->
-                mapOf(
-                    "memberId" to rs.getLong("memberId"),
-                    "memberName" to rs.getString("memberName"),
-                    "memberEmail" to rs.getString("memberEmail"),
-                )
-            }
+            jdbc.query(sql, activeUserRowMapper)
         } catch (e: Exception) {
             emptyList()
         }
