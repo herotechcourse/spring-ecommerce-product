@@ -1,10 +1,10 @@
 package ecommerce.controller
 
+import ecommerce.dto.auth.AuthenticatedUser
 import ecommerce.dto.cart.AddToCartRequest
 import ecommerce.dto.cart.UpdateQuantityRequest
 import ecommerce.model.Cart
 import ecommerce.service.CartService
-import jakarta.servlet.http.HttpServletRequest
 import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -23,18 +23,16 @@ class CartController(
     private val cartService: CartService,
 ) {
     @GetMapping("/cart-items")
-    fun getCartItems(request: HttpServletRequest): List<Cart> {
-        val userId = request.getAttribute("userId") as Long
-        return cartService.getCartItems(userId)
+    fun getCartItems(user: AuthenticatedUser): List<Cart> {
+        return cartService.getCartItems(user.userId)
     }
 
     @PostMapping("/cart-items")
     fun addToCart(
         @Valid @RequestBody addToCartRequest: AddToCartRequest,
-        request: HttpServletRequest,
+        user: AuthenticatedUser,
     ): ResponseEntity<Cart> {
-        val userId = request.getAttribute("userId") as Long
-        val cart = cartService.addToCart(userId, addToCartRequest)
+        val cart = cartService.addToCart(user.userId, addToCartRequest)
         return ResponseEntity.created(URI.create("/api/cart-items")).body(cart)
     }
 
@@ -42,26 +40,23 @@ class CartController(
     fun updateQuantity(
         @PathVariable productId: Long,
         @Valid @RequestBody updateRequest: UpdateQuantityRequest,
-        request: HttpServletRequest,
+        user: AuthenticatedUser,
     ): Cart {
-        val userId = request.getAttribute("userId") as Long
-        return cartService.updateQuantity(userId, productId, updateRequest)
+        return cartService.updateQuantity(user.userId, productId, updateRequest)
     }
 
     @DeleteMapping("/cart-items/{productId}")
     fun removeFromCart(
         @PathVariable productId: Long,
-        request: HttpServletRequest,
+        user: AuthenticatedUser,
     ): ResponseEntity<Unit> {
-        val userId = request.getAttribute("userId") as Long
-        cartService.removeFromCart(userId, productId)
+        cartService.removeFromCart(user.userId, productId)
         return ResponseEntity.noContent().build()
     }
 
     @DeleteMapping("/cart-items")
-    fun clearCart(request: HttpServletRequest): ResponseEntity<Unit> {
-        val userId = request.getAttribute("userId") as Long
-        cartService.clearCart(userId)
+    fun clearCart(user: AuthenticatedUser): ResponseEntity<Unit> {
+        cartService.clearCart(user.userId)
         return ResponseEntity.noContent().build()
     }
 }
