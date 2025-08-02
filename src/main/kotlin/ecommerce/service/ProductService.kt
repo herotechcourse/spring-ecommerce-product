@@ -9,8 +9,7 @@ import java.math.BigDecimal
 
 @Service
 class ProductService(private val repository: ProductRepository, private val productStore: BaseProductStore) {
-
-    fun validateName(name: String)  {
+    fun validateName(name: String) {
         val regex = Regex("^[()\\[\\]+\\-&/_a-zA-Z0-9\\s]+\$")
         val existingProduct = productStore.findByName(name)
 
@@ -18,17 +17,17 @@ class ProductService(private val repository: ProductRepository, private val prod
             throw IllegalArgumentException("Product name already exists.")
         }
 
-        require(!name.isBlank()) {"Product name cannot be empty."}
-        require(name.length <= 15) {"Product name cannot be more than 15 characters."}
-        require(regex.matches(name)) {"Name input can contain only ( ), [ ], +, -, &, /, _, special characters, numbers and letters. "}
+        require(!name.isBlank()) { "Product name cannot be empty." }
+        require(name.length <= 15) { "Product name cannot be more than 15 characters." }
+        require(regex.matches(name)) { "Name input can contain only ( ), [ ], +, -, &, /, _, special characters, numbers and letters. " }
     }
 
     fun validatePrice(price: BigDecimal) {
-        require(price.compareTo(BigDecimal.ZERO) > 0) {"Product price must be greater than 0."}
+        require(price.compareTo(BigDecimal.ZERO) > 0) { "Product price must be greater than 0." }
     }
 
     fun validateUrl(imageUrl: String) {
-        require(imageUrl.startsWith("http://") || imageUrl.startsWith("https://")) {"Image URL must start with http:// or https://"}
+        require(imageUrl.startsWith("http://") || imageUrl.startsWith("https://")) { "Image URL must start with http:// or https://" }
     }
 
     fun validateProductId(productId: Long) {
@@ -49,7 +48,10 @@ class ProductService(private val repository: ProductRepository, private val prod
         return if (repository.isEmptyOrNull()) emptyList() else repository.findAll()
     }
 
-    fun updateProduct(id: Long, dto: ProductDTO): Product? {
+    fun updateProduct(
+        id: Long,
+        dto: ProductDTO,
+    ): Product? {
         dto.validate().apply {
             name
             price
