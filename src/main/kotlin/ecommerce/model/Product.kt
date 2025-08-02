@@ -7,12 +7,12 @@ data class Product(
     var id: Long? = null,
     var name: String,
     var price: BigDecimal,
-    var imageUrl: String
+    var imageUrl: String,
 ) {
     init {
         require(name.isNotBlank()) { "Name cannot be blank" }
         require(name.length <= 255) { "Name must be at most 255 characters" }
-        require( price > BigDecimal.ZERO) { "Price must be positive" }
+        require(price > BigDecimal.ZERO) { "Price must be positive" }
         require(imageUrl.length <= 255) { "Name must be at most 255 characters" }
     }
 
@@ -21,7 +21,7 @@ data class Product(
             id = this.id,
             name = dto.name ?: this.name,
             price = dto.price ?: this.price,
-            imageUrl = dto.imageUrl ?: this.imageUrl
+            imageUrl = dto.imageUrl ?: this.imageUrl,
         )
     }
 
@@ -38,9 +38,7 @@ data class Product(
     }
 
     companion object {
-        fun toEntity(
-            product: Product,
-        ): Product {
+        fun toEntity(product: Product): Product {
             return Product(product.id, product.name, product.price, product.imageUrl)
         }
     }
