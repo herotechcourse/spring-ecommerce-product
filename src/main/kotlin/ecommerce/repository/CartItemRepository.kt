@@ -1,5 +1,6 @@
 package ecommerce.repository
 
+import ecommerce.dto.stats.ActiveMemberResponse
 import ecommerce.dto.stats.TopProductStats
 import ecommerce.model.CartItem
 import org.springframework.dao.EmptyResultDataAccessException
@@ -97,18 +98,30 @@ class CartItemRepository(private val jdbcTemplate: JdbcTemplate) {
         }, since)
     }
 
-    fun findRecentlyActiveMemberIds(since: LocalDateTime): List<UUID> {
+    fun findRecentlyActiveMembers(since: LocalDateTime): List<ActiveMemberResponse> {
         val sql =
             """
-            SELECT m.id
-            FROM members m
-            INNER JOIN cart_items ci ON m.id = ci.member_id
-            WHERE ci.created_at >= ?
-            GROUP BY m.id
-            ORDER BY MAX(ci.created_at) DESC
+            SELECT 
+                m.id AS id, 
+                m.name AS member_name,
+                m.email AS member_email
+            FROM 
+                members m
+            INNER JOIN 
+                cart_items ci ON m.id = ci.member_id
+            WHERE 
+                ci.created_at >= ?
+            GROUP BY 
+                m.id
+            ORDER BY 
+                MAX(ci.created_at) DESC
             """.trimIndent()
         return jdbcTemplate.query(sql, { rs, _ ->
-            UUID.fromString(rs.getString("id"))
+            ActiveMemberResponse(
+                memberId = UUID.fromString(rs.getString("id")),
+                memberName = rs.getString("member_name"),
+                memberEmail = rs.getString("member_email"),
+            )
         }, since)
     }
 }

@@ -19,14 +19,7 @@ class AdminService(
 
     fun getRecentlyActiveMembers(): List<ActiveMemberResponse> {
         val sevenDaysAgo = LocalDateTime.now().minusDays(7)
-        val activeMemberIds = cartItemRepository.findRecentlyActiveMemberIds(sevenDaysAgo)
-        val activeMembers = memberRepository.findByIds(activeMemberIds)
-        return activeMembers.map { member ->
-            ActiveMemberResponse(
-                memberId = member.id,
-                memberName = member.name,
-                memberEmail = member.email,
-            )
-        }
+        val activeMembers = cartItemRepository.findRecentlyActiveMembers(sevenDaysAgo)
+        return activeMembers
     }
 }
