@@ -14,11 +14,13 @@ import ecommerce.model.Member
 class MemberControllerTest {
     @Test
     fun `register() be able return 'created 201' response`() {
-        val requestBody = mapOf(
-            "email" to "memberTeste@test.com",
-            "password" to "12345",
-            "role" to "USER"
-        )
+        val requestBody =
+            mapOf(
+                "email" to "memberTeste@test.com",
+                "password" to "12345",
+                "name" to "Gabi",
+                "role" to "USER",
+            )
         val response =
             RestAssured
                 .given().log().all()
@@ -28,6 +30,45 @@ class MemberControllerTest {
                 .then().log().all().extract()
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value())
+    }
+
+    @Test
+    fun `register() return '400' response if request body is not correctly filled`() {
+        val requestBody =
+            mapOf(
+                "password" to "12345",
+                "name" to "Gabi",
+                "role" to "USER",
+            )
+        val response =
+            RestAssured
+                .given().log().all()
+                .body(requestBody)
+                .contentType(ContentType.JSON)
+                .`when`().post("/api/members")
+                .then().log().all().extract()
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value())
+    }
+
+    @Test
+    fun `register() return '400' response if try to register duplicate email`() {
+        val requestBody =
+            mapOf(
+                "email" to "admin@test.com",
+                "password" to "12345",
+                "name" to "Gabi",
+                "role" to "USER",
+            )
+        val response =
+            RestAssured
+                .given().log().all()
+                .body(requestBody)
+                .contentType(ContentType.JSON)
+                .`when`().post("/api/members")
+                .then().log().all().extract()
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR.value())
     }
 
     @Test

@@ -1,6 +1,6 @@
-INSERT INTO members (email, password, role)
-VALUES ('admin@test.com', '1234', 'ADMIN'),
-       ('user@test.com', '1234', 'USER');
+INSERT INTO members (email, password, role, name)
+VALUES ('admin@test.com', '1234', 'ADMIN', 'Jon'),
+       ('user@test.com', '1234', 'USER', 'Ann' );
 
 INSERT INTO products (name, price, image_url)
 VALUES ('Flat White', 12.99, 'https://example.com/images/espresso-beans.jpg'),
