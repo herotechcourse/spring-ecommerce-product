@@ -1,5 +1,6 @@
 package ecommerce.dto
 
+import ecommerce.entity.Price
 import jakarta.validation.Validation
 import jakarta.validation.Validator
 import org.assertj.core.api.Assertions
@@ -19,7 +20,7 @@ class ProductRequestTest {
         val product =
             ProductRequest(
                 name = "Ice Cream",
-                price = 1.99,
+                price = Price(1.99),
                 imageUrl = "https://example.com/image.jpg",
             )
 

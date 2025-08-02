@@ -1,6 +1,7 @@
 package ecommerce.service
 
 import ecommerce.dto.ProductRequest
+import ecommerce.entity.Price
 import ecommerce.repository.ProductRepository
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
@@ -25,7 +26,7 @@ class ProductServiceTest {
     @Test
     fun `createProduct throws if name is longer than 15 characters`() {
         val longName = "ThisNameIsWayTooLong"
-        val request = ProductRequest(name = longName, price = 1.0, imageUrl = "https://valid.url")
+        val request = ProductRequest(name = longName, price = Price(1.0), imageUrl = "https://valid.url")
 
         val exception = assertThrows<ResponseStatusException> {
             productService.createProduct(request)
@@ -37,7 +38,7 @@ class ProductServiceTest {
     @Test
     fun `createProduct throws if name is invalid`() {
         val invalidName = "Invalid@Name!"
-        val request = ProductRequest(name = invalidName, price = 1.99, imageUrl = "https://valid.url")
+        val request = ProductRequest(name = invalidName, price = Price(1.99), imageUrl = "https://valid.url")
 
         val exception = assertThrows<ResponseStatusException> {
             productService.createProduct(request)
@@ -47,22 +48,11 @@ class ProductServiceTest {
     }
 
     @Test
-    fun `createProduct throws if price is less than 0_01`() {
-        val request = ProductRequest(name = "ValidName", price = 0.0, imageUrl = "https://valid.url")
-
-        val exception = assertThrows<ResponseStatusException> {
-            productService.createProduct(request)
-        }
-
-        assertThat(exception.reason).contains("Price must be greater than 0.")
-    }
-
-    @Test
     fun `createProduct throws if name is not unique`() {
         val name = "UniqueName"
         `when`(productRepository.existsByName(name)).thenReturn(true)
 
-        val request = ProductRequest(name = name, price = 1.0, imageUrl = "https://valid.url")
+        val request = ProductRequest(name = name, price = Price(1.0), imageUrl = "https://valid.url")
 
         val exception = assertThrows<ResponseStatusException> {
             productService.createProduct(request)
@@ -75,7 +65,7 @@ class ProductServiceTest {
     fun `createProduct throws if imageUrl does not start with http or https`() {
         val request = ProductRequest(
             name = "ValidName",
-            price = 1.0,
+            price = Price(1.0),
             imageUrl = "ftp://invalid.url"
         )
 
@@ -89,7 +79,7 @@ class ProductServiceTest {
     @Test
     fun `createProduct succeeds with valid data`() {
         val name = "ValidName"
-        val price = 1.0
+        val price = Price(1.0)
         val imageUrl = "https://valid.url"
 
         val request = ProductRequest(name = name, price = price, imageUrl = imageUrl)

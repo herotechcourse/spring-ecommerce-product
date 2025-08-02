@@ -1,5 +1,6 @@
 package ecommerce.service
 
+import ecommerce.entity.Price
 import ecommerce.entity.Product
 import ecommerce.repository.ProductRepository
 import io.restassured.RestAssured
@@ -23,19 +24,19 @@ class SSRTest() {
             Product(
                 id = 1L,
                 name = "vanilla ice cream",
-                price = 1.99,
+                price = Price(1.99),
                 imageUrl = "https://laurenslatest.com/wp-content/uploads/2020/08/vanilla-ice-cream-5-copy-360x361.jpg",
             ),
             Product(
                 id = 2L,
                 name = "pistachio ice cream",
-                price = 2.49,
+                price = Price(2.49),
                 imageUrl = "https://greenhealthycooking.com/wp-content/uploads/2017/06/Pistachio-Ice-Cream-Photo.jpg",
             ),
             Product(
                 id = 3L,
                 name = "chocolate ice cream",
-                price = 1.49,
+                price = Price(1.49),
                 imageUrl = "https://www.cravethegood.com/wp-content/uploads/2021/04/sous-vide-chocolate-ice-cream-15.jpg",
             ),
         )
@@ -61,7 +62,7 @@ class SSRTest() {
             products.size,
         ) { ps, product ->
             ps.setString(1, product.name)
-            ps.setDouble(2, product.price)
+            ps.setDouble(2, product.price.value)
             ps.setString(3, product.imageUrl)
         }
     }

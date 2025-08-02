@@ -19,12 +19,6 @@ class ProductService(private val productRepository: ProductRepository) {
         }
     }
 
-    private fun validatePrice(price: Double) {
-        if (price < 0.01) {
-            throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Price must be greater than 0.")
-        }
-    }
-
     private fun validateName(name: String) {
         if (name.length !in minNameLength..maxNameLength) {
             throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Name must be between $minNameLength and $maxNameLength characters.")
@@ -43,7 +37,6 @@ class ProductService(private val productRepository: ProductRepository) {
     fun createProduct(request: ProductRequest): Long {
         validateName(request.name)
         validateUniqueName(request.name)
-        validatePrice(request.price)
         validateImageUrl(request.imageUrl)
         return productRepository.create(request.toEntity())
     }
@@ -58,7 +51,6 @@ class ProductService(private val productRepository: ProductRepository) {
     ) {
         validateName(request.name)
         validateUniqueName(request.name)
-        validatePrice(request.price)
         val updated = productRepository.update(id, request.toEntity(id))
         if (!updated) throw ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found.")
     }

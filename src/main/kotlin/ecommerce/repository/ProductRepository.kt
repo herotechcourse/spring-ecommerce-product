@@ -1,5 +1,6 @@
 package ecommerce.repository
 
+import ecommerce.entity.Price
 import ecommerce.entity.Product
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.jdbc.core.RowMapper
@@ -12,7 +13,7 @@ class ProductRepository(private val jdbc: JdbcTemplate) {
             Product(
                 id = rs.getLong("id"),
                 name = rs.getString("name"),
-                price = rs.getDouble("price"),
+                price = Price(rs.getDouble("price")),
                 imageUrl = rs.getString("image_url"),
             )
         }
@@ -25,7 +26,7 @@ class ProductRepository(private val jdbc: JdbcTemplate) {
         jdbc.update(
             "INSERT INTO products (name, price, image_url) VALUES (?, ?, ?)",
             product.name,
-            product.price,
+            product.price.value,
             product.imageUrl,
         )
         return jdbc.queryForObject("SELECT MAX(id) FROM products", Long::class.java)!!
@@ -37,7 +38,7 @@ class ProductRepository(private val jdbc: JdbcTemplate) {
     ): Boolean {
         return jdbc.update(
             "UPDATE products SET name = ?, price = ?, image_url = ? WHERE id = ?",
-            product.name, product.price, product.imageUrl, id,
+            product.name, product.price.value, product.imageUrl, id,
         ) > 0
     }
 

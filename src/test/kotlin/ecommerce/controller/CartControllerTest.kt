@@ -1,6 +1,7 @@
 package ecommerce.controller
 
 import ecommerce.entity.CartItem
+import ecommerce.entity.Price
 import ecommerce.entity.Product
 import ecommerce.entity.Role
 import ecommerce.entity.User
@@ -51,7 +52,7 @@ class CartControllerTest
 
             product1 =
                 Product(
-                    name = "walnut ice", price = 1.25,
+                    name = "walnut ice", price = Price(1.25),
                     imageUrl =
                         "https://m1.quebecormedia.com/emp/cl_prod/" +
                             "0c812707039196cfd54e13449059d16b5754cfc6/" +
@@ -61,7 +62,7 @@ class CartControllerTest
 
             product2 =
                 Product(
-                    name = "almond ice", price = 1.50,
+                    name = "almond ice", price = Price(1.50),
                     imageUrl =
                         "https://encrypted-tbn0.gstatic.com/" +
                             "images?q=tbn:ANd9GcRuUj5GRmKPJKaPk4PG_Ref3J0c-HnONIh29A&s",

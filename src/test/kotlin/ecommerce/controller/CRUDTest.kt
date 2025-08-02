@@ -1,6 +1,7 @@
 package ecommerce.controller
 
 import ecommerce.dto.ProductRequest
+import ecommerce.entity.Price
 import ecommerce.entity.Product
 import ecommerce.entity.Role
 import ecommerce.entity.User
@@ -55,19 +56,19 @@ class CRUDTest {
                 Product(
                     id = 1L,
                     name = "vanilla ice",
-                    price = 1.99,
+                    price = Price(1.99),
                     imageUrl = "https://laurenslatest.com/wp-content/uploads/2020/08/vanilla-ice-cream-5-copy-360x361.jpg",
                 ),
                 Product(
                     id = 2L,
                     name = "pistachio ice",
-                    price = 2.49,
+                    price = Price(2.49),
                     imageUrl = "https://greenhealthycooking.com/wp-content/uploads/2017/06/Pistachio-Ice-Cream-Photo.jpg",
                 ),
                 Product(
                     id = 3L,
                     name = "chocolate ice",
-                    price = 1.49,
+                    price = Price(1.49),
                     imageUrl = "https://www.cravethegood.com/wp-content/uploads/2021/04/sous-vide-chocolate-ice-cream-15.jpg",
                 ),
             )
@@ -78,7 +79,7 @@ class CRUDTest {
             products.size,
         ) { ps, product ->
             ps.setString(1, product.name)
-            ps.setDouble(2, product.price)
+            ps.setDouble(2, product.price.value)
             ps.setString(3, product.imageUrl)
         }
 
@@ -93,7 +94,7 @@ class CRUDTest {
         val request =
             ProductRequest(
                 name = "orange ice",
-                price = 2.80,
+                price = Price(2.80),
                 imageUrl = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRf8Fdb-33SCOszWX_UF-92pCwX4Rcam0uVCg&s",
             )
 
@@ -135,7 +136,7 @@ class CRUDTest {
                 .body(
                     ProductRequest(
                         name = "lemon ice",
-                        price = 3.60,
+                        price = Price(3.60),
                         imageUrl =
                             "https://www.carnation.co.uk/sites/default/files/2020-05/Final%20Lemon%20Curd%20Ice%20Cream%20mobile.jpg",
                     ),
@@ -157,7 +158,7 @@ class CRUDTest {
                 .body(
                     ProductRequest(
                         name = "vanilla ice",
-                        price = 3.60,
+                        price = Price(3.60),
                         imageUrl = "https://laurenslatest.com/wp-content/uploads/2020/08/vanilla-ice-cream-5-copy-360x361.jpg",
                     ),
                 )

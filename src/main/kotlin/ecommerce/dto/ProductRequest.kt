@@ -1,12 +1,13 @@
 package ecommerce.dto
 
+import ecommerce.entity.Price
 import ecommerce.entity.Product
 import jakarta.validation.constraints.NotBlank
 
 data class ProductRequest(
     @field:NotBlank
     val name: String,
-    val price: Double,
+    val price: Price,
     @field:NotBlank
     val imageUrl: String,
 ) {

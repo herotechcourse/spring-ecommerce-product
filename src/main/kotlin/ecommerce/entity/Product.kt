@@ -3,7 +3,7 @@ package ecommerce.entity
 class Product(
     var id: Long? = null,
     var name: String,
-    var price: Double,
+    var price: Price,
     var imageUrl: String,
 ) {
     override fun equals(other: Any?): Boolean {
