@@ -4,16 +4,12 @@ import ecommerce.dto.MemberResponse
 import ecommerce.dto.TopProductStatResponse
 import ecommerce.model.CartItem
 import ecommerce.repository.CartRepository
-import ecommerce.repository.MemberRepository
-import ecommerce.repository.ProductRepository
 import org.springframework.stereotype.Service
 import java.sql.Timestamp
 
 @Service
 class CartService(
     val cartRepository: CartRepository,
-    private val memberRepository: MemberRepository,
-    private val productRepository: ProductRepository,
     private val productService: ProductService,
 ) {
     fun addProductToCart(
@@ -45,16 +41,10 @@ class CartService(
         return cartRepository.insert(cartItem)
     }
 
-    fun calculateCartItemTotalPrice(cartItem: CartItem): Double {
-        val product = productRepository.get(cartItem.productId)
-            ?: throw IllegalArgumentException("Product with ID ${cartItem.productId} not found")
-
-        val cartQuantity = cartItem.quantity.toDouble()
-        val productPrice = product.price.toDouble()
-        return productPrice * cartQuantity
-    }
-
-    fun getCartItemForMemberAndProduct(memberId: Long, productId: Long): CartItem? {
+    fun getCartItemForMemberAndProduct(
+        memberId: Long,
+        productId: Long,
+    ): CartItem? {
         return cartRepository.findByMemberAndProductIds(memberId, productId).firstOrNull()
     }
 
@@ -62,7 +52,10 @@ class CartService(
         return cartRepository.findByMemberId(memberId)
     }
 
-    fun removeItemFromCart(memberId: Long, productId: Long): Int? {
+    fun removeItemFromCart(
+        memberId: Long,
+        productId: Long,
+    ): Int? {
         productService.validateProductId(productId)
         return cartRepository.deleteByMemberAndProduct(memberId, productId)
     }
