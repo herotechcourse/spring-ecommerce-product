@@ -2,6 +2,7 @@ package ecommerce.service
 
 import ecommerce.dto.LoggedInUser
 import ecommerce.entity.User
+import ecommerce.exception.EmailAlreadyUsedException
 import ecommerce.repository.UserRepository
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
@@ -16,8 +17,7 @@ class UserService(
         password: String,
         role: String?,
     ): Long {
-        if (userRepository.existsByEmail(email)) throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Email already in use.")
-
+        if (userRepository.existsByEmail(email)) throw EmailAlreadyUsedException("Email already in use.")
         val user = User(email = email, password = password, role = role ?: "USER")
         return userRepository.create(user)
     }
