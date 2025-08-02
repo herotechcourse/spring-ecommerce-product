@@ -18,18 +18,17 @@ class MemberRepository(private val jdbcTemplate: JdbcTemplate) {
                 rs.getString("email"),
                 rs.getString("password"),
                 Role.valueOf(rs.getString("role")),
+                rs.getString("name"),
             )
         }
 
-    fun insert(
-        memberDTO: MemberDTO,
-    ): Member {
+    fun insert(memberDTO: MemberDTO): Member {
         val keyHolder = GeneratedKeyHolder()
 
         val sql =
             """
-            INSERT INTO members ( email, password, role )
-            VALUES (?, ?, ?)
+            INSERT INTO members ( email, password, role, name )
+            VALUES (?, ?, ?, ?)
             """.trimIndent()
 
         jdbcTemplate.update({ connection ->
@@ -37,6 +36,7 @@ class MemberRepository(private val jdbcTemplate: JdbcTemplate) {
             ps.setString(1, memberDTO.email)
             ps.setString(2, memberDTO.password)
             ps.setString(3, memberDTO.role.toString())
+            ps.setString(4, memberDTO.name)
             ps
         }, keyHolder)
 
@@ -46,12 +46,12 @@ class MemberRepository(private val jdbcTemplate: JdbcTemplate) {
     }
 
     fun findById(id: Long): Member? {
-        val sql = "SELECT id, email, password, role FROM members WHERE id = ?"
+        val sql = "SELECT id, email, password, role, name FROM members WHERE id = ?"
         return jdbcTemplate.query(sql, rowMapper, id).firstOrNull()
     }
 
     fun findByEmail(email: String): Member? {
-        val sql = "SELECT id, email, password, role FROM members WHERE email = ?"
+        val sql = "SELECT id, email, password, role, name FROM members WHERE email = ?"
         return jdbcTemplate.query(sql, rowMapper, email).firstOrNull()
     }
 
@@ -61,7 +61,7 @@ class MemberRepository(private val jdbcTemplate: JdbcTemplate) {
     }
 
     operator fun get(email: String): Member? {
-        val sql = "SELECT id, email, password, role FROM members WHERE email = ?"
+        val sql = "SELECT id, email, password, role, name FROM members WHERE email = ?"
         return jdbcTemplate.query(sql, rowMapper, email).firstOrNull()
     }
 }
