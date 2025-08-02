@@ -1,8 +1,8 @@
 package ecommerce.controller
 
-import ecommerce.model.Product
 import ecommerce.dto.ProductDTO
 import ecommerce.model.Member
+import ecommerce.model.Product
 import ecommerce.model.Role
 import ecommerce.resolver.LoginMember
 import ecommerce.service.ProductService
@@ -20,12 +20,12 @@ import java.net.URI
 @RequestMapping("/api/products")
 @RestController
 class ProductController(private val productService: ProductService) {
-
     @PostMapping
     fun create(
-        @RequestBody product: Product, @LoginMember member: Member
+        @RequestBody product: Product,
+        @LoginMember member: Member,
     ): ResponseEntity<Product> {
-        if(member.role != Role.ADMIN) {
+        if (member.role != Role.ADMIN) {
             return ResponseEntity.status(401).build()
         }
         val savedProduct = productService.createProduct(product)
@@ -35,34 +35,41 @@ class ProductController(private val productService: ProductService) {
     @GetMapping
     fun read(): ResponseEntity<List<Product>> {
         val products = productService.getAllProducts()
-        return if (products.isEmpty()) ResponseEntity.noContent().build()
-        else ResponseEntity.ok(products)
+        return if (products.isEmpty()) {
+            ResponseEntity.noContent().build()
+        } else {
+            ResponseEntity.ok(products)
+        }
     }
 
     @PatchMapping("/{id}")
     fun patchUpdate(
         @RequestBody dto: ProductDTO,
         @PathVariable id: Long,
-        @LoginMember member: Member
+        @LoginMember member: Member,
     ): ResponseEntity<Product> {
-        if(member.role != Role.ADMIN) {
+        if (member.role != Role.ADMIN) {
             return ResponseEntity.status(401).build()
         }
-        val updatedProduct = productService.updateProduct(id, dto)
-            ?: return ResponseEntity.notFound().build()
+        val updatedProduct =
+            productService.updateProduct(id, dto)
+                ?: return ResponseEntity.notFound().build()
         return ResponseEntity.ok(updatedProduct)
     }
 
     @DeleteMapping("/{id}")
     fun delete(
         @PathVariable id: Long,
-        @LoginMember member: Member
+        @LoginMember member: Member,
     ): ResponseEntity<Void> {
-        if(member.role != Role.ADMIN) {
+        if (member.role != Role.ADMIN) {
             return ResponseEntity.status(401).build()
         }
         val deleted = productService.deleteProductById(id)
-        return if (deleted) ResponseEntity.noContent().build()
-        else ResponseEntity.notFound().build()
+        return if (deleted) {
+            ResponseEntity.noContent().build()
+        } else {
+            ResponseEntity.notFound().build()
+        }
     }
 }
