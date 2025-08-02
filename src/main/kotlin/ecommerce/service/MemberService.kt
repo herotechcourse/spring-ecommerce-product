@@ -6,9 +6,9 @@ import ecommerce.repository.MemberRepository
 import org.springframework.stereotype.Service
 
 @Service
-class MemberService (private val memberRepository: MemberRepository)  {
-    fun validateEmail(email: String?)  {
-        require(email != null) {"Email cannot be empty."}
+class MemberService(private val memberRepository: MemberRepository) {
+    fun validateEmail(email: String?) {
+        require(email != null) { "Email cannot be empty." }
 
         val existingMember = memberRepository.findByEmail(email)
 
@@ -16,20 +16,20 @@ class MemberService (private val memberRepository: MemberRepository)  {
             throw IllegalArgumentException("$email is already registered.")
         }
 
-        require(!email.isBlank()) {"Email cannot be empty."}
-        require("@" in email && ".com" in email) {"Please provide a valid email address"}
+        require(!email.isBlank()) { "Email cannot be empty." }
+        require("@" in email && ".com" in email) { "Please provide a valid email address" }
     }
 
-    fun validatePassword(password: String?)  {
-        require(password != null) {"Password cannot be empty."}
-        require(!password.isBlank()) {"Password cannot be empty."}
-        require(password.count() >= 4) {"Password with a minimum of 4  and maximum of 8 characters long."}
-        require(password.count() <= 8) {"Password with a minimum of 4  and maximum of 8 characters long."}
+    fun validatePassword(password: String?) {
+        require(password != null) { "Password cannot be empty." }
+        require(!password.isBlank()) { "Password cannot be empty." }
+        require(password.count() >= 4) { "Password with a minimum of 4  and maximum of 8 characters long." }
+        require(password.count() <= 8) { "Password with a minimum of 4  and maximum of 8 characters long." }
     }
 
-    fun validateId(id: Long) : Member {
+    fun validateId(id: Long): Member {
         val member = memberRepository.findById(id)
-        require(member != null) {"Member with id $id does not exist."}
+        require(member != null) { "Member with id $id does not exist." }
         return member
     }
 
