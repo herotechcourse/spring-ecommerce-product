@@ -27,7 +27,7 @@ class GlobalExceptionHandler {
 
     @ExceptionHandler(RuntimeException::class)
     fun handleRuntimeException(ex: RuntimeException): ResponseEntity<Map<String, String>> {
-        val body = mapOf("error" to (ex.message ?: "Unexpected error"))
+        val body = mapOf("error" to "An unexpected error occurred")
         return ResponseEntity(body, HttpStatus.INTERNAL_SERVER_ERROR)
     }
 }
