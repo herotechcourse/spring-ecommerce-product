@@ -5,11 +5,13 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest
+import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.jdbc.core.JdbcTemplate
+import org.springframework.test.annotation.DirtiesContext
 import java.math.BigDecimal
 
-@JdbcTest
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 class ProductRepositoryTest {
     @Autowired
     lateinit var jdbcTemplate: JdbcTemplate
@@ -18,6 +20,24 @@ class ProductRepositoryTest {
     @BeforeEach
     fun setUp() {
         repository = ProductRepository(jdbcTemplate)
+    }
+
+    @Test
+    fun `insert should return the product with the id`() {
+        val original = Product(4, "Espresso", BigDecimal.valueOf(3.00), "url1")
+        val product = repository.insert(original)
+
+        assertThat(product.id).isEqualTo(original.id)
+    }
+
+    @Test
+    fun `get() should return respective product requested with id`() {
+        val original = Product(4, "Espresso", BigDecimal.valueOf(3.00), "url1")
+        repository.insert(original)
+
+        val product = repository.get(4)
+        assertThat(product?.id).isEqualTo(original.id)
+        assertThat(product?.name).isEqualTo("Espresso")
     }
 
     @Test
@@ -71,9 +91,32 @@ class ProductRepositoryTest {
     @Test
     fun `findByName should return the product with the provided name`() {
         // data.sql already have 3 products
-
         val result = repository.findByName("Coffee Filter")
         assertThat(result).isNotNull()
         assertThat(result?.id).isEqualTo(3)
+    }
+
+    @Test
+    fun `findByName should return null when product does not exist`() {
+        // data.sql already have 3 products
+        val result = repository.findByName("Orange Juice")
+        assertThat(result).isNull()
+    }
+
+    @Test
+    fun `isEmptyOrNull should return true when there are no products`() {
+        repository.deleteById(1)
+        repository.deleteById(2)
+        repository.deleteById(3)
+
+        val result = repository.isEmptyOrNull()
+        assertThat(result).isTrue()
+    }
+
+    @Test
+    fun `isEmptyOrNull should return false when there are products in database`() {
+        // data.sql already have 3 products
+        val result = repository.isEmptyOrNull()
+        assertThat(result).isFalse()
     }
 }

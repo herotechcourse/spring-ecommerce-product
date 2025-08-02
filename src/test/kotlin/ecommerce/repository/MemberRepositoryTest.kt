@@ -40,4 +40,28 @@ class MemberRepositoryTest {
         assertThat(result).isNotNull()
         assertThat(result?.email).isEqualTo("member1@test.com")
     }
+
+    @Test
+    fun `findByEmail should return null when member does not exist`() {
+        val result = repository.findByEmail("nonExistingMember@test.com")
+        assertThat(result).isNull()
+    }
+
+    @Test
+    fun`findById should return the member with respective id`() {
+        val newMember = MemberDTO("new_member@test.com", "1234", Role.ADMIN, "Jon")
+        repository.insert(newMember)
+        val result = repository.findById(3)
+        assertThat(result).isNotNull()
+        assertThat(result?.id).isEqualTo(3)
+    }
+
+    @Test
+    fun `get() with email, should return the member with respective email`() {
+        val member1 = MemberDTO("member1@test.com", "1234", Role.ADMIN, "Jon")
+        repository.insert(member1)
+        val result = repository.get(member1.email)
+        assertThat(result).isNotNull()
+        assertThat(result?.email).isEqualTo(member1.email)
+    }
 }
