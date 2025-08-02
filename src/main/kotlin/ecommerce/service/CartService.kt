@@ -66,4 +66,12 @@ class CartService(
         productService.validateProductId(productId)
         return cartRepository.deleteByMemberAndProduct(memberId, productId)
     }
+
+    fun getTop5AddedProducts(): List<TopProductStatResponse> {
+        return cartRepository.findTopAddedProducts(5, 30)
+    }
+
+    fun getRecentActiveMembersInTheLast7Days(): List<MemberResponse> {
+        return cartRepository.getRecentActiveMembers(7)
+    }
 }

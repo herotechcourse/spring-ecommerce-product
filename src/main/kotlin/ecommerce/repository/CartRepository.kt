@@ -92,8 +92,56 @@ class CartRepository(val jdbcTemplate: JdbcTemplate) {
         } catch (ex: DataAccessException) {
             throw RuntimeException(
                 "Failed to delete cart item belonging to member_id $memberId and product_id = $productId",
-                ex
+                ex,
             )
         }
+    }
+
+    fun findTopAddedProducts(
+        count: Int,
+        days: Int,
+    ): List<TopProductStatResponse> {
+        val updatedAt = Timestamp.valueOf(LocalDateTime.now().minusDays(days.toLong()))
+        val sql =
+            """
+            SELECT 
+                p.name,
+                COUNT(*) AS times_added,
+                MAX(c.updated_at) AS most_recent_added_time
+            FROM cart c
+            JOIN products p ON c.product_id = p.id
+            WHERE c.updated_at >= ?
+            GROUP BY c.product_id, p.name
+            ORDER BY times_added DESC, most_recent_added_time DESC
+            LIMIT ?
+            """.trimIndent()
+
+        return jdbcTemplate.query(sql, { rs, _ ->
+            TopProductStatResponse(
+                name = rs.getString("name"),
+                count = rs.getInt("times_added"),
+                lastAddedAt = rs.getTimestamp("most_recent_added_time"),
+            )
+        }, updatedAt, count)
+    }
+
+    fun getRecentActiveMembers(days: Int): List<MemberResponse> {
+        val updatedAt = Timestamp.valueOf(LocalDateTime.now().minusDays(days.toLong()))
+        val sql =
+            """
+            SELECT DISTINCT m.id, m.name, m.email, m.role
+            FROM members m
+            JOIN cart c ON m.id = c.member_id
+            WHERE c.created_at >= ?
+            """.trimIndent()
+
+        return jdbcTemplate.query(sql, { rs, _ ->
+            MemberResponse(
+                id = rs.getLong("id"),
+                name = rs.getString("name"),
+                email = rs.getString("email"),
+                role = Role.valueOf(rs.getString("role")),
+            )
+        }, updatedAt)
     }
 }
