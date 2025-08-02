@@ -131,7 +131,7 @@ class ProductControllerTest {
 
     @Test
     fun `read() should be able to read a product and return 'ok 200' response`() {
-//       // data.sql already have 3 products
+       // data.sql already have 3 products
 
         val response =
             RestAssured
@@ -141,7 +141,7 @@ class ProductControllerTest {
                 .then().log().all().extract()
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
-        assertThat(response.jsonPath().getList("", Product::class.java)).hasSize(3)
+        assertThat(response.jsonPath().getList("", Product::class.java)).hasSize(5)
     }
 
     @Test
