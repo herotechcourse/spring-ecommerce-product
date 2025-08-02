@@ -24,7 +24,7 @@ class ProductRepositoryTest {
 
     @Test
     fun `insert should return the product with the id`() {
-        val original = Product(4, "Espresso", BigDecimal.valueOf(3.00), "url1")
+        val original = Product(6, "Espresso", BigDecimal.valueOf(3.00), "url1")
         val product = repository.insert(original)
 
         assertThat(product.id).isEqualTo(original.id)
@@ -32,10 +32,10 @@ class ProductRepositoryTest {
 
     @Test
     fun `get() should return respective product requested with id`() {
-        val original = Product(4, "Espresso", BigDecimal.valueOf(3.00), "url1")
+        val original = Product(6, "Espresso", BigDecimal.valueOf(3.00), "url1")
         repository.insert(original)
 
-        val product = repository.get(4)
+        val product = repository.get(6)
         assertThat(product?.id).isEqualTo(original.id)
         assertThat(product?.name).isEqualTo("Espresso")
     }
@@ -85,7 +85,7 @@ class ProductRepositoryTest {
     fun `count should return correct number of products`() {
         // data.sql already has 3 products
 
-        assertThat(repository.count()).isEqualTo(3)
+        assertThat(repository.count()).isEqualTo(5)
     }
 
     @Test
@@ -108,6 +108,8 @@ class ProductRepositoryTest {
         repository.deleteById(1)
         repository.deleteById(2)
         repository.deleteById(3)
+        repository.deleteById(4)
+        repository.deleteById(5)
 
         val result = repository.isEmptyOrNull()
         assertThat(result).isTrue()
