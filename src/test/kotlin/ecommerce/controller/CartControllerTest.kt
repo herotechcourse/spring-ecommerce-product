@@ -13,7 +13,6 @@ import org.springframework.test.annotation.DirtiesContext
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 class CartControllerTest {
-
     @Test
     fun `addToCart() should return '401' response when user is not authorized with a token`() {
         val token = JwtProvider.generateToken("invalid@test.com")
