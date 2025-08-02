@@ -78,7 +78,7 @@ class CartRepositoryTest {
     }
 
     @Test
-    fun `findTopAddedProductsByMember should return correct cart items`() {
+    fun `findTopAddedProducts should return correct cart items`() {
         val memberId = 2L
         val count = 5
         val days = 30
@@ -136,12 +136,10 @@ class CartRepositoryTest {
         recentItems.forEach { repository.insert(it) }
         oldItems.forEach { repository.insert(it) }
 
-        val fetchedProducts = repository.findTopAddedProducts(count, days)
+        val productNames = repository.findTopAddedProducts(count, days)
+        val fetchedProductNames = productNames.map { it.name }
 
-        print("#### fetchedProducts: $fetchedProducts")
-//        val fetchedProductIds = fetchedProducts.map { it.productId }
-//
-//        assertThat(fetchedProductIds).containsExactly(3, 2, 1)
-//        assertThat(fetchedProductIds).doesNotContain(4, 5)
+        assertThat(fetchedProductNames).containsExactly("Coffee Filter", "Flat White", "French Press")
+        assertThat(fetchedProductNames).doesNotContain("Old Product 4", "Old Product 5")
     }
 }
