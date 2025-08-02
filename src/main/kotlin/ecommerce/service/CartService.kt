@@ -1,10 +1,13 @@
 package ecommerce.service
 
+import ecommerce.dto.MemberResponse
+import ecommerce.dto.TopProductStatResponse
 import ecommerce.model.CartItem
 import ecommerce.repository.CartRepository
 import ecommerce.repository.MemberRepository
 import ecommerce.repository.ProductRepository
 import org.springframework.stereotype.Service
+import java.sql.Timestamp
 
 @Service
 class CartService(
@@ -13,22 +16,31 @@ class CartService(
     private val productRepository: ProductRepository,
     private val productService: ProductService,
 ) {
-    fun addProductToCart(memberId: Long, productId: Long, quantity: Int): CartItem {
+    fun addProductToCart(
+        memberId: Long,
+        productId: Long,
+        quantity: Int,
+    ): CartItem {
         productService.validateProductId(productId)
 
         var cartItem = getCartItemForMemberAndProduct(memberId, productId)
+        val currentTimestamp = Timestamp(System.currentTimeMillis())
 
         if (cartItem != null) {
             val newQuantity = cartItem.quantity + quantity
+            cartItem.updatedAt = currentTimestamp
             return cartRepository.updateQuantity(cartItem, newQuantity)
         }
 
-        cartItem = CartItem(
-            0,
-            memberId,
-            productId,
-            quantity
-        )
+        cartItem =
+            CartItem(
+                0,
+                memberId,
+                productId,
+                quantity,
+                createdAt = currentTimestamp,
+                updatedAt = currentTimestamp,
+            )
 
         return cartRepository.insert(cartItem)
     }
