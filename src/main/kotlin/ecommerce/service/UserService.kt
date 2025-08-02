@@ -30,8 +30,8 @@ class UserService(
         email: String,
         providedPassword: String,
     ): LoggedInUser {
-        val user = getByEmail(email) ?: throw ResponseStatusException(HttpStatus.FORBIDDEN, "Invalid credentials.")
-        if (!user.checkPassword(providedPassword)) throw ResponseStatusException(HttpStatus.FORBIDDEN, "Invalid credentials.")
+        val user = getByEmail(email) ?: throw ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid credentials.")
+        if (!user.checkPassword(providedPassword)) throw ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid credentials.")
         return user.toLoggedInUser()
     }
 }

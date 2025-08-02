@@ -192,7 +192,7 @@ class UserControllerTest {
             MockMvcRequestBuilders.post("/api/users/login")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(loginRequest),
-        ).andExpect(MockMvcResultMatchers.status().isForbidden)
+        ).andExpect(MockMvcResultMatchers.status().isUnauthorized)
     }
 
     @Test
@@ -209,7 +209,7 @@ class UserControllerTest {
             MockMvcRequestBuilders.post("/api/users/login")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(loginRequest),
-        ).andExpect(MockMvcResultMatchers.status().isForbidden)
+        ).andExpect(MockMvcResultMatchers.status().isUnauthorized)
     }
 
     @Test
