@@ -9,6 +9,10 @@ import org.springframework.web.server.ResponseStatusException
 
 @Service
 class ProductService(private val productRepository: ProductRepository) {
+    private val namePattern = Regex("^[a-zA-Z0-9 ()\\[\\]+\\-&/_]*$")
+    private val minNameLength = 1
+    private val maxNameLength = 15
+
     private fun validateUniqueName(name: String) {
         if (productRepository.existsByName(name)) {
             throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Product name must be unique.")
@@ -21,9 +25,26 @@ class ProductService(private val productRepository: ProductRepository) {
         }
     }
 
+    private fun validateName(name: String) {
+        if (name.length !in minNameLength..maxNameLength) {
+            throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Name must be between $minNameLength and $maxNameLength characters.")
+        }
+        if (!namePattern.matches(name)) {
+            throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Name contains invalid special characters.")
+        }
+    }
+
+    private fun validateImageUrl(imageUrl: String) {
+        if (!imageUrl.startsWith("http://") && !imageUrl.startsWith("https://")) {
+            throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Image URL must start with http:// or https://")
+        }
+    }
+
     fun createProduct(request: ProductRequest): Long {
+        validateName(request.name)
         validateUniqueName(request.name)
         validatePrice(request.price)
+        validateImageUrl(request.imageUrl)
         return productRepository.create(request.toEntity())
     }
 
@@ -35,6 +56,7 @@ class ProductService(private val productRepository: ProductRepository) {
         id: Long,
         request: ProductRequest,
     ) {
+        validateName(request.name)
         validateUniqueName(request.name)
         validatePrice(request.price)
         val updated = productRepository.update(id, request.toEntity(id))
