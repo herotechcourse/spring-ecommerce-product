@@ -41,12 +41,12 @@ class ProductRepository(val jdbcTemplate: JdbcTemplate) : BaseProductStore {
         return jdbcTemplate.query(sql, rowMapper, id).firstOrNull()
     }
 
-
     override fun insert(product: Product): Product {
-        val sql = """
+        val sql =
+            """
             INSERT INTO products (name, price, image_url)
             VALUES (?, ?, ?)
-        """.trimIndent()
+            """.trimIndent()
 
         val keyHolder: KeyHolder = GeneratedKeyHolder()
 
