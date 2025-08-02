@@ -6,6 +6,6 @@ class NewCartItem(
     val quantity: Int,
 ) {
     init {
-        // TODO: logic
+        require(quantity > 0) { "quantity must be positive" }
     }
 }

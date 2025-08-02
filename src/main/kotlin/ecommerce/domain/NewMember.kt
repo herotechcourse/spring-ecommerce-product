@@ -5,6 +5,7 @@ class NewMember(
     val password: String,
 ) {
     init {
-        // TODO: logic
+        require(email.isNotBlank()) { "Email cannot be blank" }
+        require(password.isNotBlank()) { "Password cannot be blank" }
     }
 }
