@@ -6,7 +6,7 @@ class User(
     var id: Long? = null,
     var email: String,
     var password: String,
-    var role: String? = null,
+    var role: Role = Role.USER,
 ) {
     fun checkPassword(providedPassword: String): Boolean {
         return providedPassword == password
@@ -29,7 +29,7 @@ class User(
         return LoggedInUser(
             id = this.id!!,
             email = this.email,
-            role = this.role!!,
+            role = this.role.name,
         )
     }
 }

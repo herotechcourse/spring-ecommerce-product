@@ -31,6 +31,6 @@ class LoginUserArgumentResolver : HandlerMethodArgumentResolver {
             request.getAttribute("authenticatedUser") as? User
                 ?: throw ResponseStatusException(HttpStatus.UNAUTHORIZED, "User not authenticated")
 
-        return LoggedInUser(user.id!!, user.email, user.role!!)
+        return LoggedInUser(user.id!!, user.email, user.role.name)
     }
 }

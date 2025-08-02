@@ -1,6 +1,7 @@
 package ecommerce.controller
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import ecommerce.entity.Role
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -25,8 +26,8 @@ class AdminStatisticsControllerTest(
 
     @Test
     fun `admin sees top 3 products after user adds 3 items to cart`() {
-        register("admin@mail.com", "123456", "ADMIN")
-        register("user@mail.com", "654321", "USER")
+        register("admin@mail.com", "123456", Role.ADMIN)
+        register("user@mail.com", "654321", Role.USER)
 
         adminToken = login("admin@mail.com", "123456")
         userToken = login("user@mail.com", "654321")
@@ -57,8 +58,8 @@ class AdminStatisticsControllerTest(
 
     @Test
     fun `admin sees top 5 products in correct order after user adds 7 products to cart (some of which multiple times)`() {
-        register("admin@mail.com", "123456", "ADMIN")
-        register("user@mail.com", "654321", "USER")
+        register("admin@mail.com", "123456", Role.ADMIN)
+        register("user@mail.com", "654321", Role.USER)
 
         adminToken = login("admin@mail.com", "123456")
         userToken = login("user@mail.com", "654321")
@@ -98,10 +99,10 @@ class AdminStatisticsControllerTest(
 
     @Test
     fun `admin sees recently active users who added to cart in last 7 days`() {
-        register("admin@mail.com", "123456", "ADMIN")
-        register("user1@mail.com", "654321", "USER")
-        register("user2@mail.com", "654321", "USER")
-        register("user3@mail.com", "654321", "USER") // inactive user
+        register("admin@mail.com", "123456", Role.ADMIN)
+        register("user1@mail.com", "654321", Role.USER)
+        register("user2@mail.com", "654321", Role.USER)
+        register("user3@mail.com", "654321", Role.USER) // inactive user
 
         adminToken = login("admin@mail.com", "123456")
         val user1Token = login("user1@mail.com", "654321")
@@ -138,18 +139,18 @@ class AdminStatisticsControllerTest(
     private fun register(
         email: String,
         password: String,
-        role: String,
+        role: Role,
     ) {
         mockMvc.post("/api/users/register") {
             contentType = MediaType.APPLICATION_JSON
             content =
                 """
-                {
-                    "email": "$email",
-                    "password": "$password",
-                    "role": "$role"
-                }
-                """.trimIndent()
+            {
+                "email": "$email",
+                "password": "$password",
+                "role": "${role.name}"
+            }
+            """.trimIndent()
         }.andExpect { status { isOk() } }
     }
 

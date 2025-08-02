@@ -2,6 +2,7 @@ package ecommerce.controller
 
 import ecommerce.dto.ProductRequest
 import ecommerce.entity.Product
+import ecommerce.entity.Role
 import ecommerce.entity.User
 import ecommerce.repository.ProductRepository
 import ecommerce.repository.UserRepository
@@ -81,7 +82,7 @@ class CRUDTest {
             ps.setString(3, product.imageUrl)
         }
 
-        val user = User(email = "user@mail.com", password = "p123456", role = "USER")
+        val user = User(email = "user@mail.com", password = "p123456", role = Role.USER)
         user.id = userRepository.create(user)
 
         token = jwtService.generateToken(user.email)

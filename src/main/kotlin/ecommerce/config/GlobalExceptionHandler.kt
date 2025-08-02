@@ -1,6 +1,7 @@
 package ecommerce.config
 
 import ecommerce.exception.EmailAlreadyUsedException
+import ecommerce.exception.InvalidRoleException
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.MethodArgumentNotValidException
@@ -14,6 +15,12 @@ class GlobalExceptionHandler {
     fun handleEmailAlreadyUsedException(ex: EmailAlreadyUsedException): ResponseEntity<Map<String, String>> {
         val body = mapOf("error" to (ex.message ?: "Email already in use"))
         return ResponseEntity(body, HttpStatus.BAD_REQUEST)
+    }
+
+    @ExceptionHandler(InvalidRoleException::class)
+    fun handleInvalidRoleException(ex: InvalidRoleException): ResponseEntity<Map<String, String>> {
+        val body = mapOf("error" to (ex.reason ?: "Invalid role provided"))
+        return ResponseEntity(body, ex.statusCode)
     }
 
     @ExceptionHandler(MethodArgumentNotValidException::class)

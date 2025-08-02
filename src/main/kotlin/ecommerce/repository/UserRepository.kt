@@ -1,5 +1,6 @@
 package ecommerce.repository
 
+import ecommerce.entity.Role
 import ecommerce.entity.User
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.jdbc.core.RowMapper
@@ -13,7 +14,7 @@ class UserRepository(private val jdbc: JdbcTemplate) {
                 id = rs.getLong("id"),
                 email = rs.getString("email"),
                 password = rs.getString("password"),
-                role = rs.getString("role"),
+                role = Role.valueOf(rs.getString("role")),
             )
         }
 
@@ -26,7 +27,7 @@ class UserRepository(private val jdbc: JdbcTemplate) {
             "INSERT INTO users (email, password, role) VALUES (?, ?, ?)",
             user.email,
             user.password,
-            user.role,
+            user.role.name,
         )
         return jdbc.queryForObject("SELECT MAX(id) FROM users", Long::class.java)!!
     }

@@ -2,6 +2,7 @@ package ecommerce.controller
 
 import ecommerce.entity.CartItem
 import ecommerce.entity.Product
+import ecommerce.entity.Role
 import ecommerce.entity.User
 import ecommerce.repository.CartRepository
 import ecommerce.repository.ProductRepository
@@ -43,7 +44,7 @@ class CartControllerTest
 
         @BeforeEach
         fun setup() {
-            user = User(email = "user@mail.com", password = "p123456", role = "USER")
+            user = User(email = "user@mail.com", password = "p123456", role = Role.USER)
             user.id = userRepository.create(user)
 
             token = jwtService.generateToken(user.email)

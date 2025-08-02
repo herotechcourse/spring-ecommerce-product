@@ -1,5 +1,6 @@
 package ecommerce.repository
 
+import ecommerce.entity.Role
 import ecommerce.entity.User
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
@@ -50,7 +51,7 @@ class UserRepositoryTest {
 
     @Test
     fun `should create user`() {
-        val user = User(email = "newuser@example.com", password = "testpass", role = "USER")
+        val user = User(email = "newuser@example.com", password = "testpass", role = Role.USER)
         val id = userRepository.create(user)
 
         val createdUser = userRepository.getByEmail("newuser@example.com")

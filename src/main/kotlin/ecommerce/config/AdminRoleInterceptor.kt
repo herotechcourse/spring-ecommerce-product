@@ -1,5 +1,6 @@
 package ecommerce.config
 
+import ecommerce.entity.Role
 import ecommerce.service.JwtService
 import ecommerce.service.UserService
 import jakarta.servlet.http.HttpServletRequest
@@ -34,7 +35,7 @@ class AdminRoleInterceptor(
             userService.getByEmail(email)
                 ?: throw ResponseStatusException(HttpStatus.UNAUTHORIZED, "User not found")
 
-        if (user.role != "ADMIN") {
+        if (user.role != Role.ADMIN) {
             throw ResponseStatusException(HttpStatus.FORBIDDEN, "Access denied: ADMIN role required")
         }
 
