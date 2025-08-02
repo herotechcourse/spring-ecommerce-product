@@ -1,18 +1,21 @@
 package ecommerce.service
 
 import ecommerce.auth.JwtProvider
-import ecommerce.dto.MemberDTO
 import ecommerce.repository.MemberRepository
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
 import org.springframework.web.server.ResponseStatusException
 
 @Service
-class AuthService (private val memberRepository: MemberRepository){
-    fun login(memberDTO: MemberDTO): String {
-        val member = memberRepository.findByEmail(memberDTO.email)
-            ?: throw ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid credentials")
-        if (member.password != memberDTO.password) {
+class AuthService(private val memberRepository: MemberRepository) {
+    fun login(
+        email: String,
+        password: String,
+    ): String {
+        val member =
+            memberRepository.findByEmail(email)
+                ?: throw ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid credentials")
+        if (member.password != password) {
             throw ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid credentials")
         }
         return JwtProvider.generateToken(member.email)
