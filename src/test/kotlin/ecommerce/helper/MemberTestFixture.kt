@@ -1,6 +1,7 @@
 package ecommerce.helper
 
 import ecommerce.dto.MemberRequest
+import ecommerce.entity.Member
 import io.jsonwebtoken.Jwts
 import io.restassured.RestAssured
 import io.restassured.http.ContentType
@@ -8,17 +9,24 @@ import io.restassured.response.ExtractableResponse
 import io.restassured.response.Response
 
 object MemberTestFixture {
-    object RequestCases {
-        val VALID_ADMIN =
+    object Cases {
+        val VALID_REQUEST =
             MemberRequest(
                 email = "admin@email.com",
                 password = "password",
             )
 
-        val VALID_MEMBER_GURI =
+        val VALID_REQUEST_GURI =
             MemberRequest(
                 email = "guri@email.com",
                 password = "very_cute_dog",
+            )
+
+        val MEMBER_GURI =
+            Member(
+                id = 1L,
+                email = VALID_REQUEST_GURI.email,
+                password = VALID_REQUEST_GURI.password,
             )
     }
 

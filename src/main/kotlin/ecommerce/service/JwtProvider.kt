@@ -4,7 +4,6 @@ import ecommerce.entity.Member
 import io.jsonwebtoken.JwtException
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.security.Keys
-import jakarta.annotation.PostConstruct
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.stereotype.Component
 import java.util.Base64
@@ -20,11 +19,6 @@ class JwtProvider {
     private val algorithm = Jwts.SIG.HS256
     private val key: SecretKey by lazy {
         Keys.hmacShaKeyFor(Base64.getDecoder().decode(secretKey))
-    }
-
-    @PostConstruct
-    fun init() {
-        println("secretKey in JwtProvider = $secretKey")
     }
 
     fun createToken(member: Member): String {

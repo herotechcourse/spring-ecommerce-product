@@ -7,7 +7,7 @@ import ecommerce.dto.TokenResponse
 import ecommerce.exception.LoginFailedException
 import ecommerce.exception.MemberAlreadyExistsException
 import ecommerce.helper.MemberTestExpected
-import ecommerce.helper.MemberTestFixture.RequestCases
+import ecommerce.helper.MemberTestFixture.Cases
 import ecommerce.helper.MemberTestFixture.ValidationCase
 import ecommerce.service.MemberService
 import org.junit.jupiter.api.Test
@@ -53,7 +53,7 @@ class MemberControllerTest
 
         @Test
         fun `should register admin and return expected token`() {
-            val request = RequestCases.VALID_ADMIN
+            val request = Cases.VALID_REQUEST
             val expect = MemberTestExpected(request, ValidationCase.DEFAULT_CASE)
             val expectedResponse = TokenResponse(expect.accessToken)
 
@@ -78,7 +78,7 @@ class MemberControllerTest
 
         @Test
         fun `should login and return expected token`() {
-            val request = RequestCases.VALID_MEMBER_GURI
+            val request = Cases.VALID_REQUEST_GURI
             val expect = MemberTestExpected(request, ValidationCase.DEFAULT_CASE)
             val expectedResponse = TokenResponse(expect.accessToken)
 
@@ -103,7 +103,7 @@ class MemberControllerTest
 
         @Test
         fun `should return 401 when logging in with unregistered email`() {
-            val request = RequestCases.VALID_MEMBER_GURI
+            val request = Cases.VALID_REQUEST_GURI
             val expect = MemberTestExpected(request, ValidationCase.DEFAULT_CASE)
             val expectedResponse = TokenResponse(expect.accessToken)
 

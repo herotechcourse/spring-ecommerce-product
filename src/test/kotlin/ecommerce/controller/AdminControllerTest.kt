@@ -4,7 +4,7 @@ import ecommerce.dto.MemberRequest
 import ecommerce.dto.MemberStatsResponse
 import ecommerce.dto.ProductStatsResponse
 import ecommerce.entity.Member
-import ecommerce.helper.MemberTestFixture.RequestCases.VALID_MEMBER_GURI
+import ecommerce.helper.MemberTestFixture.Cases.VALID_REQUEST_GURI
 import ecommerce.service.AdminService
 import ecommerce.service.AuthService
 import org.junit.jupiter.api.BeforeEach
@@ -91,7 +91,7 @@ class AdminControllerTest
 
         @Test
         fun `should return active members who added products in last 7 days`() {
-            val member = VALID_MEMBER_GURI
+            val member = VALID_REQUEST_GURI
             val mockProducts =
                 listOf(
                     MemberStatsResponse(
