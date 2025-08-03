@@ -35,11 +35,7 @@ class ProductController(private val productService: ProductService) {
     @GetMapping
     fun read(): ResponseEntity<List<Product>> {
         val products = productService.getAllProducts()
-        return if (products.isEmpty()) {
-            ResponseEntity.noContent().build()
-        } else {
-            ResponseEntity.ok(products)
-        }
+        return ResponseEntity.ok(products)
     }
 
     @PatchMapping("/{id}")
