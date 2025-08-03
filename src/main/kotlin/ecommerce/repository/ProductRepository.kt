@@ -29,6 +29,11 @@ class ProductRepository(private val jdbcTemplate: JdbcTemplate) {
         return jdbcTemplate.query(sql, productRowMapper, id).firstOrNull()
     }
 
+    fun findByName(name: String): Product? {
+        val sql = "select * from products where name = ?"
+        return jdbcTemplate.query(sql, productRowMapper, name).firstOrNull()
+    }
+
     fun findAllProducts(): List<Product> {
         val sql = "select id, name, price, img, quantity from products"
         return jdbcTemplate.query(sql, productRowMapper)
@@ -50,5 +55,11 @@ class ProductRepository(private val jdbcTemplate: JdbcTemplate) {
     fun delete(id: Long) {
         val sql = "delete from products where id = ?"
         jdbcTemplate.update(sql, id)
+    }
+
+    fun existsByName(name: String): Boolean {
+        val sql = "select count(*) from products where name = ?"
+        val count = jdbcTemplate.queryForObject(sql, Int::class.java, name)
+        return count != null && count > 0
     }
 }
