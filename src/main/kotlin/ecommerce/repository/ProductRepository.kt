@@ -1,5 +1,7 @@
-package ecommerce
+package ecommerce.repository
 
+import ecommerce.entity.Price
+import ecommerce.entity.Product
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.jdbc.core.RowMapper
 import org.springframework.stereotype.Repository
@@ -11,7 +13,7 @@ class ProductRepository(private val jdbc: JdbcTemplate) {
             Product(
                 id = rs.getLong("id"),
                 name = rs.getString("name"),
-                price = rs.getDouble("price"),
+                price = Price(rs.getDouble("price")),
                 imageUrl = rs.getString("image_url"),
             )
         }
@@ -24,7 +26,7 @@ class ProductRepository(private val jdbc: JdbcTemplate) {
         jdbc.update(
             "INSERT INTO products (name, price, image_url) VALUES (?, ?, ?)",
             product.name,
-            product.price,
+            product.price.value,
             product.imageUrl,
         )
         return jdbc.queryForObject("SELECT MAX(id) FROM products", Long::class.java)!!
@@ -36,11 +38,22 @@ class ProductRepository(private val jdbc: JdbcTemplate) {
     ): Boolean {
         return jdbc.update(
             "UPDATE products SET name = ?, price = ?, image_url = ? WHERE id = ?",
-            product.name, product.price, product.imageUrl, id,
+            product.name, product.price.value, product.imageUrl, id,
         ) > 0
     }
 
     fun delete(id: Long): Boolean {
         return jdbc.update("DELETE FROM products WHERE id = ?", id) > 0
+    }
+
+    fun existsById(id: Long): Boolean {
+        val sql = "SELECT COUNT(*) FROM products WHERE id = ?"
+        val count = jdbc.queryForObject(sql, Int::class.java, id)
+        return count != null && count > 0
+    }
+
+    fun existsByName(name: String): Boolean {
+        val count = jdbc.queryForObject("SELECT COUNT(*) FROM products WHERE name = ?", Long::class.java, name)
+        return count != null && count > 0
     }
 }

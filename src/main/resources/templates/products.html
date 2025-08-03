@@ -79,7 +79,9 @@
             alert('Product created!');
             location.reload(); // Reload to show new product
         } else {
-            alert('Failed to create product');
+            const errorData = await response.json();
+            const errorMessages = Object.values(errorData).join('\n');
+            alert('Failed to create product:\n' + errorMessages);
         }
     });
 
@@ -127,7 +129,9 @@
                 alert('Product updated!');
                 location.reload();
             } else {
-                alert('Failed to update product');
+                const errorData = await response.json();
+                const errorMessages = Object.values(errorData).join('\n');
+                alert('Failed to create product:\n' + errorMessages);
             }
         } catch (error) {
             console.error("Error updating product:", error);

@@ -1,0 +1,40 @@
+package ecommerce.controller
+
+import ecommerce.dto.LoginRequest
+import ecommerce.dto.LoginResponse
+import ecommerce.dto.RegisterRequest
+import ecommerce.dto.RegisterResponse
+import ecommerce.service.JwtService
+import ecommerce.service.UserService
+import jakarta.validation.Valid
+import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RestController
+
+@RestController
+@RequestMapping("/api/users")
+class UserController(
+    val userService: UserService,
+    val jwtService: JwtService,
+) {
+    @PostMapping("/register")
+    fun register(
+        @Valid @RequestBody request: RegisterRequest,
+    ): ResponseEntity<RegisterResponse> {
+        userService.register(request.email, request.password, request.role)
+        val token = jwtService.generateToken(request.email)
+        val response = RegisterResponse(token)
+        return ResponseEntity.ok(response)
+    }
+
+    @PostMapping("/login")
+    fun login(
+        @Valid @RequestBody request: LoginRequest,
+    ): ResponseEntity<LoginResponse> {
+        val user = userService.login(request.email, request.password)
+        val token = jwtService.generateToken(user.email)
+        return ResponseEntity.ok(LoginResponse(token))
+    }
+}
