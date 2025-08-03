@@ -20,5 +20,5 @@ interface BaseProductStore {
 
     fun findByName(name: String): Product?
 
-    operator fun get(id: Long): Product? // products[1] // fun findById(id: Long): Product? // products.findById(1)
+    operator fun get(id: Long): Product?
 }
