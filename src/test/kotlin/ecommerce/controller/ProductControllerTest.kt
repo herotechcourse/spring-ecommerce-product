@@ -147,14 +147,24 @@ class ProductControllerTest {
     @Test
     fun `update() should be able to update product, and return 'ok 200' response`() {
         val token = JwtProvider.generateToken("admin@test.com")
+        val requestBody =
+            mapOf(
+                "productId" to 1,
+                "product" to
+                    mapOf(
+                        "name" to "Flat White",
+                        "price" to 3.5,
+                        "imageUrl" to "http://example.com/flat-white.jpg",
+                    ),
+            )
 
         val response =
             RestAssured
                 .given().log().all()
-                .body(FLAT_WHITE)
+                .body(requestBody)
                 .header("Authorization", token)
                 .contentType(ContentType.JSON)
-                .`when`().patch("/api/products/1")
+                .`when`().patch("/api/products/update")
                 .then().log().all().extract()
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
@@ -179,12 +189,15 @@ class ProductControllerTest {
     @Test
     fun `delete() should be able to delete product, and return '204' response`() {
         val token = JwtProvider.generateToken("admin@test.com")
+        val requestBody = mapOf("productId" to 1)
 
         val response =
             RestAssured
                 .given().log().all()
                 .header("Authorization", token)
-                .`when`().delete("/api/products/1")
+                .contentType(ContentType.JSON)
+                .body(requestBody)
+                .`when`().delete("/api/products/delete")
                 .then().log().all().extract()
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value())

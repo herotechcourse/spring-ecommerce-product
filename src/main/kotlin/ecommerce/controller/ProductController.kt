@@ -3,7 +3,8 @@ package ecommerce.controller
 import ecommerce.annotation.AdminOnly
 import ecommerce.annotation.LoginMember
 import ecommerce.annotation.Protected
-import ecommerce.dto.ProductDTO
+import ecommerce.dto.DeleteProductRequest
+import ecommerce.dto.UpdateProductRequest
 import ecommerce.model.Member
 import ecommerce.model.Product
 import ecommerce.model.Role
@@ -12,7 +13,6 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PatchMapping
-import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
@@ -38,29 +38,28 @@ class ProductController(private val productService: ProductService) {
         return ResponseEntity.ok(products)
     }
 
-    @PatchMapping("/{id}")
+    @PatchMapping("/update")
     @Protected
     fun patchUpdate(
-        @RequestBody dto: ProductDTO,
-        @PathVariable id: Long,
+        @RequestBody payload: UpdateProductRequest,
     ): ResponseEntity<Product> {
         val updatedProduct =
-            productService.updateProduct(id, dto)
+            productService.updateProduct(payload.productId, payload.product)
                 ?: return ResponseEntity.notFound().build()
         return ResponseEntity.ok(updatedProduct)
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete")
     @Protected
     @AdminOnly
     fun delete(
-        @PathVariable id: Long,
+        @RequestBody body: DeleteProductRequest,
         @LoginMember member: Member,
     ): ResponseEntity<Void> {
         if (member.role != Role.ADMIN) {
             return ResponseEntity.status(401).build()
         }
-        val deleted = productService.deleteProductById(id)
+        val deleted = productService.deleteProductById(body.productId)
         return if (deleted) {
             ResponseEntity.noContent().build()
         } else {

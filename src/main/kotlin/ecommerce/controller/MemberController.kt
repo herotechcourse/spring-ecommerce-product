@@ -2,12 +2,12 @@ package ecommerce.controller
 
 import ecommerce.annotation.LoginMember
 import ecommerce.annotation.Protected
+import ecommerce.dto.FindMemberRequest
 import ecommerce.dto.MemberDTO
 import ecommerce.model.Member
 import ecommerce.service.MemberService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
@@ -26,12 +26,12 @@ class MemberController(private val memberService: MemberService) {
     }
 
     @Protected
-    @GetMapping("/{id}")
+    @GetMapping("/get")
     fun get(
-        @PathVariable id: Long,
+        @RequestBody body: FindMemberRequest,
         @LoginMember loggedMember: Member,
     ): ResponseEntity<Member> {
-        val member = memberService.validateId(id)
+        val member = memberService.validateId(body.memberId)
         if (member.id != loggedMember.id) {
             return ResponseEntity.notFound().build()
         }
