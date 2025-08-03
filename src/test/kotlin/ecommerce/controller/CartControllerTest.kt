@@ -22,7 +22,7 @@ class CartControllerTest {
                 .given().log().all()
                 .header("Authorization", token)
                 .contentType(ContentType.JSON)
-                .`when`().post("/api/cart/add")
+                .`when`().post("/api/cart")
                 .then().log().all().extract()
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value())
@@ -39,7 +39,7 @@ class CartControllerTest {
                 .header("Authorization", token)
                 .contentType(ContentType.JSON)
                 .body(requestBody)
-                .`when`().post("/api/cart/add")
+                .`when`().post("/api/cart")
                 .then().log().all().extract()
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
@@ -57,7 +57,7 @@ class CartControllerTest {
                 .header("Authorization", token)
                 .contentType(ContentType.JSON)
                 .body(requestBody)
-                .`when`().post("/api/cart/add")
+                .`when`().post("/api/cart")
                 .then().log().all().extract()
 
         responseJson = response.jsonPath()
@@ -77,7 +77,7 @@ class CartControllerTest {
                 .given().log().all()
                 .header("Authorization", token)
                 .contentType(ContentType.JSON)
-                .`when`().delete("/api/cart/delete")
+                .`when`().delete("/api/cart")
                 .then().log().all().extract()
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value())
@@ -94,7 +94,7 @@ class CartControllerTest {
                 .header("Authorization", token)
                 .contentType(ContentType.JSON)
                 .body(requestBody)
-                .`when`().post("/api/cart/add")
+                .`when`().post("/api/cart")
                 .then().log().all().extract()
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
@@ -105,7 +105,7 @@ class CartControllerTest {
                 .header("Authorization", token)
                 .contentType(ContentType.JSON)
                 .body(requestBody)
-                .`when`().delete("/api/cart/delete")
+                .`when`().delete("/api/cart")
                 .then().log().all().extract()
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value())

@@ -3,6 +3,7 @@ package ecommerce.config
 import ecommerce.resolver.LoginMemberArgumentResolver
 import org.springframework.context.annotation.Configuration
 import org.springframework.web.method.support.HandlerMethodArgumentResolver
+import org.springframework.web.servlet.config.annotation.CorsRegistry
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 
@@ -22,5 +23,13 @@ class WebConfig(
 
         registry.addInterceptor(roleCheckInterceptor)
             .addPathPatterns("/api/products/**", "/api/cart/**") // adjust as needed
+    }
+
+    override fun addCorsMappings(registry: CorsRegistry) {
+        registry.addMapping("/**")
+            .allowedOrigins("http://localhost:3000") // Replace with your frontend URL
+            .allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
+            .allowedHeaders("*")
+            .allowCredentials(true)
     }
 }

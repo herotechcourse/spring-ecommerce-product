@@ -26,7 +26,7 @@ class MemberController(private val memberService: MemberService) {
     }
 
     @Protected
-    @GetMapping("/get")
+    @GetMapping()
     fun get(
         @RequestBody body: FindMemberRequest,
         @LoginMember loggedMember: Member,

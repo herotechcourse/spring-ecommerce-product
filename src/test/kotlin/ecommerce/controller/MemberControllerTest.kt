@@ -83,7 +83,7 @@ class MemberControllerTest {
                 .header("Authorization", token)
                 .contentType(ContentType.JSON)
                 .body(requestBody)
-                .`when`().get("/api/members/get")
+                .`when`().get("/api/members")
                 .then().log().all().extract()
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
@@ -103,7 +103,7 @@ class MemberControllerTest {
                 .header("Authorization", token)
                 .contentType(ContentType.JSON)
                 .body(requestBody)
-                .`when`().get("/api/members/get")
+                .`when`().get("/api/members")
                 .then().log().all().extract()
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value())

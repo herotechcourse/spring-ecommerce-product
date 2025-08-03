@@ -38,7 +38,7 @@ class ProductController(private val productService: ProductService) {
         return ResponseEntity.ok(products)
     }
 
-    @PatchMapping("/update")
+    @PatchMapping()
     @Protected
     fun patchUpdate(
         @RequestBody payload: UpdateProductRequest,
@@ -49,7 +49,7 @@ class ProductController(private val productService: ProductService) {
         return ResponseEntity.ok(updatedProduct)
     }
 
-    @DeleteMapping("/delete")
+    @DeleteMapping()
     @Protected
     @AdminOnly
     fun delete(

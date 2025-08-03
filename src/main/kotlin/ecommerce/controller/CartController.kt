@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 class CartController(private val cartService: CartService) {
     @Protected
-    @PostMapping("/add")
+    @PostMapping()
     fun addToCart(
         @RequestBody body: AddToCartRequest,
         @LoginMember member: Member,
@@ -43,7 +43,7 @@ class CartController(private val cartService: CartService) {
     }
 
     @Protected
-    @DeleteMapping("/delete")
+    @DeleteMapping()
     fun deleteCartItem(
         @RequestBody body: DeleteCartItemRequest,
         @LoginMember member: Member,

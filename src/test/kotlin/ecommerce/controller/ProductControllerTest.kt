@@ -164,7 +164,7 @@ class ProductControllerTest {
                 .body(requestBody)
                 .header("Authorization", token)
                 .contentType(ContentType.JSON)
-                .`when`().patch("/api/products/update")
+                .`when`().patch("/api/products")
                 .then().log().all().extract()
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
@@ -197,7 +197,7 @@ class ProductControllerTest {
                 .header("Authorization", token)
                 .contentType(ContentType.JSON)
                 .body(requestBody)
-                .`when`().delete("/api/products/delete")
+                .`when`().delete("/api/products")
                 .then().log().all().extract()
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value())
