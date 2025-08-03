@@ -14,11 +14,11 @@ function productManager() {
                 body: JSON.stringify(payload)
             };
 
-            const res = await fetch(API_ENDPOINT, { ...options, method: "POST" });
+            const res = await fetch(`${API_ENDPOINT}/add`, { ...options, method: "POST" });
             return res;
         },
         async delete(id) {
-            const res = await fetch(`${API_ENDPOINT}/${id}`, { method: "DELETE" });
+            const res = await fetch(`${API_ENDPOINT}/delete`, { method: "DELETE" });
             return res;
         },
 
@@ -34,7 +34,7 @@ function productManager() {
                 body: JSON.stringify(payload)
             };
 
-            const res = await fetch(`${API_ENDPOINT}/${id}`, { ...options, method: "PATCH" });
+            const res = await fetch(`${API_ENDPOINT}/add`, { ...options, method: "PATCH" });
             return res;
         }
     }

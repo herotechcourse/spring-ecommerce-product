@@ -22,7 +22,7 @@ class CartControllerTest {
                 .given().log().all()
                 .header("Authorization", token)
                 .contentType(ContentType.JSON)
-                .`when`().post("/api/cart/add/1")
+                .`when`().post("/api/cart/add")
                 .then().log().all().extract()
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value())
@@ -31,13 +31,15 @@ class CartControllerTest {
     @Test
     fun `addToCart() should return '200' response when cart item is added`() {
         val token = JwtProvider.generateToken("user@test.com")
+        val requestBody = mapOf("productId" to 1)
 
         var response =
             RestAssured
                 .given().log().all()
                 .header("Authorization", token)
                 .contentType(ContentType.JSON)
-                .`when`().post("/api/cart/add/1")
+                .body(requestBody)
+                .`when`().post("/api/cart/add")
                 .then().log().all().extract()
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
@@ -54,7 +56,8 @@ class CartControllerTest {
                 .given().log().all()
                 .header("Authorization", token)
                 .contentType(ContentType.JSON)
-                .`when`().post("/api/cart/add/1")
+                .body(requestBody)
+                .`when`().post("/api/cart/add")
                 .then().log().all().extract()
 
         responseJson = response.jsonPath()
@@ -74,7 +77,7 @@ class CartControllerTest {
                 .given().log().all()
                 .header("Authorization", token)
                 .contentType(ContentType.JSON)
-                .`when`().delete("/api/cart/1")
+                .`when`().delete("/api/cart/delete")
                 .then().log().all().extract()
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value())
@@ -83,13 +86,15 @@ class CartControllerTest {
     @Test
     fun `deleteCartItem() should return '200' response when cart item is deleted`() {
         val token = JwtProvider.generateToken("user@test.com")
+        val requestBody = mapOf("productId" to 1)
 
         var response =
             RestAssured
                 .given().log().all()
                 .header("Authorization", token)
                 .contentType(ContentType.JSON)
-                .`when`().post("/api/cart/add/1")
+                .body(requestBody)
+                .`when`().post("/api/cart/add")
                 .then().log().all().extract()
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
@@ -99,7 +104,8 @@ class CartControllerTest {
                 .given().log().all()
                 .header("Authorization", token)
                 .contentType(ContentType.JSON)
-                .`when`().delete("/api/cart/1")
+                .body(requestBody)
+                .`when`().delete("/api/cart/delete")
                 .then().log().all().extract()
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value())
@@ -109,6 +115,7 @@ class CartControllerTest {
                 .given().log().all()
                 .header("Authorization", token)
                 .contentType(ContentType.JSON)
+                .body(requestBody)
                 .`when`().get("/api/cart")
                 .then().log().all().extract()
 
