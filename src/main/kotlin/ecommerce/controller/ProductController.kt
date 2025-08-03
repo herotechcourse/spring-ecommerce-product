@@ -1,10 +1,11 @@
-package ecommerce
+package ecommerce.controller
 
+import ecommerce.dto.ProductRequest
+import ecommerce.model.Product
+import ecommerce.service.ProductService
+import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
-import org.springframework.stereotype.Controller
-import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.DeleteMapping
-import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
@@ -15,31 +16,31 @@ import org.springframework.web.bind.annotation.RestController
 import java.net.URI
 
 @RestController
-@RequestMapping("api/products")
-class ProductController(private val productRepository: ProductRepository) {
+@RequestMapping("/api/products")
+class ProductController(
+    private val service: ProductService,
+) {
     @PostMapping
     fun createProduct(
-        @RequestBody product: Product,
+        @Valid @RequestBody product: ProductRequest,
     ): ResponseEntity<Unit> {
-        val id = productRepository.create(product)
+        service.validateUniqueName(product)
+        val id = service.create(product)
         return ResponseEntity.created(URI.create("/api/products/$id")).build()
     }
 
     @GetMapping
     fun readProducts(): ResponseEntity<List<Product>> {
-        val products = productRepository.getAll()
+        val products = service.getAll()
         return ResponseEntity.ok(products)
     }
 
     @PutMapping("/{id}")
     fun updateProduct(
-        @RequestBody newProduct: Product,
+        @Valid @RequestBody newProduct: ProductRequest,
         @PathVariable id: Long,
     ): ResponseEntity<Unit> {
-        val updated = productRepository.update(id, newProduct)
-        if (!updated) {
-            throw RuntimeException("Product not found")
-        }
+        service.update(id, newProduct)
         return ResponseEntity.ok().build()
     }
 
@@ -47,24 +48,7 @@ class ProductController(private val productRepository: ProductRepository) {
     fun deleteProduct(
         @PathVariable id: Long,
     ): ResponseEntity<Unit> {
-        val deleted = productRepository.delete(id)
-        if (!deleted) {
-            throw RuntimeException()
-        }
+        service.delete(id)
         return ResponseEntity.noContent().build()
-    }
-
-    @ExceptionHandler(RuntimeException::class)
-    fun handle(e: RuntimeException): ResponseEntity<Unit> {
-        return ResponseEntity.notFound().build()
-    }
-}
-
-@Controller
-class ProductPageController(private val productRepository: ProductRepository) {
-    @GetMapping("/products")
-    fun getProducts(model: Model): String {
-        model.addAttribute("products", productRepository.getAll())
-        return "products"
     }
 }

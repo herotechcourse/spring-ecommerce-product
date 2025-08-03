@@ -1,11 +1,12 @@
-package ecommerce
+package ecommerce.repository
 
+import ecommerce.model.Product
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.jdbc.core.RowMapper
 import org.springframework.stereotype.Repository
 
 @Repository
-class ProductRepository(private val jdbc: JdbcTemplate) {
+class JdbcProductRepository(private val jdbc: JdbcTemplate) : ProductRepository {
     private val rowMapper =
         RowMapper<Product> { rs, _ ->
             Product(
@@ -16,21 +17,21 @@ class ProductRepository(private val jdbc: JdbcTemplate) {
             )
         }
 
-    fun getAll(): List<Product> {
+    override fun getAll(): List<Product> {
         return jdbc.query("SELECT * FROM products", rowMapper)
     }
 
-    fun create(product: Product): Long {
+    override fun create(product: Product): Long? {
         jdbc.update(
             "INSERT INTO products (name, price, image_url) VALUES (?, ?, ?)",
             product.name,
             product.price,
             product.imageUrl,
         )
-        return jdbc.queryForObject("SELECT MAX(id) FROM products", Long::class.java)!!
+        return jdbc.queryForObject("SELECT MAX(id) FROM products", Long::class.java)
     }
 
-    fun update(
+    override fun update(
         id: Long,
         product: Product,
     ): Boolean {
@@ -40,7 +41,17 @@ class ProductRepository(private val jdbc: JdbcTemplate) {
         ) > 0
     }
 
-    fun delete(id: Long): Boolean {
+    override fun delete(id: Long): Boolean {
         return jdbc.update("DELETE FROM products WHERE id = ?", id) > 0
+    }
+
+    override fun existsByName(product: Product): Boolean {
+        val rows =
+            jdbc.query(
+                "SELECT id FROM products WHERE name = ?",
+                { rs, _ -> rs.getLong("id") },
+                product.name,
+            )
+        return rows.isNotEmpty()
     }
 }
