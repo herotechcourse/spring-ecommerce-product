@@ -24,12 +24,13 @@ object JwtProvider {
 
     fun validateToken(token: String): Boolean {
         return try {
+            val now = Date()
             val claims =
                 Jwts.parserBuilder()
                     .setSigningKey(secretKey)
                     .build()
                     .parseClaimsJws(token)
-            !claims.body.expiration.before(Date())
+            claims.body.expiration.after(now)
         } catch (e: Exception) {
             false
             throw RuntimeException(e)
