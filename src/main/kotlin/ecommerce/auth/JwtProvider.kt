@@ -1,5 +1,6 @@
 package ecommerce.auth
 
+import ecommerce.resolver.UnauthorizedException
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.SignatureAlgorithm
 import io.jsonwebtoken.security.Keys
@@ -31,9 +32,9 @@ object JwtProvider {
                     .build()
                     .parseClaimsJws(token)
             claims.body.expiration.after(now)
-        } catch (e: Exception) {
+        } catch (e: UnauthorizedException) {
             false
-            throw RuntimeException(e)
+            throw UnauthorizedException() as Throwable
         }
     }
 
