@@ -1,8 +1,9 @@
 package ecommerce.controller
 
+import ecommerce.annotation.LoginMember
+import ecommerce.annotation.Protected
 import ecommerce.dto.MemberDTO
 import ecommerce.model.Member
-import ecommerce.resolver.LoginMember
 import ecommerce.service.MemberService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
@@ -24,6 +25,7 @@ class MemberController(private val memberService: MemberService) {
         return ResponseEntity.created(URI.create("api/members/" + savedMember.id)).body(null)
     }
 
+    @Protected
     @GetMapping("/{id}")
     fun get(
         @PathVariable id: Long,

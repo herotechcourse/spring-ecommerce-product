@@ -1,11 +1,13 @@
 package ecommerce.controller
 
+import ecommerce.annotation.AdminOnly
+import ecommerce.annotation.LoginMember
+import ecommerce.annotation.Protected
 import ecommerce.dto.MemberResponse
 import ecommerce.dto.TopProductStatResponse
 import ecommerce.model.CartItem
 import ecommerce.model.Member
 import ecommerce.model.Role
-import ecommerce.resolver.LoginMember
 import ecommerce.service.CartService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping("/api/cart")
 @RestController
 class CartController(private val cartService: CartService) {
+    @Protected
     @PostMapping("add/{productId}")
     fun addToCart(
         @LoginMember member: Member,
@@ -27,6 +30,7 @@ class CartController(private val cartService: CartService) {
         return ResponseEntity.ok(saved)
     }
 
+    @Protected
     @GetMapping
     fun getCartItems(
         @LoginMember member: Member,
@@ -36,6 +40,7 @@ class CartController(private val cartService: CartService) {
         return ResponseEntity.ok(items)
     }
 
+    @Protected
     @DeleteMapping("/{productId}")
     fun deleteCartItem(
         @LoginMember member: Member,
@@ -49,6 +54,7 @@ class CartController(private val cartService: CartService) {
         }
     }
 
+    @Protected
     @GetMapping("/top5")
     fun getTopCartItems(): ResponseEntity<List<TopProductStatResponse>> {
         val items = cartService.getTop5AddedProducts()
@@ -56,6 +62,8 @@ class CartController(private val cartService: CartService) {
         return ResponseEntity.ok(items)
     }
 
+    @Protected
+    @AdminOnly
     @GetMapping("/active-members")
     fun getActiveMembers(
         @LoginMember member: Member,

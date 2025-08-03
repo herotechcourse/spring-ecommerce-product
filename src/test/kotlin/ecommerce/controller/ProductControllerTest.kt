@@ -64,7 +64,7 @@ class ProductControllerTest {
     }
 
     @Test
-    fun `create() should be able return '500' when name length is greater than 15`() {
+    fun `create() should return '400' when name length is greater than 15`() {
         val token = JwtProvider.generateToken("admin@test.com")
 
         val requestBody =
@@ -82,7 +82,7 @@ class ProductControllerTest {
                 .`when`().post("/api/products")
                 .then().log().all().extract()
 
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR.value())
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value())
     }
 
     @Test
@@ -131,7 +131,7 @@ class ProductControllerTest {
 
     @Test
     fun `read() should be able to read a product and return 'ok 200' response`() {
-       // data.sql already have 3 products
+        // data.sql already have 3 products
 
         val response =
             RestAssured

@@ -1,6 +1,6 @@
 package ecommerce.auth
 
-import ecommerce.resolver.UnauthorizedException
+import ecommerce.exception.UnauthorizedException
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.SignatureAlgorithm
 import io.jsonwebtoken.security.Keys

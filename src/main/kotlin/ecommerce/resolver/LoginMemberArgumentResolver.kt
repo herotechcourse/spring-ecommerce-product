@@ -1,20 +1,17 @@
 package ecommerce.resolver
 
+import ecommerce.annotation.LoginMember
+import ecommerce.exception.UnauthorizedException
 import ecommerce.model.Member
 import ecommerce.service.AuthService
 import ecommerce.service.MemberService
+import jakarta.servlet.http.HttpServletRequest
 import org.springframework.core.MethodParameter
-import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Component
-import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.support.WebDataBinderFactory
 import org.springframework.web.context.request.NativeWebRequest
 import org.springframework.web.method.support.HandlerMethodArgumentResolver
 import org.springframework.web.method.support.ModelAndViewContainer
-
-@Target(AnnotationTarget.VALUE_PARAMETER)
-@Retention(AnnotationRetention.RUNTIME)
-annotation class LoginMember
 
 @Component
 class LoginMemberArgumentResolver(
@@ -31,11 +28,13 @@ class LoginMemberArgumentResolver(
         webRequest: NativeWebRequest,
         binderFactory: WebDataBinderFactory?,
     ): Member {
-        val userEmail = authService.extractAndValidateToken(webRequest.getHeader("Authorization") ?: "")
-        val member = memberService.findByEmail(userEmail) ?: throw UnauthorizedException()
+        val request = webRequest.nativeRequest as HttpServletRequest
+        val member = request.getAttribute("member") as? Member
+
+        if (member == null) {
+            throw UnauthorizedException()
+        }
+
         return member
     }
 }
-
-@ResponseStatus(HttpStatus.UNAUTHORIZED)
-class UnauthorizedException : RuntimeException("Unauthorized")
