@@ -38,7 +38,7 @@ class MemberService(
 
     fun loginByEmail(request: MemberRequest): TokenResponse {
         val member = findMemberByEmailOrFail(request.email)
-        validatePasswordOrFail(request.password, member.password)
+        if (!member.matches(request.password)) throw LoginFailedException()
 
         val token = jwtProvider.createToken(member)
         return MemberMapper.toResponse(token)
@@ -50,14 +50,5 @@ class MemberService(
         }
         return repository.findByEmail(email)
             ?: throw RetrievalFailedException("Member with email $email does exist, but could not be retrieved")
-    }
-
-    private fun validatePasswordOrFail(
-        requestPassword: String,
-        actualPassword: String,
-    ) {
-        if (!repository.matches(requestPassword, actualPassword)) {
-            throw LoginFailedException()
-        }
     }
 }

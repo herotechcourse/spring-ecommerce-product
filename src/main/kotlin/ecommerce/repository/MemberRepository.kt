@@ -89,11 +89,4 @@ class MemberRepository(private val jdbcTemplate: JdbcTemplate) {
             }
         }
     }
-
-    fun matches(
-        actual: String,
-        expected: String,
-    ): Boolean {
-        return actual == expected
-    }
 }

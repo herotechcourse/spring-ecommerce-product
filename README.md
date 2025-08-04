@@ -30,7 +30,8 @@
   - [x] `ProductRepository.insertWithKeyholder(...)`
 
 ### 5. Method Relocation
-- [ ] Move `matches()` method in `MemberRepository` to a better place
+- [x] Move `matches()` method in `MemberRepository` to a better place
+  - to `Member` from `MemberRepository`
 
 ### 6. Admin Controller
 - [x] Remove unnecessary `ResponseEntity` wrapping
