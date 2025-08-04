@@ -84,7 +84,7 @@ class CartControllerTest {
     }
 
     @Test
-    fun `deleteCartItem() should return '200' response when cart item is deleted`() {
+    fun `deleteCartItem() should return '204' response when cart item is deleted`() {
         val token = JwtProvider.generateToken("user@test.com")
         val requestBody = mapOf("productId" to 1)
 
@@ -118,11 +118,11 @@ class CartControllerTest {
                 .`when`().get("/api/cart")
                 .then().log().all().extract()
 
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value())
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
     }
 
     @Test
-    fun `deleteCartItem() should return '200' response when cart item does not exist`() {
+    fun `deleteCartItem() should return '404' response when cart item does not exist`() {
         val token = JwtProvider.generateToken("user@test.com")
 
         val response =
@@ -140,7 +140,7 @@ class CartControllerTest {
     fun `getCartItems() should return '200' response and user cart items`() {
         val token = JwtProvider.generateToken("admin@test.com")
 
-        var response =
+        val response =
             RestAssured
                 .given().log().all()
                 .header("Authorization", token)

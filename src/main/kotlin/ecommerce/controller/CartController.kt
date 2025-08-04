@@ -37,7 +37,6 @@ class CartController(private val cartService: CartService) {
         @LoginMember member: Member,
     ): ResponseEntity<List<CartItem>> {
         val items = cartService.getCartItemsForMember(member.id)
-        if (items.isEmpty()) return ResponseEntity.noContent().build()
         return ResponseEntity.ok(items)
     }
 
@@ -59,7 +58,6 @@ class CartController(private val cartService: CartService) {
     @GetMapping("/top5")
     fun getTopCartItems(): ResponseEntity<List<TopProductStatResponse>> {
         val items = cartService.getTop5AddedProducts()
-        if (items.isEmpty()) return ResponseEntity.noContent().build()
         return ResponseEntity.ok(items)
     }
 
@@ -67,13 +65,8 @@ class CartController(private val cartService: CartService) {
     @AdminOnly
     @GetMapping("/active-members")
     fun getActiveMembers(
-        @LoginMember member: Member,
     ): ResponseEntity<List<MemberResponse>> {
-        if (member.role != Role.ADMIN) {
-            return ResponseEntity.status(401).build()
-        }
         val items = cartService.getRecentActiveMembersInTheLast7Days()
-        if (items.isEmpty()) return ResponseEntity.noContent().build()
         return ResponseEntity.ok(items)
     }
 }
