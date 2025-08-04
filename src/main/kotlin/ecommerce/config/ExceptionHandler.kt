@@ -17,6 +17,11 @@ class ExceptionHandler {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("${ex.message}")
     }
 
+    @ExceptionHandler(ForbiddenException::class)
+    fun handleIllegalArgument(ex: ForbiddenException): ResponseEntity<String> {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body("${ex.message}")
+    }
+
     @ExceptionHandler(Exception::class)
     fun handleGeneralException(ex: Exception): ResponseEntity<String> {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)

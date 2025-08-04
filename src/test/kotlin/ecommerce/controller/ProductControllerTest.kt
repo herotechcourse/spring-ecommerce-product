@@ -108,7 +108,7 @@ class ProductControllerTest {
     }
 
     @Test
-    fun `create() should return '401' response when user is not authorized with a token`() {
+    fun `create() should return '403' response when user is not authorized to access the resource`() {
         val token = JwtProvider.generateToken("user@test.com")
 
         val requestBody =
@@ -126,7 +126,7 @@ class ProductControllerTest {
                 .`when`().post("/api/products")
                 .then().log().all().extract()
 
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value())
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.FORBIDDEN.value())
     }
 
     @Test

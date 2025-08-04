@@ -1,7 +1,7 @@
 package ecommerce.config
 
 import ecommerce.annotation.AdminOnly
-import ecommerce.exception.UnauthorizedException
+import ecommerce.exception.ForbiddenException
 import ecommerce.model.Member
 import ecommerce.model.Role
 import jakarta.servlet.http.HttpServletRequest
@@ -26,7 +26,7 @@ class RoleCheckInterceptor : HandlerInterceptor {
                 val member = request.getAttribute("member") as? Member
 
                 if (member == null || member.role != Role.ADMIN) {
-                    throw UnauthorizedException()
+                    throw ForbiddenException()
                 }
             }
         }
