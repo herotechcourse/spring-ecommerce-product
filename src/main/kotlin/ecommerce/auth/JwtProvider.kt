@@ -9,7 +9,7 @@ import javax.crypto.SecretKey
 
 object JwtProvider {
     private val secretKey: SecretKey = Keys.secretKeyFor(SignatureAlgorithm.HS256)
-    private const val EXPIRATION_TIME_MS = 3600_000 // 1 hour
+    private const val EXPIRATION_TIME_MS = 3_600_000 // 1 hour
 
     fun generateToken(email: String): String {
         val now = Date()
