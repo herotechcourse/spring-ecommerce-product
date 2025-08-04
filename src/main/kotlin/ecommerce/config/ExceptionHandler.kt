@@ -9,11 +9,17 @@ import org.springframework.web.bind.annotation.RestControllerAdvice
 class ExceptionHandler {
     @ExceptionHandler(IllegalArgumentException::class)
     fun handleIllegalArgument(ex: IllegalArgumentException): ResponseEntity<String> {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("")
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("${ex.message}")
     }
 
     @ExceptionHandler(UnauthorizedException::class)
     fun handleIllegalArgument(ex: UnauthorizedException): ResponseEntity<String> {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("")
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("${ex.message}")
+    }
+
+    @ExceptionHandler(Exception::class)
+    fun handleGeneralException(ex: Exception): ResponseEntity<String> {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+            .body("An unexpected error occurred: ${ex.message}")
     }
 }
