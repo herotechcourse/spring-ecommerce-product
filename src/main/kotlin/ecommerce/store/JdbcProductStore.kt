@@ -52,18 +52,12 @@ class JdbcProductStore(private val db: JdbcTemplate) : ProductStore {
         val updates = mutableListOf<String>()
         val params = mutableListOf<Any>()
 
-        if (patch.name != null) {
-            updates.add("name = ?")
-            params.add(patch.name)
-        }
-        if (patch.price != null) {
-            updates.add("price = ?")
-            params.add(patch.price)
-        }
-        if (patch.imageUrl != null) {
-            updates.add("imageUrl = ?")
-            params.add(patch.imageUrl)
-        }
+        updates.add("name = ?")
+        params.add(patch.name)
+        updates.add("price = ?")
+        params.add(patch.price)
+        updates.add("imageUrl = ?")
+        params.add(patch.imageUrl)
         if (updates.isEmpty()) {
             return
         }

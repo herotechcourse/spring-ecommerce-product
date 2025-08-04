@@ -58,7 +58,7 @@ class CartService(
         if (productStore.findProductById(productId) == null) {
             throw NotFoundException("Product does not exist")
         }
-        val cart = cartStore.findCartByMemberId(memberId) ?: return throw IllegalArgumentException("Cart not found")
+        val cart = cartStore.findCartByMemberId(memberId) ?: throw IllegalArgumentException("Cart not found")
         cartStore.removeCartItem(cart.id, productId)
         return cartStore.findCartByMemberId(memberId)!!
     }

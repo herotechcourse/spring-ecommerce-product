@@ -1,7 +1,5 @@
 package ecommerce.controller.api
 
-import ecommerce.application.AuthorizationExtractor
-import ecommerce.application.BearerAuthorizationExtractor
 import ecommerce.dto.MemberDTO
 import ecommerce.dto.MemberRequestDTO
 import ecommerce.dto.TokenRequest
@@ -22,8 +20,6 @@ class MemberController(
     private val userService: MemberService,
     private val authService: AuthService,
 ) {
-    private val authorizationExtractor: AuthorizationExtractor<String> = BearerAuthorizationExtractor()
-
     @PostMapping("/register")
     fun registerUser(
         @Valid @RequestBody memberRequest: MemberRequestDTO,

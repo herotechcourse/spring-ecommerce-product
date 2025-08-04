@@ -47,7 +47,7 @@ class StatisticsIntegrationTest
                 }
 
             members.forEachIndexed { index, member ->
-                val cart = cartService.getOrCreateCart(member.id!!)
+                cartService.getOrCreateCart(member.id!!)
                 val productToAdd = products[index % products.size]
                 cartService.addItem(member.id!!, productToAdd.id!!, quantity = index + 1) // quantity as 1,2,3,...
             }
@@ -57,8 +57,5 @@ class StatisticsIntegrationTest
 
             Assertions.assertThat(topProducts).isNotEmpty
             Assertions.assertThat(activeMembers).hasSize(5)
-
-            println("Top Products: $topProducts")
-            println("Active Members: $activeMembers")
         }
     }
