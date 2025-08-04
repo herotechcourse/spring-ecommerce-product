@@ -73,12 +73,12 @@ StatsQueryParams(
 ```
 
 ### 11. Sensitive Config
-- [ ] Properly handle secrets (`secret-key`) in `application.yml`
+- [x] Properly handle secrets (`secret-key`) in `application.yml`
 
 ### 12. Tests and Annotations
 - [x] Avoid `@DirtiesContext`
   - [x] CartServiceTest
-- [ ] Add **JWT-related tests** (critical logic).
+- [x] Add **JWT-related tests** (critical logic).
 - [x] Remove redundant annotations (`@Rollback`)
 - [ ] Review `@AutoConfigureTestDatabase` and `@ActiveProfiles("test")`
 
