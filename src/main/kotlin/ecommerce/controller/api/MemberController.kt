@@ -1,12 +1,12 @@
 package ecommerce.controller.api
 
-import ecommerce.service.AuthService
 import ecommerce.application.AuthorizationExtractor
 import ecommerce.application.BearerAuthorizationExtractor
-import ecommerce.model.Member
 import ecommerce.dto.MemberDTO
+import ecommerce.dto.MemberRequestDTO
 import ecommerce.dto.TokenRequest
 import ecommerce.dto.TokenResponse
+import ecommerce.service.AuthService
 import ecommerce.service.MemberService
 import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
@@ -26,11 +26,11 @@ class MemberController(
 
     @PostMapping("/register")
     fun registerUser(
-        @Valid @RequestBody member: Member,
+        @Valid @RequestBody memberRequest: MemberRequestDTO,
     ): ResponseEntity<TokenResponse> {
-        val created = userService.create(member)
+        val created = userService.create(memberRequest)
         val dto = MemberDTO.from(created)
-        val tokenRequest = TokenRequest(member.email, member.password)
+        val tokenRequest = TokenRequest(created.email, created.password)
         val tokenResponse = authService.createToken(tokenRequest)
         return ResponseEntity.created(URI("/users/${dto.id}")).body(tokenResponse)
     }

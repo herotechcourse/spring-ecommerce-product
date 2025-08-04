@@ -12,10 +12,10 @@ class JdbcMemberStore(private val db: JdbcTemplate) : MemberStore {
     private val userRowMapper =
         RowMapper<Member> { rs: ResultSet, _ ->
             Member(
-                rs.getLong("id"),
                 rs.getString("email"),
                 rs.getString("password"),
                 rs.getString("name"),
+                rs.getLong("id"),
             )
         }
 

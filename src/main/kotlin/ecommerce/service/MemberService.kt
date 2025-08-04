@@ -1,5 +1,6 @@
 package ecommerce.service
 
+import ecommerce.dto.MemberRequestDTO
 import ecommerce.exception.EmailAlreadyInUseException
 import ecommerce.model.Member
 import ecommerce.store.MemberStore
@@ -7,13 +8,13 @@ import org.springframework.stereotype.Service
 
 @Service
 class MemberService(private val memberStore: MemberStore) {
-    fun create(member: Member): Member {
+    fun create(memberRequest: MemberRequestDTO): Member {
         val allMembers = findAll()
-        val emailAlreadyExists = allMembers.any { it.email == member.email }
+        val emailAlreadyExists = allMembers.any { it.email == memberRequest.email }
         if (emailAlreadyExists) {
             throw EmailAlreadyInUseException("Email already exists")
         }
-        return memberStore.createMember(member)
+        return memberStore.createMember(memberRequest.toEntity())
     }
 
     fun findAll(): List<Member> = memberStore.findAllMembers()
