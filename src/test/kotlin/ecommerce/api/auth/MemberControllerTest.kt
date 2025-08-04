@@ -83,24 +83,4 @@ class MemberControllerTest {
             .then()
             .statusCode(201)
     }
-
-    private fun loginAndGetToken(): String {
-        val json =
-            """
-            {
-                "email": "test@example.com",
-                "password": "secure123"
-            }
-            """.trimIndent()
-
-        return RestAssured
-            .given()
-            .contentType(ContentType.JSON)
-            .body(json)
-            .post("/api/members/login")
-            .then()
-            .statusCode(200)
-            .extract()
-            .path("accessToken")
-    }
 }
