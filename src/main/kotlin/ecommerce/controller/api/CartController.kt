@@ -1,13 +1,13 @@
 package ecommerce.controller.api
 
 import ecommerce.application.annotation.LoggedMember
-import ecommerce.model.Member
-import ecommerce.model.Cart
 import ecommerce.dto.CartDTO
-import ecommerce.service.CartService
-import ecommerce.model.Product
 import ecommerce.dto.ProductDTO
 import ecommerce.dto.ProductPatchDTO
+import ecommerce.dto.ProductRequestDTO
+import ecommerce.model.Cart
+import ecommerce.model.Member
+import ecommerce.service.CartService
 import ecommerce.service.ProductService
 import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
@@ -68,9 +68,9 @@ class CartController(
 class ProductController(private val productService: ProductService) {
     @PostMapping("/products")
     fun createProduct(
-        @Valid @RequestBody product: Product,
+        @Valid @RequestBody productRequest: ProductRequestDTO,
     ): ResponseEntity<ProductDTO> {
-        val created = productService.insert(product)
+        val created = productService.insert(productRequest)
         val dto = ProductDTO.Companion.from(created)
         return ResponseEntity.created(URI("/products/${dto.id}")).body(dto)
     }

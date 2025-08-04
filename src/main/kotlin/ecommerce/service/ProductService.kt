@@ -1,8 +1,9 @@
 package ecommerce.service
 
+import ecommerce.dto.ProductPatchDTO
+import ecommerce.dto.ProductRequestDTO
 import ecommerce.exception.ProductValidationException
 import ecommerce.model.Product
-import ecommerce.dto.ProductPatchDTO
 import ecommerce.store.ProductStore
 import org.springframework.stereotype.Service
 
@@ -12,13 +13,13 @@ class ProductService(private val productStore: ProductStore) {
 
     fun findById(id: Long): Product? = productStore.findProductById(id)
 
-    fun insert(product: Product): Product {
+    fun insert(productRequest: ProductRequestDTO): Product {
         val allProducts = findAll()
-        val nameAlreadyExists = allProducts.any { it.name == product.name }
+        val nameAlreadyExists = allProducts.any { it.name == productRequest.name }
         if (nameAlreadyExists) {
-            throw ProductValidationException("Product with name '${product.name}' already exists.")
+            throw ProductValidationException("Product with name '${productRequest.name}' already exists.")
         }
-        return productStore.insertProduct(product)
+        return productStore.insertProduct(productRequest.toEntity())
     }
 
     fun update(

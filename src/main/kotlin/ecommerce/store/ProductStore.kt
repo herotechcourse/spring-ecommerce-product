@@ -1,7 +1,7 @@
 package ecommerce.store
 
-import ecommerce.model.Product
 import ecommerce.dto.ProductPatchDTO
+import ecommerce.model.Product
 
 interface ProductStore {
     fun findAllProducts(): List<Product>

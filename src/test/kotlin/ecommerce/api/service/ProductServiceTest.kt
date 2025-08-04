@@ -1,7 +1,7 @@
 package ecommerce.api.service
 
 import ecommerce.dto.ProductPatchDTO
-import ecommerce.model.Product
+import ecommerce.dto.ProductRequestDTO
 import ecommerce.service.ProductService
 import ecommerce.store.JdbcProductStore
 import ecommerce.store.ProductStore
@@ -70,7 +70,7 @@ class ProductServiceTest {
 
     @Test
     fun insert() {
-        val product = Product(name = "Iron body", price = 99.0, imageUrl = "https://alexnsan.comics/imageurl/123")
+        val product = ProductRequestDTO(name = "Iron body", price = 99.0, imageUrl = "https://alexnsan.comics/imageurl/123")
         productService.insert(product)
         val allProducts = productService.findAll()
         val lastProduct = allProducts.last()
