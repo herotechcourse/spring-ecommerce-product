@@ -17,7 +17,7 @@ class CheckLoginInterceptor(private val jwtTokenProvider: JwtTokenProvider) : Ha
     ): Boolean {
         val token = authorizationExtractor.extract(request)
         println("CheckLoginInterceptor: token=$token")
-        if (token.isNullOrBlank()) {
+        if (token.isBlank()) {
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Missing or empty Authorization token")
             return false
         }
