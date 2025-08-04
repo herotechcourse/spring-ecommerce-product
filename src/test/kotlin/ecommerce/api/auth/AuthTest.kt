@@ -1,7 +1,7 @@
 package ecommerce.api.auth
 
-import ecommerce.auth.infrastructure.JwtTokenProvider
-import ecommerce.auth.model.Member
+import ecommerce.application.JwtTokenProvider
+import ecommerce.model.Member
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
