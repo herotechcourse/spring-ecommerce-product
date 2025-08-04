@@ -22,12 +22,7 @@ class CheckLoginInterceptor(private val jwtTokenProvider: JwtTokenProvider) : Ha
             return false
         }
         val userEmail = jwtTokenProvider.getPayload(token)
-        println("CheckLoginInterceptor: userEmail=$userEmail")
-        if (userEmail != null) {
-            request.setAttribute("email", userEmail)
-            return true
-        }
-        response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid token")
-        return false
+        request.setAttribute("email", userEmail)
+        return true
     }
 }
