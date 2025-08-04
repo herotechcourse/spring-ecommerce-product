@@ -1,8 +1,8 @@
 package ecommerce.application.config
 
 import ecommerce.application.JwtTokenProvider
-import ecommerce.application.resolver.LoggedMemberArgumentResolver
 import ecommerce.application.interceptor.CheckLoginInterceptor
+import ecommerce.application.resolver.LoggedMemberArgumentResolver
 import ecommerce.service.MemberService
 import org.springframework.context.annotation.Configuration
 import org.springframework.web.method.support.HandlerMethodArgumentResolver

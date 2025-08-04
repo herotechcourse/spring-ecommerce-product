@@ -30,8 +30,8 @@ class StatisticsIntegrationTest
                         Member(
                             email = "user$it@example.com",
                             password = "password",
-                            name = "name$it"
-                        )
+                            name = "name$it",
+                        ),
                     )
                 }
 
