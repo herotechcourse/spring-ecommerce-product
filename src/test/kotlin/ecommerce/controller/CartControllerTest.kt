@@ -185,4 +185,58 @@ class CartControllerTest {
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value())
     }
+
+    @Test
+    fun `getTopCartItems() should return the top 5 added products`() {
+        val token = JwtProvider.generateToken("admin@test.com")
+
+        val response =
+            RestAssured
+                .given().log().all()
+                .header("Authorization", token)
+                .contentType(ContentType.JSON)
+                .`when`().get("/api/cart/top5")
+                .then().log().all().extract()
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
+
+        val responseJson = response.jsonPath()
+        val cartItems = responseJson.getList("items", Product::class.java)
+
+        assertThat(cartItems).hasSize(2)
+    }
+
+    @Test
+    fun `getTopCartItems() should return the an empty list if no products were found`() {
+        val token = JwtProvider.generateToken("admin@test.com")
+
+        RestAssured
+            .given().log().all()
+            .header("Authorization", token)
+            .contentType(ContentType.JSON)
+            .`when`().delete("/api/cart/products/1")
+            .then().log().all().extract()
+
+        RestAssured
+            .given().log().all()
+            .header("Authorization", token)
+            .contentType(ContentType.JSON)
+            .`when`().delete("/api/cart/products/3")
+            .then().log().all().extract()
+
+        val response =
+            RestAssured
+                .given().log().all()
+                .header("Authorization", token)
+                .contentType(ContentType.JSON)
+                .`when`().get("/api/cart/top5")
+                .then().log().all().extract()
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
+
+        val responseJson = response.jsonPath()
+        val cartItems = responseJson.getList("items", Product::class.java)
+
+        assertThat(cartItems).hasSize(0)
+    }
 }
