@@ -6,8 +6,8 @@ import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.stereotype.Repository
 
 @Repository
-class JdbcStatisticsStore(private val db: JdbcTemplate) : StatisticsStore {
-    override fun find5MostAddedProductsLast30Days(): List<ProductStatsDTO> {
+class JdbcStatisticsStore(private val db: JdbcTemplate) {
+    fun find5MostAddedProductsLast30Days(): List<ProductStatsDTO> {
         val sql =
             """
             SELECT p.name, COUNT(*) AS times_added, MAX(ci.added_at) AS most_recent_added_time
@@ -28,7 +28,7 @@ class JdbcStatisticsStore(private val db: JdbcTemplate) : StatisticsStore {
         }
     }
 
-    override fun findMembersAddedToCartLast7Days(): List<MemberDTO> {
+    fun findMembersAddedToCartLast7Days(): List<MemberDTO> {
         val sql =
             """
             SELECT DISTINCT m.id, m.email, m.name
