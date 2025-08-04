@@ -41,9 +41,9 @@ class CartController(
     fun removeItem(
         @LoggedMember member: Member,
         @PathVariable productId: Long,
-    ): ResponseEntity<Cart> {
-        val cart = cartService.removeItem(member.id!!, productId)
-        return ResponseEntity.ok(cart)
+    ): ResponseEntity<Void> {
+        cartService.removeItem(member.id!!, productId)
+        return ResponseEntity.noContent().build()
     }
 
     @DeleteMapping("/clear")
