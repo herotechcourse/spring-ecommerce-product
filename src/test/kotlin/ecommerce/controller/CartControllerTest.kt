@@ -77,7 +77,7 @@ class CartControllerTest {
                 .given().log().all()
                 .header("Authorization", token)
                 .contentType(ContentType.JSON)
-                .`when`().delete("/api/cart")
+                .`when`().delete("/api/cart/products/1")
                 .then().log().all().extract()
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value())
@@ -104,8 +104,7 @@ class CartControllerTest {
                 .given().log().all()
                 .header("Authorization", token)
                 .contentType(ContentType.JSON)
-                .body(requestBody)
-                .`when`().delete("/api/cart")
+                .`when`().delete("/api/cart/products/1")
                 .then().log().all().extract()
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value())
@@ -131,7 +130,7 @@ class CartControllerTest {
                 .given().log().all()
                 .header("Authorization", token)
                 .contentType(ContentType.JSON)
-                .`when`().delete("/api/cart/1")
+                .`when`().delete("/api/cart/products/1")
                 .then().log().all().extract()
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value())

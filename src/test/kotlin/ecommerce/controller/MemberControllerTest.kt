@@ -38,7 +38,7 @@ class MemberControllerTest {
         val requestBody =
             mapOf(
                 "password" to "12345",
-                "name" to "Gabi",
+                "name" to "Test",
                 "role" to "USER",
             )
         val response =
@@ -75,15 +75,13 @@ class MemberControllerTest {
     @Test
     fun `get() should be able to get a member and return 'ok 200' response`() {
         val token = JwtProvider.generateToken("admin@test.com")
-        val requestBody = mapOf("memberId" to 1)
 
         val response =
             RestAssured
                 .given().log().all()
                 .header("Authorization", token)
                 .contentType(ContentType.JSON)
-                .body(requestBody)
-                .`when`().get("/api/members")
+                .`when`().get("/api/members/1")
                 .then().log().all().extract()
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
@@ -95,15 +93,13 @@ class MemberControllerTest {
     @Test
     fun `get() should return '401' response when user is not authorized with a token`() {
         val token = JwtProvider.generateToken("invalid@test.com")
-        val requestBody = mapOf("memberId" to 1)
 
         val response =
             RestAssured
                 .given().log().all()
                 .header("Authorization", token)
                 .contentType(ContentType.JSON)
-                .body(requestBody)
-                .`when`().get("/api/members")
+                .`when`().get("/api/members/1")
                 .then().log().all().extract()
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value())

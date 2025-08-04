@@ -43,12 +43,12 @@ class CartController(private val cartService: CartService) {
     }
 
     @Protected
-    @DeleteMapping()
+    @DeleteMapping("/products/{productId}")
     fun deleteCartItem(
-        @RequestBody body: DeleteCartItemRequest,
+        @PathVariable productId: Long,
         @LoginMember member: Member,
     ): ResponseEntity<Void> {
-        val deleted = cartService.removeItemFromCart(member.id, body.productId)
+        val deleted = cartService.removeItemFromCart(member.id, productId)
         return if (deleted != null) {
             ResponseEntity.noContent().build()
         } else {

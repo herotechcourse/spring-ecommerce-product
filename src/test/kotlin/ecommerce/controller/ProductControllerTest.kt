@@ -1,6 +1,5 @@
 package ecommerce.controller
 
-import ecommerce.ProductMock.FLAT_WHITE
 import ecommerce.auth.JwtProvider
 import ecommerce.model.Product
 import io.restassured.RestAssured
@@ -149,7 +148,6 @@ class ProductControllerTest {
         val token = JwtProvider.generateToken("admin@test.com")
         val requestBody =
             mapOf(
-                "productId" to 1,
                 "product" to
                     mapOf(
                         "name" to "Flat White",
@@ -164,7 +162,7 @@ class ProductControllerTest {
                 .body(requestBody)
                 .header("Authorization", token)
                 .contentType(ContentType.JSON)
-                .`when`().patch("/api/products")
+                .`when`().patch("/api/products/1")
                 .then().log().all().extract()
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
@@ -174,10 +172,20 @@ class ProductControllerTest {
     fun `update() should return 'not found 404' response, when failed to update product`() {
         val token = JwtProvider.generateToken("admin@test.com")
 
+        val requestBody =
+            mapOf(
+                "product" to
+                    mapOf(
+                        "name" to "Flat White",
+                        "price" to 3.5,
+                        "imageUrl" to "http://example.com/flat-white.jpg",
+                    ),
+            )
+
         val response =
             RestAssured
                 .given().log().all()
-                .body(FLAT_WHITE)
+                .body(requestBody)
                 .header("Authorization", token)
                 .contentType(ContentType.JSON)
                 .`when`().patch("/api/products/99")
@@ -189,15 +197,13 @@ class ProductControllerTest {
     @Test
     fun `delete() should be able to delete product, and return '204' response`() {
         val token = JwtProvider.generateToken("admin@test.com")
-        val requestBody = mapOf("productId" to 1)
 
         val response =
             RestAssured
                 .given().log().all()
                 .header("Authorization", token)
                 .contentType(ContentType.JSON)
-                .body(requestBody)
-                .`when`().delete("/api/products")
+                .`when`().delete("/api/products/1")
                 .then().log().all().extract()
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value())
