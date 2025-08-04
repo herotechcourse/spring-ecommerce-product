@@ -3,6 +3,7 @@ package ecommerce.application.interceptor
 import ecommerce.application.AuthorizationExtractor
 import ecommerce.application.BearerAuthorizationExtractor
 import ecommerce.application.JwtTokenProvider
+import ecommerce.exception.UnauthorizedException
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.web.servlet.HandlerInterceptor
@@ -16,11 +17,7 @@ class CheckLoginInterceptor(private val jwtTokenProvider: JwtTokenProvider) : Ha
         handler: Any,
     ): Boolean {
         val token = authorizationExtractor.extract(request)
-        println("CheckLoginInterceptor: token=$token")
-        if (token.isBlank()) {
-            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Missing or empty Authorization token")
-            return false
-        }
+        if (token.isBlank() || !jwtTokenProvider.validateToken(token)) throw UnauthorizedException("Invalid token")
         val userEmail = jwtTokenProvider.getPayload(token)
         request.setAttribute("email", userEmail)
         return true

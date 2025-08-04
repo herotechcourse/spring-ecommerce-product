@@ -1,7 +1,7 @@
 package ecommerce.application.resolver
 
 import ecommerce.application.annotation.LoggedMember
-import ecommerce.exception.AuthException
+import ecommerce.exception.UnauthorizedException
 import ecommerce.service.MemberService
 import org.springframework.core.MethodParameter
 import org.springframework.stereotype.Component
@@ -27,7 +27,7 @@ class LoggedMemberArgumentResolver(
     ): Any {
         val email =
             webRequest.getAttribute("email", RequestAttributes.SCOPE_REQUEST) as? String
-                ?: throw AuthException("Email attribute missing")
+                ?: throw UnauthorizedException("Email attribute missing")
         return memberService.findMember(email)
     }
 }

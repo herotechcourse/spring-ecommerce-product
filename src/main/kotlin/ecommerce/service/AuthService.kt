@@ -3,7 +3,7 @@ package ecommerce.service
 import ecommerce.application.JwtTokenProvider
 import ecommerce.dto.TokenRequest
 import ecommerce.dto.TokenResponse
-import ecommerce.exception.AuthException
+import ecommerce.exception.UnauthorizedException
 import org.springframework.stereotype.Service
 
 @Service
@@ -18,7 +18,7 @@ class AuthService(
 
     fun issueTokenToLoggedUSer(tokenRequest: TokenRequest): TokenResponse {
         if (checkInvalidLogin(tokenRequest)) {
-            throw AuthException(message = "Invalid login")
+            throw UnauthorizedException(message = "Invalid login")
         }
         return createToken(tokenRequest)
     }
