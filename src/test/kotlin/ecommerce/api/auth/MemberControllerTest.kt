@@ -65,20 +65,6 @@ class MemberControllerTest {
             .body("accessToken", Matchers.notNullValue())
     }
 
-    @Test
-    fun `GET - get member info with token`() {
-        registerTestUser()
-        val token = loginAndGetToken()
-
-        RestAssured
-            .given()
-            .header("Authorization", "Bearer $token")
-            .get("/api/members/me/token")
-            .then()
-            .statusCode(200)
-            .body("email", Matchers.equalTo("test@example.com"))
-    }
-
     private fun registerTestUser() {
         val json =
             """

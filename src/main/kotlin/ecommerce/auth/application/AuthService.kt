@@ -2,7 +2,6 @@ package ecommerce.auth.application
 
 import ecommerce.auth.exception.AuthException
 import ecommerce.auth.infrastructure.JwtTokenProvider
-import ecommerce.auth.model.MemberDTO
 import ecommerce.auth.model.TokenRequest
 import ecommerce.auth.model.TokenResponse
 import ecommerce.auth.service.MemberService
@@ -28,17 +27,5 @@ class AuthService(
     fun checkInvalidLogin(tokenRequest: TokenRequest): Boolean {
         val allMembers = memberService.findAll()
         return allMembers.none { it.email == tokenRequest.email && it.password == tokenRequest.password }
-    }
-
-    fun findMemberByToken(token: String): MemberDTO {
-        val payload =
-            jwtTokenProvider.getPayload(token)
-                ?: throw AuthException("Invalid token or payload missing")
-
-        val foundMember =
-            memberService.findMember(payload)
-                ?: throw AuthException("Member not found")
-
-        return MemberDTO.from(foundMember)
     }
 }

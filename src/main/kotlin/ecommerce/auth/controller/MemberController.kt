@@ -8,10 +8,12 @@ import ecommerce.auth.model.MemberDTO
 import ecommerce.auth.model.TokenRequest
 import ecommerce.auth.model.TokenResponse
 import ecommerce.auth.service.MemberService
-import jakarta.servlet.http.HttpServletRequest
 import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.*
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RestController
 import java.net.URI
 
 @RestController
@@ -39,12 +41,5 @@ class MemberController(
     ): ResponseEntity<TokenResponse> {
         val tokenResponse = authService.issueTokenToLoggedUSer(tokenRequest)
         return ResponseEntity.ok().body(tokenResponse)
-    }
-
-    @GetMapping("/me/token")
-    fun findMyInfo(request: HttpServletRequest): ResponseEntity<MemberDTO> {
-        val token = authorizationExtractor.extract(request)
-        val member = authService.findMemberByToken(token)
-        return ResponseEntity.ok().body(member)
     }
 }
