@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController
 class CartController(
     private val cartService: CartService,
 ) {
-    @GetMapping("/mycart")
+    @GetMapping("/mine")
     fun getCartDto(
         @LoggedMember member: Member,
     ): ResponseEntity<CartDTO> {
