@@ -17,6 +17,4 @@ class ProductTestExpected(
         )
 
     val product: Product = ProductMapper.toEntity(newProduct, id)
-
-    val response = ProductMapper.toResponse(product)
 }

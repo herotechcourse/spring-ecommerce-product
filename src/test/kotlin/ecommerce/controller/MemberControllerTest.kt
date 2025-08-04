@@ -104,8 +104,6 @@ class MemberControllerTest
         @Test
         fun `should return 401 when logging in with unregistered email`() {
             val request = Cases.VALID_REQUEST_GURI
-            val expect = MemberTestExpected(request, ValidationCase.DEFAULT_CASE)
-            val expectedResponse = TokenResponse(expect.accessToken)
 
             whenever(memberService.loginByEmail(any<MemberRequest>()))
                 .thenThrow(LoginFailedException())
