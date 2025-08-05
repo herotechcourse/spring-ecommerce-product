@@ -3,6 +3,7 @@ package ecommerce.model
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.codehaus.groovy.runtime.DefaultGroovyMethods.toBigDecimal
 import org.junit.jupiter.api.Test
+import java.math.BigDecimal
 
 class ProductTest {
     @Test
@@ -11,7 +12,7 @@ class ProductTest {
             Product(
                 id = 1L,
                 name = "",
-                price = toBigDecimal(10.00),
+                price = BigDecimal.valueOf(10.00),
                 imageUrl = "https://example.com/images/espresso-beans.jpg",
             )
         }.isInstanceOf(IllegalArgumentException::class.java)
@@ -20,10 +21,13 @@ class ProductTest {
 
     @Test
     fun `should throw illegal exception when name length is bigger then 255 characters`() {
+        val padding = "a".repeat(255)
+        val longName = "${padding}d"
+
         assertThatThrownBy {
             Product(
                 id = 1L,
-                name = "Aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                name = longName,
                 price = toBigDecimal(10.00),
                 imageUrl = "https://example.com/images/espresso-beans.jpg",
             )
@@ -46,14 +50,19 @@ class ProductTest {
 
     @Test
     fun `should throw illegal exception when image length is bigger then 255 characters`() {
+        val baseUrl = "https://example.com/"
+        val padding = "a".repeat(240) // to make total length > 255
+        val longUrl = baseUrl + padding + ".jpg" // safely over 255 characters
+
+        println("Generated imageUrl length: ${longUrl.length}") // should be > 255
         assertThatThrownBy {
             Product(
                 id = 1L,
                 name = "Jon",
-                price = toBigDecimal(-10.00),
-                imageUrl = "https://example.com/images/espresso-beAaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaans.jpg",
+                price = toBigDecimal(10.00),
+                imageUrl = longUrl,
             )
         }.isInstanceOf(IllegalArgumentException::class.java)
-            .hasMessageContaining("Price must be positive")
+            .hasMessageContaining("URL address must be at most 255 characters")
     }
 }

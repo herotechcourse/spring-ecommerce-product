@@ -13,7 +13,7 @@ data class Product(
         require(name.isNotBlank()) { "Name cannot be blank" }
         require(name.length <= 255) { "Name must be at most 255 characters" }
         require(price > BigDecimal.ZERO) { "Price must be positive" }
-        require(imageUrl.length <= 255) { "Name must be at most 255 characters" }
+        require(imageUrl.length <= 255) { "URL address must be at most 255 characters" }
     }
 
     fun updateWith(dto: ProductDTO): Product {
