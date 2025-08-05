@@ -8,6 +8,7 @@ Spring:
       data-locations: classpath:test-data.sql
 
 # JWT Configuration for testing only - NOT for production
+# WARNING: This is a test-only secret, do not use in production
 jwt:
-  secret: XsbQDqeFSVC8GRbbEYImM9nvJhvAGt4TwYKViNcXxF4Q43Ck5i7jwehscr5CISxCO9rfiYeYV27BV9NuowC1dw==
+  secret: test-jwt-secret-key-for-testing-purposes-only-minimum-256-bits-required-for-hmac-sha256-algorithm-do-not-use-in-production
   expiration: 86400000

@@ -44,6 +44,7 @@ out/
 ### Security & Environment ###
 # Local configuration files with sensitive data
 application-local.properties
+application-local.yml
 application-dev.properties
 application-prod.properties
 .env

@@ -33,3 +33,9 @@ logging:
     org.hibernate.SQL: DEBUG
     org.hibernate.type.descriptor.sql.BasicBinder: TRACE
     org.springframework.transaction: DEBUG
+
+# JWT Configuration for testing only - NOT for production
+# WARNING: This is a test-only secret, do not use in production
+jwt:
+  secret: test-jwt-secret-key-for-testing-purposes-only-minimum-256-bits-required-for-hmac-sha256-algorithm-do-not-use-in-production
+  expiration: 86400000
