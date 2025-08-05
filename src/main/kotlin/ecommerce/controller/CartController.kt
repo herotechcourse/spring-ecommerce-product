@@ -64,8 +64,7 @@ class CartController(private val cartService: CartService) {
     @Protected
     @AdminOnly
     @GetMapping("/active-members")
-    fun getActiveMembers(
-    ): ResponseEntity<List<MemberResponse>> {
+    fun getActiveMembers(): ResponseEntity<List<MemberResponse>> {
         val items = cartService.getRecentActiveMembersInTheLast7Days()
         return ResponseEntity.ok(items)
     }
