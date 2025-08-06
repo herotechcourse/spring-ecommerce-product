@@ -11,6 +11,8 @@ import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.test.context.ActiveProfiles
+import java.util.concurrent.CompletableFuture
+import java.util.concurrent.Executors
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
@@ -140,5 +142,44 @@ class ProductControllerIntegrationTest {
                 String::class.java,
             )
         assertThat(secondResponse.statusCode).isEqualTo(HttpStatus.BAD_REQUEST)
+    }
+
+    @Test
+    fun `should handle concurrent requests with same product name gracefully`() {
+        val productName = "concurrent-test-product"
+        val request = """{
+            "name": "productNameTest",
+            "price": 10.0,
+            "imageUrl": "http://example.com/image.jpg"
+        }"""
+        val headers = createHeaders()
+
+        val executor = Executors.newFixedThreadPool(10)
+
+        val futures =
+            (1..10).map {
+                CompletableFuture.supplyAsync({
+                    testRestTemplate.postForEntity(
+                        "/api/products",
+                        HttpEntity(request, headers),
+                        String::class.java,
+                    )
+                }, executor)
+            }
+
+        val responses = futures.map { it.get() }
+        executor.shutdown()
+
+        responses.forEachIndexed { index, response ->
+            println("Response $index: ${response.statusCode}")
+        }
+
+        val successCount = responses.count { it.statusCode == HttpStatus.CREATED }
+        val failureCount = responses.count { it.statusCode == HttpStatus.BAD_REQUEST }
+
+        println("Success count: $successCount, Failure count: $failureCount")
+
+        assertThat(successCount).isEqualTo(1)
+        assertThat(failureCount).isEqualTo(9)
     }
 }
