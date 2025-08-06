@@ -6,6 +6,7 @@ import ecommerce.exception.ErrorResponse
 import ecommerce.exception.NotFoundException
 import ecommerce.exception.ProductValidationException
 import org.springframework.http.HttpStatus
+import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestControllerAdvice
@@ -55,6 +56,17 @@ class GlobalControllerAdvice {
         return ErrorResponse(
             error = "BAD_REQUEST",
             message = e.message ?: "Invalid request",
+        )
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException::class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    fun handleValidationException(e: MethodArgumentNotValidException): ErrorResponse {
+        val fieldErrors = e.bindingResult.fieldErrors.associate { it.field to (it.defaultMessage ?: "Invalid value") }
+        return ErrorResponse(
+            error = "VALIDATION_ERROR",
+            message = "Validation failed",
+            fieldErrors = fieldErrors,
         )
     }
 }

@@ -5,46 +5,12 @@ import ecommerce.dto.product.ProductRequest
 import ecommerce.exception.ProductValidationException
 import ecommerce.model.Product
 import ecommerce.repository.ProductRepository
-import ecommerce.validation.NAME_LENGTH_MAXIMUM
-import ecommerce.validation.PRODUCT_NAME_PATTERN
-import ecommerce.validation.PRODUCT_PRICE_MINIMUM
-import ecommerce.validation.URL_PATTERN
 import org.springframework.stereotype.Service
 
 @Service
 class ProductService(
     private val productRepository: ProductRepository,
 ) {
-    private fun validateBasicProductData(request: ProductRequest) {
-        val errors = mutableListOf<String>()
-
-        if (request.name.isBlank()) {
-            errors.add("Product name cannot be blank")
-        }
-        if (request.name.length > NAME_LENGTH_MAXIMUM) {
-            errors.add("Product name must be shorter than $NAME_LENGTH_MAXIMUM characters")
-        }
-        if (!request.name.matches(PRODUCT_NAME_PATTERN.toRegex())) {
-            errors.add("Product name contains invalid characters")
-        }
-
-        val minPrice = PRODUCT_PRICE_MINIMUM.toDouble()
-        if (request.price <= minPrice) {
-            errors.add("Product price must be greater than $minPrice")
-        }
-
-        if (request.imageUrl.isBlank()) {
-            errors.add("Product image URL cannot be blank")
-        }
-        if (!request.imageUrl.matches(URL_PATTERN.toRegex())) {
-            errors.add("Product image URL must start with http:// or https://")
-        }
-
-        if (errors.isNotEmpty()) {
-            throw ProductValidationException(errors)
-        }
-    }
-
     private fun validateProductNameUniqueness(
         name: String,
         excludeId: Long? = null,
@@ -61,25 +27,8 @@ class ProductService(
         }
     }
 
-    private fun validateProductForCreation(request: ProductRequest) {
-        validateBasicProductData(request)
-        validateProductNameUniqueness(request.name)
-    }
-
-    private fun validateProductForUpdate(
-        id: Long,
-        request: ProductRequest,
-    ) {
-        validateBasicProductData(request)
-
-        val existingProduct = productRepository.findById(id)
-        if (existingProduct.name != request.name) {
-            validateProductNameUniqueness(request.name, id)
-        }
-    }
-
     fun createProduct(request: ProductRequest): Product {
-        validateProductForCreation(request)
+        validateProductNameUniqueness(request.name)
 
         val product =
             Product(
@@ -94,7 +43,7 @@ class ProductService(
         id: Long,
         request: ProductRequest,
     ): Product {
-        validateProductForUpdate(id, request)
+        validateProductNameUniqueness(request.name, id)
 
         val product =
             Product(

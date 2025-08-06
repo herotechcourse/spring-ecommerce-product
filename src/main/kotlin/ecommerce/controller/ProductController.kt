@@ -4,6 +4,7 @@ import ecommerce.dto.product.ProductPatchRequest
 import ecommerce.dto.product.ProductRequest
 import ecommerce.model.Product
 import ecommerce.service.ProductService
+import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
@@ -29,7 +30,7 @@ class ProductController(private val productService: ProductService) {
 
     @PostMapping()
     fun createProduct(
-        @RequestBody productRequest: ProductRequest,
+        @Valid @RequestBody productRequest: ProductRequest,
     ): ResponseEntity<Product> {
         val saved = productService.createProduct(productRequest)
         return ResponseEntity.created(URI.create("/api/products/${saved.id}")).body(saved)
@@ -37,7 +38,7 @@ class ProductController(private val productService: ProductService) {
 
     @PutMapping("/{id}")
     fun updateProduct(
-        @RequestBody productRequest: ProductRequest,
+        @Valid @RequestBody productRequest: ProductRequest,
         @PathVariable id: Long,
     ): Product {
         return productService.updateProduct(id, productRequest)
@@ -45,7 +46,7 @@ class ProductController(private val productService: ProductService) {
 
     @PatchMapping("/{id}")
     fun updateProductPartially(
-        @RequestBody productPatchRequest: ProductPatchRequest,
+        @Valid @RequestBody productPatchRequest: ProductPatchRequest,
         @PathVariable id: Long,
     ): Product {
         return productService.patchProduct(id, productPatchRequest)

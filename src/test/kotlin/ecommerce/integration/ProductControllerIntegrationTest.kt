@@ -1,5 +1,6 @@
 package ecommerce.integration
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
 import org.springframework.beans.factory.annotation.Autowired
@@ -115,5 +116,31 @@ class ProductControllerIntegrationTest {
                 String::class.java,
             )
         assertThat(response.statusCode).isEqualTo(HttpStatus.BAD_REQUEST)
+    }
+
+    @Test
+    fun `should throw - product name can not have duplicate name`() {
+        val request = """{
+            "name": "dup test1",
+            "price": 1.0,
+            "imageUrl": "http://google.com"
+        }"""
+        val headers = createHeaders()
+
+        val firstResponse =
+            testRestTemplate.postForEntity(
+                "/api/products",
+                HttpEntity(request, headers),
+                String::class.java,
+            )
+        assertThat(firstResponse.statusCode).isEqualTo(HttpStatus.CREATED)
+
+        val secondResponse =
+            testRestTemplate.postForEntity(
+                "/api/products",
+                HttpEntity(request, headers),
+                String::class.java,
+            )
+        assertThat(secondResponse.statusCode).isEqualTo(HttpStatus.BAD_REQUEST)
     }
 }
