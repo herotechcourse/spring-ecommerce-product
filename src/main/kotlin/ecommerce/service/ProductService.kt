@@ -5,46 +5,31 @@ import ecommerce.dto.product.ProductRequest
 import ecommerce.exception.ProductValidationException
 import ecommerce.model.Product
 import ecommerce.repository.ProductRepository
+import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.stereotype.Service
 
 @Service
 class ProductService(
     private val productRepository: ProductRepository,
 ) {
-    private fun validateProductNameUniqueness(
-        name: String,
-        excludeId: Long? = null,
-    ) {
-        if (excludeId != null) {
-            val existingProduct = productRepository.findById(excludeId)
-            if (existingProduct.name != name && productRepository.existsByName(name)) {
-                throw ProductValidationException("Product name already exists")
-            }
-        } else {
-            if (productRepository.existsByName(name)) {
-                throw ProductValidationException("Product name already exists")
-            }
-        }
-    }
-
     fun createProduct(request: ProductRequest): Product {
-        validateProductNameUniqueness(request.name)
-
         val product =
             Product(
                 name = request.name,
                 price = request.price,
                 imageUrl = request.imageUrl,
             )
-        return productRepository.save(product)
+        return try {
+            productRepository.save(product)
+        } catch (e: DataIntegrityViolationException) {
+            throw ProductValidationException("Product name already exists")
+        }
     }
 
     fun updateProduct(
         id: Long,
         request: ProductRequest,
     ): Product {
-        validateProductNameUniqueness(request.name, id)
-
         val product =
             Product(
                 id = id,
@@ -52,18 +37,28 @@ class ProductService(
                 price = request.price,
                 imageUrl = request.imageUrl,
             )
-        return productRepository.update(id, product)
+        return try {
+            productRepository.update(id, product)
+        } catch (e: DataIntegrityViolationException) {
+            if (e.message?.contains("name", ignoreCase = true) == true) {
+                throw ProductValidationException("Product name already exists")
+            }
+            throw e
+        }
     }
 
     fun patchProduct(
         id: Long,
         request: ProductPatchRequest,
     ): Product {
-        request.name?.let { newName ->
-            validateProductNameUniqueness(newName, id)
+        return try {
+            productRepository.patch(id, request)
+        } catch (e: DataIntegrityViolationException) {
+            if (e.message?.contains("name", ignoreCase = true) == true) {
+                throw ProductValidationException("Product name already exists")
+            }
+            throw e
         }
-
-        return productRepository.patch(id, request)
     }
 
     fun findAll(): List<Product> = productRepository.findAll()
