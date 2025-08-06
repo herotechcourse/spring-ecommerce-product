@@ -1,17 +1,19 @@
-package ecommerce.product
+package ecommerce.model
 
+import ecommerce.dto.ProductDTO
 import java.math.BigDecimal
 
-class Product(
+data class Product(
     var id: Long? = null,
     var name: String,
     var price: BigDecimal,
-    var imageUrl: String?
+    var imageUrl: String,
 ) {
     init {
         require(name.isNotBlank()) { "Name cannot be blank" }
         require(name.length <= 255) { "Name must be at most 255 characters" }
-        require( price > BigDecimal.ZERO) { "Price must be positive" }
+        require(price > BigDecimal.ZERO) { "Price must be positive" }
+        require(imageUrl.length <= 255) { "URL address must be at most 255 characters" }
     }
 
     fun updateWith(dto: ProductDTO): Product {
@@ -19,7 +21,7 @@ class Product(
             id = this.id,
             name = dto.name ?: this.name,
             price = dto.price ?: this.price,
-            imageUrl = dto.imageUrl ?: this.imageUrl
+            imageUrl = dto.imageUrl ?: this.imageUrl,
         )
     }
 
@@ -36,11 +38,8 @@ class Product(
     }
 
     companion object {
-        fun toEntity(
-            product: Product,
-            id: Long,
-        ): Product {
-            return Product(id, product.name, product.price, product.imageUrl)
+        fun toEntity(product: Product): Product {
+            return Product(product.id, product.name, product.price, product.imageUrl)
         }
     }
 }

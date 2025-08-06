@@ -1,39 +1,105 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Product Manager</title>
-  <style>
-    body { font-family: sans-serif; }
-    form, .products { margin-bottom: 1em; }
-    label, input { display: block; margin: 4px 0; }
-    button { margin-right: 5px; }
-    .forms-wrapper { display: flex; gap: 20px }
-    form { display: none }
-    form.active { display: block }
-  </style>
-  <script src="./js/ProductManager.js" defer onload="productManager()"></script>
+    <meta charset="UTF-8">
+    <title>ecommerce</title>
+    <style>
+        body {
+            font-family: sans-serif;
+        }
+
+        form, .products, .register-login-forms{
+            margin-bottom: 1em;
+        }
+
+        .register-login-forms {
+           display: flex;
+            justify-content: space-between;
+            max-width: 400px;
+
+        }
+
+        #register-form, #login-form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label, input {
+            display: block;
+            margin: 4px 0;
+        }
+
+        button {
+            margin-right: 5px;
+        }
+
+        .product-forms-wrapper, .register-login-forms{
+            display: flex;
+            gap: 20px
+        }
+
+        form {
+            display: none
+        }
+
+        form.active {
+            display: block
+        }
+    </style>
+    <script src="./js/RegisterOrLogin.js" defer onload="registerOrLoginHandler()"></script>
+    <script src="./js/ProductManager.js" defer onload="productManager()"></script>
 </head>
 
 <body>
+<h1>Welcome to Ecommerce</h1>
+
+<div class="register-login-forms">
+    <div>
+        <h2>Register</h2>
+        <form id="register-form">
+            <input type="hidden" name="new-member-id"/>
+            <label>Email: <input type="email" name="new-member-email" placeholder="Email address" required></label>
+            <label>Password: <input type="password" name="new-member-password" placeholder="Password" required></label>
+            <label>
+                <input type="radio" name="role" value="USER" checked> User
+            </label>
+            <label>
+                <input type="radio" name="role" value="ADMIN"> Admin
+            </label>
+            <button type="submit">Register</button>
+        </form>
+    </div>
+    <div>
+        <h2>Login</h2>
+        <form id="login-form">
+            <input type="hidden" name="member-id"/>
+            <label>Email: <input type="email" name="member-email" placeholder="Email address" required></label>
+            <label>Password: <input type="password" name="member-password" placeholder="Password" required></label>
+            <button type="submit">Login</button>
+        </form>
+    </div>
+    <ul id="members-list"></ul>
+</div>
+
 <h1>Product Manager</h1>
 
-<div class="forms-wrapper">
-  <form id="product-form" class="active">
-    <input type="hidden" name="product-id"/>
-    <label>Name: <input type="text" name="product-name" placeholder="Product name" required></label>
-    <label>Price: <input type="number" step="0.01" name="product-price" placeholder="Product price" required></label>
-    <label>Image URL: <input type="text" name="product-image" placeholder="Product image URL" required></label>
-    <button type="submit">Create</button>
-  </form>
+<div class="product-forms-wrapper">
+    <form id="product-form" class="active">
+        <input type="hidden" name="product-id"/>
+        <label>Name: <input type="text" name="product-name" placeholder="Product name" required></label>
+        <label>Price: <input type="number" step="0.01" name="product-price" placeholder="Product price" required></label>
+        <label>Image URL: <input type="text" name="product-image" placeholder="Product image URL" required></label>
+        <button type="submit">Create</button>
+    </form>
 
-  <form id="update-product-form">
-    <input type="hidden" name="product-id"/>
-    <label>Name: <input type="text" name="product-name" placeholder="Update name here"></label>
-    <label>Price: <input type="number" step="0.01" name="product-price" placeholder="Update price here"></label>
-    <label>Image URL: <input type="text" name="product-image" placeholder="Update image here"></label>
-    <button type="submit">Update</button><button type="button" class="cancel-edit-button">Cancel</button>
-  </form>
+    <form id="update-product-form">
+        <input type="hidden" name="product-id"/>
+        <label>Name: <input type="text" name="product-name" placeholder="Update name here"></label>
+        <label>Price: <input type="number" step="0.01" name="product-price" placeholder="Update price here"></label>
+        <label>Image URL: <input type="text" name="product-image" placeholder="Update image here"></label>
+        <button type="submit">Update</button>
+        <button type="button" class="cancel-edit-button">Cancel</button>
+    </form>
 </div>
 
 <h2>Products</h2>

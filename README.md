@@ -3,7 +3,8 @@
 ## Features:
 HTTP API that allows users to retrieve, add, update, and delete products.
 - HTTP requests and responses must be in JSON format.
-- Since no separate database is used at this point, store data in memory using an appropriate Kotlin Collection Framework.
+- since no separate database is used at this point, store data in memory using an appropriate Kotlin Collection Framework.
+- users should have a registration and login request to use the application
 
 ### Product
 - [x] create product with id, name, price, image URL
@@ -18,7 +19,30 @@ HTTP API that allows users to retrieve, add, update, and delete products.
   - if a product map is empty, return notFound()
   - if cannot find a product with id, return notFound()
 
+### Product Service
+- [x] create a product service class to validate requirements of product name, price and image URL
+- [x] connect validation to the methods responsible for creating and updating functions
+
+### Authentication and Authorization 
+
+#### Member
+- [x] create a member model
+- [x] create a member controller
+  - [x] create a register method to save users as members POST
+  - [x] create a GET method to retrieve member
+- [x] create a login method
+- [x] implement the Authentication and Authorization methods
+- [x] implement response to authentication
+
 ### Test: Product Controller
-- [x] refactor test names
+- [x] test CRUD methods
 - [x] positive tests
 - [x] negative tests
+
+### Test: Product Repository
+- [x] test main functions for users to interact with DB
+- [x] test updateById, deleteById, count list of products and findById
+
+### Test: Authentication and Authorization
+- [x] test if user was able to register
+- [x] test if user has authorization to login

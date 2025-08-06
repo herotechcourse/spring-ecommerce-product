@@ -1,6 +1,6 @@
 package ecommerce
 
-import ecommerce.product.Product
+import ecommerce.model.Product
 import io.restassured.RestAssured
 import io.restassured.http.ContentType
 import org.assertj.core.api.Assertions.assertThat
@@ -18,7 +18,7 @@ object ProductMock {
 
     val AMERICANO =
         Product(
-            name = "Iced Americano T",
+            name = "Iced Americano",
             price = BigDecimal.valueOf(4.50),
             imageUrl =
                 "https://st.kakaocdn.net/product/gift/product/20231010111814_9a667f9eccc943648797925498bdd8a3.jpg",
