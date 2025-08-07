@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Register</title>
+    <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css"
+    >
+</head>
+<body>
+<main class="container">
+    <h1>Log in</h1>
+    <form>
+        <fieldset>
+            <label>
+                Email
+                <input
+                        name="email"
+                        placeholder="example@something.com"
+                />
+            </label>
+            <label>
+                Password
+                <input
+                        type="password"
+                        name="password"
+                        placeholder="******"
+                />
+            </label>
+        </fieldset>
+
+        <input
+                type="submit"
+                value="Log in"
+        />
+    </form>
+</main>
+<script>
+    document.querySelector("form").addEventListener("submit", async (event) => {
+        event.preventDefault();
+
+        const form = event.target;
+        const email = form.email.value.trim();
+        const password = form.password.value;
+
+        const body = JSON.stringify({email, password});
+
+        try {
+            const res = await fetch("/api/members/login", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body
+            });
+
+            if (res.ok) {
+                const data = await res.json();
+                localStorage.setItem("token", data.accessToken);
+                window.location.assign("/");
+            } else {
+                const err = await res.text();
+                alert("Log in failed: " + err);
+            }
+        } catch (e) {
+            alert("Network or server error: " + e);
+        }
+    });
+</script>
+</body>
+</html>

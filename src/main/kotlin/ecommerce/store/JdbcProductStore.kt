@@ -1,7 +1,7 @@
 package ecommerce.store
 
+import ecommerce.dto.ProductPatchDTO
 import ecommerce.model.Product
-import ecommerce.model.ProductPatchDTO
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.jdbc.core.RowMapper
 import org.springframework.jdbc.support.GeneratedKeyHolder
@@ -13,10 +13,10 @@ class JdbcProductStore(private val db: JdbcTemplate) : ProductStore {
     private val productRowMapper =
         RowMapper<Product> { rs: ResultSet, _ ->
             Product(
-                rs.getLong("id"),
                 rs.getString("name"),
                 rs.getDouble("price"),
                 rs.getString("imageUrl"),
+                rs.getLong("id"),
             )
         }
 
@@ -35,11 +35,12 @@ class JdbcProductStore(private val db: JdbcTemplate) : ProductStore {
     override fun insertProduct(product: Product): Product {
         val keyHolder = GeneratedKeyHolder()
         db.update({ connection ->
-            connection.prepareStatement("INSERT INTO product (name, price, imageUrl) VALUES (?, ?, ?)", arrayOf("id")).apply {
-                setString(1, product.name)
-                setDouble(2, product.price)
-                setString(3, product.imageUrl)
-            }
+            connection.prepareStatement("INSERT INTO product (name, price, imageUrl) VALUES (?, ?, ?)", arrayOf("id"))
+                .apply {
+                    setString(1, product.name)
+                    setDouble(2, product.price)
+                    setString(3, product.imageUrl)
+                }
         }, keyHolder)
         return product.copy(id = keyHolder.key?.toLong() ?: throw IllegalStateException("No ID returned"))
     }
@@ -51,18 +52,12 @@ class JdbcProductStore(private val db: JdbcTemplate) : ProductStore {
         val updates = mutableListOf<String>()
         val params = mutableListOf<Any>()
 
-        if (patch.name != null) {
-            updates.add("name = ?")
-            params.add(patch.name)
-        }
-        if (patch.price != null) {
-            updates.add("price = ?")
-            params.add(patch.price)
-        }
-        if (patch.imageUrl != null) {
-            updates.add("imageUrl = ?")
-            params.add(patch.imageUrl)
-        }
+        updates.add("name = ?")
+        params.add(patch.name)
+        updates.add("price = ?")
+        params.add(patch.price)
+        updates.add("imageUrl = ?")
+        params.add(patch.imageUrl)
         if (updates.isEmpty()) {
             return
         }

@@ -1,10 +1,12 @@
 package ecommerce.model
 
+import ecommerce.dto.ProductPatchDTO
+
 data class Product(
-    var id: Long? = null,
     var name: String,
     var price: Double,
-    var imageUrl: String
+    var imageUrl: String,
+    var id: Long? = null,
 ) {
     fun updateFrom(dto: ProductPatchDTO) {
         name = dto.name ?: name

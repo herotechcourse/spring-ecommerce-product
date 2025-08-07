@@ -83,6 +83,41 @@ updateProductForm.html
 ### etc.
 
 - [x] connect to an H2 in-memory database
-  - [x] define the product schema
-  - [x] add some sample data
-  - [x] configure the database setting with `application.properties`
+    - [x] define the product schema
+    - [x] add some sample data
+    - [x] configure the database setting with `application.properties`
+
+## Features 2.1
+
+- [x] Product name Validation
+    - [x] Apart from alphanumerics character, it can contain  `( ), [ ], +, -, &, /, _`
+    - [x] I should contain less than 15 characters
+    - [x] Name should be unique
+- [x] Price should be a positive number
+- [x] Image URL must start with `http:// or https://`.
+
+## Features 2.2
+
+- [x] User account
+    - [x] Registration with email and password
+    - [x] Assign access token using JWT
+
+## Features 2.3
+
+- [x] Cart
+    - [x] Create Cart
+    - [x] Connect Cart to corresponding User
+    - [x] Users can retrieve the list of products in their cart.
+    - [x] Users can add products to their cart.
+    - [x] Users can remove products from their cart.
+- [x] (extra) Create Products and Cart View
+
+## Features 2.4
+
+- [x] Retrieve the Top 5 Most Added Products to Cart in the Last 30 Days.
+    - [x] If multiple products have same count, the most recent added comes first.
+    - [x] Response must include the product name, the number of times it was added, and the most recent added time.
+
+- [x] Retrieve Members Who Added Items to Their Cart in the Last 7 Days.
+    - [x] Each member should appear only once.
+    - [x] The response must include the member ID, name, and email.

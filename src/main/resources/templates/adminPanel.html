@@ -12,10 +12,10 @@
 <header class="container">
     <nav>
         <ul>
-            <li><strong><a href="/">Home</a></strong></li>
+            <li><strong><a href="/admin">Home</a></strong></li>
         </ul>
         <ul>
-            <li><a href="/add/product">Add Product</a></li>
+            <li><a href="/admin/add/product">Add Product</a></li>
         </ul>
     </nav>
 </header>
@@ -37,7 +37,7 @@
             <td th:text="${product.price}">9.99</td>
             <td th:text="${product.imageUrl}">http://example.com/image.jpg</td>
             <td>
-                <a th:href="@{/update/product/{id}(id=${product.id})}">Edit</a>
+                <a th:href="@{/admin/update/product/{id}(id=${product.id})}">Edit</a>
                 <button type="button"
                         class="delete-button"
                         style="background-color: red"
@@ -57,7 +57,7 @@
                 const id = event.target.getAttribute("data-id");
                 if (!confirm(`Are you sure you want to delete product ${id}?`)) return;
                 try {
-                    const response = await fetch(`/api/products/${id}`, {
+                    const response = await fetch(`/admin/api/products/${id}`, {
                         method: "DELETE"
                     });
                     if (response.ok) {

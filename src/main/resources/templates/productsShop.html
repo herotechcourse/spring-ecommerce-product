@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Products</title>
+    <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css"
+    />
+    <style>
+        .product-cards {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        .product-card {
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            padding: 1rem;
+            width: 200px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .product-image {
+            width: 100%;
+            height: 150px;
+            object-fit: contain;
+            margin-bottom: 0.5rem;
+        }
+        .quantity-input {
+            width: 60px;
+            margin-bottom: 0.5rem;
+        }
+        .add-to-cart-button {
+            padding: 0.5rem 1rem;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            align-self: stretch;
+            text-align: center;
+        }
+        .add-to-cart-button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+<header class="container">
+    <nav>
+        <ul>
+            <li><a href="/cart">My Cart</a></li>
+        </ul>
+    </nav>
+</header>
+<main class="container">
+    <div class="product-cards">
+        <div class="product-card" th:each="product : ${products}">
+            <img
+                    th:src="${product.imageUrl}"
+                    alt="Product Image"
+                    class="product-image"
+            />
+            <h3 th:text="${product.name}"></h3>
+            <p style="font-weight: bold;">$<span th:text="${product.price}">0.00</span></p>
+
+            <!-- Quantity input -->
+            <input
+                    type="number"
+                    class="quantity-input"
+                    min="1"
+                    value="1"
+                    aria-label="Quantity"
+            />
+
+            <button
+                    type="button"
+                    th:attr="data-id=${product.id}"
+                    class="add-to-cart-button"
+            >
+                Add to Cart
+            </button>
+        </div>
+    </div>
+</main>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        document.querySelectorAll(".add-to-cart-button").forEach(button => {
+            button.addEventListener("click", async () => {
+                const productId = button.getAttribute("data-id");
+
+                // Find quantity input inside the same product card container
+                const productCard = button.closest(".product-card");
+                let quantity = 1;
+                if (productCard) {
+                    const qtyInput = productCard.querySelector(".quantity-input");
+                    if (qtyInput) {
+                        quantity = parseInt(qtyInput.value, 10);
+                        if (isNaN(quantity) || quantity < 1) {
+                            alert("Please enter a valid quantity (1 or more).");
+                            return;
+                        }
+                    }
+                }
+
+                const token = localStorage.getItem("token"); // JWT token storage
+
+                if (!token) {
+                    alert("You must be logged in to add to cart.");
+                    window.location.href = "/auth/login";
+                    return;
+                }
+
+                try {
+                    const response = await fetch(`/api/cart/items?productId=${productId}&quantity=${quantity}`, {
+                        method: "POST",
+                        headers: {
+                            "Authorization": "Bearer " + token
+                        }
+                    });
+
+                    if (response.ok) {
+                        const cart = await response.json();
+                        alert(`Product added to cart! You now have ${cart.items.length} items.`);
+                    } else if (response.status === 401) {
+                        alert("Unauthorized. Please log in.");
+                        window.location.href = "/auth/login";
+                    } else {
+                        const errorText = await response.text();
+                        alert(`Failed to add product to cart: ${response.status} - ${errorText}`);
+                    }
+                } catch (error) {
+                    console.error("Error adding to cart:", error);
+                    alert("An error occurred while adding the product to the cart.");
+                }
+            });
+        });
+    });
+</script>
+</body>
+</html>
