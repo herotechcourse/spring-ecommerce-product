@@ -1,8 +1,10 @@
 package ecommerce.controller
 
+import ecommerce.dto.product.ProductPatchRequest
+import ecommerce.dto.product.ProductRequest
 import ecommerce.model.Product
-import ecommerce.model.ProductPatchRequest
-import ecommerce.repository.ProductRepository
+import ecommerce.service.ProductService
+import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
@@ -17,40 +19,44 @@ import java.net.URI
 
 @RequestMapping("/api/products")
 @RestController
-class ProductController(private val productRepository: ProductRepository) {
+class ProductController(private val productService: ProductService) {
     @GetMapping()
-    fun getProducts(): List<Product> = productRepository.findAll()
+    fun getProducts(): List<Product> = productService.findAll()
 
     @GetMapping("/{id}")
     fun getProductById(
         @PathVariable id: Long,
-    ): Product = productRepository.findById(id)
+    ): Product = productService.findById(id)
 
     @PostMapping()
     fun createProduct(
-        @RequestBody product: Product,
+        @Valid @RequestBody productRequest: ProductRequest,
     ): ResponseEntity<Product> {
-        val saved = productRepository.save(product)
+        val saved = productService.createProduct(productRequest)
         return ResponseEntity.created(URI.create("/api/products/${saved.id}")).body(saved)
     }
 
     @PutMapping("/{id}")
-    fun updateProductById(
-        @RequestBody product: Product,
+    fun updateProduct(
+        @Valid @RequestBody productRequest: ProductRequest,
         @PathVariable id: Long,
-    ): Product = productRepository.update(id, product)
+    ): Product {
+        return productService.updateProduct(id, productRequest)
+    }
 
     @PatchMapping("/{id}")
-    fun patchProductById(
-        @RequestBody patchRequest: ProductPatchRequest,
+    fun updateProductPartially(
+        @Valid @RequestBody productPatchRequest: ProductPatchRequest,
         @PathVariable id: Long,
-    ): Product = productRepository.patch(id, patchRequest)
+    ): Product {
+        return productService.patchProduct(id, productPatchRequest)
+    }
 
     @DeleteMapping("/{id}")
     fun deleteProductById(
         @PathVariable id: Long,
     ): ResponseEntity<Unit> {
-        productRepository.delete(id)
+        productService.deleteById(id)
         return ResponseEntity.noContent().build()
     }
 }

@@ -1,0 +1,107 @@
+### Complete API Flow Test - Fixed and Working Examples
+
+### 1. Register Regular User
+POST http://localhost:8080/api/members/register
+Content-Type: application/json
+
+{
+  "email": "user1@example.com",
+  "password": "password123",
+  "name": "Test User One",
+  "role": "USER"
+}
+
+### 2. Register Admin User
+POST http://localhost:8080/api/members/register
+Content-Type: application/json
+
+{
+  "email": "admin@example.com",
+  "password": "admin123",
+  "name": "Admin User",
+  "role": "ADMIN"
+}
+
+### 3. Login as Regular User
+POST http://localhost:8080/api/members/login
+Content-Type: application/json
+
+{
+  "email": "user1@example.com",
+  "password": "password123"
+}
+
+### 4. Login as Admin
+POST http://localhost:8080/api/members/login
+Content-Type: application/json
+
+{
+  "email": "admin@example.com",
+  "password": "admin123"
+}
+
+### 5. Get All Products (No Auth Required)
+GET http://localhost:8080/api/products
+
+### 6. Add Product to Cart (Fixed URL - was missing /items)
+POST http://localhost:8080/api/cart-items
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyIiwiZW1haWwiOiJhZG1pbkBleGFtcGxlLmNvbSIsInJvbGUiOiJBRE1JTiIsIm5hbWUiOiJBZG1pbiBVc2VyIiwiaWF0IjoxNzUzNzYxMzU2LCJleHAiOjE3NTM4NDc3NTZ9.xGxEAkT42Xa29mmW92Uj8tCcTzUSQmt5NaNE_C6MYtc
+Content-Type: application/json
+
+{
+  "productId": 1,
+  "quantity": 1
+}
+
+### 7. Add Another Product to Cart
+POST http://localhost:8080/api/cart-items
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyIiwiZW1haWwiOiJhZG1pbkBleGFtcGxlLmNvbSIsInJvbGUiOiJBRE1JTiIsIm5hbWUiOiJBZG1pbiBVc2VyIiwiaWF0IjoxNzUzNzYxMzU2LCJleHAiOjE3NTM4NDc3NTZ9.xGxEAkT42Xa29mmW92Uj8tCcTzUSQmt5NaNE_C6MYtc
+Content-Type: application/json
+
+{
+  "productId": 2,
+  "quantity": 2
+}
+
+### 8. Get Cart Items
+GET http://localhost:8080/api/cart-items
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyIiwiZW1haWwiOiJhZG1pbkBleGFtcGxlLmNvbSIsInJvbGUiOiJBRE1JTiIsIm5hbWUiOiJBZG1pbiBVc2VyIiwiaWF0IjoxNzUzNzYxMzU2LCJleHAiOjE3NTM4NDc3NTZ9.xGxEAkT42Xa29mmW92Uj8tCcTzUSQmt5NaNE_C6MYtc
+
+### 9. Update Cart Item Quantity
+PUT http://localhost:8080/api/cart-items/1
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyIiwiZW1haWwiOiJhZG1pbkBleGFtcGxlLmNvbSIsInJvbGUiOiJBRE1JTiIsIm5hbWUiOiJBZG1pbiBVc2VyIiwiaWF0IjoxNzUzNzYxMzU2LCJleHAiOjE3NTM4NDc3NTZ9.xGxEAkT42Xa29mmW92Uj8tCcTzUSQmt5NaNE_C6MYtc
+Content-Type: application/json
+
+{
+  "quantity": 3
+}
+
+### 10. Remove Item from Cart
+DELETE http://localhost:8080/api/cart-items/2
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyIiwiZW1haWwiOiJhZG1pbkBleGFtcGxlLmNvbSIsInJvbGUiOiJBRE1JTiIsIm5hbWUiOiJBZG1pbiBVc2VyIiwiaWF0IjoxNzUzNzYxMzU2LCJleHAiOjE3NTM4NDc3NTZ9.xGxEAkT42Xa29mmW92Uj8tCcTzUSQmt5NaNE_C6MYtc
+
+### 11. Admin Analytics(ADMIN TOKEN) - Top 5 Most Added Products (Last 30 Days)
+GET http://localhost:8080/admin/analytics/top-products
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyIiwiZW1haWwiOiJhZG1pbkBleGFtcGxlLmNvbSIsInJvbGUiOiJBRE1JTiIsIm5hbWUiOiJBZG1pbiBVc2VyIiwiaWF0IjoxNzUzNzYxNDA5LCJleHAiOjE3NTM4NDc4MDl9.gbVd91e_5ohuHHOnBe2uz_zfm2gu72X7Ro2sJJv68YQ
+
+### 12. Admin Analytics(ADMIN TOKEN) - Active Users (Last 7 Days)
+GET http://localhost:8080/admin/analytics/active-users
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyIiwiZW1haWwiOiJhZG1pbkBleGFtcGxlLmNvbSIsInJvbGUiOiJBRE1JTiIsIm5hbWUiOiJBZG1pbiBVc2VyIiwiaWF0IjoxNzUzNzYxNDA5LCJleHAiOjE3NTM4NDc4MDl9.gbVd91e_5ohuHHOnBe2uz_zfm2gu72X7Ro2sJJv68YQ
+
+### 13. Clear Entire Cart
+DELETE http://localhost:8080/api/cart-items
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyIiwiZW1haWwiOiJhZG1pbkBleGFtcGxlLmNvbSIsInJvbGUiOiJBRE1JTiIsIm5hbWUiOiJBZG1pbiBVc2VyIiwiaWF0IjoxNzUzNzYxMzU2LCJleHAiOjE3NTM4NDc3NTZ9.xGxEAkT42Xa29mmW92Uj8tCcTzUSQmt5NaNE_C6MYtc
+
+### 14. Create New Product (Admin can do this via products API)
+POST http://localhost:8080/api/products
+Content-Type: application/json
+
+{
+  "name": "New Product",
+  "price": 29.99,
+  "imageUrl": "https://example.com/image.jpg"
+}
+
+### Working Token Examples (Replace with actual tokens from login responses):
+# userToken: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiZW1haWwiOiJ1c2VyMUBleGFtcGxlLmNvbSIsInJvbGUiOiJVU0VSIiwibmFtZSI6IlRlc3QgVXNlciBPbmUiLCJpYXQiOjE3NTM3NjEyMTIsImV4cCI6MTc1Mzg0NzYxMn0
+# adminToken: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyIiwiZW1haWwiOiJhZG1pbkBleGFtcGxlLmNvbSIsInJvbGUiOiJBRE1JTiIsIm5hbWUiOiJBZG1pbiBVc2VyIiwiaWF0IjoxNzUzNzYxMjEyLCJleHAiOjE3NTM4NDc2MTJ9

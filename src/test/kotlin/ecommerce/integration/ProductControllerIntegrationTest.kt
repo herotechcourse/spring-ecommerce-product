@@ -1,0 +1,185 @@
+package ecommerce.integration
+import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.ValueSource
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.boot.test.web.client.TestRestTemplate
+import org.springframework.http.HttpEntity
+import org.springframework.http.HttpHeaders
+import org.springframework.http.HttpStatus
+import org.springframework.http.MediaType
+import org.springframework.test.context.ActiveProfiles
+import java.util.concurrent.CompletableFuture
+import java.util.concurrent.Executors
+
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@ActiveProfiles("test")
+class ProductControllerIntegrationTest {
+    @Autowired
+    private lateinit var testRestTemplate: TestRestTemplate
+
+    private fun createHeaders(): HttpHeaders {
+        return HttpHeaders().apply {
+            contentType = MediaType.APPLICATION_JSON
+        }
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = ["j", " j", "j ", "j j", " j j "])
+    fun `should accept - valid names`(validName: String) {
+        val validRequest = """{
+            "name" : "$validName",
+            "price" : 1.0,
+            "imageUrl" : "http://google.com"
+        }"""
+        val headers = createHeaders()
+        val response =
+            testRestTemplate.postForEntity(
+                "/api/products",
+                HttpEntity(validRequest, headers),
+                String::class.java,
+            )
+        assertThat(response.statusCode).isEqualTo(HttpStatus.CREATED)
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = ["123456789012345", " ()[]+-&/_aaaa "])
+    fun `should accept - valid long names`(validName: String) {
+        val request = """{
+            "name" : "$validName",
+            "price" : 1.0,
+            "imageUrl" : "http://google.com"
+            }"""
+        val headers = createHeaders()
+        val response =
+            testRestTemplate.postForEntity(
+                "/api/products",
+                HttpEntity(request, headers),
+                String::class.java,
+            )
+        assertThat(response.statusCode).isEqualTo(HttpStatus.CREATED)
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = ["", "  "])
+    fun `should throw - invalid empty names`(invalidName: String) {
+        val request = """{
+            "name" : "$invalidName",
+            "price" : 1.0,
+            "imageUrl" : "http://google.com"
+            }"""
+        val headers = createHeaders()
+        val response =
+            testRestTemplate.postForEntity(
+                "/api/products",
+                HttpEntity(request, headers),
+                String::class.java,
+            )
+        assertThat(response.statusCode).isEqualTo(HttpStatus.BAD_REQUEST)
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = ["1234567890123456", " ()[]+-&/_aaaabbb "])
+    fun `should throw - invalid too long names`(invalidName: String) {
+        val request = """{
+            "name": "$invalidName",
+            "price": 1.0,
+            "imageUrl": "http://google.com"
+        }"""
+        val headers = createHeaders()
+        val response =
+            testRestTemplate.postForEntity(
+                "/api/products",
+                HttpEntity(request, headers),
+                String::class.java,
+            )
+        assertThat(response.statusCode).isEqualTo(HttpStatus.BAD_REQUEST)
+    }
+
+    @ParameterizedTest
+    @ValueSource(
+        strings = ["hi!", "pct%", "bck\\slash", "crly{}", "hi@", "hi#", "tlda~", "emji🙂", "korean한글", "comm,a"],
+    )
+    fun `should throw - invalid names with not allowed special characters`(invalidName: String) {
+        val request = """{
+            "name": "$invalidName",
+            "price": 1.0,
+            "imageUrl": "http://google.com"
+        }"""
+        val headers = createHeaders()
+        val response =
+            testRestTemplate.postForEntity(
+                "/api/products",
+                HttpEntity(request, headers),
+                String::class.java,
+            )
+        assertThat(response.statusCode).isEqualTo(HttpStatus.BAD_REQUEST)
+    }
+
+    @Test
+    fun `should throw - product name can not have duplicate name`() {
+        val request = """{
+            "name": "dup test1",
+            "price": 1.0,
+            "imageUrl": "http://google.com"
+        }"""
+        val headers = createHeaders()
+
+        val firstResponse =
+            testRestTemplate.postForEntity(
+                "/api/products",
+                HttpEntity(request, headers),
+                String::class.java,
+            )
+        assertThat(firstResponse.statusCode).isEqualTo(HttpStatus.CREATED)
+
+        val secondResponse =
+            testRestTemplate.postForEntity(
+                "/api/products",
+                HttpEntity(request, headers),
+                String::class.java,
+            )
+        assertThat(secondResponse.statusCode).isEqualTo(HttpStatus.BAD_REQUEST)
+    }
+
+    @Test
+    fun `should handle concurrent requests with same product name gracefully`() {
+        val productName = "concurrent-test-product"
+        val request = """{
+            "name": "productNameTest",
+            "price": 10.0,
+            "imageUrl": "http://example.com/image.jpg"
+        }"""
+        val headers = createHeaders()
+
+        val executor = Executors.newFixedThreadPool(10)
+
+        val futures =
+            (1..10).map {
+                CompletableFuture.supplyAsync({
+                    testRestTemplate.postForEntity(
+                        "/api/products",
+                        HttpEntity(request, headers),
+                        String::class.java,
+                    )
+                }, executor)
+            }
+
+        val responses = futures.map { it.get() }
+        executor.shutdown()
+
+        responses.forEachIndexed { index, response ->
+            println("Response $index: ${response.statusCode}")
+        }
+
+        val successCount = responses.count { it.statusCode == HttpStatus.CREATED }
+        val failureCount = responses.count { it.statusCode == HttpStatus.BAD_REQUEST }
+
+        println("Success count: $successCount, Failure count: $failureCount")
+
+        assertThat(successCount).isEqualTo(1)
+        assertThat(failureCount).isEqualTo(9)
+    }
+}

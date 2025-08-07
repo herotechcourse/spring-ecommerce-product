@@ -1,0 +1,41 @@
+# Test configuration
+# Uses H2 in-memory database for fast, isolated tests
+
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb;MODE=MySQL;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: ""
+  sql:
+    init:
+      mode: always
+      schema-locations: classpath:schema.sql
+      data-locations: classpath:test-data.sql
+  
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
+        format_sql: true
+
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
+logging:
+  level:
+    org.springframework.jdbc: DEBUG
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+    org.springframework.transaction: DEBUG
+
+# JWT Configuration for testing only - NOT for production
+# WARNING: This is a test-only secret, do not use in production
+jwt:
+  secret: test-jwt-secret-key-for-testing-purposes-only-minimum-256-bits-required-for-hmac-sha256-algorithm-do-not-use-in-production
+  expiration: 86400000

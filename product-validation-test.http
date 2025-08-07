@@ -1,0 +1,205 @@
+### Product Validation Test Suite
+### Tests for basic validation + uniqueness validation
+
+### 1. Valid Product Creation - Should succeed
+POST http://localhost:8080/api/products
+Content-Type: application/json
+
+{
+  "name": "Valid Product",
+  "price": 19.99,
+  "imageUrl": "https://example.com/image.jpg"
+}
+
+### 2. Test Blank Name - Should fail with validation error
+POST http://localhost:8080/api/products
+Content-Type: application/json
+
+{
+  "name": "",
+  "price": 19.99,
+  "imageUrl": "https://example.com/image.jpg"
+}
+
+### 3. Test Name Too Long - Should fail with validation error
+POST http://localhost:8080/api/products
+Content-Type: application/json
+
+{
+  "name": "This product name is way too long",
+  "price": 19.99,
+  "imageUrl": "https://example.com/image.jpg"
+}
+
+### 4. Test Invalid Characters in Name - Should fail with validation error
+POST http://localhost:8080/api/products
+Content-Type: application/json
+
+{
+  "name": "Invalid@Name#",
+  "price": 19.99,
+  "imageUrl": "https://example.com/image.jpg"
+}
+
+### 5. Test Valid Characters in Name - Should succeed
+POST http://localhost:8080/api/products
+Content-Type: application/json
+
+{
+  "name": "Valid-Name_123",
+  "price": 19.99,
+  "imageUrl": "https://example.com/image.jpg"
+}
+
+### 6. Test Price Too Low - Should fail with validation error
+POST http://localhost:8080/api/products
+Content-Type: application/json
+
+{
+  "name": "Another Product",
+  "price": 0,
+  "imageUrl": "https://example.com/image.jpg"
+}
+
+### 7. Test Invalid URL Format - Should fail with validation error
+POST http://localhost:8080/api/products
+Content-Type: application/json
+
+{
+  "name": "URL Test Product",
+  "price": 19.99,
+  "imageUrl": "invalid-url"
+}
+
+### 8. Test Multiple Validation Errors - Should fail with multiple errors
+POST http://localhost:8080/api/products
+Content-Type: application/json
+
+{
+  "name": "This name is way too long and invalid",
+  "price": -5,
+  "imageUrl": "not-a-url"
+}
+
+### 9. Test Duplicate Name - Should fail with uniqueness error
+POST http://localhost:8080/api/products
+Content-Type: application/json
+
+{
+  "name": "Valid Product",
+  "price": 25.99,
+  "imageUrl": "https://example.com/different-image.jpg"
+}
+
+### 10. Test Valid Product with Different Name - Should succeed
+POST http://localhost:8080/api/products
+Content-Type: application/json
+
+{
+  "name": "Another Valid",
+  "price": 15.50,
+  "imageUrl": "https://example.com/another.jpg"
+}
+
+### 11. Test Product Update - Same Name (Should succeed)
+PUT http://localhost:8080/api/products/1
+Content-Type: application/json
+
+{
+  "name": "Valid Product",
+  "price": 22.99,
+  "imageUrl": "https://example.com/updated.jpg"
+}
+
+### 12. Test Product Update - New Valid Name (Should succeed)
+PUT http://localhost:8080/api/products/1
+Content-Type: application/json
+
+{
+  "name": "Updated Product",
+  "price": 22.99,
+  "imageUrl": "https://example.com/updated.jpg"
+}
+
+### 13. Test Product Update - Duplicate Name (Should fail)
+PUT http://localhost:8080/api/products/1
+Content-Type: application/json
+
+{
+  "name": "Another Valid",
+  "price": 22.99,
+  "imageUrl": "https://example.com/updated.jpg"
+}
+
+### 14. Test Product Update - Invalid Format (Should fail)
+PUT http://localhost:8080/api/products/1
+Content-Type: application/json
+
+{
+  "name": "",
+  "price": -1,
+  "imageUrl": "bad-url"
+}
+
+### 15. Test Partial Update (PATCH) - Valid Name Change
+PATCH http://localhost:8080/api/products/1
+Content-Type: application/json
+
+{
+  "name": "Patched Product"
+}
+
+### 16. Test Partial Update (PATCH) - Duplicate Name
+PATCH http://localhost:8080/api/products/1
+Content-Type: application/json
+
+{
+  "name": "Another Valid"
+}
+
+### 17. Test Edge Case - Exactly 15 Characters (Should succeed)
+POST http://localhost:8080/api/products
+Content-Type: application/json
+
+{
+  "name": "Exactly15Chars!",
+  "price": 19.99,
+  "imageUrl": "https://example.com/edge.jpg"
+}
+
+### 18. Test Edge Case - 16 Characters (Should fail)
+POST http://localhost:8080/api/products
+Content-Type: application/json
+
+{
+  "name": "Exactly16Chars!!",
+  "price": 19.99,
+  "imageUrl": "https://example.com/edge.jpg"
+}
+
+### 19. Test Special Characters Allowed - Should succeed
+POST http://localhost:8080/api/products
+Content-Type: application/json
+
+{
+  "name": "Test (A) [B] +C",
+  "price": 19.99,
+  "imageUrl": "https://example.com/special.jpg"
+}
+
+### 20. Test Minimum Valid Price - Should succeed
+POST http://localhost:8080/api/products
+Content-Type: application/json
+
+{
+  "name": "Min Price Test",
+  "price": 0.01,
+  "imageUrl": "https://example.com/min.jpg"
+}
+
+### Expected Results:
+# Valid requests: 1, 5, 10, 11, 12, 15, 17, 19, 20
+# Invalid format: 2, 3, 4, 6, 7, 8, 14, 18
+# Duplicate name: 9, 13, 16
+# Multiple errors will show all validation issues at once
+# Basic validation errors appear first, before uniqueness checks

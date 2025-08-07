@@ -1,8 +1,8 @@
 package ecommerce.repository
 
+import ecommerce.dto.product.ProductPatchRequest
 import ecommerce.exception.NotFoundException
 import ecommerce.model.Product
-import ecommerce.model.ProductPatchRequest
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.jdbc.core.RowMapper
 import org.springframework.jdbc.support.GeneratedKeyHolder
@@ -83,5 +83,11 @@ class ProductRepository(private val jdbc: JdbcTemplate) {
         jdbc.update(sql, updatedName, updatedPrice, updatedImageUrl, id)
 
         return updatedProduct
+    }
+
+    fun existsByName(name: String): Boolean {
+        val sql = "SELECT EXISTS(SELECT 1 FROM products WHERE name = ?)"
+        val count = jdbc.queryForObject(sql, Int::class.java, name) ?: 0
+        return count > 0
     }
 }
